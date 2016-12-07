@@ -1,34 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// Class to controll the player's avatar.  (The ball)
-public class PlayerController : MonoBehaviour {
-  BasePlayerController inputController;
+namespace Hamster {
 
-  void Start() {
-    inputController = new MultiInputController();
-  }
+  // Class to controll the player's avatar.  (The ball)
+  public class PlayerController : MonoBehaviour {
+    InputControllers.BasePlayerController inputController;
 
-  // Height of the kill-plane.
-  // If the player's y-coordinate ever falls below this, it is treated as
-  // a loss/failure.
-  const float kFellOffLevelHeight = -10.0f;
+    Vector3 initialPosition;
 
-  static Vector3 kStartPosition = new Vector3(0, 4, 0);
-  const float kMaxVelocity = 20f;
-  const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
+    void Start() {
+      inputController = new InputControllers.MultiInputController();
+      initialPosition = transform.position;
+    }
 
-  // Since we're doing physics work, we use FixedUpdate instead of Update.
-  void FixedUpdate() {
-    Rigidbody rigidBody = GetComponent<Rigidbody>();
+    // Height of the kill-plane.
+    // If the player's y-coordinate ever falls below this, it is treated as
+    // a loss/failure.
+    const float kFellOffLevelHeight = -10.0f;
 
-    Vector2 input = inputController.GetInputVector();
-    rigidBody.AddForce(new Vector3(input.x, 0, input.y));
+    const float kMaxVelocity = 20f;
+    const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
 
-    if (transform.position.y < kFellOffLevelHeight) {
-      transform.position = kStartPosition;
-      rigidBody.velocity = Vector3.zero;
-      rigidBody.angularVelocity = Vector3.zero;
+    public void ResetToInitialPosition() {
+      transform.position = initialPosition;
+    }
+
+    // Since we're doing physics work, we use FixedUpdate instead of Update.
+    void FixedUpdate() {
+      Rigidbody rigidBody = GetComponent<Rigidbody>();
+
+      Vector2 input = inputController.GetInputVector();
+      rigidBody.AddForce(new Vector3(input.x, 0, input.y));
+
+      if (transform.position.y < kFellOffLevelHeight) {
+        ResetToInitialPosition();
+        rigidBody.velocity = Vector3.zero;
+        rigidBody.angularVelocity = Vector3.zero;
+      }
     }
   }
+
 }

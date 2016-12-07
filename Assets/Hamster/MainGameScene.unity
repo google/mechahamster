@@ -293,6 +293,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editorCam: {x: 0, y: 0, z: 0}
+  kViewAngleVector: {x: 0, y: 0.84481907, z: -0.53505206}
+  kViewDistance: 10
+--- !u!1 &1564395064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1564395065}
+  - 114: {fileID: 1564395066}
+  m_Layer: 0
+  m_Name: GameWorld
+  m_TagString: GameWorld
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1564395065
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1564395064}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.625493, y: -5.8255405, z: -0.31001693}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+--- !u!114 &1564395066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1564395064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d187c429c203c8d458259c9fb92f4759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldMap:
+    name: unnamed map
+    mapId: <<mapId>>
+    ownerId: <<ownerId>>
+    elements:
+      Keys: []
+      Values: []
 --- !u!1 &1990879349
 GameObject:
   m_ObjectHideFlags: 0
