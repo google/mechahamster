@@ -52,13 +52,10 @@ namespace Hamster {
       }
 
       // Add the new object.  (Or add nothing, if we're "adding" an empty blocks)
-      GameObject obj = null;
-      if (!worldMap.elements.ContainsKey(key) && element.type != MapElement.MapElementType.Empty) {
-        obj = SpawnElement(element);
-        worldMap.elements.Add(key, element);
-      }
 
+      GameObject obj = SpawnElement(element);
       if (obj != null) {
+        worldMap.elements.Add(key, element);
         sceneObjects.Add(element.GetStringKey(), obj);
       }
       return obj;
@@ -66,32 +63,14 @@ namespace Hamster {
 
     GameObject SpawnElement(MapElement element) {
       GameObject obj = null;
-      switch (element.type) {
-        case MapElement.MapElementType.Empty:
-          break;
-        case MapElement.MapElementType.Wall:
-          obj = (GameObject)(Instantiate(CommonData.prefabs.wall,
-              element.position, element.rotation));
-          break;
-        case MapElement.MapElementType.Floor:
-          obj = (GameObject)(Instantiate(CommonData.prefabs.floor,
-              element.position, element.rotation));
-          break;
-        case MapElement.MapElementType.StartPosition:
-          obj = (GameObject)(Instantiate(CommonData.prefabs.startPos,
-              element.position, element.rotation));
-          break;
-        case MapElement.MapElementType.JumpPad:
-          obj = (GameObject)(Instantiate(CommonData.prefabs.jumpTile,
-              element.position, element.rotation));
-          break;
-        case MapElement.MapElementType.Goal:
-          obj = (GameObject)(Instantiate(CommonData.prefabs.goal,
-              element.position, element.rotation));
-          break;
-        default:
-          Debug.LogError("Spawning objects - encountered unknown element type:" + element.type);
-          break;
+       PrefabList.PrefabEntry elementDef;
+      if (CommonData.prefabs.lookup.TryGetValue(element.type, out elementDef)) {
+        if (elementDef.prefab != null) {
+          obj = (GameObject)Instantiate(elementDef.prefab, element.position, element.rotation);
+        }
+      } else {
+        throw new Exception(
+            "SpawnElement: type did not match any registered prefabs: [" + element.type + "]");
       }
       return obj;
     }

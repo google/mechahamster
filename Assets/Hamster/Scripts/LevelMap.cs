@@ -81,19 +81,10 @@ namespace Hamster {
 
   [System.Serializable]
   public class MapElement {
-    public MapElementType type;
+    public string type;
     public Vector3 scale = new Vector3(1, 1, 1);
     public Vector3 position = new Vector3(0, 0, 0);
     public Quaternion rotation = Quaternion.identity;
-
-    public enum MapElementType {
-      Empty,
-      Wall,
-      Floor,
-      JumpPad,
-      StartPosition,
-      Goal,
-    }
 
     // Takes a map element, and returns the string key that will represent
     // it in the database.  For most objects, this is a function of their
@@ -102,18 +93,10 @@ namespace Hamster {
     // start locations) they have a different name, to enforce that they
     // are once-per-map.
     public string GetStringKey() {
-      if (type == MapElement.MapElementType.StartPosition)
-        return "StartPos";
+      if (CommonData.prefabs.lookup[type].limitOnePerMap)
+        return type;
       else
         return "obj_" + position.ToString();
     }
-
-    // Returns true if an element is limited to one copy per map.
-    // Currently only true for start locations, but there could
-    // conceivably be others.
-    public bool IsUniqueType() {
-      return (type == MapElement.MapElementType.StartPosition);
-    }
-
   }
 }

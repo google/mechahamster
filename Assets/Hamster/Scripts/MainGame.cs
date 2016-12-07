@@ -30,14 +30,6 @@ namespace Hamster {
 
     Vector2 scrollViewPosition;
     int mapToolSelection = 0;
-    static string[] mapToolList = new string[] {
-      "Empty",
-      "Wall",
-      "Floor",
-      "JumpPad",
-      "Start",
-      "Goal"
-    };
 
     void Start() {
       mainCamera = FindObjectOfType<Camera>();
@@ -79,8 +71,7 @@ namespace Hamster {
 
     void LevelEditorUpdate() {
       if (Input.GetMouseButton(0) && GUIUtility.hotControl == 0) {
-        MapElement.MapElementType brushElementType = (MapElement.MapElementType)mapToolSelection;
-
+        string brushElementType = CommonData.prefabs.prefabNames[mapToolSelection];
         float rayDist;
         Ray cameraRay = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (CommonData.kZeroPlane.Raycast(cameraRay, out rayDist)) {
@@ -136,7 +127,8 @@ namespace Hamster {
         case GameMode.Editor:
           scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition);
 
-          mapToolSelection = GUILayout.SelectionGrid(mapToolSelection, mapToolList, 1);
+          mapToolSelection = GUILayout.SelectionGrid(
+              mapToolSelection, CommonData.prefabs.prefabNames, 1);
 
           GUILayout.EndScrollView();
 
