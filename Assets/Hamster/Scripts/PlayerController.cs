@@ -22,8 +22,11 @@ namespace Hamster {
     const float kMaxVelocity = 20f;
     const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
 
-    public void ResetToInitialPosition() {
+    public void Reset() {
       transform.position = initialPosition;
+      Rigidbody rigidBody = GetComponent<Rigidbody>();
+      rigidBody.velocity = Vector3.zero;
+      rigidBody.angularVelocity = Vector3.zero;
     }
 
     // Since we're doing physics work, we use FixedUpdate instead of Update.
@@ -34,9 +37,7 @@ namespace Hamster {
       rigidBody.AddForce(new Vector3(input.x, 0, input.y));
 
       if (transform.position.y < kFellOffLevelHeight) {
-        ResetToInitialPosition();
-        rigidBody.velocity = Vector3.zero;
-        rigidBody.angularVelocity = Vector3.zero;
+        Reset();
       }
     }
   }
