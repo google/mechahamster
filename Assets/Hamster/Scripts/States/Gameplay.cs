@@ -33,5 +33,3 @@ namespace Hamster.States {
     public override void OnGUI() { }
   }
 }
-
-

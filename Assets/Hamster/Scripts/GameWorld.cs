@@ -63,7 +63,7 @@ namespace Hamster {
 
     GameObject SpawnElement(MapElement element) {
       GameObject obj = null;
-       PrefabList.PrefabEntry elementDef;
+      PrefabList.PrefabEntry elementDef;
       if (CommonData.prefabs.lookup.TryGetValue(element.type, out elementDef)) {
         if (elementDef.prefab != null) {
           obj = (GameObject)Instantiate(elementDef.prefab, element.position, element.rotation);
@@ -74,6 +74,5 @@ namespace Hamster {
       }
       return obj;
     }
-
   }
 }

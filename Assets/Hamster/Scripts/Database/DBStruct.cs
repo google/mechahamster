@@ -70,4 +70,3 @@ public class DBStruct<T> where T : new() {
     database.RootReference.Child(dbPathName).SetRawJsonValueAsync(json);
   }
 }
-

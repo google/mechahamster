@@ -12,7 +12,5 @@ namespace Hamster.InputControllers {
     public virtual Vector2 GetInputVector() {
       return Vector2.zero;
     }
-
   }
-
 }

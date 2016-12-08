@@ -29,5 +29,4 @@ namespace Hamster.InputControllers {
       return result;
     }
   }
-
 }

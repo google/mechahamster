@@ -24,5 +24,4 @@ namespace Hamster.MapObjects {
     protected virtual void MapObjectActivation(Collider collider) {
     }
   }
-
 }

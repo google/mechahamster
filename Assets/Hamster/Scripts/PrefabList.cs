@@ -53,5 +53,4 @@ namespace Hamster {
       public bool limitOnePerMap;
     }
   }
-
 }

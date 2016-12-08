@@ -29,12 +29,10 @@ namespace Hamster {
         transform.position = player.transform.position +
             kViewAngleVector * kViewDistance;
         transform.LookAt(player.transform.position, kUpVector);
-      }
-      else {
+      } else {
         transform.position = editorCam + kViewAngleVector * kViewDistance;
         transform.LookAt(editorCam, new Vector3(0, 1, 1));
       }
     }
   }
-
 }

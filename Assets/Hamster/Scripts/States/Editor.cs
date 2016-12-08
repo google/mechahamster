@@ -96,5 +96,3 @@ namespace Hamster.States {
     }
   }
 }
-
-

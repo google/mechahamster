@@ -29,12 +29,11 @@ namespace Hamster {
     }
 
     public bool isGameRunning() {
-      return (stateManager.CurrentState() is States.Gameplay) ;
+      return (stateManager.CurrentState() is States.Gameplay);
     }
 
     void OnGUI() {
       stateManager.OnGUI();
     }
-
   }
 }

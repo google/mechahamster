@@ -18,5 +18,4 @@ namespace Hamster.InputControllers {
       return new Vector3(tiltInput.x, tiltInput.y);
     }
   }
-
 }
