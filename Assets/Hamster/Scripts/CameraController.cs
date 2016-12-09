@@ -9,30 +9,70 @@ namespace Hamster {
   /// </summary>
   public class CameraController : MonoBehaviour {
 
-    MainGame mainGame;
-    public Vector3 editorCam = new Vector3(0, 0, 0);
-    public Vector3 kViewAngleVector = new Vector3(0.0f, 3.0f, -1.9f).normalized;
-    static Vector3 kUpVector = new Vector3(0, 1, 1);
-    // Distance (in world units) between camera and target.
+    // Set by the inspector:
+    public Vector3 kViewAngleVector;
+    // Distance between the camera and the ground.
     public float kViewDistance = 10.0f;
+    // How fast you pan in the editor.
+    public float kEditorScrollSpeed = 0.3f;
+    // How fast the camera zooms to its new target:
+    public float kCameraZoom = 0.05f;
 
+    private MainGame mainGame;
+    private float lastFrameTime;
+    private Vector3 editorCam = new Vector3(0, 0, 0);
+    private static Vector3 kUpVector = new Vector3(0, 1, 1);
     PlayerController player;
 
     void Start() {
       mainGame = FindObjectOfType<MainGame>();
+      // Needs to be normalized because it was set via the inspector.
+      kViewAngleVector.Normalize();
+      lastFrameTime = Time.realtimeSinceStartup;
+    }
+
+    // Pans the camera in a direction during edit mode.
+    public void PanCamera(Vector3 direction) {
+      // Need to use time.realtimeSinceStartup instead of Time.DeltaTime, because
+      // the way we pause the physics simulation (and hence the game, while we're
+      // in editor mode) is by setting the Timescale to 0.
+      editorCam += direction * kEditorScrollSpeed * mainGame.TimeSinceLastUpdate;
     }
 
     void LateUpdate() {
-      if (player == null)
-        player = FindObjectOfType<PlayerController>();
-      if (mainGame.isGameRunning() && player != null) {
-        transform.position = player.transform.position +
-            kViewAngleVector * kViewDistance;
-        transform.LookAt(player.transform.position, kUpVector);
+      if (mainGame.isGameRunning()) {
+        // Gameplay mode:  Camera should follow the player:
+        if (player == null)
+          player = FindObjectOfType<PlayerController>();
+        if (player != null) {
+          transform.position = player.transform.position +
+              kViewAngleVector * kViewDistance;
+          transform.LookAt(player.transform.position, kUpVector);
+        }
       } else {
-        transform.position = editorCam + kViewAngleVector * kViewDistance;
-        transform.LookAt(editorCam, new Vector3(0, 1, 1));
+        // Editor mode:  Camera should be user-controlled.
+
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
+          PanCamera(Vector3.forward);
+        }
+        if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
+          PanCamera(Vector3.back);
+        }
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
+          PanCamera(Vector3.left);
+        }
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+          PanCamera(Vector3.right);
+        }
+
+        Vector3 cameraTarget = editorCam + kViewAngleVector * kViewDistance;
+
+        transform.position = cameraTarget * kCameraZoom
+            + transform.position * (1.0f - kCameraZoom);
+
+        transform.LookAt(transform.position - kViewAngleVector, kUpVector);
       }
+      lastFrameTime = Time.realtimeSinceStartup;
     }
   }
 }

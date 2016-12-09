@@ -292,9 +292,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26c486d75f1ac4b9f8a394d12dc89892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  editorCam: {x: 0, y: 0, z: 0}
-  kViewAngleVector: {x: 0, y: 0.84481907, z: -0.53505206}
+  kViewAngleVector: {x: 0, y: 3, z: -2}
   kViewDistance: 10
+  kEditorScrollSpeed: 0.8
+  kCameraZoom: 0.3
 --- !u!1 &1564395064
 GameObject:
   m_ObjectHideFlags: 0

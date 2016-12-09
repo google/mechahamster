@@ -7,7 +7,12 @@ namespace Hamster {
 
   public class MainGame : MonoBehaviour {
 
-    States.StateManager stateManager = new States.StateManager();
+    private States.StateManager stateManager = new States.StateManager();
+    private float currentFrameTime, lastFrameTime;
+
+    public float TimeSinceLastUpdate {
+      get { return currentFrameTime - lastFrameTime; }
+    }
 
     void Start() {
       CommonData.prefabs = FindObjectOfType<PrefabList>();
@@ -23,8 +28,9 @@ namespace Hamster {
       stateManager.PushState(new States.Editor());
     }
 
-
     void Update() {
+      lastFrameTime = currentFrameTime;
+      currentFrameTime = Time.realtimeSinceStartup;
       stateManager.Update();
     }
 
