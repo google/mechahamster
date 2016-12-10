@@ -19,7 +19,6 @@ namespace Hamster {
     public float kCameraZoom = 0.05f;
 
     private MainGame mainGame;
-    private float lastFrameTime;
     private Vector3 editorCam = new Vector3(0, 0, 0);
     private static Vector3 kUpVector = new Vector3(0, 1, 1);
     PlayerController player;
@@ -28,7 +27,6 @@ namespace Hamster {
       mainGame = FindObjectOfType<MainGame>();
       // Needs to be normalized because it was set via the inspector.
       kViewAngleVector.Normalize();
-      lastFrameTime = Time.realtimeSinceStartup;
     }
 
     // Pans the camera in a direction during edit mode.
@@ -51,7 +49,6 @@ namespace Hamster {
         }
       } else {
         // Editor mode:  Camera should be user-controlled.
-
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
           PanCamera(Vector3.forward);
         }
@@ -72,7 +69,6 @@ namespace Hamster {
 
         transform.LookAt(transform.position - kViewAngleVector, kUpVector);
       }
-      lastFrameTime = Time.realtimeSinceStartup;
     }
   }
 }

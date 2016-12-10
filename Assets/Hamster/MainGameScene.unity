@@ -390,6 +390,9 @@ MonoBehaviour:
   - name: Jump Tile
     prefab: {fileID: 1000012415800088, guid: 5b52de807ceec4cabbcebcd8d3d01e2d, type: 2}
     limitOnePerMap: 0
+  - name: Player
+    prefab: {fileID: 1000013606253090, guid: 31e5e8564405e40ae9d5918707f60736, type: 2}
+    limitOnePerMap: 0
   prefabNames: []
 --- !u!4 &1990879351
 Transform:

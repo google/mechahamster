@@ -7,27 +7,16 @@ namespace Hamster {
   public class PlayerController : MonoBehaviour {
     InputControllers.BasePlayerController inputController;
 
-    Vector3 initialPosition;
-
     void Start() {
       inputController = new InputControllers.MultiInputController();
-      initialPosition = transform.position;
     }
 
     // Height of the kill-plane.
     // If the player's y-coordinate ever falls below this, it is treated as
     // a loss/failure.
     const float kFellOffLevelHeight = -10.0f;
-
     const float kMaxVelocity = 20f;
     const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
-
-    public void Reset() {
-      transform.position = initialPosition;
-      Rigidbody rigidBody = GetComponent<Rigidbody>();
-      rigidBody.velocity = Vector3.zero;
-      rigidBody.angularVelocity = Vector3.zero;
-    }
 
     // Since we're doing physics work, we use FixedUpdate instead of Update.
     void FixedUpdate() {
@@ -37,7 +26,7 @@ namespace Hamster {
       rigidBody.AddForce(new Vector3(input.x, 0, input.y));
 
       if (transform.position.y < kFellOffLevelHeight) {
-        Reset();
+        CommonData.mainGame.DestroyPlayer();
       }
     }
   }

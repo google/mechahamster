@@ -39,9 +39,6 @@ namespace Hamster.States {
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
       Time.timeScale = 0.0f;
-      // If there is a player in the world, make sure it gets reset.
-      var player = GameObject.FindObjectOfType<PlayerController>();
-      if (player != null) player.Reset();
     }
 
     // Called once per frame when the state is active.

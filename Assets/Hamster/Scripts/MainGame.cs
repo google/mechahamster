@@ -10,13 +10,14 @@ namespace Hamster {
     private States.StateManager stateManager = new States.StateManager();
     private float currentFrameTime, lastFrameTime;
 
-    public float TimeSinceLastUpdate {
-      get { return currentFrameTime - lastFrameTime; }
-    }
+    private const string kPlayerLookupID = "Player";
+
+    public GameObject player;
 
     void Start() {
       CommonData.prefabs = FindObjectOfType<PrefabList>();
       CommonData.mainCamera = FindObjectOfType<Camera>();
+      CommonData.mainGame = this;
 
       Screen.orientation = ScreenOrientation.Landscape;
 
@@ -34,8 +35,33 @@ namespace Hamster {
       stateManager.Update();
     }
 
+    // Utility function to check the time since the last update.
+    // Needed, since we can't use Time.deltaTime, as we are adjusting the
+    // simulation timestep.  (Setting it to 0 to pause the world.)
+    public float TimeSinceLastUpdate {
+      get { return currentFrameTime - lastFrameTime; }
+    }
+
+    // Utility function to check if the game is currently running.  (i.e.
+    // not in edit mode.)
     public bool isGameRunning() {
       return (stateManager.CurrentState() is States.Gameplay);
+    }
+
+    // Utility function for spawning the player.
+    public GameObject SpawnPlayer() {
+      if (player == null) {
+        player = (GameObject)Instantiate(CommonData.prefabs.lookup[kPlayerLookupID].prefab);
+      }
+      return player;
+    }
+
+    // Utility function for despawning the player.
+    public void DestroyPlayer() {
+      if (player != null) {
+        Destroy(player);
+        player = null;
+      }
     }
 
     void OnGUI() {
