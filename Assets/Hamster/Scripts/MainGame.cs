@@ -11,22 +11,35 @@ namespace Hamster {
     private float currentFrameTime, lastFrameTime;
 
     private const string kPlayerLookupID = "Player";
+    DBTable<UserData> userTable;
 
     public GameObject player;
+
+    public DBStruct<UserData> currentUser;
 
     void Start() {
       CommonData.prefabs = FindObjectOfType<PrefabList>();
       CommonData.mainCamera = FindObjectOfType<Camera>();
       CommonData.mainGame = this;
-
-      Screen.orientation = ScreenOrientation.Landscape;
-
       Firebase.AppOptions ops = new Firebase.AppOptions();
       CommonData.app = Firebase.FirebaseApp.Create(ops);
       CommonData.app.SetEditorDatabaseUrl("https://hamster-demo.firebaseio.com/");
 
+      Screen.orientation = ScreenOrientation.Landscape;
+
+      userTable = new DBTable<UserData>(CommonData.kDBUserTablePath, CommonData.app);
+      UserData temp = new UserData();
+      //  Temporary login credentials, to be replaced with Auth.
+      temp.name = "Ico the Corgi";
+      temp.id = "XYZZY";
+      string key = "<<TEMP KEY>>";
+      userTable.Add(key, temp);
+      userTable.PushData();
+
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
       stateManager.PushState(new States.Editor());
+
+      currentUser = new DBStruct<UserData>("user", CommonData.app);
     }
 
     void Update() {

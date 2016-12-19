@@ -5,18 +5,36 @@ using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
-  class WaitingForDBLoad : BaseState {
+  class WaitingForDBLoad<T> : BaseState where T : new() {
 
-    DBTable<LevelMap> mapTable;
+    bool isComplete = false;
+    bool wasSuccessful = false;
+    T result = default(T);
+    string path;
 
-    public WaitingForDBLoad(DBTable<LevelMap> mapTable) {
-      this.mapTable = mapTable;
+    Firebase.Database.FirebaseDatabase database;
+
+    public WaitingForDBLoad(string path) {
+      this.path = path;
     }
 
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
       Time.timeScale = 0.0f;
+
+      database = Firebase.Database.FirebaseDatabase.GetInstance(CommonData.app);
+
+      database.GetReference(path).GetValueAsync().ContinueWith(task => {
+        isComplete = true;
+        if (task.IsFaulted) {
+          Debug.LogError("Database could not fetch value at [" + path + "] :\n"
+            + task.Exception);
+        } else if (task.IsCompleted) {
+          result = JsonUtility.FromJson<T>(task.Result.GetRawJsonValue());
+          wasSuccessful = true;
+        }
+      });
     }
 
     // Resume the state.  Called when the state becomes active
@@ -29,15 +47,13 @@ namespace Hamster.States {
 
     // Called once per frame when the state is active.
     public override void Update() {
-      if (mapTable.areChangesPending) {
-        mapTable.ApplyRemoteChanges();
-        if (mapTable.data.ContainsKey("test_map")) {
-          LevelMap worldMap = mapTable.data["test_map"].data;
-          CommonData.gameWorld.DisposeWorld();
-          CommonData.gameWorld.SpawnWorld(worldMap);
-          manager.PopState();
-        }
+      if (isComplete) {
+        manager.PopState();
       }
+    }
+
+    public override StateExitValue Cleanup() {
+      return new StateExitValue(typeof(WaitingForDBLoad<T>), new Results(result, wasSuccessful));
     }
 
     // Called once per frame for GUI creation, if the state is active.
@@ -48,5 +64,19 @@ namespace Hamster.States {
       GUI.Label(new Rect(Screen.width / 2 - 400,
         Screen.height / 2 - 50, 800, 100), "Loading...", centeredStyle);
     }
+
+    // Class for encapsulating the results of the database load, as
+    // well as information about whether the load was successful
+    // or not.
+    public class Results {
+      public T results;
+      public bool wasSuccessful;
+
+      public Results(T results, bool wasSuccessful) {
+        this.results = results;
+        this.wasSuccessful = wasSuccessful;
+      }
+    }
+
   }
 }

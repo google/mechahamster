@@ -54,7 +54,7 @@ public class DBStruct<T> where T : new() {
 
   void OnDataChanged(object sender, Firebase.Database.ValueChangedEventArgs args) {
     if (args.DatabaseError != null) {
-      Debug.LogError("Something went wrong - database error on struct " + dbPathName + "!\n"
+      Debug.LogError("Something went wrong - database error on struct [" + dbPathName + "]!\n"
           + args.DatabaseError.ToString());
       return;
     }

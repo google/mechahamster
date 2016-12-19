@@ -6,8 +6,7 @@ using Firebase.Unity.Editor;
 
 namespace Hamster.States {
   class Editor : BaseState {
-
-    DBTable<LevelMap> mapTable;
+    DBStruct<LevelMap> currentLevel;
 
     Vector2 scrollViewPosition;
     int mapToolSelection = 0;
@@ -17,12 +16,14 @@ namespace Hamster.States {
     const string kButtonNameClear = "Clear";
     const string kButtonNamePlay = "Play";
 
-    const string kDBMapTablePath = "MapList";
+    // This is a placeholder while I swap in the selector.
+    const string kMapName = "test_map";
 
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      mapTable = new DBTable<LevelMap>(kDBMapTablePath, CommonData.app);
+      currentLevel = new DBStruct<LevelMap>(
+          CommonData.kDBMapTablePath + kMapName, CommonData.app);
       Time.timeScale = 0.0f;
     }
 
@@ -39,6 +40,17 @@ namespace Hamster.States {
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
       Time.timeScale = 0.0f;
+      if (results != null && results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
+        var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
+        if (resultData.wasSuccessful) {
+          currentLevel.Initialize(resultData.results);
+          CommonData.gameWorld.DisposeWorld();
+          CommonData.gameWorld.SpawnWorld(currentLevel.data);
+          Debug.Log("Map load complete!");
+        } else {
+          Debug.LogWarning("Map load complete, but not successful...");
+        }
+      }
     }
 
     // Called once per frame when the state is active.
@@ -74,14 +86,12 @@ namespace Hamster.States {
       GUILayout.EndScrollView();
 
       if (GUILayout.Button(kButtonNameSave)) {
-        if (mapTable.data.ContainsKey("test_map")) mapTable.data.Remove("test_map");
-        mapTable.Add("test_map", CommonData.gameWorld.worldMap);
-        mapTable.PushData();
+        currentLevel.Initialize(CommonData.gameWorld.worldMap);
+        currentLevel.PushData();
       }
       if (GUILayout.Button(kButtonNameLoad)) {
         CommonData.gameWorld.DisposeWorld();
-        mapTable = new DBTable<LevelMap>(kDBMapTablePath, CommonData.app);
-        manager.PushState(new WaitingForDBLoad(mapTable));
+        manager.PushState(new WaitingForDBLoad<LevelMap>(CommonData.kDBMapTablePath + kMapName));
       }
       if (GUILayout.Button(kButtonNameClear)) {
         CommonData.gameWorld.DisposeWorld();
