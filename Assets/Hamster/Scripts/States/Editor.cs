@@ -86,8 +86,7 @@ namespace Hamster.States {
       GUILayout.EndScrollView();
 
       if (GUILayout.Button(kButtonNameSave)) {
-        currentLevel.Initialize(CommonData.gameWorld.worldMap);
-        currentLevel.PushData();
+        SaveMap();
       }
       if (GUILayout.Button(kButtonNameLoad)) {
         CommonData.gameWorld.DisposeWorld();
@@ -100,6 +99,14 @@ namespace Hamster.States {
         manager.PushState(new Gameplay());
       }
       GUILayout.EndHorizontal();
+    }
+
+    // Save the current map to the database
+    void SaveMap() {
+      currentLevel.Initialize(CommonData.gameWorld.worldMap);
+      currentLevel.PushData();
+      CommonData.currentUser.data.addMap(CommonData.gameWorld.worldMap);
+      CommonData.currentUser.PushData();
     }
   }
 }

@@ -13,6 +13,7 @@ namespace Hamster {
     public static Camera mainCamera;
     public static Firebase.FirebaseApp app;
     public static MainGame mainGame;
+    public static DBStruct<UserData> currentUser;
 
     // Paths to various database tables:
     // Trailing slashes required, because in some cases

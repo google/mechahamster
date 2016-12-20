@@ -17,6 +17,12 @@ namespace Hamster {
     // Associates an existing map with a user profile.  (Usually used
     // when a new map is created.)
     public void addMap(LevelMap newMap) {
+      // Remove the map if we're saving over something that exists:
+      List<MapListEntry> toDelete = maps.FindAll(value => { return value.mapId == newMap.mapId; });
+      foreach(MapListEntry entry in toDelete) {
+        maps.Remove(entry);
+      }
+
       foreach (MapListEntry mapEntry in maps) {
         if (mapEntry.mapId == newMap.mapId)
           throw new System.Exception("map already exists");

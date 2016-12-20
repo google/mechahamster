@@ -295,8 +295,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kViewAngleVector: {x: 0, y: 3, z: -2}
   kViewDistance: 10
-  kEditorScrollSpeed: 3
-  kCameraZoom: 0.3
+  kEditorScrollSpeed: 8
+  kCameraZoom: 0.05
 --- !u!1 &1564395064
 GameObject:
   m_ObjectHideFlags: 0

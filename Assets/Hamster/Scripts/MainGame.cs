@@ -11,7 +11,6 @@ namespace Hamster {
     private float currentFrameTime, lastFrameTime;
 
     private const string kPlayerLookupID = "Player";
-    DBTable<UserData> userTable;
 
     public GameObject player;
 
@@ -27,14 +26,14 @@ namespace Hamster {
 
       Screen.orientation = ScreenOrientation.Landscape;
 
-      userTable = new DBTable<UserData>(CommonData.kDBUserTablePath, CommonData.app);
       UserData temp = new UserData();
       //  Temporary login credentials, to be replaced with Auth.
       temp.name = "Ico the Corgi";
       temp.id = "XYZZY";
-      string key = "<<TEMP KEY>>";
-      userTable.Add(key, temp);
-      userTable.PushData();
+      CommonData.currentUser = new DBStruct<UserData>(
+          CommonData.kDBUserTablePath + temp.id, CommonData.app);
+      CommonData.currentUser.Initialize(temp);
+      CommonData.currentUser.PushData();
 
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
       stateManager.PushState(new States.Editor());
