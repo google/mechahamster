@@ -26,18 +26,9 @@ namespace Hamster {
 
       Screen.orientation = ScreenOrientation.Landscape;
 
-      UserData temp = new UserData();
-      //  Temporary login credentials, to be replaced with Auth.
-      temp.name = "Ico the Corgi";
-      temp.id = "XYZZY";
-      CommonData.currentUser = new DBStruct<UserData>(
-          CommonData.kDBUserTablePath + temp.id, CommonData.app);
-      CommonData.currentUser.Initialize(temp);
-      CommonData.currentUser.PushData();
 
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
       stateManager.PushState(new States.Editor());
-
       currentUser = new DBStruct<UserData>("user", CommonData.app);
     }
 

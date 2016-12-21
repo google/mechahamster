@@ -22,18 +22,19 @@ namespace Hamster.States {
     // is added to the stack.
     public override void Initialize() {
       Time.timeScale = 0.0f;
-
       database = Firebase.Database.FirebaseDatabase.GetInstance(CommonData.app);
-
       database.GetReference(path).GetValueAsync().ContinueWith(task => {
-        isComplete = true;
         if (task.IsFaulted) {
-          Debug.LogError("Database could not fetch value at [" + path + "] :\n"
+          Debug.LogError("Database exception!  Path = [" + path + "]\n"
             + task.Exception);
         } else if (task.IsCompleted) {
-          result = JsonUtility.FromJson<T>(task.Result.GetRawJsonValue());
-          wasSuccessful = true;
+          string json = task.Result.GetRawJsonValue();
+          if (json != null) {
+            result = JsonUtility.FromJson<T>(json);
+            wasSuccessful = true;
+          }
         }
+        isComplete = true;
       });
     }
 
