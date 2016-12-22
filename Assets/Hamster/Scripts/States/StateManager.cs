@@ -43,6 +43,7 @@ namespace Hamster.States {
     // anything below.  Different from Pop + Push, in that the next
     // state down never gets resumed/suspended.
     public void SwapState(BaseState newState) {
+      newState.manager = this;
       CurrentState().Cleanup();
       stateStack.Pop();
       stateStack.Push(newState);

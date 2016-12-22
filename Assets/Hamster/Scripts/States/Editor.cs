@@ -19,22 +19,12 @@ namespace Hamster.States {
     // This is a placeholder while I swap in the selector.
     const string kMapName = "test_map";
 
-    // More placeholders, will be swapped out for real data once
-    // auth is hooked up.
-    const string kUserID = "XYZZY";
-    const string kUserName = "Ico the Corgi";
-
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
       currentLevel = new DBStruct<LevelMap>(
           CommonData.kDBMapTablePath + kMapName, CommonData.app);
       Time.timeScale = 0.0f;
-
-      // When the editor starts up, it needs to either download the user data
-      // or create a new profile.
-      manager.PushState(
-        new States.WaitingForDBLoad<UserData>(CommonData.kDBUserTablePath + kUserID));
     }
 
     // Resume the state.  Called when the state becomes active
@@ -53,20 +43,6 @@ namespace Hamster.States {
             Debug.Log("Map load complete!");
           } else {
             Debug.LogWarning("Map load complete, but not successful...");
-          }
-        } else if (results.sourceState == typeof(WaitingForDBLoad<UserData>)) {
-          var resultData = results.data as WaitingForDBLoad<UserData>.Results;
-          CommonData.currentUser = new DBStruct<UserData>(
-            CommonData.kDBUserTablePath + kUserID, CommonData.app);
-          if (resultData.wasSuccessful) {
-            CommonData.currentUser.Initialize(resultData.results);
-          } else {
-            UserData temp = new UserData();
-            //  Temporary login credentials, to be replaced with Auth.
-            temp.name = kUserName;
-            temp.id = kUserID;
-            CommonData.currentUser.Initialize(temp);
-            CommonData.currentUser.PushData();
           }
         }
       }

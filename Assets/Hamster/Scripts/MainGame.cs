@@ -14,6 +14,10 @@ namespace Hamster {
 
     public GameObject player;
 
+    // More placeholders, will be swapped out for real data once
+    // auth is hooked up.
+    const string kUserID = "XYZZY";
+
     public DBStruct<UserData> currentUser;
 
     void Start() {
@@ -26,10 +30,13 @@ namespace Hamster {
 
       Screen.orientation = ScreenOrientation.Landscape;
 
-
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
-      stateManager.PushState(new States.Editor());
       currentUser = new DBStruct<UserData>("user", CommonData.app);
+      stateManager.PushState(new States.MainMenu());
+
+      // When the game starts up, it needs to either download the user data
+      // or create a new profile.
+      stateManager.PushState(new States.FetchUserData(kUserID));
     }
 
     void Update() {

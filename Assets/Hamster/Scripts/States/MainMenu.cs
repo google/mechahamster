@@ -1,0 +1,61 @@
+﻿using UnityEngine;
+
+namespace Hamster.States {
+  class MainMenu : BaseState {
+    // Width/Height of the menu, expressed as a portion of the screen width:
+    const float kMenuWidth = 0.25f;
+    const float kMenuHeight = 0.75f;
+
+    private GUIStyle titleStyle;
+    private GUIStyle subTitleStyle;
+
+    public MainMenu() {
+      // Pre-populate some styles that we'll for the title.
+      titleStyle = new GUIStyle();
+      titleStyle.alignment = TextAnchor.UpperCenter;
+      titleStyle.fontSize = 50;
+
+      subTitleStyle = new GUIStyle();
+      subTitleStyle.alignment = TextAnchor.UpperCenter;
+      subTitleStyle.fontSize = 20;
+    }
+
+    // Initialization method.  Called after the state
+    // is added to the stack.
+    public override void Initialize() {
+      Time.timeScale = 0.0f;
+    }
+
+    // Called once per frame for GUI creation, if the state is active.
+    public override void OnGUI() {
+      float menuWidth = kMenuWidth * Screen.width;
+      float menuHeight = kMenuHeight * Screen.height;
+      GUI.skin = CommonData.prefabs.guiSkin;
+
+      UnityEngine.GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
+
+      GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height - menuHeight));
+      centeredStyle.alignment = TextAnchor.UpperCenter;
+
+      GUILayout.Label("MechaHamster!", titleStyle);
+      GUILayout.Label("The thrilling adventures of Col. Hammy D. Hamster!", subTitleStyle);
+
+      GUILayout.EndArea();
+
+      GUILayout.BeginArea(
+          new Rect((Screen.width - menuWidth) / 2, (Screen.height - menuHeight) / 2,
+          menuWidth, menuHeight));
+
+      GUILayout.BeginVertical();
+      if (GUILayout.Button("Play")) {
+
+      }
+      if (GUILayout.Button("Editor")) {
+        manager.SwapState(new States.Editor());
+      }
+      GUILayout.Button("Invite?");
+      GUILayout.EndVertical();
+      GUILayout.EndArea();
+    }
+  }
+}
