@@ -1,0 +1,19 @@
+{
+    "levels": [
+        {
+            "name": "First Level",
+            "description": "A good place to start",
+            "filename": "level1"
+        },
+        {
+            "name": "Second Level",
+            "description": "A challenge!",
+            "filename": "level2"
+        },
+        {
+            "name": "Third Level",
+            "description": "Really just the second level again.",
+            "filename": "level2"
+        }
+    ]
+}

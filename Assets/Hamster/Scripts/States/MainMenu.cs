@@ -10,7 +10,7 @@ namespace Hamster.States {
     private GUIStyle subTitleStyle;
 
     public MainMenu() {
-      // Pre-populate some styles that we'll for the title.
+      // Initialize some styles that we'll for the title.
       titleStyle = new GUIStyle();
       titleStyle.alignment = TextAnchor.UpperCenter;
       titleStyle.fontSize = 50;
@@ -48,7 +48,7 @@ namespace Hamster.States {
 
       GUILayout.BeginVertical();
       if (GUILayout.Button("Play")) {
-
+        manager.SwapState(new LevelSelect());
       }
       if (GUILayout.Button("Editor")) {
         manager.SwapState(new States.Editor());

@@ -15,6 +15,7 @@ namespace Hamster.States {
     const string kButtonNameLoad = "Load";
     const string kButtonNameClear = "Clear";
     const string kButtonNamePlay = "Play";
+    const string kButtonNameBack = "Back";
 
     // This is a placeholder while I swap in the selector.
     const string kMapName = "test_map";
@@ -25,6 +26,12 @@ namespace Hamster.States {
       currentLevel = new DBStruct<LevelMap>(
           CommonData.kDBMapTablePath + kMapName, CommonData.app);
       Time.timeScale = 0.0f;
+    }
+
+    // Clean up when we exit the state.
+    public override StateExitValue Cleanup() {
+      CommonData.gameWorld.DisposeWorld();
+      return null;
     }
 
     // Resume the state.  Called when the state becomes active
@@ -92,6 +99,15 @@ namespace Hamster.States {
       }
       if (GUILayout.Button(kButtonNamePlay)) {
         manager.PushState(new Gameplay());
+      }
+      if (GUILayout.Button(kButtonNameBack)) {
+        manager.SwapState(new MainMenu());
+      }
+      // TODO(ccornell): Remove this!  Export is just here to
+      // make it easy for me to generate/edit prepackaged levels
+      // during devleopment!
+      if (GUILayout.Button("export")) {
+        manager.PushState(new ExportMap(CommonData.gameWorld.worldMap));
       }
       GUILayout.EndHorizontal();
     }
