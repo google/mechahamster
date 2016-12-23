@@ -21,22 +21,7 @@ namespace Hamster {
     public DBStruct<UserData> currentUser;
 
     void Start() {
-      CommonData.prefabs = FindObjectOfType<PrefabList>();
-      CommonData.mainCamera = FindObjectOfType<Camera>();
-      CommonData.mainGame = this;
-      Firebase.AppOptions ops = new Firebase.AppOptions();
-      CommonData.app = Firebase.FirebaseApp.Create(ops);
-      CommonData.app.SetEditorDatabaseUrl("https://hamster-demo.firebaseio.com/");
-
-      Screen.orientation = ScreenOrientation.Landscape;
-
-      CommonData.gameWorld = FindObjectOfType<GameWorld>();
-      currentUser = new DBStruct<UserData>("user", CommonData.app);
-      stateManager.PushState(new States.MainMenu());
-
-      // When the game starts up, it needs to either download the user data
-      // or create a new profile.
-      stateManager.PushState(new States.FetchUserData(kUserID));
+      InitializeFirebaseAndStart();
     }
 
     void Update() {
@@ -74,8 +59,72 @@ namespace Hamster {
       }
     }
 
+    // Pass through to allow states to have their own GUI.
     void OnGUI() {
       stateManager.OnGUI();
+    }
+
+    // Sets the default values for remote config.  These are the values that will
+    // be used if we haven't fetched yet.
+    System.Threading.Tasks.Task InitializeRemoteConfig() {
+      Dictionary<string, object> defaults = new Dictionary<string, object>();
+      defaults.Add(StringConstants.kRC_PhysicsGravity, -20.0f);
+      Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
+      return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync();
+    }
+
+    // When the app starts, check to make sure that we have
+    // the required dependencies to use Firebase, and if not,
+    // add them if possible.
+    void InitializeFirebaseAndStart() {
+      Firebase.DependencyStatus dependencyStatus = Firebase.FirebaseApp.CheckDependencies();
+
+      if (dependencyStatus != Firebase.DependencyStatus.Available) {
+        Firebase.FirebaseApp.FixDependenciesAsync().ContinueWith(task => {
+          dependencyStatus = Firebase.FirebaseApp.CheckDependencies();
+          if (dependencyStatus == Firebase.DependencyStatus.Available) {
+            InitializeFirebaseComponents();
+          } else {
+            Debug.LogError(
+                "Could not resolve all Firebase dependencies: " + dependencyStatus);
+            Application.Quit();
+          }
+        });
+      } else {
+        InitializeFirebaseComponents();
+      }
+    }
+
+    void InitializeFirebaseComponents() {
+      System.Threading.Tasks.Task.WhenAll(
+          InitializeRemoteConfig()
+        ).ContinueWith(task => { StartGame(); });
+
+    }
+
+    // Actually start the game, once we've verified that everything
+    // is working and we have the firebase prerequisites ready to go.
+    void StartGame() {
+      // Remote Config data has been fetched, so this applies it for this play session:
+      Firebase.RemoteConfig.FirebaseRemoteConfig.ActivateFetched();
+
+      CommonData.prefabs = FindObjectOfType<PrefabList>();
+      CommonData.mainCamera = FindObjectOfType<Camera>();
+      CommonData.mainGame = this;
+      Firebase.AppOptions ops = new Firebase.AppOptions();
+      CommonData.app = Firebase.FirebaseApp.Create(ops);
+      CommonData.app.SetEditorDatabaseUrl("https://unity-test-app-fc4db.firebaseio.com/");
+
+      Screen.orientation = ScreenOrientation.Landscape;
+
+
+      CommonData.gameWorld = FindObjectOfType<GameWorld>();
+      currentUser = new DBStruct<UserData>("user", CommonData.app);
+      stateManager.PushState(new States.MainMenu());
+
+      // When the game starts up, it needs to either download the user data
+      // or create a new profile.
+      stateManager.PushState(new States.FetchUserData(kUserID));
     }
   }
 }

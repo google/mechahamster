@@ -11,12 +11,6 @@ namespace Hamster.States {
     Vector2 scrollViewPosition;
     int mapToolSelection = 0;
 
-    const string kButtonNameSave = "Save";
-    const string kButtonNameLoad = "Load";
-    const string kButtonNameClear = "Clear";
-    const string kButtonNamePlay = "Play";
-    const string kButtonNameBack = "Back";
-
     // This is a placeholder while I swap in the selector.
     const string kMapName = "test_map";
 
@@ -87,20 +81,20 @@ namespace Hamster.States {
 
       GUILayout.EndScrollView();
 
-      if (GUILayout.Button(kButtonNameSave)) {
+      if (GUILayout.Button(StringConstants.kButtonNameSave)) {
         SaveMap();
       }
-      if (GUILayout.Button(kButtonNameLoad)) {
+      if (GUILayout.Button(StringConstants.kButtonNameLoad)) {
         CommonData.gameWorld.DisposeWorld();
         manager.PushState(new WaitingForDBLoad<LevelMap>(CommonData.kDBMapTablePath + kMapName));
       }
-      if (GUILayout.Button(kButtonNameClear)) {
+      if (GUILayout.Button(StringConstants.kButtonNameClear)) {
         CommonData.gameWorld.DisposeWorld();
       }
-      if (GUILayout.Button(kButtonNamePlay)) {
+      if (GUILayout.Button(StringConstants.kButtonNamePlay)) {
         manager.PushState(new Gameplay());
       }
-      if (GUILayout.Button(kButtonNameBack)) {
+      if (GUILayout.Button(StringConstants.kButtonNameBack)) {
         manager.SwapState(new MainMenu());
       }
       // TODO(ccornell): Remove this!  Export is just here to

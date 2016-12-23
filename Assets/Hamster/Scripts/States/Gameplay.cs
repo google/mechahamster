@@ -11,6 +11,10 @@ namespace Hamster.States {
     // is added to the stack.
     public override void Initialize() {
       Time.timeScale = 1.0f;
+      double gravity_y =
+        Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
+            StringConstants.kRC_PhysicsGravity).DoubleValue;
+      Physics.gravity = new Vector3(0, (float)gravity_y, 0);
     }
 
     // Resume the state.  Called when the state becomes active

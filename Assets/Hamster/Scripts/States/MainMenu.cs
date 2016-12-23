@@ -37,8 +37,8 @@ namespace Hamster.States {
       GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height - menuHeight));
       centeredStyle.alignment = TextAnchor.UpperCenter;
 
-      GUILayout.Label("MechaHamster!", titleStyle);
-      GUILayout.Label("The thrilling adventures of Col. Hammy D. Hamster!", subTitleStyle);
+      GUILayout.Label(StringConstants.kTitleText, titleStyle);
+      GUILayout.Label(StringConstants.kSubTitleText, subTitleStyle);
 
       GUILayout.EndArea();
 
@@ -47,13 +47,13 @@ namespace Hamster.States {
           menuWidth, menuHeight));
 
       GUILayout.BeginVertical();
-      if (GUILayout.Button("Play")) {
+      if (GUILayout.Button(StringConstants.kButtonNamePlay)) {
         manager.SwapState(new LevelSelect());
       }
-      if (GUILayout.Button("Editor")) {
+      if (GUILayout.Button(StringConstants.kButtonNameEditor)) {
         manager.SwapState(new States.Editor());
       }
-      GUILayout.Button("Invite?");
+      GUILayout.Button(StringConstants.kButtonNameInvite);
       GUILayout.EndVertical();
       GUILayout.EndArea();
     }
