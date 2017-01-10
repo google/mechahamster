@@ -45,6 +45,11 @@ public class DBStruct<T> where T : new() {
     areChangesPending = false;
   }
 
+  // Returns a guaranteed unique string, usable as a dictionary key value.
+  public string GetUniqueKey() {
+    return database.RootReference.Child(dbPathName).Push().Key;
+  }
+
   public void Initialize(T value) {
     data = value;
     newData = value;

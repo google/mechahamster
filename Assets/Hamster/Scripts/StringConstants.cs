@@ -21,6 +21,11 @@ namespace Hamster {
     public const string kTitleText = "MechaHamster!";
     public const string kSubTitleText = "The thrilling adventures of Col. Hammy D. Hamster!";
 
+    // Save/Load screen text:
+    public const string kDefaultMapName = "Unnamed Map";
+    public const string kButtonSaveInNew = "Save in a new slot";
+    public const string kLabelName = "Name:";
+    public const string kLabelOverwrite = "Overwrite an existing map:";
 
     // Remote Config constants:
     public const string kRC_PhysicsGravity = "physics_gravity";

@@ -152,6 +152,11 @@ public class DBTable<T> {
     areChangesPending = false;
   }
 
+  // Returns a guaranteed unique string, usable as a key value.
+  public string GetUniqueKey() {
+    return database.RootReference.Child(tableName).Push().Key;
+  }
+
   // Clears out the table on the server.
   public void Clear() {
     lock (clearMutexLock) {

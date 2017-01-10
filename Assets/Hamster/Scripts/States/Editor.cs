@@ -6,19 +6,25 @@ using Firebase.Unity.Editor;
 
 namespace Hamster.States {
   class Editor : BaseState {
-    DBStruct<LevelMap> currentLevel;
+    LevelMap currentLevel;
 
     Vector2 scrollViewPosition;
     int mapToolSelection = 0;
 
     // This is a placeholder while I swap in the selector.
-    const string kMapName = "test_map";
+    string mapId = "unnamed_map";
 
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      currentLevel = new DBStruct<LevelMap>(
-          CommonData.kDBMapTablePath + kMapName, CommonData.app);
+      // Set up our map to edit, and populate the data
+      // structure with the necessary IDs.
+      mapId = CommonData.currentUser.GetUniqueKey();
+      currentLevel = new LevelMap();
+
+      CommonData.gameWorld.worldMap.mapId = mapId;
+      CommonData.gameWorld.worldMap.ownerId = CommonData.currentUser.data.id;
+
       Time.timeScale = 0.0f;
     }
 
@@ -38,9 +44,9 @@ namespace Hamster.States {
         if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
           var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
           if (resultData.wasSuccessful) {
-            currentLevel.Initialize(resultData.results);
+            currentLevel = resultData.results;
             CommonData.gameWorld.DisposeWorld();
-            CommonData.gameWorld.SpawnWorld(currentLevel.data);
+            CommonData.gameWorld.SpawnWorld(currentLevel);
             Debug.Log("Map load complete!");
           } else {
             Debug.LogWarning("Map load complete, but not successful...");
@@ -86,7 +92,7 @@ namespace Hamster.States {
       }
       if (GUILayout.Button(StringConstants.kButtonNameLoad)) {
         CommonData.gameWorld.DisposeWorld();
-        manager.PushState(new WaitingForDBLoad<LevelMap>(CommonData.kDBMapTablePath + kMapName));
+        manager.PushState(new WaitingForDBLoad<LevelMap>(CommonData.kDBMapTablePath + mapId));
       }
       if (GUILayout.Button(StringConstants.kButtonNameClear)) {
         CommonData.gameWorld.DisposeWorld();
@@ -108,10 +114,7 @@ namespace Hamster.States {
 
     // Save the current map to the database
     void SaveMap() {
-      currentLevel.Initialize(CommonData.gameWorld.worldMap);
-      currentLevel.PushData();
-      CommonData.currentUser.data.addMap(CommonData.gameWorld.worldMap);
-      CommonData.currentUser.PushData();
+      manager.PushState(new SaveMap(currentLevel));
     }
   }
 }

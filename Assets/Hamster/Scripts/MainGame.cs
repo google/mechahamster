@@ -113,7 +113,7 @@ namespace Hamster {
       CommonData.mainGame = this;
       Firebase.AppOptions ops = new Firebase.AppOptions();
       CommonData.app = Firebase.FirebaseApp.Create(ops);
-      CommonData.app.SetEditorDatabaseUrl("https://unity-test-app-fc4db.firebaseio.com/");
+      CommonData.app.SetEditorDatabaseUrl("https://hamster-demo.firebaseio.com/");
 
       Screen.orientation = ScreenOrientation.Landscape;
 
