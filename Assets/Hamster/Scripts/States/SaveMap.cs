@@ -5,45 +5,57 @@ using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
+
+  // State for handling the "save map" menu.  Allows the user to specify
+  // a name for the map, and gives them the option to either save the current
+  // map as a new entry in the database, or update a previous version.  (If one
+  // exists.)
   class SaveMap : BaseState {
 
-    private LevelMap currentLevel;
-
-    public SaveMap(LevelMap currentLevel) {
-      this.currentLevel = currentLevel;
-    }
+    Vector2 scrollViewPosition;
+    string mapName;
+    bool mapAlreadySaved = false;
 
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
       Time.timeScale = 0.0f;
-    }
+      mapName = CommonData.gameWorld.worldMap.name;
 
-    string mapName = StringConstants.kDefaultMapName;
+      // Check if this map has already been saved, or if it's a new map:
+      foreach (MapListEntry entry in CommonData.currentUser.data.maps) {
+        if (entry.mapId == CommonData.gameWorld.worldMap.mapId) {
+          mapAlreadySaved = true;
+          break;
+        }
+      }
+    }
 
     // Called once per frame for GUI creation, if the state is active.
     public override void OnGUI() {
       GUI.skin = CommonData.prefabs.guiSkin;
       GUILayout.BeginVertical();
 
+      GUILayout.Label(StringConstants.kLabelSaveMap);
+
       GUILayout.BeginHorizontal();
       GUILayout.Label(StringConstants.kLabelName);
-      mapName = GUILayout.TextField(mapName, GUILayout.Width(Screen.width/2));
+      mapName = GUILayout.TextField(mapName, GUILayout.Width(Screen.width / 2));
       GUILayout.EndHorizontal();
 
+      if (mapAlreadySaved) {
+        if (GUILayout.Button(StringConstants.kButtonSaveUpdate)) {
+          SaveMapToDB(CommonData.gameWorld.worldMap.mapId);
+        }
+      }
       if (GUILayout.Button(StringConstants.kButtonSaveInNew)) {
         SaveMapToDB(null);
       }
-      GUILayout.Label(StringConstants.kLabelOverwrite);
-      string selectedId = null;
-      foreach (MapListEntry mapEntry in CommonData.currentUser.data.maps) {
-        if (GUILayout.Button(mapEntry.name)) {
-          selectedId = mapEntry.mapId;
-        }
+
+      if (GUILayout.Button(StringConstants.kButtonNameCancel)) {
+        manager.PopState();
       }
-      if (selectedId != null) {
-        SaveMapToDB(selectedId);
-      }
+
       GUILayout.EndVertical();
     }
 
@@ -56,9 +68,12 @@ namespace Hamster.States {
       DBStruct<LevelMap> dbLevel =
           new DBStruct<LevelMap>(CommonData.kDBMapTablePath + mapId, CommonData.app);
 
+      LevelMap currentLevel = CommonData.gameWorld.worldMap;
+
       currentLevel.name = mapName;
       currentLevel.mapId = mapId;
       currentLevel.ownerId = CommonData.currentUser.data.id;
+
       dbLevel.Initialize(currentLevel);
       dbLevel.PushData();
 

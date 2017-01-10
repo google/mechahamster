@@ -16,14 +16,18 @@ namespace Hamster {
     public const string kButtonNameBack = "Back";
     public const string kButtonNameEditor = "Editor";
     public const string kButtonNameInvite = "Invite";
+    public const string kButtonNameCancel = "Cancel";
 
     // Title screen text:
     public const string kTitleText = "MechaHamster!";
     public const string kSubTitleText = "The thrilling adventures of Col. Hammy D. Hamster!";
 
     // Save/Load screen text:
+    public const string kLabelSaveMap = "Save Map:";
+    public const string kLabelLoadMap = "Load Map:";
     public const string kDefaultMapName = "Unnamed Map";
-    public const string kButtonSaveInNew = "Save in a new slot";
+    public const string kButtonSaveInNew = "Save as New Map";
+    public const string kButtonSaveUpdate = "Save Map";
     public const string kLabelName = "Name:";
     public const string kLabelOverwrite = "Overwrite an existing map:";
 

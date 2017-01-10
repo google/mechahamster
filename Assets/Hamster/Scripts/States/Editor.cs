@@ -88,11 +88,11 @@ namespace Hamster.States {
       GUILayout.EndScrollView();
 
       if (GUILayout.Button(StringConstants.kButtonNameSave)) {
-        SaveMap();
+        manager.PushState(new SaveMap());
       }
       if (GUILayout.Button(StringConstants.kButtonNameLoad)) {
         CommonData.gameWorld.DisposeWorld();
-        manager.PushState(new WaitingForDBLoad<LevelMap>(CommonData.kDBMapTablePath + mapId));
+        manager.PushState(new LoadMap());
       }
       if (GUILayout.Button(StringConstants.kButtonNameClear)) {
         CommonData.gameWorld.DisposeWorld();
@@ -110,11 +110,6 @@ namespace Hamster.States {
         manager.PushState(new ExportMap(CommonData.gameWorld.worldMap));
       }
       GUILayout.EndHorizontal();
-    }
-
-    // Save the current map to the database
-    void SaveMap() {
-      manager.PushState(new SaveMap(currentLevel));
     }
   }
 }
