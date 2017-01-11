@@ -82,7 +82,7 @@ namespace Hamster {
     // be used if we haven't fetched yet.
     System.Threading.Tasks.Task InitializeRemoteConfig() {
       Dictionary<string, object> defaults = new Dictionary<string, object>();
-      defaults.Add(StringConstants.kRC_PhysicsGravity, -20.0f);
+      defaults.Add(StringConstants.RemoteConfigPhysicsGravity, -20.0f);
       Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
       return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);
     }

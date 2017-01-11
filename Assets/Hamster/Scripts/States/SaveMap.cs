@@ -36,23 +36,23 @@ namespace Hamster.States {
       GUI.skin = CommonData.prefabs.guiSkin;
       GUILayout.BeginVertical();
 
-      GUILayout.Label(StringConstants.kLabelSaveMap);
+      GUILayout.Label(StringConstants.LabelSaveMap);
 
       GUILayout.BeginHorizontal();
-      GUILayout.Label(StringConstants.kLabelName);
+      GUILayout.Label(StringConstants.LabelName);
       mapName = GUILayout.TextField(mapName, GUILayout.Width(Screen.width / 2));
       GUILayout.EndHorizontal();
 
       if (mapAlreadySaved) {
-        if (GUILayout.Button(StringConstants.kButtonSaveUpdate)) {
+        if (GUILayout.Button(StringConstants.ButtonSaveUpdate)) {
           SaveMapToDB(CommonData.gameWorld.worldMap.mapId);
         }
       }
-      if (GUILayout.Button(StringConstants.kButtonSaveInNew)) {
+      if (GUILayout.Button(StringConstants.ButtonSaveInNew)) {
         SaveMapToDB(null);
       }
 
-      if (GUILayout.Button(StringConstants.kButtonNameCancel)) {
+      if (GUILayout.Button(StringConstants.ButtonCancel)) {
         manager.PopState();
       }
 

@@ -9,30 +9,30 @@ namespace Hamster {
   class StringConstants {
 
     // Names for Buttons:
-    public const string kButtonNameSave = "Save";
-    public const string kButtonNameLoad = "Load";
-    public const string kButtonNameClear = "Clear";
-    public const string kButtonNamePlay = "Play";
-    public const string kButtonNameBack = "Back";
-    public const string kButtonNameEditor = "Editor";
-    public const string kButtonNameInvite = "Invite";
-    public const string kButtonNameCancel = "Cancel";
+    public const string ButtonSave = "Save";
+    public const string ButtonLoad = "Load";
+    public const string ButtonClear = "Clear";
+    public const string ButtonPlay = "Play";
+    public const string ButtonBack = "Back";
+    public const string ButtonEditor = "Editor";
+    public const string ButtonInvite = "Invite";
+    public const string ButtonCancel = "Cancel";
 
     // Title screen text:
-    public const string kTitleText = "MechaHamster!";
-    public const string kSubTitleText = "The thrilling adventures of Col. Hammy D. Hamster!";
+    public const string TitleText = "MechaHamster!";
+    public const string SubTitleText = "The thrilling adventures of Col. Hammy D. Hamster!";
 
     // Save/Load screen text:
-    public const string kLabelSaveMap = "Save Map:";
-    public const string kLabelLoadMap = "Load Map:";
-    public const string kDefaultMapName = "Unnamed Map";
-    public const string kButtonSaveInNew = "Save as New Map";
-    public const string kButtonSaveUpdate = "Save Map";
-    public const string kLabelName = "Name:";
-    public const string kLabelOverwrite = "Overwrite an existing map:";
+    public const string LabelSaveMap = "Save Map:";
+    public const string LabelLoadMap = "Load Map:";
+    public const string DefaultMapName = "Unnamed Map";
+    public const string ButtonSaveInNew = "Save as New Map";
+    public const string ButtonSaveUpdate = "Save Map";
+    public const string LabelName = "Name:";
+    public const string LabelOverwrite = "Overwrite an existing map:";
 
     // Remote Config constants:
-    public const string kRC_PhysicsGravity = "physics_gravity";
+    public const string RemoteConfigPhysicsGravity = "physics_gravity";
 
     // Analytics tags:
 

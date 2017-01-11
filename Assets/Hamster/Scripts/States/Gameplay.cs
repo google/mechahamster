@@ -13,7 +13,7 @@ namespace Hamster.States {
       Time.timeScale = 1.0f;
       double gravity_y =
         Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
-            StringConstants.kRC_PhysicsGravity).DoubleValue;
+            StringConstants.RemoteConfigPhysicsGravity).DoubleValue;
       Physics.gravity = new Vector3(0, (float)gravity_y, 0);
     }
 

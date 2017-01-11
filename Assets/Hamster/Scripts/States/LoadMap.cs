@@ -18,16 +18,16 @@ namespace Hamster.States {
       Time.timeScale = 0.0f;
     }
 
-    string mapName = StringConstants.kDefaultMapName;
+    string mapName = StringConstants.DefaultMapName;
 
     // Called once per frame for GUI creation, if the state is active.
     public override void OnGUI() {
       GUI.skin = CommonData.prefabs.guiSkin;
       GUILayout.BeginVertical();
 
-      GUILayout.Label(StringConstants.kLabelLoadMap);
+      GUILayout.Label(StringConstants.LabelLoadMap);
 
-      GUILayout.Label(StringConstants.kLabelOverwrite);
+      GUILayout.Label(StringConstants.LabelOverwrite);
       string selectedId = null;
       scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition);
       foreach (MapListEntry mapEntry in CommonData.currentUser.data.maps) {
@@ -36,7 +36,7 @@ namespace Hamster.States {
         }
       }
       GUILayout.EndScrollView();
-      if (GUILayout.Button(StringConstants.kButtonNameCancel)) {
+      if (GUILayout.Button(StringConstants.ButtonCancel)) {
         manager.PopState();
       }
       GUILayout.EndVertical();

@@ -87,20 +87,20 @@ namespace Hamster.States {
 
       GUILayout.EndScrollView();
 
-      if (GUILayout.Button(StringConstants.kButtonNameSave)) {
+      if (GUILayout.Button(StringConstants.ButtonSave)) {
         manager.PushState(new SaveMap());
       }
-      if (GUILayout.Button(StringConstants.kButtonNameLoad)) {
+      if (GUILayout.Button(StringConstants.ButtonLoad)) {
         CommonData.gameWorld.DisposeWorld();
         manager.PushState(new LoadMap());
       }
-      if (GUILayout.Button(StringConstants.kButtonNameClear)) {
+      if (GUILayout.Button(StringConstants.ButtonClear)) {
         CommonData.gameWorld.DisposeWorld();
       }
-      if (GUILayout.Button(StringConstants.kButtonNamePlay)) {
+      if (GUILayout.Button(StringConstants.ButtonPlay)) {
         manager.PushState(new Gameplay());
       }
-      if (GUILayout.Button(StringConstants.kButtonNameBack)) {
+      if (GUILayout.Button(StringConstants.ButtonBack)) {
         manager.SwapState(new MainMenu());
       }
       // TODO(ccornell): Remove this!  Export is just here to

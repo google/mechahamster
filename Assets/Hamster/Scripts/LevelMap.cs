@@ -8,7 +8,7 @@ namespace Hamster {
   // all objects (and their positions) in the level.
   [System.Serializable]
   public class LevelMap {
-    public string name = StringConstants.kDefaultMapName;
+    public string name = StringConstants.DefaultMapName;
     public string mapId = "<<mapId>>";
     public string ownerId = "<<ownerId>>";
     public StringMapElementDict elements = new StringMapElementDict();
