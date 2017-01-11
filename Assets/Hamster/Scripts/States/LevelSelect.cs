@@ -86,9 +86,12 @@ namespace Hamster.States {
       GUILayout.Label(levelDir.levels[mapSelection].description, descriptionStyle);
       GUILayout.EndVertical();
 
-
       GUILayout.BeginVertical(GUILayout.MaxWidth(Screen.width * kUIColumnWidth));
       if (GUILayout.Button(kButtonNamePlay)) {
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(
+            StringConstants.AnalyticsEventMapStart,
+            StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
+
         manager.PushState(new Gameplay());
       }
       if (GUILayout.Button(kButtonNameBack)) {

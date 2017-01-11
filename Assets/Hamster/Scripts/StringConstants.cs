@@ -33,5 +33,19 @@ namespace Hamster {
 
     // Remote Config constants:
     public const string kRC_PhysicsGravity = "physics_gravity";
+
+    // Analytics tags:
+
+    // Called when a level is started.
+    // Properties:
+    // AnalyticsParamMapId : string representing the mapid of the level.
+    public const string AnalyticsEventMapStart = "map_start";
+
+
+    // Analytics properties:
+
+    // Specifies a map ID in the database.
+    public const string AnalyticsParamMapId = "map_id";
+
   }
 }

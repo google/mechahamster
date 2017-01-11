@@ -64,6 +64,20 @@ namespace Hamster {
       stateManager.OnGUI();
     }
 
+    void InitializeAnalytics() {
+      Firebase.Analytics.FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+
+      // Set the user's sign up method.
+      Firebase.Analytics.FirebaseAnalytics.SetUserProperty(
+        Firebase.Analytics.FirebaseAnalytics.UserPropertySignUpMethod,
+        "Google");
+
+      // TODO(ccornell): replace this with a real user token
+      // once Auth gets hooked up.
+      // Set the user ID.
+      Firebase.Analytics.FirebaseAnalytics.SetUserId("desktop_user");
+    }
+
     // Sets the default values for remote config.  These are the values that will
     // be used if we haven't fetched yet.
     System.Threading.Tasks.Task InitializeRemoteConfig() {
@@ -96,10 +110,11 @@ namespace Hamster {
     }
 
     void InitializeFirebaseComponents() {
+      InitializeAnalytics();
+
       System.Threading.Tasks.Task.WhenAll(
           InitializeRemoteConfig()
         ).ContinueWith(task => { StartGame(); });
-
     }
 
     // Actually start the game, once we've verified that everything
