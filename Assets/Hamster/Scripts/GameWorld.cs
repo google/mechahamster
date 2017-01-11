@@ -19,9 +19,7 @@ namespace Hamster {
         GameObject obj = PlaceTile(element);
         obj.transform.localScale = element.scale;
       }
-      worldMap.ownerId = map.ownerId;
-      worldMap.name = map.name;
-      worldMap.mapId = map.mapId;
+      worldMap.SetProperties(map.name, map.mapId, map.ownerId);
     }
 
     public void DisposeWorld() {
@@ -30,6 +28,7 @@ namespace Hamster {
         Destroy(obj);
       }
       sceneObjects.Clear();
+      worldMap.ResetProperties();
     }
 
     // Internal utility function for removing an item from the map, based on its

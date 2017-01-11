@@ -70,9 +70,7 @@ namespace Hamster.States {
 
       LevelMap currentLevel = CommonData.gameWorld.worldMap;
 
-      currentLevel.name = mapName;
-      currentLevel.mapId = mapId;
-      currentLevel.ownerId = CommonData.currentUser.data.id;
+      currentLevel.SetProperties(mapName, mapId, CommonData.currentUser.data.id);
 
       dbLevel.Initialize(currentLevel);
       dbLevel.PushData();

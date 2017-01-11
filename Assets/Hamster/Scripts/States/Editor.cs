@@ -22,8 +22,8 @@ namespace Hamster.States {
       mapId = CommonData.currentUser.GetUniqueKey();
       currentLevel = new LevelMap();
 
-      CommonData.gameWorld.worldMap.mapId = mapId;
-      CommonData.gameWorld.worldMap.ownerId = CommonData.currentUser.data.id;
+      CommonData.gameWorld.worldMap.SetProperties(StringConstants.DefaultMapName,
+          mapId, CommonData.currentUser.data.id);
 
       Time.timeScale = 0.0f;
     }
@@ -87,27 +87,12 @@ namespace Hamster.States {
 
       GUILayout.EndScrollView();
 
-      if (GUILayout.Button(StringConstants.ButtonSave)) {
-        manager.PushState(new SaveMap());
-      }
-      if (GUILayout.Button(StringConstants.ButtonLoad)) {
-        CommonData.gameWorld.DisposeWorld();
-        manager.PushState(new LoadMap());
-      }
-      if (GUILayout.Button(StringConstants.ButtonClear)) {
-        CommonData.gameWorld.DisposeWorld();
-      }
       if (GUILayout.Button(StringConstants.ButtonPlay)) {
         manager.PushState(new Gameplay());
       }
-      if (GUILayout.Button(StringConstants.ButtonBack)) {
-        manager.SwapState(new MainMenu());
-      }
-      // TODO(ccornell): Remove this!  Export is just here to
-      // make it easy for me to generate/edit prepackaged levels
-      // during devleopment!
-      if (GUILayout.Button("export")) {
-        manager.PushState(new ExportMap(CommonData.gameWorld.worldMap));
+
+      if (GUILayout.Button(StringConstants.ButtonMenu)) {
+        manager.PushState(new EditorMenu());
       }
       GUILayout.EndHorizontal();
     }

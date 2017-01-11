@@ -9,9 +9,21 @@ namespace Hamster {
   [System.Serializable]
   public class LevelMap {
     public string name = StringConstants.DefaultMapName;
-    public string mapId = "<<mapId>>";
+    public string mapId = StringConstants.DefaultMapId;
     public string ownerId = "<<ownerId>>";
     public StringMapElementDict elements = new StringMapElementDict();
+
+    public void ResetProperties() {
+      name = StringConstants.DefaultMapName;
+      mapId = StringConstants.DefaultMapId;
+      ownerId = "<<ownerId>>";
+    }
+
+    public void SetProperties(string name, string mapId, string ownerId) {
+      this.name = name;
+      this.mapId = mapId;
+      this.ownerId = ownerId;
+    }
   }
 
   // Ok, so this is a bit of a hack.

@@ -53,7 +53,6 @@ namespace Hamster.States {
       if (GUILayout.Button(StringConstants.ButtonEditor)) {
         manager.SwapState(new States.Editor());
       }
-      GUILayout.Button(StringConstants.ButtonInvite);
       GUILayout.EndVertical();
       GUILayout.EndArea();
     }
