@@ -70,7 +70,7 @@ namespace Hamster {
       Dictionary<string, object> defaults = new Dictionary<string, object>();
       defaults.Add(StringConstants.kRC_PhysicsGravity, -20.0f);
       Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
-      return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync();
+      return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);
     }
 
     // When the app starts, check to make sure that we have
