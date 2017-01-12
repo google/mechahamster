@@ -15,7 +15,7 @@ namespace Hamster {
     public const string ButtonPlay = "Play";
     public const string ButtonMainMenu = "Main Menu";
     public const string ButtonEditor = "Editor";
-    public const string ButtonInvite = "Invite";
+    public const string ButtonInvite = "Share Map";
     public const string ButtonCancel = "Cancel";
     public const string ButtonMenu = "Menu";
 
@@ -32,6 +32,21 @@ namespace Hamster {
     public const string ButtonSaveUpdate = "Save Map";
     public const string LabelName = "Name:";
     public const string LabelOverwrite = "Overwrite an existing map:";
+
+    // Invites:
+    public const string RemoteConfigInviteTitleText = "invite_title_text";
+    public const string DefaultInviteTitleText = "Share your map!";
+
+    public const string RemoteConfigInviteMessageText = "invite_message_text";
+    public const string DefaultInviteMessageText = "Try out this map I made for MechaHamster!";
+
+    public const string RemoteConfigInviteCallToActionText = "invite_call_to_action_text";
+    public const string DefaultInviteCallToActionText = "Play my map!";
+
+    public const string RemoteConfigInviteDeepLinkUrl = "invite_deep_link_url";
+    public const string DefaultInviteDeepLinkUrl = "https://firebase.google.com/";
+
+    public const string ReferralParamMapId = "map_id";
 
     // Remote Config constants:
     public const string RemoteConfigPhysicsGravity = "physics_gravity";

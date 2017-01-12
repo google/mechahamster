@@ -10,10 +10,20 @@ namespace Hamster.States {
   // and exiting to the main menu.
   class EditorMenu : BaseState {
 
+    bool mapAlreadySaved = false;
+
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
       Time.timeScale = 0.0f;
+
+      // Check if this map has already been saved, or if it's a new map:
+      foreach (MapListEntry entry in CommonData.currentUser.data.maps) {
+        if (entry.mapId == CommonData.gameWorld.worldMap.mapId) {
+          mapAlreadySaved = true;
+          break;
+        }
+      }
     }
 
     // Called once per frame for GUI creation, if the state is active.
@@ -41,8 +51,11 @@ namespace Hamster.States {
         CommonData.gameWorld.DisposeWorld();
         manager.SwapState(new LoadMap());
       }
-      if (GUILayout.Button(StringConstants.ButtonInvite)) {
-        // TODO(ccornell): Implement sharing via invites.
+      if (mapAlreadySaved) {
+        // You can only share maps once they've been saved to the database.
+        if (GUILayout.Button(StringConstants.ButtonInvite)) {
+          manager.SwapState(new SendInvite());
+        }
       }
 
       if (GUILayout.Button(StringConstants.ButtonClear)) {

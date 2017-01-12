@@ -82,7 +82,20 @@ namespace Hamster {
     // be used if we haven't fetched yet.
     System.Threading.Tasks.Task InitializeRemoteConfig() {
       Dictionary<string, object> defaults = new Dictionary<string, object>();
+
+      // Physics defaults:
       defaults.Add(StringConstants.RemoteConfigPhysicsGravity, -20.0f);
+
+      // Invites defaults:
+      defaults.Add(StringConstants.RemoteConfigInviteTitleText,
+          StringConstants.DefaultInviteTitleText);
+      defaults.Add(StringConstants.RemoteConfigInviteMessageText,
+          StringConstants.DefaultInviteMessageText);
+      defaults.Add(StringConstants.RemoteConfigInviteCallToActionText,
+          StringConstants.DefaultInviteCallToActionText);
+      defaults.Add(StringConstants.RemoteConfigInviteDeepLinkUrl,
+          StringConstants.DefaultInviteDeepLinkUrl);
+
       Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
       return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);
     }

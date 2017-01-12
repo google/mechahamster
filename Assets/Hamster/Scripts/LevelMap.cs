@@ -11,6 +11,7 @@ namespace Hamster {
     public string name = StringConstants.DefaultMapName;
     public string mapId = StringConstants.DefaultMapId;
     public string ownerId = "<<ownerId>>";
+    public bool isShared = false;
     public StringMapElementDict elements = new StringMapElementDict();
 
     public void ResetProperties() {
