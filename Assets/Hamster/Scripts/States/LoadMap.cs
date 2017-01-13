@@ -41,7 +41,7 @@ namespace Hamster.States {
 
       if (selectedId != null) {
         manager.SwapState(
-          new WaitingForDBLoad<LevelMap>(CommonData.kDBMapTablePath + selectedId));
+          new WaitingForDBLoad<LevelMap>(CommonData.DBMapTablePath + selectedId));
       }
     }
   }

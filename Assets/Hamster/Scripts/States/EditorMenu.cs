@@ -77,6 +77,12 @@ namespace Hamster.States {
       if (GUILayout.Button("export")) {
         manager.PushState(new ExportMap(CommonData.gameWorld.worldMap));
       }
+
+      // This button is a developer tool, for easily creating bonus levels.
+      // It is not intended to be public-facing.
+      if (GUILayout.Button("Save as Bonus Map")) {
+        manager.PushState(new SaveBonusMap());
+      }
 #endif
       GUILayout.EndVertical();
       GUILayout.EndArea();

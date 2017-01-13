@@ -37,6 +37,8 @@ namespace Hamster.States {
 
       invite.ReferralParameters.Add(StringConstants.ReferralParamMapId,
           CommonData.gameWorld.worldMap.mapId);
+      invite.ReferralParameters.Add(StringConstants.ReferralParamMapName,
+          CommonData.gameWorld.worldMap.name);
 
       Firebase.Invites.FirebaseInvites.SendInviteAsync(invite).ContinueWith(task => {
         isComplete = true;
@@ -75,7 +77,7 @@ namespace Hamster.States {
 
       currentLevel.isShared = true;
       DBStruct<LevelMap> dbLevel = new DBStruct<LevelMap>(
-          CommonData.kDBMapTablePath + currentLevel.mapId, CommonData.app);
+          CommonData.DBMapTablePath + currentLevel.mapId, CommonData.app);
       dbLevel.Initialize(currentLevel);
       dbLevel.PushData();
     }

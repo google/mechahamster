@@ -11,9 +11,6 @@ namespace Hamster.States {
   // Basically just does the fetch, and then returns the result to whatever
   // state invoked it.
   class FetchUserData : BaseState {
-    private const string kDefaultUserName = "Unnamed User";
-    private const string kFetchString = "Fetching User Data...";
-
     private string userID;
 
     public FetchUserData(string userID) {
@@ -24,7 +21,7 @@ namespace Hamster.States {
     // state to get user data, and then handle the logic of what to do with the results.
     public override void Initialize() {
       manager.PushState(
-        new States.WaitingForDBLoad<UserData>(CommonData.kDBUserTablePath + userID));
+        new States.WaitingForDBLoad<UserData>(CommonData.DBUserTablePath + userID));
     }
 
     // Resume the state.  Called when the state becomes active
@@ -37,7 +34,7 @@ namespace Hamster.States {
         if (results.sourceState == typeof(WaitingForDBLoad<UserData>)) {
           var resultData = results.data as WaitingForDBLoad<UserData>.Results;
           CommonData.currentUser = new DBStruct<UserData>(
-            CommonData.kDBUserTablePath + userID, CommonData.app);
+            CommonData.DBUserTablePath + userID, CommonData.app);
           if (resultData.wasSuccessful) {
             CommonData.currentUser.Initialize(resultData.results);
             Debug.Log("Fetched user " + CommonData.currentUser.data.name);
@@ -46,7 +43,7 @@ namespace Hamster.States {
             Debug.Log("Could not find user " + CommonData.currentUser.data.name +
                " - Creating new profile.");
             UserData temp = new UserData();
-            temp.name = kDefaultUserName;
+            temp.name = StringConstants.DefaultUserName;
             temp.id = userID;
             CommonData.currentUser.Initialize(temp);
             CommonData.currentUser.PushData();
@@ -64,7 +61,7 @@ namespace Hamster.States {
       UnityEngine.GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
       centeredStyle.alignment = TextAnchor.UpperCenter;
       GUI.Label(new Rect(Screen.width / 2 - 400,
-        Screen.height / 2 - 50, 800, 100), kFetchString, centeredStyle);
+        Screen.height / 2 - 50, 800, 100), StringConstants.LabelFetchingUserData, centeredStyle);
     }
   }
 }

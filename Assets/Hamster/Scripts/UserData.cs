@@ -11,31 +11,35 @@ namespace Hamster {
     public string name = "<<USER NAME>>";
     // List of all maps owned by this player.
     public List<MapListEntry> maps = new List<MapListEntry>();
+    public List<MapListEntry> bonusMaps = new List<MapListEntry>();
 
     public UserData() { }
 
     // Associates an existing map with a user profile.  (Usually used
     // when a new map is created.)
-    public void addMap(LevelMap newMap) {
+    private void AddMapHelper(string mapName, string mapId, List<MapListEntry> mapList) {
       // Remove the map if we're saving over something that exists:
-      List<MapListEntry> toDelete = maps.FindAll(value => { return value.mapId == newMap.mapId; });
+      List<MapListEntry> toDelete = mapList.FindAll(value => {
+        return value.mapId == mapId;
+      });
+
       foreach(MapListEntry entry in toDelete) {
-        maps.Remove(entry);
+        mapList.Remove(entry);
       }
 
-      foreach (MapListEntry mapEntry in maps) {
-        if (mapEntry.mapId == newMap.mapId)
+      foreach (MapListEntry mapEntry in mapList) {
+        if (mapEntry.mapId == mapId)
           throw new System.Exception("map already exists");
       }
 
       // TODO(ccornell) write this using transactions.
-      maps.Add(new MapListEntry(newMap.name, newMap.mapId));
+      mapList.Add(new MapListEntry(mapName, mapId));
     }
 
-    public void removeMap(string targetMapId) {
+    private void RemoveMapHelper(string targetMapId, List<MapListEntry> mapList) {
       MapListEntry target = null;
 
-      foreach (MapListEntry mapEntry in maps) {
+      foreach (MapListEntry mapEntry in mapList) {
         if (mapEntry.mapId == targetMapId) {
           target = mapEntry;
           break;
@@ -43,11 +47,28 @@ namespace Hamster {
       }
 
       if (target != null) {
-        maps.Remove(target);
+        mapList.Remove(target);
       } else {
         throw new System.Exception("Could not find map to remove: " + targetMapId);
       }
     }
+
+    public void AddMap(string mapName, string mapId) {
+      AddMapHelper(mapName, mapId, maps);
+    }
+
+    public void RemoveMap(string targetMapId) {
+      RemoveMapHelper(targetMapId, maps);
+    }
+
+    public void AddBonusMap(string mapName, string mapId) {
+      AddMapHelper(mapName, mapId, bonusMaps);
+    }
+
+    public void RemoveBonusMap(string targetMapId) {
+      RemoveMapHelper(targetMapId, bonusMaps);
+    }
+
   }
 
   [System.Serializable]
@@ -62,6 +83,6 @@ namespace Hamster {
     // Unique database identifier.
     public string mapId;
     // Plaintext string name.
-    public string name = "<<MAP NAME>>";
+    public string name = StringConstants.DefaultMapName;
   }
 }
