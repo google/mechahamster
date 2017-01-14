@@ -12,6 +12,7 @@ namespace Hamster {
     // List of all maps owned by this player.
     public List<MapListEntry> maps = new List<MapListEntry>();
     public List<MapListEntry> bonusMaps = new List<MapListEntry>();
+    public List<MapListEntry> sharedMaps = new List<MapListEntry>();
 
     public UserData() { }
 
@@ -23,7 +24,7 @@ namespace Hamster {
         return value.mapId == mapId;
       });
 
-      foreach(MapListEntry entry in toDelete) {
+      foreach (MapListEntry entry in toDelete) {
         mapList.Remove(entry);
       }
 
@@ -67,6 +68,14 @@ namespace Hamster {
 
     public void RemoveBonusMap(string targetMapId) {
       RemoveMapHelper(targetMapId, bonusMaps);
+    }
+
+    public void AddSharedMap(string mapName, string mapId) {
+      AddMapHelper(mapName, mapId, sharedMaps);
+    }
+
+    public void RemoveSharedMap(string targetMapId) {
+      RemoveMapHelper(targetMapId, sharedMaps);
     }
 
   }

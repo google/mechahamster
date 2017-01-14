@@ -93,8 +93,6 @@ namespace Hamster {
           StringConstants.DefaultInviteMessageText);
       defaults.Add(StringConstants.RemoteConfigInviteCallToActionText,
           StringConstants.DefaultInviteCallToActionText);
-      defaults.Add(StringConstants.RemoteConfigInviteDeepLinkUrl,
-          StringConstants.DefaultInviteDeepLinkUrl);
 
       Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
       return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);
@@ -145,14 +143,10 @@ namespace Hamster {
 
       Screen.orientation = ScreenOrientation.Landscape;
 
-
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
       currentUser = new DBStruct<UserData>("user", CommonData.app);
-      stateManager.PushState(new States.MainMenu());
 
-      // When the game starts up, it needs to either download the user data
-      // or create a new profile.
-      stateManager.PushState(new States.FetchUserData(kUserID));
+      stateManager.PushState(new States.Startup(kUserID));
     }
   }
 }

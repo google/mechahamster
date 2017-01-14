@@ -32,13 +32,10 @@ namespace Hamster.States {
         StringConstants.RemoteConfigInviteTitleText).StringValue;
       invite.CallToActionText = Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
         StringConstants.RemoteConfigInviteCallToActionText).StringValue;
-      invite.DeepLinkUrl = new System.Uri(Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
-        StringConstants.RemoteConfigInviteDeepLinkUrl).StringValue);
 
-      invite.ReferralParameters.Add(StringConstants.ReferralParamMapId,
-          CommonData.gameWorld.worldMap.mapId);
-      invite.ReferralParameters.Add(StringConstants.ReferralParamMapName,
-          CommonData.gameWorld.worldMap.name);
+      invite.DeepLinkUrl = new System.Uri(
+          string.Format(StringConstants.DefaultInviteDeepLinkUrl,
+              CommonData.gameWorld.worldMap.mapId));
 
       Firebase.Invites.FirebaseInvites.SendInviteAsync(invite).ContinueWith(task => {
         isComplete = true;

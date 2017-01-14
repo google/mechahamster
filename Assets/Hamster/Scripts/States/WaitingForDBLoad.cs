@@ -5,12 +5,14 @@ using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
-  class WaitingForDBLoad<T> : BaseState where T : new() {
+  // Utility state, for fetching structures from the database.
+  // Returns the result in the result struct.
+  class WaitingForDBLoad<T> : BaseState {
 
-    bool isComplete = false;
-    bool wasSuccessful = false;
-    T result = default(T);
-    string path;
+    protected bool isComplete = false;
+    protected bool wasSuccessful = false;
+    protected T result = default(T);
+    protected string path;
 
     Firebase.Database.FirebaseDatabase database;
 
@@ -23,19 +25,22 @@ namespace Hamster.States {
     public override void Initialize() {
       Time.timeScale = 0.0f;
       database = Firebase.Database.FirebaseDatabase.GetInstance(CommonData.app);
-      database.GetReference(path).GetValueAsync().ContinueWith(task => {
-        if (task.IsFaulted) {
-          Debug.LogError("Database exception!  Path = [" + path + "]\n"
-            + task.Exception);
-        } else if (task.IsCompleted) {
-          string json = task.Result.GetRawJsonValue();
-          if (json != null) {
-            result = JsonUtility.FromJson<T>(json);
-            wasSuccessful = true;
-          }
+      database.GetReference(path).GetValueAsync().ContinueWith(HandleResult);
+    }
+
+    protected virtual void HandleResult(
+        System.Threading.Tasks.Task<Firebase.Database.DataSnapshot> task) {
+      if (task.IsFaulted) {
+        Debug.LogError("Database exception!  Path = [" + path + "]\n"
+          + task.Exception);
+      } else if (task.IsCompleted) {
+        string json = task.Result.GetRawJsonValue();
+        if (json != null) {
+          result = JsonUtility.FromJson<T>(json);
+          wasSuccessful = true;
         }
-        isComplete = true;
-      });
+      }
+      isComplete = true;
     }
 
     // Resume the state.  Called when the state becomes active

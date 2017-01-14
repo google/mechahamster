@@ -30,14 +30,17 @@ namespace Hamster.States {
     public override void Initialize() {
       Time.timeScale = 0.0f;
       SetFirebaseMessagingListeners();
+      SetFirebaseInvitesListeners();
     }
 
     public override void Resume(StateExitValue results) {
       SetFirebaseMessagingListeners();
+      SetFirebaseInvitesListeners();
     }
 
     public override void Suspend() {
       RemoveFirebaseMessagingListeners();
+      RemoveFirebaseInvitesListeners();
     }
 
     public override StateExitValue Cleanup() {
@@ -72,12 +75,17 @@ namespace Hamster.States {
       if (GUILayout.Button(StringConstants.ButtonEditor)) {
         manager.SwapState(new States.Editor());
       }
-      if (GUILayout.Button(StringConstants.ButtonPlayShared)) {
-        manager.PushState(new BasicDialog("Not yet implemented"));
+      if (CommonData.currentUser.data.sharedMaps.Count > 0) {
+        if (GUILayout.Button(StringConstants.ButtonPlayShared)) {
+          manager.PushState(new SharedLevelSelect());
+        }
       }
-      if (GUILayout.Button(StringConstants.ButtonPlayBonus)) {
-        manager.PushState(new BonusLevelSelect());
+      if (CommonData.currentUser.data.bonusMaps.Count > 0) {
+        if (GUILayout.Button(StringConstants.ButtonPlayBonus)) {
+          manager.PushState(new BonusLevelSelect());
+        }
       }
+
       GUILayout.EndVertical();
       GUILayout.EndArea();
     }
@@ -85,7 +93,9 @@ namespace Hamster.States {
     // Update function.  If any states are waiting to be shown, swap to them.
     public override void Update() {
       if (statesToShow.Count != 0) {
-        manager.PushState(statesToShow.Pop());
+        lock (stateStackLock) {
+          manager.PushState(statesToShow.Pop());
+        }
       }
     }
 
@@ -93,7 +103,7 @@ namespace Hamster.States {
     // Made a helper function, because it needs a lock, in case
     // randomly firing listeners cause race conditions.
     private void QueueState(BaseState newState) {
-      lock(stateStackLock) {
+      lock (stateStackLock) {
         statesToShow.Push(newState);
       }
     }
@@ -104,6 +114,45 @@ namespace Hamster.States {
 
     private void RemoveFirebaseMessagingListeners() {
       Firebase.Messaging.FirebaseMessaging.MessageReceived -= OnMessageReceived;
+    }
+
+    private void SetFirebaseInvitesListeners() {
+      Firebase.Invites.FirebaseInvites.InviteReceived += OnInviteReceived;
+      Firebase.Invites.FirebaseInvites.InviteNotReceived += OnInviteNotReceived;
+      Firebase.Invites.FirebaseInvites.ErrorReceived += OnErrorReceived;
+    }
+
+    private void RemoveFirebaseInvitesListeners() {
+      Firebase.Invites.FirebaseInvites.InviteReceived -= OnInviteReceived;
+      Firebase.Invites.FirebaseInvites.InviteNotReceived -= OnInviteNotReceived;
+      Firebase.Invites.FirebaseInvites.ErrorReceived -= OnErrorReceived;
+    }
+
+    public void OnInviteReceived(object sender,
+                                 Firebase.Invites.InviteReceivedEventArgs e) {
+      QueueState(new InviteReceived(e));
+    }
+
+    public void OnInviteNotReceived(object sender, System.EventArgs e) {
+      Debug.Log("No Invite or Deep Link received on start up");
+    }
+
+    public void OnErrorReceived(object sender,
+                                Firebase.Invites.InviteErrorReceivedEventArgs e) {
+      Debug.LogError("Error occurred received the invite: " +
+          e.ErrorMessage);
+    }
+
+    void HandleConversionResult(System.Threading.Tasks.Task convertTask) {
+      if (convertTask.IsCanceled) {
+        Debug.Log("Conversion canceled.");
+      } else if (convertTask.IsFaulted) {
+        Debug.Log("Conversion encountered an error:");
+        Debug.Log(convertTask.Exception.ToString());
+      } else if (convertTask.IsCompleted) {
+        Debug.Log("Conversion completed successfully!");
+        Debug.Log("ConvertInvitation: Successfully converted invitation");
+      }
     }
 
     public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e) {

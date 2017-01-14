@@ -13,7 +13,6 @@ namespace Hamster.States {
 
     Firebase.Messaging.MessageReceivedEventArgs messageArgs;
     Dictionary<string, string> messageValues = new Dictionary<string, string>();
-    string messageTitle, messageBody, messageFrom;
 
     public MessageReceived(Firebase.Messaging.MessageReceivedEventArgs messageArgs) {
       this.messageArgs = messageArgs;
@@ -27,13 +26,6 @@ namespace Hamster.States {
       if (notification == null) {
         Debug.LogError("Got a message with no notification.\n" + messageArgs.ToString());
         manager.PopState();
-      }
-
-      messageTitle = notification.Title;
-      messageBody = notification.Body;
-
-      if (messageArgs.Message.From.Length > 0) {
-        messageFrom = messageArgs.Message.From;
       }
 
       if (messageArgs.Message.Data.Count > 0) {

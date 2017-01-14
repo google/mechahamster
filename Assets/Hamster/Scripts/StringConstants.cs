@@ -44,7 +44,7 @@ namespace Hamster {
     // Invites:
     //--------------------------
     public const string RemoteConfigInviteTitleText = "invite_title_text";
-    public const string DefaultInviteTitleText = "Share your map!";
+    public const string DefaultInviteTitleText = "Try out this map I made!";
 
     public const string RemoteConfigInviteMessageText = "invite_message_text";
     public const string DefaultInviteMessageText = "Try out this map I made for MechaHamster!";
@@ -52,11 +52,10 @@ namespace Hamster {
     public const string RemoteConfigInviteCallToActionText = "invite_call_to_action_text";
     public const string DefaultInviteCallToActionText = "Play my map!";
 
-    public const string RemoteConfigInviteDeepLinkUrl = "invite_deep_link_url";
-    public const string DefaultInviteDeepLinkUrl = "https://firebase.google.com/";
+    public const string DefaultInviteDeepLinkUrl = "https://firebase.google.com/?mapid={0}";
 
-    public const string ReferralParamMapId = "map_id";
-    public const string ReferralParamMapName = "map_name";
+    public const string SharedMapUserMessage = "Someone has shared a new map with you!:\n" +
+      "{0}\nFind it under 'Shared Maps'!";
 
     // Remote Config:
     //--------------------------
