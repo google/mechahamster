@@ -9,7 +9,6 @@ namespace Hamster.States {
   // menu state.
   class Startup : BaseState {
 
-    bool isComplete = false;
     string UserId;
 
     public Startup(string UserId) {
@@ -28,13 +27,6 @@ namespace Hamster.States {
     public override void Resume(StateExitValue results) {
       Time.timeScale = 0.0f;
       manager.SwapState(new States.MainMenu());
-    }
-
-    // Called once per frame when the state is active.
-    public override void Update() {
-      if (isComplete) {
-        manager.PopState();
-      }
     }
   }
 }
