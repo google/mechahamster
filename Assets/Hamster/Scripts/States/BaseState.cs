@@ -39,7 +39,7 @@ namespace Hamster.States {
   // things like yes/no dialog boxes, etc.  This class represents
   // those return values.
   public class StateExitValue {
-    public StateExitValue(Type sourceState, object data) {
+    public StateExitValue(Type sourceState, object data = null) {
       this.data = data;
       this.sourceState = sourceState;
     }

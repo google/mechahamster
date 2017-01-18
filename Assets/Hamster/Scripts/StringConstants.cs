@@ -18,8 +18,10 @@ namespace Hamster {
     public const string ButtonInvite = "Share Map";
     public const string ButtonPlayShared = "Play Shared Map";
     public const string ButtonPlayBonus = "Play Bonus Maps";
+    public const string ButtonOkay = "Okay";
     public const string ButtonCancel = "Cancel";
     public const string ButtonMenu = "Menu";
+    public const string ButtonAccount = "Account";
 
     // Title screen text:
     public const string TitleText = "MechaHamster!";
@@ -40,6 +42,31 @@ namespace Hamster {
     public const string DefaultUserName = "Unnamed User";
     public const string DefaultMapName = "Unnamed Map";
     public const string DefaultMapId = "<<default mapid>>";
+
+    // Auth:
+    //--------------------------
+
+    public const string LabelSignIn = "Sign In!";
+    public const string LabelCreateAccount = "Create an Account!";
+    public const string LabelAddEmail = "Add an Email!";
+
+    public const string LabelEmail = "Email:";
+    public const string LabelPassword = "Password:";
+    public const string ButtonSignIn = "Sign in!";
+    public const string ButtonCreateAccount = "Create Account!";
+
+    public const string ButtonSignInWithEmail = "Sign In with account";
+    public const string ButtonSignInAnonymously = "Sign In Later";
+
+    public const string LabelSigningIn = "Signing In...";
+
+    public const string LabelAnonymousAccount = "You are signed in on an anonymous account.";
+    public const string LabelPasswordAccount = "You are signed in to an email/password account.";
+
+    public const string ButtonAddEmailPassword = "Add Email/Password";
+    public const string ButtonLogout = "Log out";
+    public const string LabelAnonymousWarning = "You are currently using an anonymous account.\n" +
+        "If you log out, you will lose anything you have saved.\nAre you sure you want to log out?";
 
     // Invites:
     //--------------------------

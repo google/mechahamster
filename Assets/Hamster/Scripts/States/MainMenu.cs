@@ -86,6 +86,10 @@ namespace Hamster.States {
         }
       }
 
+      if (GUILayout.Button(StringConstants.ButtonAccount)) {
+        manager.PushState(new ManageAccount());
+      }
+
       GUILayout.EndVertical();
       GUILayout.EndArea();
     }

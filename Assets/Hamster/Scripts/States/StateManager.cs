@@ -39,6 +39,18 @@ namespace Hamster.States {
       CurrentState().Resume(result);
     }
 
+    // Clears out all states, leaving just newState as the sole state
+    // on the stack.  Since PopState is called, all underlying states
+    // still get to respond to Resume() and Cleanup().  Mainly useful
+    // for soft resets where we don't want to care about how many levels
+    // of menu we have below us.
+    public void ClearStack(BaseState newState) {
+      while (stateStack.Count > 1) {
+        PopState();
+      }
+      SwapState(newState);
+    }
+
     // Switches the current state for a new one, without disturbing
     // anything below.  Different from Pop + Push, in that the next
     // state down never gets resumed/suspended.

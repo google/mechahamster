@@ -10,13 +10,9 @@ namespace Hamster {
     private States.StateManager stateManager = new States.StateManager();
     private float currentFrameTime, lastFrameTime;
 
-    private const string kPlayerLookupID = "Player";
+    private const string PlayerPrefabID = "Player";
 
     public GameObject player;
-
-    // More placeholders, will be swapped out for real data once
-    // auth is hooked up.
-    const string kUserID = "XYZZY";
 
     public DBStruct<UserData> currentUser;
 
@@ -46,7 +42,7 @@ namespace Hamster {
     // Utility function for spawning the player.
     public GameObject SpawnPlayer() {
       if (player == null) {
-        player = (GameObject)Instantiate(CommonData.prefabs.lookup[kPlayerLookupID].prefab);
+        player = (GameObject)Instantiate(CommonData.prefabs.lookup[PlayerPrefabID].prefab);
       }
       return player;
     }
@@ -146,7 +142,7 @@ namespace Hamster {
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
       currentUser = new DBStruct<UserData>("user", CommonData.app);
 
-      stateManager.PushState(new States.Startup(kUserID));
+      stateManager.PushState(new States.Startup());
     }
   }
 }

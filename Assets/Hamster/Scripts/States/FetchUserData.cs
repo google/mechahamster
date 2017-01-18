@@ -24,6 +24,10 @@ namespace Hamster.States {
         new States.WaitingForDBLoad<UserData>(CommonData.DBUserTablePath + userID));
     }
 
+    public override StateExitValue Cleanup() {
+      return new StateExitValue(typeof(FetchUserData), null);
+    }
+
     // Resume the state.  Called when the state becomes active
     // when the state above is removed.  That state may send an
     // optional object containing any results/data.  Results
