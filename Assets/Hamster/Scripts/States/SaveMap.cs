@@ -33,7 +33,6 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      Time.timeScale = 0.0f;
       mapName = CommonData.gameWorld.worldMap.name;
 
       // Check if this map has already been saved, or if it's a new map:

@@ -47,8 +47,6 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      Time.timeScale = 0.0f;
-
       auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
     }
 

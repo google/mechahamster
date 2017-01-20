@@ -33,8 +33,6 @@ namespace Hamster.States {
     }
 
     public override void Initialize() {
-      Time.timeScale = 0.0f;
-
       var notification = messageArgs.Message.Notification;
 
       if (notification == null) {

@@ -33,12 +33,6 @@ namespace Hamster.States {
       this.buttonText = buttonText;
     }
 
-    // Initialization method.  Called after the state
-    // is added to the stack.
-    public override void Initialize() {
-      Time.timeScale = 0.0f;
-    }
-
     // Called once per frame for GUI creation, if the state is active.
     // TODO(ccornell): This needs some layout attention, if it's going
     // to see much use.  Needs to be centered at a minimum.

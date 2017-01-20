@@ -32,7 +32,6 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      Time.timeScale = 0.0f;
       manager.PushState(new BasicDialog(errorText));
     }
 

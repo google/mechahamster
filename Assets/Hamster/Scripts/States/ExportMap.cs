@@ -25,12 +25,6 @@ namespace Hamster.States {
       jsonExport = JsonUtility.ToJson(currentLevel, true);
     }
 
-    // Initialization method.  Called after the state
-    // is added to the stack.
-    public override void Initialize() {
-      Time.timeScale = 0.0f;
-    }
-
     // Called once per frame for GUI creation, if the state is active.
     public override void OnGUI() {
       GUI.skin = CommonData.prefabs.guiSkin;

@@ -62,7 +62,6 @@ namespace Hamster.States {
     }
 
     public override void Resume(StateExitValue results) {
-      Time.timeScale = 0.0f;
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
           var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
@@ -80,7 +79,6 @@ namespace Hamster.States {
 
     // Initialization method.  Called after the state is added to the stack.
     public override void Initialize() {
-      Time.timeScale = 0.0f;
       levelNames = new string[mapSourceList.Count];
 
       for (int i = 0; i < mapSourceList.Count; i++) {

@@ -47,7 +47,6 @@ namespace Hamster.States {
     // optional object containing any results/data.  Results
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
-      Time.timeScale = 0.0f;
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<UserData>)) {
           var resultData = results.data as WaitingForDBLoad<UserData>.Results;

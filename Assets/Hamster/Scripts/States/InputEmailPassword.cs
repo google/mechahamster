@@ -53,7 +53,6 @@ namespace Hamster.States {
     // is added to the stack.
     public override void Initialize() {
       auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-      Time.timeScale = 0.0f;
     }
 
     // Called once per frame for GUI creation, if the state is active.

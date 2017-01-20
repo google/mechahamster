@@ -33,7 +33,6 @@ namespace Hamster.States {
     }
 
     public override void Resume(StateExitValue results) {
-      Time.timeScale = 0.0f;
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<string>)) {
           var resultData = results.data as WaitingForDBLoad<string>.Results;
@@ -52,8 +51,6 @@ namespace Hamster.States {
     }
 
     public override void Initialize() {
-      Time.timeScale = 0.0f;
-
       // TODO(ccornell): This is a hack - need to make a more robust parsing.
       string[] splitString = args.DeepLink.Query.Split(new string[] { "?mapid=" }, 2, System.StringSplitOptions.None);
       if (splitString.Length != 2) {

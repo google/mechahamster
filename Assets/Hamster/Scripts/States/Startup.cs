@@ -58,8 +58,6 @@ namespace Hamster.States {
     // If we got back from login, request/start a user with that ID.
     // If we got back from fetching user data, start the game.
     public override void Resume(StateExitValue results) {
-      Time.timeScale = 0.0f;
-
       if (results.sourceState == typeof(SignInMenu)) {
           // We just got back from trying to sign in anonymously.
           // Did it work?

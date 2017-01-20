@@ -39,6 +39,15 @@ namespace Hamster.States {
       Time.timeScale = 1.0f;
     }
 
+    public override StateExitValue Cleanup() {
+      Time.timeScale = 0.0f;
+      return new StateExitValue(typeof(Gameplay));
+    }
+
+    public override void Suspend() {
+      Time.timeScale = 0.0f;
+    }
+
     // Called once per frame when the state is active.
     public override void Update() {
       if (Input.GetKeyDown(KeyCode.Escape)) {

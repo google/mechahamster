@@ -38,8 +38,6 @@ namespace Hamster.States {
 
       CommonData.gameWorld.worldMap.SetProperties(StringConstants.DefaultMapName,
           mapId, CommonData.currentUser.data.id);
-
-      Time.timeScale = 0.0f;
     }
 
     // Clean up when we exit the state.
@@ -53,7 +51,6 @@ namespace Hamster.States {
     // optional object containing any results/data.  Results
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
-      Time.timeScale = 0.0f;
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
           var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;

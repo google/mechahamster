@@ -30,8 +30,6 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      Time.timeScale = 0.0f;
-
       if (CommonData.gameWorld.worldMap.mapId == StringConstants.DefaultMapId) {
         Debug.LogWarning("Error - Trying to share an unsaved map!");
         manager.PopState();
@@ -59,14 +57,6 @@ namespace Hamster.States {
           SetMapToShared();
         }
       });
-    }
-
-    // Resume the state.  Called when the state becomes active
-    // when the state above is removed.  That state may send an
-    // optional object containing any results/data.  Results
-    // can also just be null, if no data is sent.
-    public override void Resume(StateExitValue results) {
-      Time.timeScale = 0.0f;
     }
 
     // Called once per frame when the state is active.
