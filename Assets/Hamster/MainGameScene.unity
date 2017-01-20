@@ -379,24 +379,31 @@ MonoBehaviour:
   - name: Empty
     prefab: {fileID: 0}
     limitOnePerMap: 0
+    includeInToolPalette: 1
   - name: Player Start
     prefab: {fileID: 1000012644549590, guid: 14f9722887fcda141a857225def72aa2, type: 2}
     limitOnePerMap: 1
+    includeInToolPalette: 1
   - name: Goal
     prefab: {fileID: 1000010396292050, guid: dc4f96adbd6cc6e498b5d19ebdf5c589, type: 2}
     limitOnePerMap: 0
+    includeInToolPalette: 1
   - name: Wall
     prefab: {fileID: 1000013217471512, guid: 89f5bfd194807ed48ba4388a609e550a, type: 2}
     limitOnePerMap: 0
+    includeInToolPalette: 1
   - name: Floor
     prefab: {fileID: 1000010910874200, guid: 3aebd366a476f4e6799605470f74b365, type: 2}
     limitOnePerMap: 0
+    includeInToolPalette: 1
   - name: Jump Tile
     prefab: {fileID: 1000012415800088, guid: 5b52de807ceec4cabbcebcd8d3d01e2d, type: 2}
     limitOnePerMap: 0
+    includeInToolPalette: 1
   - name: Player
     prefab: {fileID: 1000013606253090, guid: 31e5e8564405e40ae9d5918707f60736, type: 2}
     limitOnePerMap: 0
+    includeInToolPalette: 0
   prefabNames: []
 --- !u!4 &1990879351
 Transform:

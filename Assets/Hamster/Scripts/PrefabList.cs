@@ -58,24 +58,29 @@ namespace Hamster {
     // for dictionaries.)
     void Start() {
       lookup = new Dictionary<string, PrefabEntry>();
-      prefabNames = new string[prefabs.Length];
-      int index = 0;
+      List<string> nameList = new List<string>();
       foreach (PrefabEntry entry in prefabs) {
-        lookup[entry.name] = entry;
-        prefabNames[index++] = entry.name;
+        if (entry.includeInToolPalette) {
+          lookup[entry.name] = entry;
+          nameList.Add(entry.name);
+        }
       }
+      prefabNames = nameList.ToArray();
     }
 
     [System.Serializable]
     public struct PrefabEntry {
-      public PrefabEntry(string name, GameObject prefab, bool limitOnePerMap) {
+      public PrefabEntry(string name, GameObject prefab,
+          bool limitOnePerMap, bool includeInToolPalette) {
         this.name = name;
         this.prefab = prefab;
         this.limitOnePerMap = limitOnePerMap;
+        this.includeInToolPalette = includeInToolPalette;
       }
       public string name;
       public GameObject prefab;
       public bool limitOnePerMap;
+      public bool includeInToolPalette;
     }
   }
 }
