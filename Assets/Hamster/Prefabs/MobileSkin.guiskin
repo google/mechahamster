@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12001, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GeneralSkin
+  m_Name: MobileSkin
   m_EditorClassIdentifier: 
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_box:
@@ -124,17 +124,17 @@ MonoBehaviour:
       m_Top: 4
       m_Bottom: 4
     m_Padding:
-      m_Left: 16
-      m_Right: 16
-      m_Top: 13
-      m_Bottom: 13
+      m_Left: 25
+      m_Right: 25
+      m_Top: 20
+      m_Bottom: 20
     m_Overflow:
       m_Left: 0
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
     m_Font: {fileID: 0}
-    m_FontSize: 40
+    m_FontSize: 60
     m_FontStyle: 0
     m_Alignment: 4
     m_WordWrap: 0
@@ -268,7 +268,7 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Font: {fileID: 0}
-    m_FontSize: 60
+    m_FontSize: 80
     m_FontStyle: 0
     m_Alignment: 1
     m_WordWrap: 1
@@ -335,7 +335,7 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Font: {fileID: 0}
-    m_FontSize: 60
+    m_FontSize: 80
     m_FontStyle: 0
     m_Alignment: 0
     m_WordWrap: 0
@@ -410,7 +410,7 @@ MonoBehaviour:
     m_TextClipping: 1
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 0
+    m_FixedWidth: 80
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0

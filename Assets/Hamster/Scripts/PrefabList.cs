@@ -24,7 +24,18 @@ namespace Hamster {
   // strips unused resources from release builds:
   // https://docs.unity3d.com/Manual/iphone-playerSizeOptimization.html)
   public class PrefabList : MonoBehaviour {
-    public UnityEngine.GUISkin guiSkin;
+    public UnityEngine.GUISkin guiSkin {
+      get {
+#if UNITY_EDITOR
+        return desktopSkin;
+#else
+        return mobileSkin;
+#endif
+      }
+    }
+
+    public UnityEngine.GUISkin mobileSkin;
+    public UnityEngine.GUISkin desktopSkin;
     // List of all the prefabs, and their names.  Note that this is mostly
     // just used as a way to edit the list in the inspector - changing this
     // at runtime won't do anything, because all of the data has already been
