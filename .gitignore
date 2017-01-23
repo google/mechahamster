@@ -34,13 +34,11 @@ sysinfo.txt
 # Unique to MechaHamster:
 # Firebase stuff
 /Assets/Firebase/
-/Assets/Materials/
 /Assets/PlayServicesResolver/
 /Assets/Plugins/
 /Assets/Editor\ Default\ Resources/
 
 /Assets/Firebase.meta
-/Assets/Materials.meta
 /Assets/PlayServicesResolver.meta
 /Assets/Plugins.meta
 /Assets/Editor\ Default\ Resources.meta
