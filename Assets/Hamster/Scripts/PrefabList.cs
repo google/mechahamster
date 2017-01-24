@@ -60,8 +60,8 @@ namespace Hamster {
       lookup = new Dictionary<string, PrefabEntry>();
       List<string> nameList = new List<string>();
       foreach (PrefabEntry entry in prefabs) {
+        lookup[entry.name] = entry;
         if (entry.includeInToolPalette) {
-          lookup[entry.name] = entry;
           nameList.Add(entry.name);
         }
       }
