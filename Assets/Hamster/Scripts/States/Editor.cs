@@ -28,6 +28,33 @@ namespace Hamster.States {
     // This is a placeholder while I swap in the selector.
     string mapId = "unnamed_map";
 
+    // Special tools that get prepended to the list.
+    enum SpecialTools {
+      Camera = 0,
+    }
+
+    private string[] tools = null;
+    string[] Tools {
+      get {
+        if (tools == null) {
+          List<string> toolList = new List<string>();
+          // We want the Special Tools to be listed at the top.
+          toolList.AddRange(System.Enum.GetNames(typeof(SpecialTools)));
+          toolList.AddRange(CommonData.prefabs.prefabNames);
+          tools = toolList.ToArray();
+        }
+        return tools;
+      }
+    }
+
+    // Tell the camera controller if the special tool Camera is selected.
+    private void UpdateCameraController() {
+      CameraController c = CommonData.mainCamera.GetComponent<CameraController>();
+      if (c != null) {
+        c.MouseControlsEditorCamera = mapToolSelection == (int)SpecialTools.Camera;
+      }
+    }
+
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
@@ -38,6 +65,8 @@ namespace Hamster.States {
 
       CommonData.gameWorld.worldMap.SetProperties(StringConstants.DefaultMapName,
           mapId, CommonData.currentUser.data.id);
+
+      UpdateCameraController();
     }
 
     // Clean up when we exit the state.
@@ -64,24 +93,29 @@ namespace Hamster.States {
           }
         }
       }
+      UpdateCameraController();
     }
 
     // Called once per frame when the state is active.
     public override void Update() {
       if (Input.GetMouseButton(0) && GUIUtility.hotControl == 0) {
-        string brushElementType = CommonData.prefabs.prefabNames[mapToolSelection];
-        float rayDist;
-        Ray cameraRay = CommonData.mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (CommonData.kZeroPlane.Raycast(cameraRay, out rayDist)) {
-          MapElement element = new MapElement();
-          Vector3 pos = cameraRay.GetPoint(rayDist);
-          pos.x = Mathf.RoundToInt(pos.x);
-          pos.y = Mathf.RoundToInt(pos.y);
-          pos.z = Mathf.RoundToInt(pos.z);
-          element.position = pos;
-          element.type = brushElementType;
+        int specialToolCount = System.Enum.GetNames(typeof(SpecialTools)).Length;
+        if (mapToolSelection >= specialToolCount) {
+          int selection = mapToolSelection - specialToolCount;
+          string brushElementType = CommonData.prefabs.prefabNames[selection];
+          float rayDist;
+          Ray cameraRay = CommonData.mainCamera.ScreenPointToRay(Input.mousePosition);
+          if (CommonData.kZeroPlane.Raycast(cameraRay, out rayDist)) {
+            MapElement element = new MapElement();
+            Vector3 pos = cameraRay.GetPoint(rayDist);
+            pos.x = Mathf.RoundToInt(pos.x);
+            pos.y = Mathf.RoundToInt(pos.y);
+            pos.z = Mathf.RoundToInt(pos.z);
+            element.position = pos;
+            element.type = brushElementType;
 
-          CommonData.gameWorld.PlaceTile(element);
+            CommonData.gameWorld.PlaceTile(element);
+          }
         }
       }
     }
@@ -93,8 +127,15 @@ namespace Hamster.States {
 
       scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition);
 
-      mapToolSelection = GUILayout.SelectionGrid(
-          mapToolSelection, CommonData.prefabs.prefabNames, 1);
+      int previousSelection = mapToolSelection;
+      mapToolSelection = GUILayout.SelectionGrid(mapToolSelection, Tools, 1);
+
+      // If selecting or unselecting Camera, we need to update the controller.
+      if (previousSelection != mapToolSelection &&
+          (previousSelection == (int)SpecialTools.Camera ||
+           mapToolSelection == (int)SpecialTools.Camera)) {
+        UpdateCameraController();
+      }
 
       GUILayout.EndScrollView();
 

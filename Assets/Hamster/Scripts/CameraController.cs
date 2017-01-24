@@ -37,6 +37,12 @@ namespace Hamster {
     private static Vector3 kUpVector = new Vector3(0, 1, 1);
     PlayerController player;
 
+    // The location used for controlling the camera with mouse drag.
+    private Vector3 pinnedLocation;
+
+    // Should be editor camera be controlled via mouse drag.
+    public bool MouseControlsEditorCamera { get; set; }
+
     void Start() {
       mainGame = FindObjectOfType<MainGame>();
       // Needs to be normalized because it was set via the inspector.
@@ -60,6 +66,20 @@ namespace Hamster {
           transform.position = player.transform.position +
               kViewAngleVector * kViewDistance;
           transform.LookAt(player.transform.position, kUpVector);
+        }
+      } else if (MouseControlsEditorCamera && Input.GetMouseButton(0)) {
+        Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        float dist;
+        if (CommonData.kZeroPlane.Raycast(ray, out dist)) {
+          if (Input.GetMouseButtonDown(0)) {
+            // Save where the mouse went down, as we want that to stay under the mouse.
+            pinnedLocation = ray.GetPoint(dist);
+          } else {
+            // Move the camera based on how far the mouse was dragged.
+            Vector3 diff = pinnedLocation - ray.GetPoint(dist);
+            transform.position += diff;
+            editorCam += diff;
+          }
         }
       } else {
         // Editor mode:  Camera should be user-controlled.
