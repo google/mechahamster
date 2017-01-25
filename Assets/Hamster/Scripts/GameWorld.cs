@@ -27,6 +27,9 @@ namespace Hamster {
     Dictionary<string, GameObject> sceneObjects = new Dictionary<string, GameObject>();
     public LevelMap worldMap = new LevelMap();
 
+    // When spawning in elements, adjust their positions by this amount.
+    Vector3 elementAdjust = new Vector3(0.0f, -0.5f, 0.0f);
+
     // Iterates through a map and spawns all the objects in it.
     public void SpawnWorld(LevelMap map) {
       foreach (MapElement element in map.elements.Values) {
@@ -79,7 +82,8 @@ namespace Hamster {
       PrefabList.PrefabEntry elementDef;
       if (CommonData.prefabs.lookup.TryGetValue(element.type, out elementDef)) {
         if (elementDef.prefab != null) {
-          obj = (GameObject)Instantiate(elementDef.prefab, element.position, element.rotation);
+          obj = (GameObject)Instantiate(elementDef.prefab, element.position + elementAdjust,
+                                        element.rotation);
         }
       } else {
         throw new Exception(
