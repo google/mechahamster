@@ -30,10 +30,7 @@ namespace Hamster.States {
     public override void OnGUI() {
       GUI.skin = CommonData.prefabs.guiSkin;
       GUILayout.BeginVertical();
-
       GUILayout.Label(StringConstants.LabelLoadMap);
-
-      GUILayout.Label(StringConstants.LabelOverwrite);
       string selectedId = null;
       scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition);
       foreach (MapListEntry mapEntry in CommonData.currentUser.data.maps) {
