@@ -91,5 +91,15 @@ namespace Hamster {
       }
       return obj;
     }
+
+    // Reset all the MapObjects currently being used to their original state.
+    public void ResetMapObjects() {
+      foreach (GameObject gameObject in sceneObjects.Values) {
+        MapObjects.MapObject mapObject = gameObject.GetComponent<MapObjects.MapObject>();
+        if (mapObject != null) {
+          mapObject.Reset();
+        }
+      }
+    }
   }
 }

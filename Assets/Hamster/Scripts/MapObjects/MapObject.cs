@@ -37,5 +37,8 @@ namespace Hamster.MapObjects {
     // Objects override this to define custom behavior when hit.
     protected virtual void MapObjectActivation(Collider collider) {
     }
+
+    // Reset the MapObject back to its original state.
+    public virtual void Reset() { }
   }
 }

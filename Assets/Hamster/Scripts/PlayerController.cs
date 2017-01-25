@@ -21,6 +21,9 @@ namespace Hamster {
   public class PlayerController : MonoBehaviour {
     InputControllers.BasePlayerController inputController;
 
+    // Has the player object touched a goal tile.
+    public bool ReachedGoal { get; private set; }
+
     void Start() {
       inputController = new InputControllers.MultiInputController();
     }
@@ -42,6 +45,10 @@ namespace Hamster {
       if (transform.position.y < kFellOffLevelHeight) {
         CommonData.mainGame.DestroyPlayer();
       }
+    }
+
+    public void HandleGoalCollision() {
+      ReachedGoal = true;
     }
   }
 }

@@ -54,9 +54,13 @@ namespace Hamster.States {
         manager.PopState();
         return;
       }
-    }
 
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() { }
+      // If the goal was reached, then we want to finish the Gameplay state.
+      if (CommonData.mainGame.PlayerController != null &&
+          CommonData.mainGame.PlayerController.ReachedGoal) {
+        manager.SwapState(new LevelFinished());
+        return;
+      }
+    }
   }
 }

@@ -36,6 +36,8 @@ namespace Hamster {
     public const string ButtonCancel = "Cancel";
     public const string ButtonMenu = "Menu";
     public const string ButtonAccount = "Account";
+    public const string ButtonRetry = "Retry";
+    public const string ButtonExit = "Exit";
 
     // Title screen text:
     public const string TitleText = "MechaHamster!";
@@ -56,6 +58,9 @@ namespace Hamster {
     public const string DefaultUserName = "Unnamed User";
     public const string DefaultMapName = "Unnamed Map";
     public const string DefaultMapId = "<<default mapid>>";
+
+    // Level finished screen text:
+    public const string FinishedTopText = "Great Job!";
 
     // Auth:
     //--------------------------

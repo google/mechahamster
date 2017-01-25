@@ -39,5 +39,11 @@ namespace Hamster.MapObjects {
         }
       }
     }
+
+    public override void Reset() {
+      if (CommonData.mainGame.player != null) {
+        CommonData.mainGame.DestroyPlayer();
+      }
+    }
   }
 }

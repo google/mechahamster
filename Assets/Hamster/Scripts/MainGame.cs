@@ -26,7 +26,14 @@ namespace Hamster {
 
     private const string PlayerPrefabID = "Player";
 
+    // The active player object in the game.
     public GameObject player;
+    // The PlayerController component on the active player object.
+    public PlayerController PlayerController {
+      get {
+        return player != null ? player.GetComponent<PlayerController>() : null;
+      }
+    }
 
     public DBStruct<UserData> currentUser;
 
@@ -50,7 +57,11 @@ namespace Hamster {
     // Utility function to check if the game is currently running.  (i.e.
     // not in edit mode.)
     public bool isGameRunning() {
-      return (stateManager.CurrentState() is States.Gameplay);
+      States.BaseState state = stateManager.CurrentState();
+      return (state is States.Gameplay ||
+        // While with LevelFinished the game is not technically running, we want
+        // to mimic the traditional behavior in the background.
+        state is States.LevelFinished);
     }
 
     // Utility function for spawning the player.
