@@ -24,9 +24,14 @@ namespace Hamster.States {
 
     Vector2 scrollViewPosition;
     int mapToolSelection = 0;
+    string mapId = StringConstants.DefaultMapId;
 
-    // This is a placeholder while I swap in the selector.
-    string mapId = "unnamed_map";
+    // Rotation is in 90 degree increments.
+    int currentOrientation = 0;
+
+    // Strings to graphically represent orientation.  Placeholder
+    // until we get art.
+    static string[] orientationStrings = new string[] { "^", ">", "v", "<" };
 
     // Special tools that get prepended to the list.
     enum SpecialTools {
@@ -113,6 +118,7 @@ namespace Hamster.States {
             pos.z = Mathf.RoundToInt(pos.z);
             element.position = pos;
             element.type = brushElementType;
+            element.orientation = currentOrientation;
 
             CommonData.gameWorld.PlaceTile(element);
           }
@@ -138,6 +144,11 @@ namespace Hamster.States {
       }
 
       GUILayout.EndScrollView();
+
+      if (GUILayout.Button(
+        StringConstants.ButtonOrientation + orientationStrings[currentOrientation])) {
+        currentOrientation = (currentOrientation + 1) % 4;
+      }
 
       if (GUILayout.Button(StringConstants.ButtonPlay)) {
         manager.PushState(new Gameplay());

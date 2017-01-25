@@ -111,7 +111,9 @@ namespace Hamster {
     public string type;
     public Vector3 scale = new Vector3(1, 1, 1);
     public Vector3 position = new Vector3(0, 0, 0);
-    public Quaternion rotation = Quaternion.identity;
+    // Orientation of the tile, in 90 degree increments.  (So an
+    // orientation of 1 means 90 degrees, 2 means 180, etc.)
+    public int orientation = 0;
 
     // Takes a map element, and returns the string key that will represent
     // it in the database.  For most objects, this is a function of their
