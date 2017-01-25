@@ -20,15 +20,28 @@ namespace Hamster.MapObjects {
   // When stepped on, these kick the player up into the air.
   public class JumpTile : MapObject {
 
+    // Static variable shared across all jumptiles, to make sure
+    // that they only get one jump impulse at once.  (Stops them
+    // from getting double- or quadruple-powered jumps, if they
+    // manage to touch more than one jump tile on the same frame.)
+    static bool triggeredThisFrame;
+
     // Velocity of the kick, in world-units/second.
     public float kJumpVelocity = 8;
 
+    public void Update() {
+      triggeredThisFrame = false;
+    }
+
     protected override void MapObjectActivation(Collider collider) {
-      if (collider.GetComponent<PlayerController>() != null) {
-        Rigidbody rigidbody = collider.attachedRigidbody;
-        collider.attachedRigidbody.velocity =
-            new Vector3(rigidbody.velocity.x, 0, rigidbody.velocity.z);
-        rigidbody.AddForce(new Vector3(0.0f, kJumpVelocity, 0.0f), ForceMode.Impulse);
+      if (!triggeredThisFrame) {
+        triggeredThisFrame = true;
+        if (collider.GetComponent<PlayerController>() != null) {
+          Rigidbody rigidbody = collider.attachedRigidbody;
+          collider.attachedRigidbody.velocity =
+              new Vector3(rigidbody.velocity.x, 0, rigidbody.velocity.z);
+          rigidbody.AddForce(new Vector3(0.0f, kJumpVelocity, 0.0f), ForceMode.Impulse);
+        }
       }
     }
   }
