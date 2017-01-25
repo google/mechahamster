@@ -93,8 +93,10 @@ namespace Hamster {
       PrefabList.PrefabEntry elementDef;
       if (CommonData.prefabs.lookup.TryGetValue(element.type, out elementDef)) {
         if (elementDef.prefab != null) {
+          Quaternion orientation = Quaternion.Euler(
+              new Vector3(0.0f, element.orientation * 90.0f, 0.0f));
           obj = (GameObject)Instantiate(elementDef.prefab, element.position + elementAdjust,
-                                        element.rotation);
+                                        orientation);
         }
       } else {
         throw new Exception(

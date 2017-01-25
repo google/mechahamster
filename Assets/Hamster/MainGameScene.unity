@@ -404,6 +404,10 @@ MonoBehaviour:
     prefab: {fileID: 1000013606253090, guid: 31e5e8564405e40ae9d5918707f60736, type: 2}
     limitOnePerMap: 0
     includeInToolPalette: 0
+  - name: Ramp
+    prefab: {fileID: 1633995981044064, guid: 62715cf115358504ab8b0b742b1bafd0, type: 2}
+    limitOnePerMap: 0
+    includeInToolPalette: 1
   prefabNames: []
 --- !u!4 &1990879351
 Transform:

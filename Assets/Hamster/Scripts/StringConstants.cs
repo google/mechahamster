@@ -38,6 +38,7 @@ namespace Hamster {
     public const string ButtonAccount = "Account";
     public const string ButtonRetry = "Retry";
     public const string ButtonExit = "Exit";
+    public const string ButtonOrientation = "Orientation: ";
 
     // Title screen text:
     public const string TitleText = "MechaHamster!";
