@@ -27,6 +27,10 @@ namespace Hamster.States {
     protected bool wasSuccessful = false;
     protected T result = default(T);
     protected string path;
+    protected int failedFetches = 0;
+
+    // TODO(ccornell): Put this into a remote config variable.
+    const int MaxDatabaseRetries = 5;
 
     Firebase.Database.FirebaseDatabase database;
 
@@ -44,13 +48,15 @@ namespace Hamster.States {
     protected virtual void HandleResult(
         System.Threading.Tasks.Task<Firebase.Database.DataSnapshot> task) {
       if (task.IsFaulted) {
-        Debug.LogError("Database exception!  Path = [" + path + "]\n"
-          + task.Exception);
+        HandleFaultedFetch(task);
+        return;
       } else if (task.IsCompleted) {
-        string json = task.Result.GetRawJsonValue();
-        if (json != null) {
-          result = JsonUtility.FromJson<T>(json);
-          wasSuccessful = true;
+        if (task.Result != null) {
+          string json = task.Result.GetRawJsonValue();
+          if (!string.IsNullOrEmpty(json)) {
+            result = JsonUtility.FromJson<T>(json);
+            wasSuccessful = true;
+          }
         }
       }
       isComplete = true;
@@ -60,6 +66,21 @@ namespace Hamster.States {
     public override void Update() {
       if (isComplete) {
         manager.PopState();
+      }
+    }
+
+    // If a fetch from the database comes back failed, try again, until the
+    // maximum number of retries have been reached.  Failures are most often
+    // caused by connectivity issues or database access rules.
+    protected void HandleFaultedFetch(
+        System.Threading.Tasks.Task<Firebase.Database.DataSnapshot> task) {
+      Debug.LogError("Database exception!  Path = [" + path + "]\n" + task.Exception);
+      // Retry after failure.
+      if (failedFetches++ < MaxDatabaseRetries) {
+        database.GetReference(path).GetValueAsync().ContinueWith(HandleResult);
+      } else {
+        // Too many failures.  Exit the state, with wasSuccessful set to false.
+        isComplete = true;
       }
     }
 

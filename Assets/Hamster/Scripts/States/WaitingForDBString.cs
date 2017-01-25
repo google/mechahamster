@@ -29,13 +29,18 @@ namespace Hamster.States {
     protected override void HandleResult(
         System.Threading.Tasks.Task<Firebase.Database.DataSnapshot> task) {
       if (task.IsFaulted) {
-        Debug.LogError("Database exception!  Path = [" + path + "]\n"
-          + task.Exception);
+        HandleFaultedFetch(task);
+        return;
       } else if (task.IsCompleted) {
-        string json = task.Result.GetRawJsonValue();
-        if (json.Length > 2) {
-          result = json.Substring(1, json.Length - 2);
-          wasSuccessful = true;
+        if (task.Result != null) {
+          string json = task.Result.GetRawJsonValue();
+          // Check for length>2, because the minimum valid
+          // string we can get back is "''" - a string containing
+          // nothing but two quotes.  (Designating an empty string.)
+          if (json.Length > 2) {
+            result = json.Substring(1, json.Length - 2);
+            wasSuccessful = true;
+          }
         }
       }
       isComplete = true;
