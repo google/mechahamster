@@ -30,6 +30,17 @@ namespace Hamster {
     // When spawning in elements, adjust their positions by this amount.
     Vector3 elementAdjust = new Vector3(0.0f, -0.5f, 0.0f);
 
+    public float GameStartTime { get; private set; }
+    public float ElapsedGameTime {
+      get {
+        return Time.time - GameStartTime;
+      }
+    }
+
+    private void Start() {
+      GameStartTime = Time.time;
+    }
+
     // Iterates through a map and spawns all the objects in it.
     public void SpawnWorld(LevelMap map) {
       foreach (MapElement element in map.elements.Values) {
@@ -92,8 +103,11 @@ namespace Hamster {
       return obj;
     }
 
-    // Reset all the MapObjects currently being used to their original state.
-    public void ResetMapObjects() {
+    // Reset the Map back to its original state. This includes the game time since it started,
+    // and the MapObjects
+    public void ResetMap() {
+      GameStartTime = Time.time;
+
       foreach (GameObject gameObject in sceneObjects.Values) {
         MapObjects.MapObject mapObject = gameObject.GetComponent<MapObjects.MapObject>();
         if (mapObject != null) {

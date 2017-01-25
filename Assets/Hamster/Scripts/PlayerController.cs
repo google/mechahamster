@@ -43,7 +43,7 @@ namespace Hamster {
       rigidBody.AddForce(new Vector3(input.x, 0, input.y));
 
       if (transform.position.y < kFellOffLevelHeight) {
-        CommonData.mainGame.DestroyPlayer();
+        CommonData.gameWorld.ResetMap();
       }
     }
 

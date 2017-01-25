@@ -22,14 +22,23 @@ namespace Hamster.States {
     const float MenuWidth = 0.40f;
     const float MenuHeight = 0.75f;
 
+    // The number of decimal places to round the time to.
+    const int RoundTimeToDecimal = 3;
+
     // How long it takes to reach setting the timescale to 0, in seconds.
     private float SlowdownTotalTime = 1.0f;
     // The realtime that the state is started, in seconds.
     private float StartTime { get; set; }
 
+    // The total time taken to finish the level, in seconds.
+    private float ElapsedGameTime { get; set; }
+
     public override void Initialize() {
       Time.timeScale = 1.0f;
       StartTime = Time.realtimeSinceStartup;
+      // Grab the elapsed game time now, as we leave timeScale > 0 for a bit.
+      ElapsedGameTime =
+        (float)Math.Round(CommonData.gameWorld.ElapsedGameTime, RoundTimeToDecimal);
     }
 
     public override void Suspend() {
@@ -61,9 +70,11 @@ namespace Hamster.States {
 
       GUILayout.Label(StringConstants.FinishedTopText);
 
+      GUILayout.Label(string.Format(StringConstants.FinishedTimeText, ElapsedGameTime));
+
       GUILayout.BeginVertical();
       if (GUILayout.Button(StringConstants.ButtonRetry)) {
-        CommonData.gameWorld.ResetMapObjects();
+        CommonData.gameWorld.ResetMap();
         manager.SwapState(new Gameplay());
       }
       if (GUILayout.Button(StringConstants.ButtonExit)) {

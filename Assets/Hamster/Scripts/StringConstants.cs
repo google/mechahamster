@@ -61,6 +61,7 @@ namespace Hamster {
 
     // Level finished screen text:
     public const string FinishedTopText = "Great Job!";
+    public const string FinishedTimeText = "Time: {0} s";
 
     // Auth:
     //--------------------------
