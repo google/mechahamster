@@ -33,7 +33,7 @@ namespace Hamster.MapObjects {
       triggeredThisFrame = false;
     }
 
-    protected override void MapObjectActivation(Collider collider) {
+    void OnTriggerEnter(Collider collider) {
       if (!triggeredThisFrame) {
         triggeredThisFrame = true;
         if (collider.GetComponent<PlayerController>() != null) {

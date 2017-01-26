@@ -21,7 +21,7 @@ namespace Hamster.MapObjects {
   // complete the level when stepped on.
   public class GoalTile : MapObject {
 
-    protected override void MapObjectActivation(Collider collider) {
+    void OnTriggerEnter(Collider collider) {
       PlayerController pc = collider.GetComponent<PlayerController>();
       if (pc != null) {
         // Inform the player they reached the goal.

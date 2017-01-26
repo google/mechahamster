@@ -19,16 +19,6 @@ namespace Hamster.MapObjects {
 
   // General base-class for objects on the map.
   public class MapObject : MonoBehaviour {
-    // Generic behavior for map objects.
-    // When something hits them, they do stuff.
-    void OnTriggerEnter(Collider collider) {
-      MapObjectActivation(collider);
-    }
-
-    // Objects override this to define custom behavior when hit.
-    protected virtual void MapObjectActivation(Collider collider) {
-    }
-
     // Reset the MapObject back to its original state.
     public virtual void Reset() { }
   }
