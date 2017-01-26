@@ -30,8 +30,6 @@ namespace Hamster.States {
     string waitText;
     System.Threading.Tasks.Task task;
 
-    Firebase.Database.FirebaseDatabase database;
-
     public WaitForTask(System.Threading.Tasks.Task task, string waitText = "") {
       this.waitText = waitText;
       this.task = task;
