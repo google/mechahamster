@@ -408,6 +408,10 @@ MonoBehaviour:
     prefab: {fileID: 1633995981044064, guid: 62715cf115358504ab8b0b742b1bafd0, type: 2}
     limitOnePerMap: 0
     includeInToolPalette: 1
+  - name: ZoomTile
+    prefab: {fileID: 1723608468413280, guid: 9267a0538f837974ca3bb97fddb1a7d9, type: 2}
+    limitOnePerMap: 0
+    includeInToolPalette: 1
   prefabNames: []
 --- !u!4 &1990879351
 Transform:
