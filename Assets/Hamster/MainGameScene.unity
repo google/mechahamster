@@ -401,7 +401,7 @@ MonoBehaviour:
     limitOnePerMap: 0
     includeInToolPalette: 1
   - name: Player
-    prefab: {fileID: 1000013606253090, guid: 31e5e8564405e40ae9d5918707f60736, type: 2}
+    prefab: {fileID: 1130139028330910, guid: 6909568afabe72941b740a9d3b768cc9, type: 2}
     limitOnePerMap: 0
     includeInToolPalette: 0
   - name: Ramp
