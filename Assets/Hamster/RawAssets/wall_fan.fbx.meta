@@ -1,0 +1,153 @@
+fileFormatVersion: 2
+guid: b307ef9291dc84e7996c45ab06a49d0d
+timeCreated: 1485515995
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: prop_blades1
+    100002: prop_blades1 1
+    100004: prop_blades2
+    100006: prop_blades2 1
+    100008: prop_blades3
+    100010: prop_blades3 1
+    100012: prop_center
+    100014: prop_center 1
+    100016: prop_light
+    100018: prop_light 1
+    100020: propellor_grp
+    100022: propellor_grp1
+    100024: //RootNode
+    100026: wall_fan_mount1
+    100028: wall_fan_mount2
+    100030: wall_fan_wall
+    100032: wallprop_mount_red1
+    100034: wallprop_mount_red2
+    400000: prop_blades1
+    400002: prop_blades1 1
+    400004: prop_blades2
+    400006: prop_blades2 1
+    400008: prop_blades3
+    400010: prop_blades3 1
+    400012: prop_center
+    400014: prop_center 1
+    400016: prop_light
+    400018: prop_light 1
+    400020: propellor_grp
+    400022: propellor_grp1
+    400024: //RootNode
+    400026: wall_fan_mount1
+    400028: wall_fan_mount2
+    400030: wall_fan_wall
+    400032: wallprop_mount_red1
+    400034: wallprop_mount_red2
+    2300000: prop_blades1
+    2300002: prop_blades1 1
+    2300004: prop_blades2
+    2300006: prop_blades2 1
+    2300008: prop_blades3
+    2300010: prop_blades3 1
+    2300012: prop_center
+    2300014: prop_center 1
+    2300016: prop_light
+    2300018: prop_light 1
+    2300020: wall_fan_mount1
+    2300022: wall_fan_mount2
+    2300024: wall_fan_wall
+    2300026: wallprop_mount_red1
+    2300028: wallprop_mount_red2
+    3300000: prop_blades1
+    3300002: prop_blades1 1
+    3300004: prop_blades2
+    3300006: prop_blades2 1
+    3300008: prop_blades3
+    3300010: prop_blades3 1
+    3300012: prop_center
+    3300014: prop_center 1
+    3300016: prop_light
+    3300018: prop_light 1
+    3300020: wall_fan_mount1
+    3300022: wall_fan_mount2
+    3300024: wall_fan_wall
+    3300026: wallprop_mount_red1
+    3300028: wallprop_mount_red2
+    4300000: wallprop_mount_red1
+    4300002: wall_fan_mount2
+    4300004: wallprop_mount_red2
+    4300006: wall_fan_mount1
+    4300008: wall_fan_wall
+    4300010: prop_blades1
+    4300012: prop_center
+    4300014: prop_light
+    4300016: prop_blades2
+    4300018: prop_blades3
+    4300020: prop_blades1
+    4300022: prop_center
+    4300024: prop_light
+    4300026: prop_blades2
+    4300028: prop_blades3
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

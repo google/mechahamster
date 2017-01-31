@@ -1,0 +1,237 @@
+fileFormatVersion: 2
+guid: f81697a7ca07c44f09518e65ea1aeaa5
+timeCreated: 1485515995
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: explosion
+    100002: explosion_shard1
+    100004: explosion_shard10
+    100006: explosion_shard11
+    100008: explosion_shard12
+    100010: explosion_shard2
+    100012: explosion_shard3
+    100014: explosion_shard4
+    100016: explosion_shard5
+    100018: explosion_shard6
+    100020: explosion_shard7
+    100022: explosion_shard8
+    100024: explosion_shard9
+    100026: mine
+    100028: mine_ball
+    100030: mine_bits
+    100032: mine_bits 1
+    100034: mine_bits1
+    100036: mine_bits10
+    100038: mine_bits11
+    100040: mine_bits12
+    100042: mine_bits13
+    100044: mine_bits14
+    100046: mine_bits2
+    100048: mine_bits3
+    100050: mine_bits4
+    100052: mine_bits5
+    100054: mine_bits6
+    100056: mine_bits7
+    100058: mine_bits8
+    100060: mine_bits9
+    100062: mine_light
+    100064: mine_pointlight1
+    100066: tile_mine
+    100068: //RootNode
+    100070: tile_mine 1
+    400000: explosion
+    400002: explosion_shard1
+    400004: explosion_shard10
+    400006: explosion_shard11
+    400008: explosion_shard12
+    400010: explosion_shard2
+    400012: explosion_shard3
+    400014: explosion_shard4
+    400016: explosion_shard5
+    400018: explosion_shard6
+    400020: explosion_shard7
+    400022: explosion_shard8
+    400024: explosion_shard9
+    400026: mine
+    400028: mine_ball
+    400030: mine_bits
+    400032: mine_bits 1
+    400034: mine_bits1
+    400036: mine_bits10
+    400038: mine_bits11
+    400040: mine_bits12
+    400042: mine_bits13
+    400044: mine_bits14
+    400046: mine_bits2
+    400048: mine_bits3
+    400050: mine_bits4
+    400052: mine_bits5
+    400054: mine_bits6
+    400056: mine_bits7
+    400058: mine_bits8
+    400060: mine_bits9
+    400062: mine_light
+    400064: mine_pointlight1
+    400066: tile_mine
+    400068: //RootNode
+    400070: tile_mine 1
+    2300000: explosion_shard1
+    2300002: explosion_shard10
+    2300004: explosion_shard11
+    2300006: explosion_shard12
+    2300008: explosion_shard2
+    2300010: explosion_shard3
+    2300012: explosion_shard4
+    2300014: explosion_shard5
+    2300016: explosion_shard6
+    2300018: explosion_shard7
+    2300020: explosion_shard8
+    2300022: explosion_shard9
+    2300024: mine
+    2300026: mine_bits 1
+    2300028: mine_bits1
+    2300030: mine_bits10
+    2300032: mine_bits11
+    2300034: mine_bits12
+    2300036: mine_bits13
+    2300038: mine_bits14
+    2300040: mine_bits2
+    2300042: mine_bits3
+    2300044: mine_bits4
+    2300046: mine_bits5
+    2300048: mine_bits6
+    2300050: mine_bits7
+    2300052: mine_bits8
+    2300054: mine_bits9
+    2300056: mine_light
+    2300058: tile_mine
+    2300060: tile_mine 1
+    3300000: explosion_shard1
+    3300002: explosion_shard10
+    3300004: explosion_shard11
+    3300006: explosion_shard12
+    3300008: explosion_shard2
+    3300010: explosion_shard3
+    3300012: explosion_shard4
+    3300014: explosion_shard5
+    3300016: explosion_shard6
+    3300018: explosion_shard7
+    3300020: explosion_shard8
+    3300022: explosion_shard9
+    3300024: mine
+    3300026: mine_bits 1
+    3300028: mine_bits1
+    3300030: mine_bits10
+    3300032: mine_bits11
+    3300034: mine_bits12
+    3300036: mine_bits13
+    3300038: mine_bits14
+    3300040: mine_bits2
+    3300042: mine_bits3
+    3300044: mine_bits4
+    3300046: mine_bits5
+    3300048: mine_bits6
+    3300050: mine_bits7
+    3300052: mine_bits8
+    3300054: mine_bits9
+    3300056: mine_light
+    3300058: tile_mine
+    3300060: tile_mine 1
+    4300000: tile_mine
+    4300002: mine
+    4300004: mine_light
+    4300006: explosion_shard1
+    4300008: explosion_shard2
+    4300010: explosion_shard3
+    4300012: explosion_shard4
+    4300014: explosion_shard5
+    4300016: explosion_shard6
+    4300018: explosion_shard7
+    4300020: explosion_shard8
+    4300022: explosion_shard9
+    4300024: explosion_shard10
+    4300026: explosion_shard11
+    4300028: explosion_shard12
+    4300030: mine_bits
+    4300032: mine_bits1
+    4300034: mine_bits2
+    4300036: mine_bits3
+    4300038: mine_bits4
+    4300040: mine_bits5
+    4300042: mine_bits6
+    4300044: mine_bits7
+    4300046: mine_bits8
+    4300048: mine_bits9
+    4300050: mine_bits10
+    4300052: mine_bits11
+    4300054: mine_bits12
+    4300056: mine_bits13
+    4300058: mine_bits14
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

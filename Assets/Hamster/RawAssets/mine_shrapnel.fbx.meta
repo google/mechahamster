@@ -1,0 +1,150 @@
+fileFormatVersion: 2
+guid: da4125716f7f443c191799b0e24b0294
+timeCreated: 1485770040
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: mine_bit1
+    100002: mine_bit10
+    100004: mine_bit11
+    100006: mine_bit12
+    100008: mine_bit13
+    100010: mine_bit14
+    100012: mine_bit15
+    100014: mine_bit2
+    100016: mine_bit3
+    100018: mine_bit4
+    100020: mine_bit5
+    100022: mine_bit6
+    100024: mine_bit7
+    100026: mine_bit8
+    100028: mine_bit9
+    100030: //RootNode
+    400000: mine_bit1
+    400002: mine_bit10
+    400004: mine_bit11
+    400006: mine_bit12
+    400008: mine_bit13
+    400010: mine_bit14
+    400012: mine_bit15
+    400014: mine_bit2
+    400016: mine_bit3
+    400018: mine_bit4
+    400020: mine_bit5
+    400022: mine_bit6
+    400024: mine_bit7
+    400026: mine_bit8
+    400028: mine_bit9
+    400030: //RootNode
+    2300000: mine_bit1
+    2300002: mine_bit10
+    2300004: mine_bit11
+    2300006: mine_bit12
+    2300008: mine_bit13
+    2300010: mine_bit14
+    2300012: mine_bit15
+    2300014: mine_bit2
+    2300016: mine_bit3
+    2300018: mine_bit4
+    2300020: mine_bit5
+    2300022: mine_bit6
+    2300024: mine_bit7
+    2300026: mine_bit8
+    2300028: mine_bit9
+    3300000: mine_bit1
+    3300002: mine_bit10
+    3300004: mine_bit11
+    3300006: mine_bit12
+    3300008: mine_bit13
+    3300010: mine_bit14
+    3300012: mine_bit15
+    3300014: mine_bit2
+    3300016: mine_bit3
+    3300018: mine_bit4
+    3300020: mine_bit5
+    3300022: mine_bit6
+    3300024: mine_bit7
+    3300026: mine_bit8
+    3300028: mine_bit9
+    4300000: mine_bit15
+    4300002: mine_bit14
+    4300004: mine_bit13
+    4300006: mine_bit12
+    4300008: mine_bit11
+    4300010: mine_bit10
+    4300012: mine_bit9
+    4300014: mine_bit8
+    4300016: mine_bit7
+    4300018: mine_bit6
+    4300020: mine_bit5
+    4300022: mine_bit4
+    4300024: mine_bit3
+    4300026: mine_bit2
+    4300028: mine_bit1
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

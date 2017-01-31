@@ -1,0 +1,114 @@
+fileFormatVersion: 2
+guid: 7a2c8362855134006bf221e7146c6571
+timeCreated: 1485515994
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: big_crystal_deco
+    100002: //RootNode
+    100004: crystal_rock_base
+    100006: grass_blade10
+    100008: grass_blade11
+    100010: grass_blade12
+    100012: grass_blade13
+    100014: grass_blade8
+    100016: grass_blade9
+    400000: big_crystal_deco
+    400002: //RootNode
+    400004: crystal_rock_base
+    400006: grass_blade10
+    400008: grass_blade11
+    400010: grass_blade12
+    400012: grass_blade13
+    400014: grass_blade8
+    400016: grass_blade9
+    2300000: big_crystal_deco
+    2300002: crystal_rock_base
+    2300004: grass_blade10
+    2300006: grass_blade11
+    2300008: grass_blade12
+    2300010: grass_blade13
+    2300012: grass_blade8
+    2300014: grass_blade9
+    3300000: big_crystal_deco
+    3300002: crystal_rock_base
+    3300004: grass_blade10
+    3300006: grass_blade11
+    3300008: grass_blade12
+    3300010: grass_blade13
+    3300012: grass_blade8
+    3300014: grass_blade9
+    4300000: big_crystal_deco
+    4300002: grass_blade9
+    4300004: grass_blade8
+    4300006: grass_blade11
+    4300008: grass_blade10
+    4300010: crystal_rock_base
+    4300012: grass_blade12
+    4300014: grass_blade13
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

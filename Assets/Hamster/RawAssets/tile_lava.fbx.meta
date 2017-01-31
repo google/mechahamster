@@ -1,0 +1,145 @@
+fileFormatVersion: 2
+guid: a59adfd3c753941fd8f117ab38e443e9
+timeCreated: 1485515994
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: fire8
+    100002: fire_grp
+    100004: lava_tile
+    100006: molten_lava
+    100008: //RootNode
+    100010: fire_bones
+    100012: joint10
+    100014: joint11
+    100016: joint12
+    100018: joint13
+    100020: joint14
+    100022: joint15
+    100024: joint16
+    100026: joint17
+    100028: joint18
+    100030: joint2
+    100032: joint2 1
+    100034: joint2 10
+    100036: joint2 11
+    100038: joint2 12
+    100040: joint2 2
+    100042: joint2 3
+    100044: joint2 4
+    100046: joint2 5
+    100048: joint2 6
+    100050: joint2 7
+    100052: joint2 8
+    100054: joint2 9
+    100056: joint3
+    100058: joint4
+    100060: joint7
+    100062: joint8
+    100064: tile_lava
+    400000: fire8
+    400002: fire_grp
+    400004: lava_tile
+    400006: molten_lava
+    400008: //RootNode
+    400010: fire_bones
+    400012: joint10
+    400014: joint11
+    400016: joint12
+    400018: joint13
+    400020: joint14
+    400022: joint15
+    400024: joint16
+    400026: joint17
+    400028: joint18
+    400030: joint2
+    400032: joint2 1
+    400034: joint2 10
+    400036: joint2 11
+    400038: joint2 12
+    400040: joint2 2
+    400042: joint2 3
+    400044: joint2 4
+    400046: joint2 5
+    400048: joint2 6
+    400050: joint2 7
+    400052: joint2 8
+    400054: joint2 9
+    400056: joint3
+    400058: joint4
+    400060: joint7
+    400062: joint8
+    400064: tile_lava
+    2300000: lava_tile
+    2300002: molten_lava
+    3300000: lava_tile
+    3300002: molten_lava
+    4300000: lava_tile
+    4300002: molten_lava
+    7400000: Take 001
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
