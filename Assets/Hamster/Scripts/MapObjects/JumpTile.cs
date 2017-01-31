@@ -34,9 +34,15 @@ namespace Hamster.MapObjects {
     }
 
     void OnTriggerEnter(Collider collider) {
-      if (!triggeredThisFrame) {
-        triggeredThisFrame = true;
-        if (collider.GetComponent<PlayerController>() != null) {
+      if (collider.GetComponent<PlayerController>() != null) {
+        // Trigger the spring animation for all the components that this shares the
+        // root entity with.
+        foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+          animator.SetTrigger(StringConstants.AnimationSpring);
+        }
+
+        if (!triggeredThisFrame) {
+          triggeredThisFrame = true;
           Rigidbody rigidbody = collider.attachedRigidbody;
           collider.attachedRigidbody.velocity =
               new Vector3(rigidbody.velocity.x, 0, rigidbody.velocity.z);

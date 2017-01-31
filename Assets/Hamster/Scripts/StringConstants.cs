@@ -143,5 +143,9 @@ namespace Hamster {
     // Specifies a map ID in the database.
     public const string AnalyticsParamMapId = "map_id";
 
+    // Animation Parameters:
+    //--------------------------
+    // Triggers the spring/jump tile animation
+    public const string AnimationSpring = "spring";
   }
 }
