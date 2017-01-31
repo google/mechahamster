@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33657441947558528}
   - component: {fileID: 65058056374388046}
   - component: {fileID: 23610721538243754}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33080822085787738}
   - component: {fileID: 64450767087659568}
   - component: {fileID: 23774954146781316}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Slope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 33374312133538626}
   - component: {fileID: 65825763010423626}
   - component: {fileID: 23287685313144514}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 33119513138804466}
   - component: {fileID: 64540259193533810}
   - component: {fileID: 23850473244901208}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
