@@ -29,6 +29,7 @@ namespace Hamster.States {
         Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
             StringConstants.RemoteConfigPhysicsGravity).DoubleValue;
       Physics.gravity = new Vector3(0, (float)gravity_y, 0);
+      CommonData.gameWorld.ResetMap();
     }
 
     // Resume the state.  Called when the state becomes active
