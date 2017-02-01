@@ -44,10 +44,12 @@ namespace Hamster.States {
       titleStyle = new GUIStyle();
       titleStyle.alignment = TextAnchor.UpperCenter;
       titleStyle.fontSize = 50;
+      titleStyle.normal.textColor = Color.white;
 
       descriptionStyle = new GUIStyle();
       descriptionStyle.alignment = TextAnchor.UpperCenter;
       descriptionStyle.fontSize = 20;
+      descriptionStyle.normal.textColor = Color.white;
     }
 
     // Update function, which gets called once per frame.

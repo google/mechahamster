@@ -33,10 +33,12 @@ namespace Hamster.States {
       titleStyle = new GUIStyle();
       titleStyle.alignment = TextAnchor.UpperCenter;
       titleStyle.fontSize = 50;
+      titleStyle.normal.textColor = Color.white;
 
       subTitleStyle = new GUIStyle();
       subTitleStyle.alignment = TextAnchor.UpperCenter;
       subTitleStyle.fontSize = 20;
+      subTitleStyle.normal.textColor = Color.white;
     }
 
     // Initialization method.  Called after the state
