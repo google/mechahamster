@@ -31,14 +31,25 @@ namespace Hamster {
     Vector3 elementAdjust = new Vector3(0.0f, -0.5f, 0.0f);
 
     public float GameStartTime { get; private set; }
+    // Returns the amount of time the current level has been played, in seconds.
     public float ElapsedGameTime {
       get {
         return Time.time - GameStartTime;
       }
     }
+    // Returns the amount of time the current level has been played, in milliseconds.
+    public long ElapsedGameTimeMs {
+      get {
+        return (long)(ElapsedGameTime * 1000);
+      }
+    }
+
+    // Does the currently loaded map have pending edits not saved to the database.
+    public bool HasPendingEdits { get; private set; }
 
     private void Start() {
       GameStartTime = Time.time;
+      HasPendingEdits = false;
     }
 
     // Iterates through a map and spawns all the objects in it.
@@ -47,7 +58,8 @@ namespace Hamster {
         GameObject obj = PlaceTile(element);
         obj.transform.localScale = element.scale;
       }
-      worldMap.SetProperties(map.name, map.mapId, map.ownerId);
+      worldMap.SetProperties(map.name, map.mapId, map.ownerId, map.DatabasePath);
+      HasPendingEdits = false;
     }
 
     public void DisposeWorld() {
@@ -57,6 +69,8 @@ namespace Hamster {
       }
       sceneObjects.Clear();
       worldMap.ResetProperties();
+      worldMap.DatabasePath = null;
+      HasPendingEdits = false;
     }
 
     // Internal utility function for removing an item from the map, based on its
@@ -85,6 +99,7 @@ namespace Hamster {
         worldMap.elements.Add(key, element);
         sceneObjects.Add(element.GetStringKey(), obj);
       }
+      HasPendingEdits = true;
       return obj;
     }
 
@@ -114,6 +129,11 @@ namespace Hamster {
       } else {
         return null;
       }
+    }
+
+    // Called when the current world map is saved to the database.
+    public void OnSave() {
+      HasPendingEdits = false;
     }
 
     // Reset the Map back to its original state. This includes the game time since it started,

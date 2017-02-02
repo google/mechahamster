@@ -28,11 +28,14 @@ namespace Hamster.States {
 
     protected bool isComplete = false;
     string waitText;
+    bool useDots;
     System.Threading.Tasks.Task task;
 
-    public WaitForTask(System.Threading.Tasks.Task task, string waitText = "") {
+    public WaitForTask(System.Threading.Tasks.Task task, string waitText = "",
+                       bool useDots = false) {
       this.waitText = waitText;
       this.task = task;
+      this.useDots = useDots;
     }
 
     // Called once per frame when the state is active.
@@ -52,7 +55,8 @@ namespace Hamster.States {
       UnityEngine.GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
       centeredStyle.alignment = TextAnchor.UpperCenter;
       GUI.Label(new Rect(Screen.width / 2 - LabelWidth/2,
-        Screen.height / 2 - LabelHeight/2, LabelWidth, LabelHeight), waitText, centeredStyle);
+        Screen.height / 2 - LabelHeight/2, LabelWidth, LabelHeight),
+        waitText + (useDots ? Utilities.StringHelper.CycleDots() : ""), centeredStyle);
     }
 
     // Class for encapsulating the results of the database load, as

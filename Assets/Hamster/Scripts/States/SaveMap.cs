@@ -78,12 +78,13 @@ namespace Hamster.States {
       if (mapId == null) {
         mapId = CommonData.currentUser.GetUniqueKey();
       }
-      DBStruct<LevelMap> dbLevel =
-          new DBStruct<LevelMap>(CommonData.DBMapTablePath + mapId, CommonData.app);
+      string path = CommonData.DBMapTablePath + mapId;
+      DBStruct<LevelMap> dbLevel = new DBStruct<LevelMap>(path, CommonData.app);
 
       LevelMap currentLevel = CommonData.gameWorld.worldMap;
 
-      currentLevel.SetProperties(mapName, mapId, CommonData.currentUser.data.id);
+      currentLevel.SetProperties(mapName, mapId, CommonData.currentUser.data.id, path);
+      CommonData.gameWorld.OnSave();
 
       dbLevel.Initialize(currentLevel);
       dbLevel.PushData();

@@ -70,6 +70,14 @@ namespace Hamster.States {
         }
       }
 
+      if (mapAlreadySaved && !CommonData.gameWorld.HasPendingEdits) {
+        // Only show the top times if the map has been saved, and there are no
+        // pending edits, which would clear the times.
+        if (GUILayout.Button(StringConstants.ButtonTopTimes)) {
+          manager.PushState(new TopTimes(null));
+        }
+      }
+
       if (GUILayout.Button(StringConstants.ButtonClear)) {
         CommonData.gameWorld.DisposeWorld();
         manager.PopState();

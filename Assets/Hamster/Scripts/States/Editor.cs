@@ -24,7 +24,6 @@ namespace Hamster.States {
 
     Vector2 scrollViewPosition;
     int mapToolSelection = 0;
-    string mapId = StringConstants.DefaultMapId;
 
     // Rotation is in 90 degree increments.
     int currentOrientation = 0;
@@ -65,11 +64,11 @@ namespace Hamster.States {
     public override void Initialize() {
       // Set up our map to edit, and populate the data
       // structure with the necessary IDs.
-      mapId = CommonData.currentUser.GetUniqueKey();
+      string mapId = CommonData.currentUser.GetUniqueKey();
       currentLevel = new LevelMap();
 
       CommonData.gameWorld.worldMap.SetProperties(StringConstants.DefaultMapName,
-          mapId, CommonData.currentUser.data.id);
+          mapId, CommonData.currentUser.data.id, null);
 
       UpdateCameraController();
     }
@@ -90,6 +89,7 @@ namespace Hamster.States {
           var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
           if (resultData.wasSuccessful) {
             currentLevel = resultData.results;
+            currentLevel.DatabasePath = resultData.path;
             CommonData.gameWorld.DisposeWorld();
             CommonData.gameWorld.SpawnWorld(currentLevel);
             Debug.Log("Map load complete!");

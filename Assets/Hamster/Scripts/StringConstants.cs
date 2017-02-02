@@ -39,6 +39,8 @@ namespace Hamster {
     public const string ButtonRetry = "Retry";
     public const string ButtonExit = "Exit";
     public const string ButtonOrientation = "Orientation: ";
+    public const string ButtonTopTimes = "Top Times";
+    public const string ButtonUploadTime = "Upload Time";
 
     // Title screen text:
     public const string TitleText = "MechaHamster!";
@@ -64,6 +66,18 @@ namespace Hamster {
     public const string FinishedTopText = "Great Job!";
     public const string FinishedTimeText = "Time: {0} s";
 
+    // Top Times page:
+    public const string TopTimesTitle = "Top Times";
+    public const string TopTimesHighlight = "*** {0} ***";
+
+    // Uploading scores page:
+    public const string UploadTimeTitle = "Uploading Time";
+    public const string UploadPending = "Uploading";
+    public const string UploadError = "Failed to upload time";
+    // Key used to save names for uploading scores:
+    public const string UploadScoreNameKey = "upload_score_name";
+    public const string UploadScoreDefaultName = "Hammy";
+
     // Auth:
     //--------------------------
 
@@ -79,7 +93,9 @@ namespace Hamster {
     public const string ButtonSignInWithEmail = "Sign In with account";
     public const string ButtonSignInAnonymously = "Sign In Later";
 
-    public const string LabelSigningIn = "Signing In...";
+    public const string LabelSigningIn = "Signing In";
+
+    public const string LabelLoading = "Loading";
 
     public const string LabelAnonymousAccount = "You are signed in on an anonymous account.";
     public const string LabelPasswordAccount = "You are signed in to an email/password account.";

@@ -61,6 +61,7 @@ namespace Hamster.States {
         currentLoadedMap = mapSelection;
         TextAsset json = Resources.Load(levelDir.levels[currentLoadedMap].filename) as TextAsset;
         currentLevel = JsonUtility.FromJson<LevelMap>(json.ToString());
+        currentLevel.DatabasePath = null;
         CommonData.gameWorld.DisposeWorld();
         CommonData.gameWorld.SpawnWorld(currentLevel);
       }
@@ -108,6 +109,9 @@ namespace Hamster.States {
             StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
 
         manager.PushState(new Gameplay());
+      }
+      if (GUILayout.Button(StringConstants.ButtonTopTimes)) {
+        manager.PushState(new TopTimes(null));
       }
       if (GUILayout.Button(kButtonNameBack)) {
         manager.SwapState(new MainMenu());

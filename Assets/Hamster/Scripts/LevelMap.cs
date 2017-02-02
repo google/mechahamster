@@ -28,16 +28,23 @@ namespace Hamster {
     public bool isShared = false;
     public StringMapElementDict elements = new StringMapElementDict();
 
+    // The database path that the map is saved under.
+    // Null/empty indicates it is an offline available map.
+    public string DatabasePath { get; set; }
+
     public void ResetProperties() {
       name = StringConstants.DefaultMapName;
       mapId = StringConstants.DefaultMapId;
       ownerId = "<<ownerId>>";
+      DatabasePath = null;
     }
 
-    public void SetProperties(string name, string mapId, string ownerId) {
+    public void SetProperties(string name, string mapId, string ownerId,
+      string databasePath) {
       this.name = name;
       this.mapId = mapId;
       this.ownerId = ownerId;
+      DatabasePath = databasePath;
     }
   }
 

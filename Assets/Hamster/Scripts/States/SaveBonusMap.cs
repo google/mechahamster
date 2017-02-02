@@ -68,12 +68,13 @@ namespace Hamster.States {
     // Save the current map to the database.  If no mapID is provided,
     // a new id is created.  Otherwise, it saves over the existing ID.
     void SaveMapToDB() {
-      DBStruct<LevelMap> dbLevel =
-          new DBStruct<LevelMap>(CommonData.DBBonusMapTablePath + mapId, CommonData.app);
+      string path = CommonData.DBBonusMapTablePath + mapId;
+      DBStruct<LevelMap> dbLevel = new DBStruct<LevelMap>(path, CommonData.app);
 
       LevelMap currentLevel = CommonData.gameWorld.worldMap;
 
-      currentLevel.SetProperties(mapName, mapId, CommonData.currentUser.data.id);
+      currentLevel.SetProperties(mapName, mapId, CommonData.currentUser.data.id, path);
+      CommonData.gameWorld.OnSave();
 
       dbLevel.Initialize(currentLevel);
       dbLevel.PushData();

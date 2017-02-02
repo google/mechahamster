@@ -69,6 +69,7 @@ namespace Hamster.States {
           var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
           if (resultData.wasSuccessful) {
             currentLevel = resultData.results;
+            currentLevel.DatabasePath = resultData.path;
             CommonData.gameWorld.DisposeWorld();
             CommonData.gameWorld.SpawnWorld(currentLevel);
             Debug.Log("Map load complete!");
@@ -117,6 +118,9 @@ namespace Hamster.States {
             StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
 
         manager.PushState(new Gameplay());
+      }
+      if (GUILayout.Button(StringConstants.ButtonTopTimes)) {
+        manager.PushState(new TopTimes(null));
       }
       if (GUILayout.Button(StringConstants.ButtonCancel)) {
         manager.SwapState(new MainMenu());

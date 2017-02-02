@@ -85,7 +85,8 @@ namespace Hamster.States {
     }
 
     public override StateExitValue Cleanup() {
-      return new StateExitValue(typeof(WaitingForDBLoad<T>), new Results(result, wasSuccessful));
+      return new StateExitValue(
+        typeof(WaitingForDBLoad<T>), new Results(path, result, wasSuccessful));
     }
 
     // Called once per frame for GUI creation, if the state is active.
@@ -94,17 +95,21 @@ namespace Hamster.States {
       UnityEngine.GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
       centeredStyle.alignment = TextAnchor.UpperCenter;
       GUI.Label(new Rect(Screen.width / 2 - 400,
-        Screen.height / 2 - 50, 800, 100), "Loading...", centeredStyle);
+        Screen.height / 2 - 50, 800, 100),
+        StringConstants.LabelLoading + Utilities.StringHelper.CycleDots(),
+        centeredStyle);
     }
 
     // Class for encapsulating the results of the database load, as
     // well as information about whether the load was successful
     // or not.
     public class Results {
+      public string path;
       public T results;
       public bool wasSuccessful;
 
-      public Results(T results, bool wasSuccessful) {
+      public Results(string path, T results, bool wasSuccessful) {
+        this.path = path;
         this.results = results;
         this.wasSuccessful = wasSuccessful;
       }

@@ -30,15 +30,29 @@ namespace Hamster.States {
     // The realtime that the state is started, in seconds.
     private float StartTime { get; set; }
 
-    // The total time taken to finish the level, in seconds.
-    private float ElapsedGameTime { get; set; }
+    // The total time taken to finish the level, in milliseconds.
+    private long ElapsedGameTime { get; set; }
+
+    // Tracks if the score being shown has been uploaded.
+    private bool ScoreUploaded { get; set; }
 
     public override void Initialize() {
       Time.timeScale = 1.0f;
       StartTime = Time.realtimeSinceStartup;
       // Grab the elapsed game time now, as we leave timeScale > 0 for a bit.
-      ElapsedGameTime =
-        (float)Math.Round(CommonData.gameWorld.ElapsedGameTime, RoundTimeToDecimal);
+      ElapsedGameTime = CommonData.gameWorld.ElapsedGameTimeMs;
+      ScoreUploaded = false;
+
+    }
+
+    public override void Resume(StateExitValue results) {
+      if (results != null) {
+        if (results.sourceState == typeof(UploadTime)) {
+          ScoreUploaded = (bool)results.data;
+        } else if (results.sourceState == typeof(TopTimes)) {
+          ScoreUploaded = true;
+        }
+      }
     }
 
     public override void Suspend() {
@@ -70,12 +84,20 @@ namespace Hamster.States {
 
       GUILayout.Label(StringConstants.FinishedTopText);
 
-      GUILayout.Label(string.Format(StringConstants.FinishedTimeText, ElapsedGameTime));
+      GUILayout.Label(string.Format(StringConstants.FinishedTimeText,
+        Utilities.StringHelper.FormatTime(ElapsedGameTime)));
 
       GUILayout.BeginVertical();
       if (GUILayout.Button(StringConstants.ButtonRetry)) {
         CommonData.gameWorld.ResetMap();
         manager.SwapState(new Gameplay());
+      }
+      if (!ScoreUploaded && !CommonData.gameWorld.HasPendingEdits) {
+        // Only allow uploads if the score hasn't been uploaded already,
+        // and there are no pending edits that the database doesn't know of.
+        if (GUILayout.Button(StringConstants.ButtonUploadTime)) {
+          manager.PushState(new UploadTime(ElapsedGameTime));
+        }
       }
       if (GUILayout.Button(StringConstants.ButtonExit)) {
         manager.PopState();

@@ -64,7 +64,8 @@ namespace Hamster.States {
       }
       if (GUILayout.Button(StringConstants.ButtonSignInAnonymously)) {
         manager.PushState(
-            new WaitForTask(auth.SignInAnonymouslyAsync(), StringConstants.LabelSigningIn));
+            new WaitForTask(auth.SignInAnonymouslyAsync(),
+              StringConstants.LabelSigningIn, true));
       }
       GUILayout.EndVertical();
     }

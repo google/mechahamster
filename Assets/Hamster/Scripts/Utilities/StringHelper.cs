@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections.Generic;
 
-namespace Hamster.States {
-  // Select a bonus map!  Uses the general level select template. (BaseLevelSelect)
-  class BonusLevelSelect : BaseLevelSelect {
-    // Initialization method.  Called after the state is added to the stack.
-    public override void Initialize() {
-      mapDBPath = CommonData.DBBonusMapTablePath;
-      mapSourceList = CommonData.currentUser.data.bonusMaps;
+namespace Hamster.Utilities {
 
-      base.Initialize();
+  static class StringHelper {
+    public static string FormatTime(long timeMs) {
+      return string.Format("{0:0.000}", timeMs / 1000.0);
+    }
+
+    public static string CycleDots(int maxDots = 3) {
+      return new string('.', (int)(Time.realtimeSinceStartup % maxDots) + 1);
     }
   }
+
 }
