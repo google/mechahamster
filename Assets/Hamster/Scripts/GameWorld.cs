@@ -105,6 +105,17 @@ namespace Hamster {
       return obj;
     }
 
+    // Returns the GameObject that matches with the non-unique MapElement at the given position.
+    public GameObject ElementAtPosition(int x, int z) {
+      string key = MapElement.GetKeyForPosition(x, z);
+      GameObject gameObject;
+      if (sceneObjects.TryGetValue(key, out gameObject)) {
+        return gameObject;
+      } else {
+        return null;
+      }
+    }
+
     // Reset the Map back to its original state. This includes the game time since it started,
     // and the MapObjects
     public void ResetMap() {

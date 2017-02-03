@@ -125,7 +125,17 @@ namespace Hamster {
       if (CommonData.prefabs.lookup[type].limitOnePerMap)
         return type;
       else
-        return "obj_" + position.ToString();
+        return GetKeyForPosition(position);
+    }
+
+    // Returns the string key used for non-unique elements as the given position.
+    public static string GetKeyForPosition(Vector3 position) {
+      return "obj_" + position.ToString();
+    }
+
+    // Returns the string key used for non-unique elements as the given position.
+    public static string GetKeyForPosition(int x, int z) {
+      return GetKeyForPosition(new Vector3(x, 0, z));
     }
   }
 }
