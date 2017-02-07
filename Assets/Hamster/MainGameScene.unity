@@ -730,6 +730,10 @@ MonoBehaviour:
     prefab: {fileID: 1887872253074472, guid: 106e82e1065408348ab4d059f8eb4d07, type: 2}
     limitOnePerMap: 0
     includeInToolPalette: 1
+  - name: Sand Trap
+    prefab: {fileID: 1883130435826018, guid: 34b7089ac07c33f4aa72ca41041dfc35, type: 2}
+    limitOnePerMap: 0
+    includeInToolPalette: 1
   prefabNames: []
 --- !u!4 &1990879351
 Transform:
