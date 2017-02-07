@@ -3,7 +3,7 @@ guid: b10c9db7027cf401595d54ae14e2d7b4
 timeCreated: 1485515995
 licenseType: Pro
 ModelImporter:
-  serializedVersion: 18
+  serializedVersion: 19
   fileIDToRecycleName:
     100000: tile_normal1
     100002: tile_spikes17
@@ -17,6 +17,7 @@ ModelImporter:
     100018: tile_spikes24
     100020: tile_spikes25
     100022: //RootNode
+    100024: tile_spike_base
     400000: tile_normal1
     400002: tile_spikes17
     400004: tile_spikes18
@@ -29,6 +30,7 @@ ModelImporter:
     400018: tile_spikes24
     400020: tile_spikes25
     400022: //RootNode
+    400024: tile_spike_base
     2300000: tile_normal1
     2300002: tile_spikes17
     2300004: tile_spikes18
@@ -39,6 +41,7 @@ ModelImporter:
     2300014: tile_spikes23
     2300016: tile_spikes24
     2300018: tile_spikes25
+    2300020: tile_spike_base
     3300000: tile_normal1
     3300002: tile_spikes17
     3300004: tile_spikes18
@@ -49,6 +52,7 @@ ModelImporter:
     3300014: tile_spikes23
     3300016: tile_spikes24
     3300018: tile_spikes25
+    3300020: tile_spike_base
     4300000: tile_normal1
     4300002: tile_spikes23
     4300004: tile_spikes22
@@ -59,6 +63,7 @@ ModelImporter:
     4300014: tile_spikes19
     4300016: tile_spikes18
     4300018: tile_spikes20
+    4300020: tile_spike_base
     7400000: Take 001
     9500000: //RootNode
   materials:
@@ -68,6 +73,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
@@ -75,9 +81,9 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     animationCompression: 1
-    animationRotationError: .5
-    animationPositionError: .5
-    animationScaleError: .5
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
     clipAnimations: []
@@ -101,23 +107,26 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 4
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human: []
     skeleton: []
-    armTwist: .5
-    foreArmTwist: .5
-    upperLegTwist: .5
-    legTwist: .5
-    armStretch: .0500000007
-    legStretch: .0500000007
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1
