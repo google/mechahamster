@@ -1,31 +1,26 @@
 fileFormatVersion: 2
 guid: c61b5da30d1fd4f8cb916a46d09cd71d
-timeCreated: 1486451832
+timeCreated: 1486534098
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: mine
-    100002: mine_ball
-    100004: mine_light
-    100006: mine_pointlight1
-    100008: //RootNode
-    100010: tile_mine_base
-    400000: mine
-    400002: mine_ball
-    400004: mine_light
-    400006: mine_pointlight1
-    400008: //RootNode
-    400010: tile_mine_base
-    2300000: mine
-    2300002: mine_light
-    2300004: tile_mine_base
-    3300000: mine
-    3300002: mine_light
-    3300004: tile_mine_base
+    100000: mine_ball_body
+    100002: //RootNode
+    100004: tile_mine_base
+    100006: ttile_mine_export_mine_pointlight1
+    400000: mine_ball_body
+    400002: //RootNode
+    400004: tile_mine_base
+    400006: ttile_mine_export_mine_pointlight1
+    2300000: mine_ball_body
+    2300002: tile_mine_base
+    3300000: mine_ball_body
+    3300002: tile_mine_base
     4300000: tile_mine_base
-    4300002: mine
-    4300004: mine_light
+    4300002: mine_ball_body
+    7400000: Take 001
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -88,7 +83,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
