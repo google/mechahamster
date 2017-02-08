@@ -64,7 +64,11 @@ ModelImporter:
     4300016: tile_spikes18
     4300018: tile_spikes20
     4300020: tile_spike_base
-    7400000: Take 001
+    7400000: IdleUp
+    7400002: TransitionUp
+    7400004: IdleDown
+    7400006: TransitionDown
+    7400008: Dance
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -86,7 +90,267 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: IdleUp
+      takeName: Take 001
+      firstFrame: 15
+      lastFrame: 16
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: tile_spike_base
+        weight: 1
+      - path: tile_spikes1_spike2
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes17
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes18
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes19
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes20
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes21
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes22
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes23
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes24
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes25
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: TransitionUp
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 9
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: tile_spike_base
+        weight: 1
+      - path: tile_spikes1_spike2
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes17
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes18
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes19
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes20
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes21
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes22
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes23
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes24
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes25
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: IdleDown
+      takeName: Take 001
+      firstFrame: 32
+      lastFrame: 33
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: tile_spike_base
+        weight: 1
+      - path: tile_spikes1_spike2
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes17
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes18
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes19
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes20
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes21
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes22
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes23
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes24
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes25
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: TransitionDown
+      takeName: Take 001
+      firstFrame: 26
+      lastFrame: 32
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: tile_spike_base
+        weight: 1
+      - path: tile_spikes1_spike2
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes17
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes18
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes19
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes20
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes21
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes22
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes23
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes24
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes25
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Dance
+      takeName: Take 001
+      firstFrame: 20
+      lastFrame: 26
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: tile_spike_base
+        weight: 1
+      - path: tile_spikes1_spike2
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes17
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes18
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes19
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes20
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes21
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes22
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes23
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes24
+        weight: 1
+      - path: tile_spikes1_spike2/tile_spikes25
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

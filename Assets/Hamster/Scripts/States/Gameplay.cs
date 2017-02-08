@@ -52,6 +52,7 @@ namespace Hamster.States {
     // Called once per frame when the state is active.
     public override void Update() {
       if (Input.GetKeyDown(KeyCode.Escape)) {
+        CommonData.gameWorld.ResetMap();
         manager.PopState();
         return;
       }

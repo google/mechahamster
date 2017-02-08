@@ -140,11 +140,21 @@ namespace Hamster {
     // and the MapObjects
     public void ResetMap() {
       GameStartTime = Time.time;
-
       foreach (GameObject gameObject in sceneObjects.Values) {
-        MapObjects.MapObject mapObject = gameObject.GetComponent<MapObjects.MapObject>();
+        MapObjects.MapObject mapObject = gameObject.GetComponentInChildren<MapObjects.MapObject>();
         if (mapObject != null) {
           mapObject.Reset();
+        }
+      }
+    }
+
+    // Called when a Switch is triggered, forwards that along to switchable map objects.
+    public void OnSwitchTriggered() {
+      foreach (GameObject gameObject in sceneObjects.Values) {
+        MapObjects.ISwitchable switchable =
+          gameObject.GetComponentInChildren<MapObjects.ISwitchable>();
+        if (switchable != null) {
+          switchable.OnSwitchTriggered();
         }
       }
     }

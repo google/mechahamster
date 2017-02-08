@@ -161,7 +161,15 @@ namespace Hamster {
 
     // Animation Parameters:
     //--------------------------
-    // Triggers the spring/jump tile animation
+    // Triggers the spring/jump tile animation.
     public const string AnimationSpring = "spring";
+    // Toggles the switch animation to go up and down (false is up).
+    public const string AnimationSwitch = "switch";
+    // Triggers the spikes going up and down.
+    public const string AnimationSpikesDown = "spikes_down";
+    public const string AnimationSpikesUp = "spikes_up";
+    // The state of the spikes idling in the down/up positions.
+    public const string AnimationSpikesIdleDown = "IdleDown";
+    public const string AnimationSpikesIdleUp = "IdleUp";
   }
 }
