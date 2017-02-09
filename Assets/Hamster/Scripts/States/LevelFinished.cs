@@ -89,7 +89,6 @@ namespace Hamster.States {
 
       GUILayout.BeginVertical();
       if (GUILayout.Button(StringConstants.ButtonRetry)) {
-        CommonData.gameWorld.ResetMap();
         manager.SwapState(new Gameplay());
       }
       if (!ScoreUploaded && !CommonData.gameWorld.HasPendingEdits) {

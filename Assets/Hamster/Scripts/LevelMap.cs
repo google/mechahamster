@@ -129,10 +129,7 @@ namespace Hamster {
     // start locations) they have a different name, to enforce that they
     // are once-per-map.
     public string GetStringKey() {
-      if (CommonData.prefabs.lookup[type].limitOnePerMap)
-        return type;
-      else
-        return GetKeyForPosition(position);
+      return GetKeyForPosition(position);
     }
 
     // Returns the string key used for non-unique elements as the given position.

@@ -30,6 +30,7 @@ namespace Hamster.States {
             StringConstants.RemoteConfigPhysicsGravity).DoubleValue;
       Physics.gravity = new Vector3(0, (float)gravity_y, 0);
       CommonData.gameWorld.ResetMap();
+      Utilities.HideDuringGameplay.OnGameplayStateChange(true);
     }
 
     // Resume the state.  Called when the state becomes active
@@ -41,6 +42,7 @@ namespace Hamster.States {
     }
 
     public override StateExitValue Cleanup() {
+      Utilities.HideDuringGameplay.OnGameplayStateChange(false);
       Time.timeScale = 0.0f;
       return new StateExitValue(typeof(Gameplay));
     }

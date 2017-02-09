@@ -688,64 +688,64 @@ MonoBehaviour:
   prefabs:
   - name: Empty
     prefab: {fileID: 0}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Player Start
-    prefab: {fileID: 1000012644549590, guid: 14f9722887fcda141a857225def72aa2, type: 2}
-    limitOnePerMap: 1
+    prefab: {fileID: 1640089751301338, guid: 14f9722887fcda141a857225def72aa2, type: 2}
     includeInToolPalette: 1
+    maxCount: 1
   - name: Goal
     prefab: {fileID: 1000010396292050, guid: dc4f96adbd6cc6e498b5d19ebdf5c589, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Wall
     prefab: {fileID: 1000013217471512, guid: 89f5bfd194807ed48ba4388a609e550a, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Floor
     prefab: {fileID: 1000010910874200, guid: 3aebd366a476f4e6799605470f74b365, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Jump Tile
     prefab: {fileID: 1000012415800088, guid: 5b52de807ceec4cabbcebcd8d3d01e2d, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Player
     prefab: {fileID: 1130139028330910, guid: 6909568afabe72941b740a9d3b768cc9, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 0
+    maxCount: 0
   - name: Ramp
     prefab: {fileID: 1633995981044064, guid: 62715cf115358504ab8b0b742b1bafd0, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: ZoomTile
     prefab: {fileID: 1723608468413280, guid: 9267a0538f837974ca3bb97fddb1a7d9, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: TeleportTile
     prefab: {fileID: 1129170301622010, guid: e6fa0d989b725764e90aa272ef589d41, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 2
   - name: Mine
     prefab: {fileID: 1887872253074472, guid: 106e82e1065408348ab4d059f8eb4d07, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Sand Trap
     prefab: {fileID: 1883130435826018, guid: 34b7089ac07c33f4aa72ca41041dfc35, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Switch
     prefab: {fileID: 1301325228326724, guid: 052b05cbff4e9d44599a5622249ac01b, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Spikes (Up)
     prefab: {fileID: 1896143142498782, guid: 17b5ebbb2dddd7a4da83feeba7276128, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   - name: Spikes (Down)
     prefab: {fileID: 1452249573567748, guid: 77bf33f4734115242b050b81df383976, type: 2}
-    limitOnePerMap: 0
     includeInToolPalette: 1
+    maxCount: 0
   prefabNames: []
 --- !u!4 &1990879351
 Transform:

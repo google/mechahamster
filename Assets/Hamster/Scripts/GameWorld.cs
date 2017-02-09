@@ -26,6 +26,9 @@ namespace Hamster {
     // string based on their position and type.)
     Dictionary<string, GameObject> sceneObjects = new Dictionary<string, GameObject>();
     public LevelMap worldMap = new LevelMap();
+    // Tracks the map objects that there is a max count limit of.
+    Dictionary<string, List<string>> limitedMapObjects =
+      new Dictionary<string, List<string>>();
 
     // When spawning in elements, adjust their positions by this amount.
     Vector3 elementAdjust = new Vector3(0.0f, -0.5f, 0.0f);
@@ -68,6 +71,7 @@ namespace Hamster {
         Destroy(obj);
       }
       sceneObjects.Clear();
+      limitedMapObjects.Clear();
       worldMap.ResetProperties();
       worldMap.DatabasePath = null;
       HasPendingEdits = false;
@@ -77,6 +81,10 @@ namespace Hamster {
     // dictionary key.  (The dictionary key is the string returned from
     // MapElement::GetKey())
     void RemoveObject(string key) {
+      List<string> limitedList;
+      if (limitedMapObjects.TryGetValue(worldMap.elements[key].type, out limitedList)) {
+        limitedList.Remove(key);
+      }
       worldMap.elements.Remove(key);
       Destroy(sceneObjects[key]);
       sceneObjects.Remove(key);
@@ -85,6 +93,8 @@ namespace Hamster {
     // Spawns a single object in the world, based on a map element.
     public GameObject PlaceTile(MapElement element) {
       string key = element.GetStringKey();
+
+      PrefabList.PrefabEntry prefabEntry = CommonData.prefabs.lookup[element.type];
 
       // If we're placing a unique object, or we're placing an object over an existing object,
       // then remove the old one that is being replaced.
@@ -98,6 +108,18 @@ namespace Hamster {
       if (obj != null) {
         worldMap.elements.Add(key, element);
         sceneObjects.Add(element.GetStringKey(), obj);
+
+        if (prefabEntry.maxCount > 0) {
+          List<string> limitedList = null;
+          if (!limitedMapObjects.TryGetValue(element.type, out limitedList)) {
+            limitedList = new List<string>();
+            limitedMapObjects[element.type] = limitedList;
+          }
+          limitedList.Add(key);
+          while (limitedList.Count > prefabEntry.maxCount) {
+            RemoveObject(limitedList[0]);
+          }
+        }
       }
       HasPendingEdits = true;
       return obj;
