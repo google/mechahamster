@@ -42,3 +42,11 @@ sysinfo.txt
 /Assets/PlayServicesResolver.meta
 /Assets/Plugins.meta
 /Assets/Editor\ Default\ Resources.meta
+
+
+# Daydream state files:
+GvrIgnoreManifestMergeCheck.txt
+GvrIgnoreCompatibilityCheck.txt
+
+# Daydream Demos:
+Assets/GoogleVR/Demos
