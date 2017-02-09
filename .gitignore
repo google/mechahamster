@@ -30,23 +30,45 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-
 # Unique to MechaHamster:
 # Firebase stuff
 /Assets/Firebase/
 /Assets/PlayServicesResolver/
-/Assets/Plugins/
 /Assets/Editor\ Default\ Resources/
-
 /Assets/Firebase.meta
 /Assets/PlayServicesResolver.meta
-/Assets/Plugins.meta
 /Assets/Editor\ Default\ Resources.meta
-
+/Assets/Plugins/Android/AndroidManifest.xml
+/Assets/Plugins/Android/AndroidManifest.xml.meta
+/Assets/Plugins/Android/firebase*
+/Assets/Plugins/Android/Firebase.meta
+/Assets/Plugins/Android/libmessaging_unity_player_activity.jar
+/Assets/Plugins/Android/libmessaging_unity_player_activity.jar.meta
+/Assets/Plugins/Android/play-services-appinvite-10.0.1.aar
+/Assets/Plugins/Android/play-services-appinvite-10.0.1.aar.meta
+/Assets/Plugins/Android/play-services-base-10.0.1.aar
+/Assets/Plugins/Android/play-services-base-10.0.1.aar.meta
+/Assets/Plugins/Android/play-services-basement-10.0.1.aar
+/Assets/Plugins/Android/play-services-basement-10.0.1.aar.meta
+/Assets/Plugins/Android/play-services-tasks-10.0.1.aar
+/Assets/Plugins/Android/play-services-tasks-10.0.1.aar.meta
+/Assets/Plugins/Android/support-annotations-24.0.0.jar
+/Assets/Plugins/Android/support-annotations-24.0.0.jar.meta
+/Assets/Plugins/Android/support-v4-24.0.0.aar
+/Assets/Plugins/Android/support-v4-24.0.0.aar.meta
+/Assets/Plugins/Android/Firebase/
+/Assets/Plugins/Android/firebase*
+/Assets/Plugins/iOS/
+/Assets/Plugins/iOS.meta
+/Assets/Plugins/x86_64/
+/Assets/Plugins/x86_64.meta
 
 # Daydream state files:
 GvrIgnoreManifestMergeCheck.txt
+GvrIgnoreManifestMergeCheck.txt.meta
 GvrIgnoreCompatibilityCheck.txt
+GvrIgnoreCompatibilityCheck.txt.meta
 
 # Daydream Demos:
 Assets/GoogleVR/Demos
+Assets/GoogleVR/Demos.meta
