@@ -58,10 +58,10 @@ sysinfo.txt
 /Assets/Plugins/Android/support-v4-24.0.0.aar.meta
 /Assets/Plugins/Android/Firebase/
 /Assets/Plugins/Android/firebase*
-/Assets/Plugins/iOS/
-/Assets/Plugins/iOS.meta
-/Assets/Plugins/x86_64/
-/Assets/Plugins/x86_64.meta
+/Assets/Plugins/iOS/Firebase/
+/Assets/Plugins/iOS/firebase*
+/Assets/Plugins/x86_64/Firebase/
+/Assets/Plugins/x86_64/firebase*
 
 # Daydream state files:
 GvrIgnoreManifestMergeCheck.txt
