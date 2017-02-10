@@ -13,28 +13,27 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
 namespace Hamster.InputControllers {
 
-  // Class for compositing multile input sources.
-  // Useful for normalizing and combining different input sources.
-  public class MultiInputController : BasePlayerController {
-
-    List<BasePlayerController> controllerList = new List<BasePlayerController>() {
-    new KeyboardController(),
-#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
-    new DaydreamController(),
-#else
-    new TiltController(),
-#endif
-    };
+  // Class for keyboard controller interfaces.
+  // Responsible for returning a 2d vector representing the
+  // player's movement, based on keypresses.
+  public class DaydreamController : BasePlayerController {
+    // Velocity, in world-units-per-second, from holding down
+    // a key.
+    const float VelocityScale = 16.0f;
+    static Vector2 TouchPadOffset = new Vector2(-0.5f, -0.5f);
 
     public override Vector2 GetInputVector() {
       Vector2 result = Vector2.zero;
-      foreach (BasePlayerController controller in controllerList) {
-        result += controller.GetInputVector();
+#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
+      if (GvrController.IsTouching) {
+        result += (GvrController.TouchPos + TouchPadOffset) * VelocityScale;
+        result.y *= -1;
       }
+#endif
       return result;
     }
   }
