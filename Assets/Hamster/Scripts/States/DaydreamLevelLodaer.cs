@@ -25,7 +25,7 @@ namespace Hamster.States {
   class DaydreamLevelLoader : BaseState {
 
     const string LevelDirectoryJson = "LevelList";
-    const int LevelToLoad = 0;
+    const int LevelToLoad = 1;
 
     public override void Initialize() {
       LevelMap currentLevel;
