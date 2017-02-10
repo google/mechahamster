@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33000010759206776}
   - component: {fileID: 65000014133432594}
   - component: {fileID: 114000013977654740}
+  - component: {fileID: 114239176587568114}
   m_Layer: 10
   m_Name: Tile
   m_TagString: Untagged
@@ -337,3 +338,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kJumpVelocity: 8
+--- !u!114 &114239176587568114
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011133426384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03c1bcf6c97c074f914a90c47e912cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MinImpulseMagnitude: 0
+  MaxImpulseMagnitude: 0
+  AudioClips:
+  - {fileID: 8300000, guid: 3eae5d3e99b8ef84aa6dd609a76705ad, type: 3}

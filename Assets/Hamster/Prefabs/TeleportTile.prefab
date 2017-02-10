@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 33196972215033770}
   - component: {fileID: 65020507986649436}
   - component: {fileID: 114029569134557406}
+  - component: {fileID: 114475522830993850}
   m_Layer: 10
   m_Name: Tile
   m_TagString: Untagged
@@ -1086,3 +1087,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HideOnCooldown: {fileID: 1988049832183968}
   Key: 0
+--- !u!114 &114475522830993850
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766653406311786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03c1bcf6c97c074f914a90c47e912cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MinImpulseMagnitude: 0
+  MaxImpulseMagnitude: 0
+  AudioClips:
+  - {fileID: 8300000, guid: e58d6164042ca944686292aa0948a1ba, type: 3}
+  - {fileID: 8300000, guid: f30af47e94231c64dbd3f7b7123c5d13, type: 3}

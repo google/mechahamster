@@ -21,6 +21,9 @@ namespace Hamster {
   public class PlayerController : MonoBehaviour {
     InputControllers.BasePlayerController inputController;
 
+    // Audio clip that is played when the ball falls below the kill plane.
+    public AudioClip OnFallAudio;
+
     // Has the player object touched a goal tile.
     public bool ReachedGoal { get; private set; }
 
@@ -43,6 +46,15 @@ namespace Hamster {
       rigidBody.AddForce(new Vector3(input.x, 0, input.y));
 
       if (transform.position.y < kFellOffLevelHeight) {
+        if (OnFallAudio != null) {
+          GameObject audioObject = new GameObject();
+          audioObject.transform.position = transform.position;
+          AudioSource audioSource = audioObject.AddComponent<AudioSource>();
+          audioSource.clip = OnFallAudio;
+          audioSource.Play();
+          GameObject.Destroy(audioObject, OnFallAudio.length);
+        }
+
         CommonData.gameWorld.ResetMap();
       }
     }

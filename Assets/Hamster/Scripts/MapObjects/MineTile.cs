@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+using Hamster.Utilities;
 
 namespace Hamster.MapObjects {
 
@@ -40,6 +39,11 @@ namespace Hamster.MapObjects {
     public float ExplosionRadius;
     // The upwards modifier to apply with the explosion.
     public float UpwardsModifier;
+
+    // The audio to play when launching a mine.
+    public AudioClip LaunchMineAudio;
+    // The audio clips for when the mine explodes.
+    public AudioClip[] ExplosionAudio;
 
     public void Update() {
       if (Cooldown > 0.0f) {
@@ -72,7 +76,14 @@ namespace Hamster.MapObjects {
         StartCooldown();
         // Trigger the mine animation.
         foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
-          animator.SetTrigger("LaunchMine");
+          animator.SetTrigger(StringConstants.AnimationLaunchMine);
+        }
+
+        // Play the audio for launching the mine.
+        AudioSource audioSource = GetComponent<AudioSource>();
+        if (audioSource != null) {
+          audioSource.clip = LaunchMineAudio;
+          audioSource.Play();
         }
       }
     }
@@ -97,6 +108,12 @@ namespace Hamster.MapObjects {
         Rigidbody playerRB = CommonData.mainGame.player.GetComponent<Rigidbody>();
         playerRB.AddExplosionForce(ExplosionForce, mineLocation.position, ExplosionRadius,
           UpwardsModifier, ForceMode.Impulse);
+      }
+
+      // Play the audio for exploding the mine.
+      AudioSource audioSource = GetComponent<AudioSource>();
+      if (audioSource != null) {
+        audioSource.PlayRandom(ExplosionAudio);
       }
     }
   }

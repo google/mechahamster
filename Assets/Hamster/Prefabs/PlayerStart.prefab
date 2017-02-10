@@ -71,6 +71,7 @@ GameObject:
   - component: {fileID: 4050308292116048}
   - component: {fileID: 33853623459362126}
   - component: {fileID: 65936493704381798}
+  - component: {fileID: 114448228213318480}
   m_Layer: 9
   m_Name: Floor
   m_TagString: Untagged
@@ -338,6 +339,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d98ac29b624687c40b85885d622ece16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114448228213318480
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1158378748030914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03c1bcf6c97c074f914a90c47e912cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MinImpulseMagnitude: 4
+  MaxImpulseMagnitude: 30
+  AudioClips:
+  - {fileID: 8300000, guid: c0b233c9f30d7d24c9a14697420e8037, type: 3}
+  - {fileID: 8300000, guid: 9a9a392118c0b814996b6dd8a9e2de3b, type: 3}
+  - {fileID: 8300000, guid: 024e4ec7acece174aa502f80b516c102, type: 3}
+  - {fileID: 8300000, guid: 753856e660ea2a24e8e37520c273bf21, type: 3}
+  - {fileID: 8300000, guid: 152eebd6db3ad5347b4f34640609381b, type: 3}
 --- !u!114 &114725110323810102
 MonoBehaviour:
   m_ObjectHideFlags: 1

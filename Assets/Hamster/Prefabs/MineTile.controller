@@ -8,7 +8,7 @@ AnimatorController:
   m_Name: MineTile
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: LaunchMine
+  - m_Name: launch_mine
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -35,7 +35,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: LaunchMine
+    m_ConditionEvent: launch_mine
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102211088409044156}

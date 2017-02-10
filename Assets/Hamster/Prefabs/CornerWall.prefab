@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33654747043021502}
   - component: {fileID: 23930241439840288}
   - component: {fileID: 65834079892912680}
+  - component: {fileID: 114103632767332732}
   m_Layer: 9
   m_Name: CornerWall
   m_TagString: Untagged
@@ -92,3 +93,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 2, z: 1.5}
   m_Center: {x: -0.25, y: 1, z: -0.25}
+--- !u!114 &114103632767332732
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1313388505912438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03c1bcf6c97c074f914a90c47e912cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MinImpulseMagnitude: 1
+  MaxImpulseMagnitude: 12
+  AudioClips:
+  - {fileID: 8300000, guid: c0b233c9f30d7d24c9a14697420e8037, type: 3}
+  - {fileID: 8300000, guid: 9a9a392118c0b814996b6dd8a9e2de3b, type: 3}
+  - {fileID: 8300000, guid: 024e4ec7acece174aa502f80b516c102, type: 3}
+  - {fileID: 8300000, guid: 753856e660ea2a24e8e37520c273bf21, type: 3}
+  - {fileID: 8300000, guid: 152eebd6db3ad5347b4f34640609381b, type: 3}

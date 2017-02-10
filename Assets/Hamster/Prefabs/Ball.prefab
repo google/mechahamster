@@ -218,6 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e69e13a7c58644639bdf568c2c16996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnFallAudio: {fileID: 8300000, guid: e416b8202f1a85b45bb10313d4356319, type: 3}
 --- !u!135 &135615730316192926
 SphereCollider:
   m_ObjectHideFlags: 1
