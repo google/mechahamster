@@ -156,7 +156,7 @@ namespace Hamster {
       Firebase.RemoteConfig.FirebaseRemoteConfig.ActivateFetched();
 
       CommonData.prefabs = FindObjectOfType<PrefabList>();
-      CommonData.mainCamera = FindObjectOfType<CameraController>().GetComponent<Camera>();
+      CommonData.mainCamera = FindObjectOfType<CameraController>().GetComponentInChildren<Camera>();
       CommonData.mainGame = this;
       Firebase.AppOptions ops = new Firebase.AppOptions();
       CommonData.app = Firebase.FirebaseApp.Create(ops);
