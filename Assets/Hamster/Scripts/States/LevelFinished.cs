@@ -43,6 +43,10 @@ namespace Hamster.States {
       ElapsedGameTime = CommonData.gameWorld.ElapsedGameTimeMs;
       ScoreUploaded = false;
 
+      // TODO(ccornell) Remove once we get menus!  [daydream scaffolding]
+#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
+      manager.SwapState(new Gameplay());
+#endif
     }
 
     public override void Resume(StateExitValue results) {

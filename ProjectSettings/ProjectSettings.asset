@@ -129,7 +129,7 @@ PlayerSettings:
       enableTransitionView: 0
     daydream:
       depthFormat: 0
-      useSustainedPerformanceMode: 0
+      useSustainedPerformanceMode: 1
     hololens:
       depthFormat: 1
   protectGraphicsMemory: 0
@@ -239,7 +239,7 @@ PlayerSettings:
   - m_BuildTarget: Android
     m_Enabled: 0
     m_Devices:
-    - Oculus
+    - daydream
   - m_BuildTarget: Metro
     m_Enabled: 0
     m_Devices: []
