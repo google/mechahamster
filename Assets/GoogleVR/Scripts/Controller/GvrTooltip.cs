@@ -81,6 +81,7 @@ public class GvrTooltip : MonoBehaviour {
   void Awake() {
     rectTransform = GetComponent<RectTransform>();
     canvasGroup = GetComponent<CanvasGroup>();
+    isOnLeft = IsTooltipOnLeft();
     RefreshTooltip();
   }
 
