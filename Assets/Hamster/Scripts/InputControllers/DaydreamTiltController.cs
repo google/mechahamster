@@ -17,21 +17,18 @@ using System.Collections;
 
 namespace Hamster.InputControllers {
 
-  // Class for controlling the ball via the daydream controller.
-  // Uses the analog touchpad for direction.
-  public class DaydreamController : BasePlayerController {
-    // Velocity, in world-units-per-second, from holding down
-    // a direction at an extreme.
-    const float VelocityScale = 16.0f;
-    static Vector2 TouchPadOffset = new Vector2(-0.5f, -0.5f);
+  // Class for daydream-tilt-control interfaces.
+  // Responsible for returning a 2d vector representing the
+  // player's movement, based on the orientation of the daydream
+  // controller.
+  public class DaydreamTiltController : BasePlayerController {
+    // Velocity, in world-units-per-second, from tilting the controller in a direction.
+    const float TiltVelocity = 1.0f;
 
     public override Vector2 GetInputVector() {
       Vector2 result = Vector2.zero;
 #if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
-      if (GvrController.IsTouching) {
-        result += (GvrController.TouchPos + TouchPadOffset) * VelocityScale;
-        result.y *= -1;
-      }
+        result = new Vector2(GvrController.Accel.z, -GvrController.Accel.x) * TiltVelocity;
 #endif
       return result;
     }
