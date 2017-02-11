@@ -454,8 +454,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1764771770870152}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6, z: 0}
-  m_LocalScale: {x: 1, y: 0.2, z: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4515286568645958}
   m_RootOrder: 2
@@ -886,10 +886,10 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1764771770870152}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Size: {x: 0.7, y: 0.5, z: 0.7}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &95035256607589786
 Animator:
@@ -920,7 +920,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MinImpulseMagnitude: 0
-  MaxImpulseMagnitude: 0
+  MaxImpulseMagnitude: 12
   AudioClips:
   - {fileID: 8300000, guid: 53531c59b1ade7949980e2fcf2688c24, type: 3}
   - {fileID: 8300000, guid: 93c43ae4b887321449b45e8024a466e7, type: 3}
@@ -955,6 +955,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnabledAtStart: 0
-  ExplosionForce: 10
-  ExplosionRadius: 2
-  ExplosionUpwardsModifier: -0.5

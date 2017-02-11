@@ -87,5 +87,10 @@ namespace Hamster.MapObjects {
           ExplosionRadius, ExplosionUpwardsModifier, ForceMode.Impulse);
       }
     }
+
+    // If using a collision shape instead, treat it the same as if it was a trigger.
+    private void OnCollisionEnter(Collision collision) {
+      OnTriggerEnter(collision.collider);
+    }
   }
 }
