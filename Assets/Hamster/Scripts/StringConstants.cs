@@ -124,6 +124,20 @@ namespace Hamster {
     // Remote Config:
     //--------------------------
     public const string RemoteConfigPhysicsGravity = "physics_gravity";
+    // AccelerationTile
+    public const string RemoteConfigAccelerationTileForce = "acceleration_tile_force";
+    // DragTile
+    public const string RemoteConfigSandTileDrag = "sand_tile_drag";
+    // JumpTile
+    public const string RemoteConfigJumpTileVelocity = "jump_tile_velocity";
+    // MineTile
+    public const string RemoteConfigMineTileForce = "mine_tile_force";
+    public const string RemoteConfigMineTileRadius = "mine_tile_radius";
+    public const string RemoteConfigMineTileUpwardsMod = "mine_tile_upwards_mod";
+    // SpikesTile
+    public const string RemoteConfigSpikesTileForce = "spikes_tile_force";
+    public const string RemoteConfigSpikesTileRadius = "spikes_tile_radius";
+    public const string RemoteConfigSpikesTileUpwardsMod = "spikes_tile_upwards_mod";
 
     // Messaging:
     //--------------------------

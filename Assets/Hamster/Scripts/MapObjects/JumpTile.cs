@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
+using Firebase.RemoteConfig;
 
 namespace Hamster.MapObjects {
 
@@ -27,7 +27,12 @@ namespace Hamster.MapObjects {
     static bool triggeredThisFrame;
 
     // Velocity of the kick, in world-units/second.
-    public float kJumpVelocity = 8;
+    public float JumpVelocity { get; private set; }
+
+    private void Start() {
+      JumpVelocity = (float)FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigJumpTileVelocity).DoubleValue;
+    }
 
     public void Update() {
       triggeredThisFrame = false;
@@ -46,7 +51,7 @@ namespace Hamster.MapObjects {
           Rigidbody rigidbody = collider.attachedRigidbody;
           collider.attachedRigidbody.velocity =
               new Vector3(rigidbody.velocity.x, 0, rigidbody.velocity.z);
-          rigidbody.AddForce(new Vector3(0.0f, kJumpVelocity, 0.0f), ForceMode.Impulse);
+          rigidbody.AddForce(new Vector3(0.0f, JumpVelocity, 0.0f), ForceMode.Impulse);
         }
       }
     }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
+using Firebase.RemoteConfig;
 
 namespace Hamster.MapObjects {
 
@@ -21,14 +22,21 @@ namespace Hamster.MapObjects {
     // Whether the spikes start in the up position when the level begins.
     public bool EnabledAtStart = false;
 
-    public float ExplosionForce = 10.0f;
-    public float ExplosionRadius = 2.0f;
-    public float ExplosionUpwardsModifier = -0.5f;
+    public float ExplosionForce { get; private set; }
+    public float ExplosionRadius { get; private set; }
+    public float ExplosionUpwardsModifier { get; private set; }
 
     // Whether the spikes are currently active.
     public bool SpikesActive { get; private set; }
 
     private void Start() {
+      ExplosionForce = (float)FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigSpikesTileForce).DoubleValue;
+      ExplosionRadius = (float)FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigSpikesTileRadius).DoubleValue;
+      ExplosionUpwardsModifier = (float)FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigSpikesTileUpwardsMod).DoubleValue;
+
       ForceState(EnabledAtStart);
     }
 

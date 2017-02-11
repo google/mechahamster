@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
+using Firebase.RemoteConfig;
 
 namespace Hamster.MapObjects {
 
@@ -26,8 +26,13 @@ namespace Hamster.MapObjects {
     // more than one tile on the same frame.)
     static bool triggeredThisFrame;
 
-    // Acceleration vector.  Set in the editor as part of the prefab.
-    public Vector3 AccelerationVector;
+    // Acceleration force applied to the ball, set through Remote Config.
+    public float Acceleration { get; private set; }
+
+    private void Start() {
+      Acceleration = (float)FirebaseRemoteConfig.GetValue(
+          StringConstants.RemoteConfigAccelerationTileForce).DoubleValue;
+    }
 
     public void Update() {
       triggeredThisFrame = false;
@@ -38,7 +43,7 @@ namespace Hamster.MapObjects {
         triggeredThisFrame = true;
         if (collider.GetComponent<PlayerController>() != null) {
           Rigidbody rigidbody = collider.attachedRigidbody;
-          Vector3 force = AccelerationVector;
+          Vector3 force = Vector3.forward * Acceleration;
           force = transform.TransformDirection(force);
           rigidbody.AddForce(force, ForceMode.Force);
         }

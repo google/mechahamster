@@ -115,6 +115,22 @@ namespace Hamster {
       defaults.Add(StringConstants.RemoteConfigInviteCallToActionText,
           StringConstants.DefaultInviteCallToActionText);
 
+      // Defaults for Map Objects:
+      // Acceleration Tile
+      defaults.Add(StringConstants.RemoteConfigAccelerationTileForce, 24.0f);
+      // Drag Tile
+      defaults.Add(StringConstants.RemoteConfigSandTileDrag, 5.0f);
+      // Jump Tile
+      defaults.Add(StringConstants.RemoteConfigJumpTileVelocity, 8.0f);
+      // Mine Tile
+      defaults.Add(StringConstants.RemoteConfigMineTileForce, 10.0f);
+      defaults.Add(StringConstants.RemoteConfigMineTileRadius, 2.0f);
+      defaults.Add(StringConstants.RemoteConfigMineTileUpwardsMod, 0.2f);
+      // Spikes Tile
+      defaults.Add(StringConstants.RemoteConfigSpikesTileForce, 10.0f);
+      defaults.Add(StringConstants.RemoteConfigSpikesTileRadius, 1.0f);
+      defaults.Add(StringConstants.RemoteConfigSpikesTileUpwardsMod, -0.5f);
+
       Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
       return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);
     }
