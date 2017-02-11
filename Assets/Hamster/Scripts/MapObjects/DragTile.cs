@@ -13,13 +13,18 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
+using Firebase.RemoteConfig;
 
 namespace Hamster.MapObjects {
 
   // Tile that adjusts the ball's drag while it is inside.
   public class DragTile : MapObject {
-    public float Drag;
+    public float Drag { get; private set; }
+
+    private void Start() {
+      Drag = (float)FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigSandTileDrag).DoubleValue;
+    }
 
     void OnTriggerEnter(Collider collider) {
       Ball.AdjustableDrag adjustableDrag = collider.GetComponent<Ball.AdjustableDrag>();

@@ -14,6 +14,7 @@
 
 using UnityEngine;
 using Hamster.Utilities;
+using Firebase.RemoteConfig;
 
 namespace Hamster.MapObjects {
 
@@ -34,16 +35,25 @@ namespace Hamster.MapObjects {
     public float Cooldown { get; private set; }
 
     // The amount of force to apply with the explosion.
-    public float ExplosionForce;
+    public float ExplosionForce { get; private set; }
     // The radius of the explosion.
-    public float ExplosionRadius;
+    public float ExplosionRadius { get; private set; }
     // The upwards modifier to apply with the explosion.
-    public float UpwardsModifier;
+    public float UpwardsModifier { get; private set; }
 
     // The audio to play when launching a mine.
     public AudioClip LaunchMineAudio;
     // The audio clips for when the mine explodes.
     public AudioClip[] ExplosionAudio;
+
+    private void Start() {
+      ExplosionForce = (float)FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigMineTileForce).DoubleValue;
+      ExplosionRadius = (float)FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigMineTileRadius).DoubleValue;
+      UpwardsModifier = (float)FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigMineTileUpwardsMod).DoubleValue;
+    }
 
     public void Update() {
       if (Cooldown > 0.0f) {
