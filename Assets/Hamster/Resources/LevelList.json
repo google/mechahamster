@@ -12,8 +12,8 @@
         },
         {
             "name": "Third Level",
-            "description": "Really just the second level again.",
-            "filename": "level2"
+            "description": "More complicated tricks!",
+            "filename": "level3"
         }
     ]
 }
