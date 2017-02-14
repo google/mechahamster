@@ -24,10 +24,14 @@ namespace Hamster.States {
   class Startup : BaseState {
 
     Firebase.Auth.FirebaseAuth auth;
-
+    bool inVrMode = false;
     const string DefaultDesktopID = "XYZZY";
 
     public Startup() {
+      VRSystemSetup vrSetup = GameObject.FindObjectOfType<VRSystemSetup>();
+      if (vrSetup) {
+        inVrMode = vrSetup.StartInVRMode;
+      }
     }
 
     // Initialization method.  Called after the state
@@ -46,7 +50,12 @@ namespace Hamster.States {
       // If we need to sign in, do that.  Otherwise, if we know who we are,
       // so fetch the user data.
       if (auth.CurrentUser == null) {
-        manager.PushState(new SignInMenu());
+        if (inDaydreamMode) {
+              manager.PushState(new WaitForTask(auth.SignInAnonymouslyAsync(),
+                  StringConstants.LabelSigningIn, true));
+        } else {
+          manager.PushState(new SignInMenu());
+        }
       } else {
         manager.PushState(new States.FetchUserData(auth.CurrentUser.UserId));
       }
@@ -58,7 +67,8 @@ namespace Hamster.States {
     // If we got back from login, request/start a user with that ID.
     // If we got back from fetching user data, start the game.
     public override void Resume(StateExitValue results) {
-      if (results.sourceState == typeof(SignInMenu)) {
+      if (results.sourceState == typeof(SignInMenu) ||
+          results.sourceState == typeof(WaitForTask)) {
           // We just got back from trying to sign in anonymously.
           // Did it work?
           if (auth.CurrentUser != null) {
@@ -74,12 +84,13 @@ namespace Hamster.States {
         // Did THAT work?
         if (CommonData.currentUser.data != null) {
           // Yes.  Ready to start!
-          // TODO(ccornell) Remove once we get menus!  [daydream scaffolding]
-#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
-          manager.SwapState(new States.DaydreamLevelLoader());
-#else
-          manager.SwapState(new States.MainMenu());
-#endif
+          if (inVrMode) {
+            // TODO(ccornell) Remove once we get menus!  [daydream scaffolding]
+            manager.SwapState(new States.DaydreamLevelLoader());
+          } else {
+            //  Normal load path.
+            manager.SwapState(new States.MainMenu());
+          }
         } else {
           // Nope.  Problems.
           manager.PushState(new FatalError("Could not fetch or create user data."));
