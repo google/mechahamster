@@ -16,8 +16,16 @@
 
 extern "C" {
 
+#define WORKAROUND_FULLY_LINKED_GVR_IOS_LIBS 1
+#if WORKAROUND_FULLY_LINKED_GVR_IOS_LIBS
+// Because of a bug in how the GVR library is linked on iOS, we need to disable
+// libgvrunity.a, which means we need to stub out the functions that called it.
+void cardboardPause(bool paused) {}
+void createUiLayer(id app, UIView* view) {}
+#else
 extern void cardboardPause(bool paused);
 extern void createUiLayer(id app, UIView* view);
+#endif
 
 bool isOpenGLAPI() {
   CardboardAppController *app = (CardboardAppController *)GetAppController();
@@ -34,9 +42,18 @@ void finishActivityAndReturn(bool exitVR) {
 struct UnityAudioEffectDefinition;
 typedef int (*UnityPluginGetAudioEffectDefinitionsFunc)(
     struct UnityAudioEffectDefinition*** descptr);
+
+#if WORKAROUND_FULLY_LINKED_GVR_IOS_LIBS
+// Because of a bug in how the GVR library is linked on iOS, we need to disable
+// libgvrunity.a, which means we need to stub out the functions that called it.
+void UnityRegisterAudioPlugin(
+    UnityPluginGetAudioEffectDefinitionsFunc getAudioEffectDefinitions) {}
+int UnityGetAudioEffectDefinitions(UnityAudioEffectDefinition*** definitionptr) { return 0; }
+#else
 extern void UnityRegisterAudioPlugin(
     UnityPluginGetAudioEffectDefinitionsFunc getAudioEffectDefinitions);
 extern int UnityGetAudioEffectDefinitions(UnityAudioEffectDefinition*** definitionptr);
+#endif
 
 }  // extern "C"
 

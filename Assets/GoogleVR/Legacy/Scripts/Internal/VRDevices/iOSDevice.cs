@@ -45,6 +45,13 @@ namespace Gvr.Internal {
       launchSettingsDialog();
     }
 
+// Because of a bug in how the GVR library is linked on iOS, we need to disable
+// libgvrunity.a, which means we need to stub out the functions that called it.
+#if UNITY_IOS
+    private static bool isOpenGLAPI() { return true; }
+    private static void setVRModeEnabled(bool enabled) {}
+    private static void launchSettingsDialog() {}
+#else
     [DllImport("__Internal")]
     private static extern bool isOpenGLAPI();
 
@@ -53,6 +60,7 @@ namespace Gvr.Internal {
 
     [DllImport("__Internal")]
     private static extern void launchSettingsDialog();
+#endif
   }
 }
 /// @endcond

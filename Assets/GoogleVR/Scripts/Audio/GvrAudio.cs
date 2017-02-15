@@ -380,6 +380,39 @@ public static class GvrAudio {
   private const string pluginName = "audioplugingvrunity";
 #endif
 
+// Because of a bug in how the GVR library is linked on iOS, we need to disable
+// libgvrunity.a, which means we need to stub out the functions that called it.
+#if UNITY_IOS
+  // Listener handlers.
+  private static void SetListenerGain (float gain) {}
+
+  // Soundfield handlers.
+  private static int CreateSoundfield (int numChannels) { return 0; }
+
+  private static void DestroySoundfield (int soundfieldId) {}
+
+  // Source handlers.
+  private static int CreateSource (bool enableHrtf) { return 0; }
+
+  private static void DestroySource (int sourceId) {}
+
+  private static void SetSourceBypassRoomEffects (int sourceId, bool bypassRoomEffects) {}
+
+  private static void SetSourceDirectivity (int sourceId, float alpha, float order) {}
+
+  private static void SetSourceListenerDirectivity (int sourceId, float alpha, float order) {}
+
+  private static void SetSourceOcclusionIntensity (int sourceId, float intensity) {}
+
+  // Room handlers.
+  private static void SetRoomProperties (IntPtr roomProperties) {}
+
+  // System handlers.
+  private static void Initialize (Quality quality, int sampleRate, int numChannels,
+                                         int framesPerBuffer) {}
+
+  private static void Shutdown () {}
+#else
   // Listener handlers.
   [DllImport(pluginName)]
   private static extern void SetListenerGain (float gain);
@@ -421,4 +454,5 @@ public static class GvrAudio {
 
   [DllImport(pluginName)]
   private static extern void Shutdown ();
+#endif
 }

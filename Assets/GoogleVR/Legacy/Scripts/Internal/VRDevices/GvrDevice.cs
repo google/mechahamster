@@ -190,6 +190,37 @@ namespace Gvr.Internal {
     private const string dllName = "gvrunity";
 #endif  // UNITY_IOS
 
+// Because of a bug in how the GVR library is linked on iOS, we need to disable
+// libgvrunity.a, which means we need to stub out the functions that called it.
+#if UNITY_IOS
+    private static void Start() {}
+
+    private static void SetTextureId(int id) {}
+
+    private static bool SetDefaultProfile(byte[] uri, int size) { return true; }
+
+    private static void SetUnityVersion(byte[] version_str, int version_length) {}
+
+    private static void EnableDistortionCorrection(bool enable) {}
+
+    private static void SetNeckModelFactor(float factor) {}
+
+    private static void ResetHeadTracker() {}
+
+    private static int GetEventFlags() { return 0; }
+
+    private static void GetProfile(float[] profile) {}
+
+    private static void GetHeadPose(float[] pose) {}
+
+    private static void GetViewParameters(float[] viewParams) {}
+
+    private static void Pause() {}
+
+    private static void Resume() {}
+
+    private static void Stop() {}
+#else
     [DllImport(dllName)]
     private static extern void Start();
 
@@ -231,6 +262,7 @@ namespace Gvr.Internal {
 
     [DllImport(dllName)]
     private static extern void Stop();
+#endif
   }
 }
 /// @endcond
