@@ -50,7 +50,7 @@ namespace Hamster.States {
       // If we need to sign in, do that.  Otherwise, if we know who we are,
       // so fetch the user data.
       if (auth.CurrentUser == null) {
-        if (inDaydreamMode) {
+        if (inVrMode) {
               manager.PushState(new WaitForTask(auth.SignInAnonymouslyAsync(),
                   StringConstants.LabelSigningIn, true));
         } else {

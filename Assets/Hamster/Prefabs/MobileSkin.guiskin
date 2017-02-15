@@ -813,7 +813,7 @@ MonoBehaviour:
     m_ImagePosition: 2
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
-    m_FixedHeight: 15
+    m_FixedHeight: 60
     m_StretchWidth: 1
     m_StretchHeight: 0
   m_horizontalScrollbarThumb:
@@ -880,7 +880,7 @@ MonoBehaviour:
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
-    m_FixedHeight: 13
+    m_FixedHeight: 60
     m_StretchWidth: 1
     m_StretchHeight: 0
   m_horizontalScrollbarLeftButton:
@@ -1080,7 +1080,7 @@ MonoBehaviour:
     m_TextClipping: 1
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 15
+    m_FixedWidth: 60
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
@@ -1147,7 +1147,7 @@ MonoBehaviour:
     m_TextClipping: 1
     m_ImagePosition: 2
     m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 15
+    m_FixedWidth: 60
     m_FixedHeight: 0
     m_StretchWidth: 0
     m_StretchHeight: 1

@@ -23,11 +23,7 @@ namespace Hamster.InputControllers {
 
     List<BasePlayerController> controllerList = new List<BasePlayerController>() {
     new KeyboardController(),
-#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
-    new DaydreamTiltController(),
-#else
     new TiltController(),
-#endif
     };
 
     public override Vector2 GetInputVector() {

@@ -6,14 +6,68 @@
             "filename": "level1"
         },
         {
-            "name": "Second Level",
-            "description": "A challenge!",
-            "filename": "level2"
+            "name": "Jumping!",
+            "description": "What do they do?!?",
+            "filename": "jumptutorial"
         },
         {
-            "name": "Third Level",
-            "description": "More complicated tricks!",
+            "name": "A Puzzle!",
+            "description": "How to get inside?",
+            "filename": "wallwalking"
+        },
+        {
+            "name": "Warping 101",
+            "description": "Everything you ever wondered about teleporting!",
+            "filename": "teleporterintro"
+        },
+        {
+            "name": "Spikes",
+            "description": "Watch out!",
+            "filename": "spikesandpits"
+        },
+
+        {
+            "name": "The Button",
+            "description": "Dare you to press it.",
+            "filename": "switches"
+        },
+        {
+            "name": "Zoom!",
+            "description": "Gotta go fast!",
+            "filename": "pitjumping"
+        },
+        {
+            "name": "Painful Q",
+            "description": "It hurts!",
+            "filename": "spikyq"
+        },
+        {
+            "name": "Synthesis",
+            "description": "Putting it all together!",
             "filename": "level3"
+        },
+        {
+            "name": "Weaving",
+            "description": "Mind the pits!",
+            "filename": "level2"
+        },
+
+        {
+            "name": "Warping 201",
+            "description": "Things you never needed to know about teleporting!",
+            "filename": "basicteleport"
+        },
+        {
+            "name": "Dance Party",
+            "description": "The cruelst mosh.",
+            "filename": "danceparty"
+        },
+        {
+            "name": "Blasting Off",
+            "description": "Can you achieve liftoff?",
+            "filename": "blastingoff"
         }
+
+
     ]
 }

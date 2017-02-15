@@ -496,7 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cd4e98ba52a7bc4cb1705809c72afa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartInVRMode: 1
+  StartInVRMode: 0
   VREventSystem: {fileID: 761381335, guid: 463285ecd6702471a909ba810832bf0e, type: 2}
   VRViewer: {fileID: 177758, guid: 970dd4b9371394fb4890965f608d46fd, type: 2}
   VRController: {fileID: 198490, guid: 5ca80f4596fa44b87912a0592346d260, type: 2}
