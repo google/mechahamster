@@ -17,21 +17,24 @@ using System.Collections.Generic;
 
 namespace Hamster {
 
-  // This class creates things at startup that are required
-  // by the game
+  // This class spawns various things at startup that are required to
+  // play the game in VR mode.  It also sets up the event system/ui canvas.
   public class VRSystemSetup : MonoBehaviour {
-    public bool StartInVRMode = false;
+    public bool SimulateVRInEditor = false;
 
-    public GameObject VREventSystem;
     public GameObject VRViewer;
     public GameObject VRController;
     public GameObject VRControllerPointer;
 
     public CameraController CameraHolder;
 
+    public Canvas canvas;
+    public UnityEngine.EventSystems.EventSystem eventSystem;
+
     private void Awake() {
-      if (StartInVRMode) {
-        Instantiate(VREventSystem);
+      CommonData.inVrMode =
+          UnityEngine.VR.VRSettings.enabled || (Application.isEditor && SimulateVRInEditor);
+      if (CommonData.inVrMode) {
         GameObject viewer = Instantiate(VRViewer);
         Instantiate(VRController);
         GvrViewer gvrViewer = viewer.GetComponent<GvrViewer>();
@@ -42,6 +45,13 @@ namespace Hamster {
         GameObject pointer = Instantiate(VRControllerPointer);
         pointer.transform.SetParent(CameraHolder.transform);
         pointer.transform.localPosition = new Vector3(0.0f, 0.0f, -9.75f);
+
+        canvas.gameObject.AddComponent<GvrPointerGraphicRaycaster>();
+        eventSystem.gameObject.AddComponent<GvrPointerInputModule>();
+        eventSystem.gameObject.AddComponent<GvrPointerManager>();
+      } else {
+        canvas.gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+        eventSystem.gameObject.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
       }
     }
   }

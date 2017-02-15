@@ -54,13 +54,6 @@ namespace Hamster.States {
     // TODO(ccornell): This needs some layout attention, if it's going
     // to see much use.  Needs to be centered at a minimum.
     public override void OnGUI() {
-      bool inVrMode = false;
-      // TODO(ccornell) - DAYDREAM SCAFFOLDING
-      VRSystemSetup vrSetup = GameObject.FindObjectOfType<VRSystemSetup>();
-      if (vrSetup) {
-        inVrMode = vrSetup.StartInVRMode;
-      }
-
       GUI.skin = CommonData.prefabs.guiSkin;
       GUILayout.BeginVertical();
       if (GUILayout.Button(StringConstants.ButtonSignInWithEmail)) {
@@ -69,7 +62,8 @@ namespace Hamster.States {
       if (GUILayout.Button(StringConstants.ButtonCreateAccount)) {
         manager.PushState(new CreateAccount());
       }
-      if (GUILayout.Button(StringConstants.ButtonSignInAnonymously) || inVrMode) {
+      // TODO(ccornell) REMOVE DAYDREAM SCAFFOLDING
+      if (GUILayout.Button(StringConstants.ButtonSignInAnonymously) || CommonData.inVrMode) {
         manager.PushState(
             new WaitForTask(auth.SignInAnonymouslyAsync(),
               StringConstants.LabelSigningIn, true));

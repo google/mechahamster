@@ -21,10 +21,19 @@ namespace Hamster.InputControllers {
   // Useful for normalizing and combining different input sources.
   public class MultiInputController : BasePlayerController {
 
-    List<BasePlayerController> controllerList = new List<BasePlayerController>() {
-    new KeyboardController(),
-    new TiltController(),
-    };
+    List<BasePlayerController> controllerList;
+
+    public MultiInputController() {
+
+      controllerList = new List<BasePlayerController>() {
+        new KeyboardController(),
+      };
+      if (CommonData.inVrMode) {
+        controllerList.Add(new DaydreamTiltController());
+      } else {
+        new TiltController();
+      }
+    }
 
     public override Vector2 GetInputVector() {
       Vector2 result = Vector2.zero;
