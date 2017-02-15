@@ -24,15 +24,7 @@ namespace Hamster.States {
   class Startup : BaseState {
 
     Firebase.Auth.FirebaseAuth auth;
-    bool inVrMode = false;
     const string DefaultDesktopID = "XYZZY";
-
-    public Startup() {
-      VRSystemSetup vrSetup = GameObject.FindObjectOfType<VRSystemSetup>();
-      if (vrSetup) {
-        inVrMode = vrSetup.StartInVRMode;
-      }
-    }
 
     // Initialization method.  Called after the state
     // is added to the stack.
@@ -50,7 +42,7 @@ namespace Hamster.States {
       // If we need to sign in, do that.  Otherwise, if we know who we are,
       // so fetch the user data.
       if (auth.CurrentUser == null) {
-        if (inVrMode) {
+        if (CommonData.inVrMode) {
               manager.PushState(new WaitForTask(auth.SignInAnonymouslyAsync(),
                   StringConstants.LabelSigningIn, true));
         } else {
@@ -84,7 +76,7 @@ namespace Hamster.States {
         // Did THAT work?
         if (CommonData.currentUser.data != null) {
           // Yes.  Ready to start!
-          if (inVrMode) {
+          if (CommonData.inVrMode) {
             // TODO(ccornell) Remove once we get menus!  [daydream scaffolding]
             manager.SwapState(new States.DaydreamLevelLoader());
           } else {

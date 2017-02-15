@@ -38,5 +38,7 @@ namespace Hamster {
 
     // X-Z plane at height 0
     public static Plane kZeroPlane = new Plane(Vector3.up, new Vector3(0, 0, 0));
+
+    public static bool inVrMode = false;
   }
 }
