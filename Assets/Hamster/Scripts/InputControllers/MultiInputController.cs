@@ -31,7 +31,7 @@ namespace Hamster.InputControllers {
       if (CommonData.inVrMode) {
         controllerList.Add(new DaydreamTiltController());
       } else {
-        new TiltController();
+        controllerList.Add(new TiltController());
       }
     }
 
