@@ -42,9 +42,16 @@ namespace Hamster {
     // copied out into lookup and prefabnames.
     public PrefabEntry[] prefabs;
 
-    // Lookup dictionary, for quickly finding the prefab, given a name.
+    // List of all the prefabs that contain menu screens for UI.  Populated
+    // via the Unity inspector.  Similar to the prefab list, these get
+    // processed into a dictionary at runtime to make lookups easier.
+    public MenuEntry[] menuScreens;
+
+    // Lookup dictionaries, for quickly finding the prefab, given a name.
     [HideInInspector]
     public Dictionary<string, PrefabEntry> lookup;
+    [HideInInspector]
+    public Dictionary<string, GameObject> menuLookup;
 
     // Array of prefabs names.  Useful because some things (GUI) need
     // them in a plain array of strings.
@@ -66,6 +73,11 @@ namespace Hamster {
         }
       }
       prefabNames = nameList.ToArray();
+
+      menuLookup = new Dictionary<string, GameObject>();
+      foreach (MenuEntry entry in menuScreens) {
+        menuLookup[entry.name] = entry.prefab;
+      }
     }
 
     [System.Serializable]
@@ -82,6 +94,16 @@ namespace Hamster {
       public bool includeInToolPalette;
       // The max number of that tile type allowed. 0 is unlimited.
       public int maxCount;
+    }
+
+    [System.Serializable]
+    public struct MenuEntry {
+      public MenuEntry(string name, GameObject prefab) {
+        this.name = name;
+        this.prefab = prefab;
+      }
+      public string name;
+      public GameObject prefab;
     }
   }
 }

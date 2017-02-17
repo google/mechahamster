@@ -27,6 +27,7 @@ namespace Hamster.States {
     private Stack<BaseState> statesToShow = new Stack<BaseState>();
     private Object stateStackLock = new Object();
 
+    private Menus.MainMenuGUI menuComponent;
 
     public MainMenu() {
       // Initialize some styles that we'll for the title.
@@ -46,67 +47,46 @@ namespace Hamster.States {
     public override void Initialize() {
       SetFirebaseMessagingListeners();
       SetFirebaseInvitesListeners();
+      menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
+
+      // Only display the shared/bonus levels if the user has at least one.
+      menuComponent.SharedLevelsButton.gameObject.SetActive(
+          CommonData.currentUser.data.sharedMaps.Count > 0);
+      menuComponent.BonusLevelsButton.gameObject.SetActive(
+          CommonData.currentUser.data.bonusMaps.Count > 0);
     }
 
     public override void Resume(StateExitValue results) {
       SetFirebaseMessagingListeners();
       SetFirebaseInvitesListeners();
+      menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
+      menuComponent.gameObject.SetActive(true);
     }
 
     public override void Suspend() {
       RemoveFirebaseMessagingListeners();
       RemoveFirebaseInvitesListeners();
+      menuComponent.gameObject.SetActive(false);
     }
 
     public override StateExitValue Cleanup() {
       RemoveFirebaseMessagingListeners();
+      DestroyUI();
       return null;
     }
 
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() {
-      float menuWidth = MenuWidth * Screen.width;
-      float menuHeight = MenuHeight * Screen.height;
-      GUI.skin = CommonData.prefabs.guiSkin;
-
-      UnityEngine.GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
-
-      GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height - menuHeight));
-      centeredStyle.alignment = TextAnchor.UpperCenter;
-
-      GUILayout.Label(StringConstants.TitleText, titleStyle);
-      GUILayout.Label(StringConstants.SubTitleText, subTitleStyle);
-
-      GUILayout.EndArea();
-
-      GUILayout.BeginArea(
-          new Rect((Screen.width - menuWidth) / 2, (Screen.height - menuHeight) / 2,
-          menuWidth, menuHeight));
-
-      GUILayout.BeginVertical();
-      if (GUILayout.Button(StringConstants.ButtonPlay)) {
+    public override void HandleUIEvent(GameObject source, object eventData) {
+      if (source == menuComponent.PlayButton.gameObject) {
         manager.SwapState(new LevelSelect());
+      } else if (source == menuComponent.EditorButton.gameObject) {
+        manager.SwapState(new Editor());
+      } else if (source == menuComponent.SharedLevelsButton.gameObject) {
+        manager.SwapState(new SharedLevelSelect());
+      } else if (source == menuComponent.BonusLevelsButton.gameObject) {
+        manager.SwapState(new BonusLevelSelect());
+      } else if (source == menuComponent.AccountButton.gameObject) {
+        manager.SwapState(new ManageAccount());
       }
-      if (GUILayout.Button(StringConstants.ButtonEditor)) {
-        manager.SwapState(new States.Editor());
-      }
-      if (CommonData.currentUser.data.sharedMaps.Count > 0) {
-        if (GUILayout.Button(StringConstants.ButtonPlayShared)) {
-          manager.PushState(new SharedLevelSelect());
-        }
-      }
-      if (CommonData.currentUser.data.bonusMaps.Count > 0) {
-        if (GUILayout.Button(StringConstants.ButtonPlayBonus)) {
-          manager.PushState(new BonusLevelSelect());
-        }
-      }
-
-      if (GUILayout.Button(StringConstants.ButtonAccount)) {
-        manager.PushState(new ManageAccount());
-      }
-
-      GUILayout.EndVertical();
-      GUILayout.EndArea();
     }
 
     // Update function.  If any states are waiting to be shown, swap to them.

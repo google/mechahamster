@@ -187,5 +187,10 @@ namespace Hamster {
     // The state of the spikes idling in the down/up positions.
     public const string AnimationSpikesIdleDown = "IdleDown";
     public const string AnimationSpikesIdleUp = "IdleUp";
+
+
+    // Menu identifiers:
+    //--------------------------
+    public const string PrefabMainMenu = "MainMenu";
   }
 }

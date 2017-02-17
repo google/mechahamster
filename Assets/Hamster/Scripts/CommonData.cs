@@ -39,6 +39,10 @@ namespace Hamster {
     // X-Z plane at height 0
     public static Plane kZeroPlane = new Plane(Vector3.up, new Vector3(0, 0, 0));
 
+    // Whether we're in VR mode or not.  Set at startup by VRSystemSetup.
     public static bool inVrMode = false;
+
+    // The main canvas that UI is rendered on to.
+    public static Canvas canvas;
   }
 }

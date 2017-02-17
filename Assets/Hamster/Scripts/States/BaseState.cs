@@ -14,11 +14,16 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Hamster.States {
 
   public class BaseState {
+    // A link to the state manager, used any time we need to switch states.
     public StateManager manager;
+
+    // The actual object representing any UI used by the state.
+    protected GameObject gui;
 
     // Initialization method.  Called after the state
     // is added to the stack.
@@ -45,6 +50,25 @@ namespace Hamster.States {
 
     // Called once per frame for GUI creation, if the state is active.
     public virtual void OnGUI() { }
+
+    // Called by buttons and other UI elements, when they trigger.
+    public virtual void HandleUIEvent(GameObject source, object eventData) { }
+
+    // Spawn a UI Prefab, and return the component associated with it.
+    protected T SpawnUI<T>(string prefabLookup) {
+      gui = GameObject.Instantiate(CommonData.prefabs.menuLookup[prefabLookup]);
+      gui.transform.SetParent(CommonData.canvas.transform, false);
+      return gui.GetComponent<T>();
+    }
+
+    // Destroy the UI prefab.
+    protected void DestroyUI() {
+      if (gui != null) {
+        GameObject.Destroy(gui);
+        gui = null;
+      }
+    }
+
   }
 
   // When states exit, they can return an
@@ -60,5 +84,4 @@ namespace Hamster.States {
     public Type sourceState;
     public object data;
   }
-
 }
