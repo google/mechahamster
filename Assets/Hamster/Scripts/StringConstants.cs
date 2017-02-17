@@ -192,5 +192,6 @@ namespace Hamster {
     // Menu identifiers:
     //--------------------------
     public const string PrefabMainMenu = "MainMenu";
+    public const string PrefabBasicDialog = "BasicDialog";
   }
 }

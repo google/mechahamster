@@ -42,7 +42,5 @@ namespace Hamster {
     // Whether we're in VR mode or not.  Set at startup by VRSystemSetup.
     public static bool inVrMode = false;
 
-    // The main canvas that UI is rendered on to.
-    public static Canvas canvas;
   }
 }

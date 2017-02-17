@@ -19,14 +19,11 @@ namespace Hamster.Menus {
 
   // Interface class for providing code access to the GUI
   // elements in the main menu prefab.
-  public class MainMenuGUI : BaseMenu {
+  public class BasicDialogGUI : BaseMenu {
 
     // These fields are set in the inspector.
-    public UnityEngine.UI.Button PlayButton;
-    public UnityEngine.UI.Button EditorButton;
-    public UnityEngine.UI.Button AccountButton;
-    public UnityEngine.UI.Button SharedLevelsButton;
-    public UnityEngine.UI.Button BonusLevelsButton;
+    public UnityEngine.UI.Button OkayButton;
+    public UnityEngine.UI.Text DialogText;
   }
 
 }

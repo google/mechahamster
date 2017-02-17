@@ -26,26 +26,35 @@ namespace Hamster.States {
 
     Vector2 scrollViewPosition;
     string dialogText;
-    string buttonText;
 
-    public BasicDialog(string dialogText, string buttonText = "Okay") {
+    Menus.BasicDialogGUI dialogComponent;
+
+    public BasicDialog(string dialogText) {
       this.dialogText = dialogText;
-      this.buttonText = buttonText;
     }
 
-    // Called once per frame for GUI creation, if the state is active.
-    // TODO(ccornell): This needs some layout attention, if it's going
-    // to see much use.  Needs to be centered at a minimum.
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      GUILayout.BeginVertical();
-      scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition);
-      GUILayout.Label(dialogText);
-      GUILayout.EndScrollView();
-      if (GUILayout.Button(buttonText)) {
+    public override void Initialize() {
+      dialogComponent = SpawnUI<Menus.BasicDialogGUI>(StringConstants.PrefabBasicDialog);
+      dialogComponent.DialogText.text = dialogText;
+    }
+
+    public override void Resume(StateExitValue results) {
+      dialogComponent.gameObject.SetActive(true);
+    }
+
+    public override void Suspend() {
+      dialogComponent.gameObject.SetActive(false);
+    }
+
+    public override StateExitValue Cleanup() {
+      DestroyUI();
+      return null;
+    }
+
+    public override void HandleUIEvent(GameObject source, object eventData) {
+      if (source == dialogComponent.OkayButton.gameObject) {
         manager.PopState();
       }
-      GUILayout.EndVertical();
     }
   }
 }

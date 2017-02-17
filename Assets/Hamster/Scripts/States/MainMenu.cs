@@ -49,9 +49,11 @@ namespace Hamster.States {
       SetFirebaseInvitesListeners();
       menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
 
+      // Editor is disabled in VR mode.
+      menuComponent.EditorButton.gameObject.SetActive(!CommonData.inVrMode);
       // Only display the shared/bonus levels if the user has at least one.
       menuComponent.SharedLevelsButton.gameObject.SetActive(
-          CommonData.currentUser.data.sharedMaps.Count > 0);
+        CommonData.currentUser.data.sharedMaps.Count > 0);
       menuComponent.BonusLevelsButton.gameObject.SetActive(
           CommonData.currentUser.data.bonusMaps.Count > 0);
     }
