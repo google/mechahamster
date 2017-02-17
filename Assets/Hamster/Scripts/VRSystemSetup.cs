@@ -31,8 +31,6 @@ namespace Hamster {
     public Canvas canvas;
     public UnityEngine.EventSystems.EventSystem eventSystem;
 
-    private static Vector3 PointerCameraOffset = new Vector3(0.0f, 0.0f, 0.25f);
-
     private void Awake() {
       CommonData.inVrMode =
           UnityEngine.VR.VRSettings.enabled || (Application.isEditor && SimulateVRInEditor);
@@ -47,7 +45,11 @@ namespace Hamster {
 
         GameObject pointer = Instantiate(VRControllerPointer);
         pointer.transform.SetParent(CameraHolder.transform);
-        pointer.transform.localPosition = PointerCameraOffset;
+        #if UNITY_EDITOR
+        // Make it easier to see the controller pointer in editor's game view,
+        // but leave controller positioning up to GVR arm model in final build.
+        pointer.transform.localPosition = .25f * Vector3.forward;
+        #endif
 
         canvas.gameObject.AddComponent<GvrPointerGraphicRaycaster>();
         eventSystem.gameObject.AddComponent<GvrPointerInputModule>();
