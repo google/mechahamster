@@ -21,13 +21,16 @@ namespace Hamster {
 
   public class MainGame : MonoBehaviour {
 
-    private States.StateManager stateManager = new States.StateManager();
+    [HideInInspector]
+    public States.StateManager stateManager = new States.StateManager();
     private float currentFrameTime, lastFrameTime;
 
     private const string PlayerPrefabID = "Player";
 
     // The active player object in the game.
+    [HideInInspector]
     public GameObject player;
+
     // The PlayerController component on the active player object.
     public PlayerController PlayerController {
       get {

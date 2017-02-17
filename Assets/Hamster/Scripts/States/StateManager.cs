@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Hamster.States {
 
@@ -89,6 +90,12 @@ namespace Hamster.States {
     // Handy utility function for checking the top state in the stack.
     public BaseState CurrentState() {
       return stateStack.Peek();
+    }
+
+    // When GUIButton receives a Unity UI event, it reports it via
+    // this function.  (Which then directs it to whichever state is active.)
+    public void HandleUIEvent(GameObject source, object eventData) {
+      CurrentState().HandleUIEvent(source, eventData);
     }
   }
 

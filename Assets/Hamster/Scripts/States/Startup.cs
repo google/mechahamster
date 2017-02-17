@@ -76,13 +76,7 @@ namespace Hamster.States {
         // Did THAT work?
         if (CommonData.currentUser.data != null) {
           // Yes.  Ready to start!
-          if (CommonData.inVrMode) {
-            // TODO(ccornell) Remove once we get menus!  [daydream scaffolding]
-            manager.SwapState(new States.DaydreamLevelLoader());
-          } else {
-            //  Normal load path.
-            manager.SwapState(new States.MainMenu());
-          }
+          manager.SwapState(new States.MainMenu());
         } else {
           // Nope.  Problems.
           manager.PushState(new FatalError("Could not fetch or create user data."));
