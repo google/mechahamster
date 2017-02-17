@@ -263,7 +263,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1125341627222620}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -294,7 +294,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1837194929611092}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -324,7 +324,7 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1233047708953074}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -513,9 +513,6 @@ MonoBehaviour:
     type: 2}
   ShrapnelPrefab: {fileID: 1840188740384082, guid: 3289fa5213184a94a8b469930840edb9,
     type: 2}
-  ExplosionForce: 10
-  ExplosionRadius: 2
-  UpwardsModifier: 0.2
   LaunchMineAudio: {fileID: 8300000, guid: 4de0879c64003974a8760193ec32678b, type: 3}
   ExplosionAudio:
   - {fileID: 8300000, guid: cb08e14dc1bfbc2448ed677df60b1cc9, type: 3}
