@@ -66,5 +66,19 @@ namespace Hamster.States {
         return;
       }
     }
+
+#if UNITY_IOS
+    public override void OnGUI() {
+      GUI.skin = CommonData.prefabs.guiSkin;
+      float buttonWidth = Screen.width * 0.2f;
+      float buttonHeight = Screen.height * 0.1f;
+      GUILayout.BeginArea(new Rect(Screen.width - buttonWidth - 10, Screen.height - buttonHeight,
+        buttonWidth, buttonHeight));
+      if (GUILayout.Button (StringConstants.ButtonExit)) {
+        manager.PopState ();
+      }
+    GUILayout.EndArea ();
+    }
+#endif
   }
 }
