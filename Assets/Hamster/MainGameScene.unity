@@ -136,7 +136,6 @@ Transform:
   m_Children:
   - {fileID: 1298557705}
   - {fileID: 621062966}
-  - {fileID: 847856997}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -292,9 +291,9 @@ MonoBehaviour:
     maxCount: 0
   menuScreens:
   - name: MainMenu
-    prefab: {fileID: 1743894628597276, guid: 0256cf881a9c84143a13af165ce80e68, type: 2}
-  - name: 
-    prefab: {fileID: 0}
+    prefab: {fileID: 1690053025725844, guid: 0256cf881a9c84143a13af165ce80e68, type: 2}
+  - name: BasicDialog
+    prefab: {fileID: 1541999078217486, guid: 28f6b75f4e5853a4a8aa8abbd50fca84, type: 2}
   - name: 
     prefab: {fileID: 0}
   - name: 
@@ -320,82 +319,6 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: cb6ff255d747c47e6909c425e7346154, type: 3}
   m_PrefabInternal: {fileID: 1668219086}
---- !u!1 &847856996
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 847856997}
-  - component: {fileID: 847857000}
-  - component: {fileID: 847856999}
-  m_Layer: 5
-  m_Name: Canvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &847856997
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 847856996}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
-  m_Children: []
-  m_Father: {fileID: 8407452}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 300, y: 400}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &847856999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 847856996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
---- !u!223 &847857000
-Canvas:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 847856996}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1061133299
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,7 +637,6 @@ MonoBehaviour:
   VRControllerPointer: {fileID: 555767533, guid: 34c21f523e72f45509a4e37ed0293c3b,
     type: 2}
   CameraHolder: {fileID: 8407453}
-  canvas: {fileID: 847857000}
   eventSystem: {fileID: 170869240}
 --- !u!4 &1661935603
 Transform:

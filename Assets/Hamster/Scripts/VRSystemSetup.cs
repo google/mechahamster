@@ -28,13 +28,11 @@ namespace Hamster {
 
     public CameraController CameraHolder;
 
-    public Canvas canvas;
     public UnityEngine.EventSystems.EventSystem eventSystem;
 
     private void Awake() {
       CommonData.inVrMode =
           UnityEngine.VR.VRSettings.enabled || (Application.isEditor && SimulateVRInEditor);
-      CommonData.canvas = canvas;
       if (CommonData.inVrMode) {
         GameObject viewer = Instantiate(VRViewer);
         Instantiate(VRController);
@@ -51,11 +49,9 @@ namespace Hamster {
         pointer.transform.localPosition = .25f * Vector3.forward;
         #endif
 
-        canvas.gameObject.AddComponent<GvrPointerGraphicRaycaster>();
         eventSystem.gameObject.AddComponent<GvrPointerInputModule>();
         eventSystem.gameObject.AddComponent<GvrPointerManager>();
       } else {
-        canvas.gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
         eventSystem.gameObject.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
       }
     }
