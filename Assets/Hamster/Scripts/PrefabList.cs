@@ -42,6 +42,10 @@ namespace Hamster {
     // copied out into lookup and prefabnames.
     public PrefabEntry[] prefabs;
 
+    // List of prefabs that we only want to be placeable when on desktop,
+    // used for non-gameplay related props.
+    public PrefabEntry[] desktopOnlyProps;
+
     // List of all the prefabs that contain menu screens for UI.  Populated
     // via the Unity inspector.  Similar to the prefab list, these get
     // processed into a dictionary at runtime to make lookups easier.
@@ -71,6 +75,15 @@ namespace Hamster {
         if (entry.includeInToolPalette) {
           nameList.Add(entry.name);
         }
+      }
+
+      foreach (PrefabEntry prop in desktopOnlyProps) {
+        lookup[prop.name] = prop;
+#if UNITY_EDITOR
+        if (prop.includeInToolPalette) {
+          nameList.Add(prop.name);
+        }
+#endif
       }
       prefabNames = nameList.ToArray();
 
