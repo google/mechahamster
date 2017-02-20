@@ -78,6 +78,10 @@ namespace Hamster.MapObjects {
 
     public override void Reset() {
       FinishCooldown();
+      // Reset the animation back to default.
+      foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+        animator.Play(StringConstants.AnimationMineIdleState);
+      }
     }
 
     // When the player rolls off of the mine is when we want to trigger it.

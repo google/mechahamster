@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 135615730316192926}
   - component: {fileID: 114640272511753506}
   - component: {fileID: 114073281240166754}
+  - component: {fileID: 114641014322556518}
   m_Layer: 8
   m_Name: Ball
   m_TagString: Untagged
@@ -220,9 +221,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e69e13a7c58644639bdf568c2c16996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnFallAudio: {fileID: 8300000, guid: e416b8202f1a85b45bb10313d4356319, type: 3}
   OnFallSpawn: {fileID: 1908175734399466, guid: f053a7252283048a799e9be1b4967bb9,
     type: 2}
+  RespawnTime: 1
+--- !u!114 &114641014322556518
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1130139028330910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b26b6b8e0637a48c488528bd9a0ecabc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135615730316192926
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -3405,6 +3405,7 @@ GameObject:
   - component: {fileID: 95007796385487448}
   - component: {fileID: 114067283824821356}
   - component: {fileID: 82692588498659670}
+  - component: {fileID: 114666552811326322}
   m_Layer: 0
   m_Name: BallParticles
   m_TagString: Untagged
@@ -15338,5 +15339,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37b756c7afd4308408272ebcffe288dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114666552811326322
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1908175734399466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b26b6b8e0637a48c488528bd9a0ecabc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

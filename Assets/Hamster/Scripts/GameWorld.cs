@@ -30,6 +30,10 @@ namespace Hamster {
     Dictionary<string, List<string>> limitedMapObjects =
       new Dictionary<string, List<string>>();
 
+    // Tracks the extra objects, like particles, that need to be destroyed on reset.
+    public List<Utilities.DestroyOnReset> destroyOnReset =
+      new List<Hamster.Utilities.DestroyOnReset>();
+
     // When spawning in elements, adjust their positions by this amount.
     Vector3 elementAdjust = new Vector3(0.0f, -0.5f, 0.0f);
 
@@ -168,6 +172,11 @@ namespace Hamster {
           mapObject.Reset();
         }
       }
+      foreach (Utilities.DestroyOnReset toDestroy in destroyOnReset) {
+        toDestroy.RegisteredInWorld = false;
+        Destroy(toDestroy.gameObject);
+      }
+      destroyOnReset.Clear();
     }
 
     // Called when a Switch is triggered, forwards that along to switchable map objects.
