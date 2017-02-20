@@ -28,7 +28,7 @@ namespace Hamster.MapObjects {
       DownCount = 0;
       // Reset the animation back to default.
       foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
-        animator.Rebind();
+        animator.Play(StringConstants.AnimationSwitchIdleState);
       }
     }
 

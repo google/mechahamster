@@ -180,10 +180,13 @@ namespace Hamster {
     //--------------------------
     // Triggers the spring/jump tile animation.
     public const string AnimationSpring = "spring";
+    public const string AnimationSpringIdleState = "Idle";
     // Triggers the launching of the mine.
     public const string AnimationLaunchMine = "launch_mine";
+    public const string AnimationMineIdleState = "Idle";
     // Toggles the switch animation to go up and down (false is up).
     public const string AnimationSwitch = "switch";
+    public const string AnimationSwitchIdleState = "ButtonStart";
     // Triggers the spikes going up and down.
     public const string AnimationSpikesDown = "spikes_down";
     public const string AnimationSpikesUp = "spikes_up";

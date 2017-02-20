@@ -38,6 +38,13 @@ namespace Hamster.MapObjects {
       triggeredThisFrame = false;
     }
 
+    public override void Reset() {
+      // Reset the animation back to default.
+      foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+        animator.Play(StringConstants.AnimationSpringIdleState);
+      }
+    }
+
     void OnTriggerEnter(Collider collider) {
       if (collider.GetComponent<PlayerController>() != null) {
         // Trigger the spring animation for all the components that this shares the
