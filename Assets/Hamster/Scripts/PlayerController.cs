@@ -21,13 +21,20 @@ namespace Hamster {
   public class PlayerController : MonoBehaviour {
     InputControllers.BasePlayerController inputController;
 
-    // Audio clip that is played when the ball falls below the kill plane.
-    public AudioClip OnFallAudio;
+    // Game object that is spawned when the ball falls below the kill plane.
+    public GameObject OnFallSpawn;
+
+    // How long after death before restarting the level, in seconds.
+    public float RespawnTime = 1.0f;
 
     // Has the player object touched a goal tile.
     public bool ReachedGoal { get; private set; }
 
+    // Is the player object currently processing a death
+    public bool IsProcessingDeath { get; private set; }
+
     void Start() {
+      IsProcessingDeath = false;
       inputController = new InputControllers.MultiInputController();
     }
 
@@ -40,23 +47,36 @@ namespace Hamster {
 
     // Since we're doing physics work, we use FixedUpdate instead of Update.
     void FixedUpdate() {
+      if (IsProcessingDeath)
+        return;
+
       Rigidbody rigidBody = GetComponent<Rigidbody>();
 
       Vector2 input = inputController.GetInputVector();
       rigidBody.AddForce(new Vector3(input.x, 0, input.y));
 
       if (transform.position.y < kFellOffLevelHeight) {
-        if (OnFallAudio != null) {
-          GameObject audioObject = new GameObject();
-          audioObject.transform.position = transform.position;
-          AudioSource audioSource = audioObject.AddComponent<AudioSource>();
-          audioSource.clip = OnFallAudio;
-          audioSource.Play();
-          GameObject.Destroy(audioObject, OnFallAudio.length);
-        }
+        if (OnFallSpawn != null) {
+          // Spawn in the death particles. Note that the particles should clean themselves up.
+          Instantiate(OnFallSpawn, transform.position, Quaternion.identity);
 
-        CommonData.gameWorld.ResetMap();
+          // We don't want the ball to keep the ball where it died, so that the camera can
+          // see the on death particles before respawning.
+          IsProcessingDeath = true;
+          rigidBody.isKinematic = true;
+          // Disable the children, which have the visible components of the ball.
+          foreach (Transform child in transform) {
+            child.gameObject.SetActive(false);
+          }
+          StartCoroutine(DelayedResetLevel());
+        }
       }
+    }
+
+    // Triggers a delayed reset of the level, using coroutines.
+    IEnumerator DelayedResetLevel() {
+      yield return new WaitForSeconds(RespawnTime);
+      CommonData.gameWorld.ResetMap();
     }
 
     public void HandleGoalCollision() {
