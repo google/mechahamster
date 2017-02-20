@@ -359,10 +359,10 @@ MonoBehaviour:
     prefab: {fileID: 1690053025725844, guid: 0256cf881a9c84143a13af165ce80e68, type: 2}
   - name: BasicDialog
     prefab: {fileID: 1541999078217486, guid: 28f6b75f4e5853a4a8aa8abbd50fca84, type: 2}
-  - name: 
-    prefab: {fileID: 0}
-  - name: 
-    prefab: {fileID: 0}
+  - name: LevelSelectMenu
+    prefab: {fileID: 1056155533364976, guid: 7c0b462e6bb78f14db58d9ed2bf8f0f7, type: 2}
+  - name: LevelSelectButton
+    prefab: {fileID: 1555570376085334, guid: ce0cddd9505130e439942eee7c9d1191, type: 2}
   - name: 
     prefab: {fileID: 0}
   prefabNames: []

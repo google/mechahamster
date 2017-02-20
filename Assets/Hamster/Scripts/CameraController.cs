@@ -24,13 +24,16 @@ namespace Hamster {
   public class CameraController : MonoBehaviour {
 
     // Set by the inspector:
-    public Vector3 kViewAngleVector;
+    public Vector3 ViewAngleVector;
     // Distance between the camera and the ground.
-    public float kViewDistance = 10.0f;
+    public float ViewDistance = 10.0f;
     // How fast you pan in the editor.
-    public float kEditorScrollSpeed = 0.3f;
+    public float EditorScrollSpeed = 0.3f;
     // How fast the camera zooms to its new target:
-    public float kCameraZoom = 0.05f;
+    public float CameraZoom = 0.05f;
+    // How far away the camera goes during menus.
+    // (Needed to make sure the level doesn't clip through the menu.)
+    public float CameraScaleInMenus = 1.5f;
 
     // Values representing various modes the camera can be in.
     public enum CameraMode {
@@ -57,7 +60,7 @@ namespace Hamster {
     void Start() {
       mainGame = FindObjectOfType<MainGame>();
       // Needs to be normalized because it was set via the inspector.
-      kViewAngleVector.Normalize();
+      ViewAngleVector.Normalize();
     }
 
     // Pans the camera in a direction during edit mode.
@@ -65,7 +68,7 @@ namespace Hamster {
       // Need to use time.realtimeSinceStartup instead of Time.DeltaTime, because
       // the way we pause the physics simulation (and hence the game, while we're
       // in editor mode) is by setting the Timescale to 0.
-      editorCam += direction * kEditorScrollSpeed * mainGame.TimeSinceLastUpdate;
+      editorCam += direction * EditorScrollSpeed * mainGame.TimeSinceLastUpdate;
     }
 
     void LateUpdate() {
@@ -76,7 +79,7 @@ namespace Hamster {
             player = FindObjectOfType<PlayerController>();
           if (player != null) {
             transform.position = player.transform.position +
-                kViewAngleVector * kViewDistance;
+                ViewAngleVector * ViewDistance;
             transform.LookAt(player.transform.position, kUpVector);
           }
           break;
@@ -110,22 +113,22 @@ namespace Hamster {
             PanCamera(Vector3.right);
           }
 
-          Vector3 cameraTarget = editorCam + kViewAngleVector * kViewDistance;
+          Vector3 cameraTarget = editorCam + ViewAngleVector * ViewDistance;
 
-          transform.position = cameraTarget * kCameraZoom
-              + transform.position * (1.0f - kCameraZoom);
+          transform.position = cameraTarget * CameraZoom
+              + transform.position * (1.0f - CameraZoom);
 
-          transform.LookAt(transform.position - kViewAngleVector, kUpVector);
+          transform.LookAt(transform.position - ViewAngleVector, kUpVector);
           break;
         case CameraMode.Menu:
           // Menu mode.  User is in a menu.
+          Vector3 menuCameraTarget =
+            editorCam + ViewAngleVector * ViewDistance * CameraScaleInMenus;
 
-          Vector3 menuCameraTarget = editorCam + kViewAngleVector * kViewDistance;
+          transform.position = menuCameraTarget * CameraZoom
+              + transform.position * (1.0f - CameraZoom);
 
-          transform.position = menuCameraTarget * kCameraZoom
-              + transform.position * (1.0f - kCameraZoom);
-
-          transform.LookAt(transform.position - kViewAngleVector, kUpVector);
+          transform.LookAt(transform.position - ViewAngleVector, kUpVector);
           break;
       }
     }

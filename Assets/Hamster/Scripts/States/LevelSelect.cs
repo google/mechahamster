@@ -17,41 +17,26 @@ using System.Collections.Generic;
 
 namespace Hamster.States {
   class LevelSelect : BaseState {
-    // Width/Height of the menu, expressed as a portion of the screen width:
-    private const float kMenuWidth = 0.25f;
-    private const float kMenuHeight = 0.75f;
-    private const string kButtonNamePlay = "Play";
-    private const string kButtonNameBack = "Back";
+    Menus.LevelSelectGUI menuComponent;
 
-    // GUI state.
-    private Vector2 scrollViewPosition;
     private int mapSelection = 0;
-
+    private int currentPage = 0;
     private LevelMap currentLevel;
-    private GUIStyle titleStyle;
-    private GUIStyle descriptionStyle;
-    private List<PremadeLevelEntry> levels;
     private string[] levelNames;
     private LevelDirectory levelDir;
 
     private int currentLoadedMap = -1;
 
-    private const float kUIColumnWidth = 0.33f;
+    // Layout constants.
+    private const int ButtonsPerPage = 5;
+    private const float ColumnPadding = 50;
 
     public LevelSelect() {
-      // Initialize some styles that we'll for the title.
-      titleStyle = new GUIStyle();
-      titleStyle.alignment = TextAnchor.UpperCenter;
-      titleStyle.fontSize = 50;
-      titleStyle.normal.textColor = Color.white;
-
-      descriptionStyle = new GUIStyle();
-      descriptionStyle.alignment = TextAnchor.UpperCenter;
-      descriptionStyle.fontSize = 20;
-      descriptionStyle.normal.textColor = Color.white;
     }
 
     const string kLevelDirectoryJson = "LevelList";
+
+    Dictionary<int, GameObject> levelButtons = new Dictionary<int, GameObject>();
 
     // Update function, which gets called once per frame.
     public override void Update() {
@@ -74,51 +59,91 @@ namespace Hamster.States {
 
       levelNames = new string[levelDir.levels.Count];
 
+      // Generate a list of level names.
       for (int i = 0; i < levelDir.levels.Count; i++) {
         levelNames[i] = levelDir.levels[i].name;
       }
+
+      menuComponent = SpawnUI<Menus.LevelSelectGUI>(StringConstants.PrefabsLevelSelectMenu);
+      menuComponent.SelectionText.text = StringConstants.BuiltinLevelScreenTitle;
+
+      SpawnLevelButtons(currentPage);
+      ChangePage(0);
     }
 
-    // Clean up when we exit the state.
-    public override StateExitValue Cleanup() {
+    // Removes all buttons from the screen.
+    void ClearCurrentButtons() {
+      foreach (KeyValuePair<int, GameObject> pair in levelButtons) {
+        GameObject.Destroy(pair.Value);
+      }
+      levelButtons.Clear();
+    }
+
+    // Creates one page worth of level buttons for a given page.  Sets their names
+    // and properties, and makes sure they're in the correct part of the window.
+    // Also removes any existing level buttons.
+    void SpawnLevelButtons(int page) {
+      ClearCurrentButtons();
+      int maxButtonIndex = (currentPage + 1) * ButtonsPerPage;
+      if (maxButtonIndex > levelDir.levels.Count) maxButtonIndex = levelDir.levels.Count;
+      for (int i = currentPage * ButtonsPerPage; i < maxButtonIndex; i++) {
+        GameObject button = GameObject.Instantiate(
+            CommonData.prefabs.menuLookup[StringConstants.PrefabsLevelSelectButton]);
+        Menus.LevelSelectButtonGUI component = button.GetComponent<Menus.LevelSelectButtonGUI>();
+        if (component != null) {
+          component.buttonId = i;
+          levelButtons[i] = button;
+          button.transform.SetParent(menuComponent.Panel.transform, false);
+          component.ButtonText.text = levelDir.levels[i].name;
+        } else {
+          Debug.LogError("Level select button prefab had no LevelSelectButtionGUI component.");
+        }
+
+        gui.transform.SetParent(CommonData.mainCamera.transform, false);
+      }
+    }
+
+    public override void Resume(StateExitValue results) {
+      menuComponent.gameObject.SetActive(true);
+    }
+
+    public override void Suspend() {
+      menuComponent.gameObject.SetActive(false);
+    }
+
+    void ChangePage(int delta) {
+      currentPage += delta;
+      int pageMax = (int)((levelDir.levels.Count) / ButtonsPerPage);
+      if (currentPage <= 0) currentPage = 0;
+      if (currentPage >= pageMax) currentPage = pageMax;
+
+      menuComponent.BackButton.gameObject.SetActive(currentPage != 0);
+      menuComponent.ForwardButton.gameObject.SetActive(currentPage != pageMax);
+      SpawnLevelButtons(currentPage);
+    }
+
+    public override void HandleUIEvent(GameObject source, object eventData) {
+      Menus.LevelSelectButtonGUI buttonComponent =
+          source.GetComponent<Menus.LevelSelectButtonGUI>();
+      if (source == menuComponent.MainButton.gameObject) {
+        manager.SwapState(new MainMenu());
+      } else if (source == menuComponent.PlayButton.gameObject) {
+        manager.PushState(new Gameplay());
+      } else if (source == menuComponent.BackButton.gameObject) {
+        ChangePage(-1);
+      } else if (source == menuComponent.ForwardButton.gameObject) {
+        ChangePage(1);
+      } else if (buttonComponent != null) {
+        // They pressed one of the buttons for a level.
+        mapSelection = buttonComponent.buttonId;
+      }
+    }
+
+  // Clean up when we exit the state.
+  public override StateExitValue Cleanup() {
+      DestroyUI();
       CommonData.gameWorld.DisposeWorld();
       return null;
-    }
-
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-
-      GUILayout.BeginHorizontal();
-
-      scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition,
-          GUILayout.MaxWidth(Screen.width * 0.33f));
-      mapSelection = GUILayout.SelectionGrid(
-          mapSelection, levelNames, 1);
-      GUILayout.EndScrollView();
-
-      GUILayout.BeginVertical(GUILayout.MaxWidth(Screen.width * kUIColumnWidth));
-      GUILayout.Label(levelDir.levels[mapSelection].name, titleStyle);
-      GUILayout.Label(levelDir.levels[mapSelection].description, descriptionStyle);
-      GUILayout.EndVertical();
-
-      GUILayout.BeginVertical(GUILayout.MaxWidth(Screen.width * kUIColumnWidth));
-      if (GUILayout.Button(kButtonNamePlay)) {
-        Firebase.Analytics.FirebaseAnalytics.LogEvent(
-            StringConstants.AnalyticsEventMapStart,
-            StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
-
-        manager.PushState(new Gameplay());
-      }
-      if (GUILayout.Button(StringConstants.ButtonTopTimes)) {
-        manager.PushState(new TopTimes(null));
-      }
-      if (GUILayout.Button(kButtonNameBack)) {
-        manager.SwapState(new MainMenu());
-      }
-      GUILayout.EndVertical();
-
-      GUILayout.EndHorizontal();
     }
 
     [System.Serializable]

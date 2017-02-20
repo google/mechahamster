@@ -78,6 +78,9 @@ namespace Hamster {
     public const string UploadScoreNameKey = "upload_score_name";
     public const string UploadScoreDefaultName = "Hammy";
 
+    // Level selection text
+    public const string BuiltinLevelScreenTitle = "Hammy's Adventures";
+
     // Auth:
     //--------------------------
 
@@ -193,5 +196,7 @@ namespace Hamster {
     //--------------------------
     public const string PrefabMainMenu = "MainMenu";
     public const string PrefabBasicDialog = "BasicDialog";
+    public const string PrefabsLevelSelectMenu = "LevelSelectMenu";
+    public const string PrefabsLevelSelectButton = "LevelSelectButton";
   }
 }

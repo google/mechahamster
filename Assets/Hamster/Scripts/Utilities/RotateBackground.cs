@@ -35,7 +35,6 @@ namespace Hamster.Utilities {
             transform.rotation * quat, CommonData.mainGame.TimeSinceLastUpdate);
       }
     }
-
   }
 
 }
