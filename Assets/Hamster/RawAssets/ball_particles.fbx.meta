@@ -1104,6 +1104,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -1114,11 +1116,482 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Take 001
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 1
+        functionName: AnimationDone
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask:
+      - path: 
+        weight: 1
+      - path: ball_particle1
+        weight: 1
+      - path: ball_particle2
+        weight: 1
+      - path: ball_particle3
+        weight: 1
+      - path: ball_particle4
+        weight: 1
+      - path: ball_particle5
+        weight: 1
+      - path: ball_particle6
+        weight: 1
+      - path: ball_particle7
+        weight: 1
+      - path: ball_particle8
+        weight: 1
+      - path: ball_particle9
+        weight: 1
+      - path: ball_particle10
+        weight: 1
+      - path: ball_particle11
+        weight: 1
+      - path: ball_particle12
+        weight: 1
+      - path: ball_particle13
+        weight: 1
+      - path: ball_particle14
+        weight: 1
+      - path: ball_particle15
+        weight: 1
+      - path: ball_particle16
+        weight: 1
+      - path: ball_particle17
+        weight: 1
+      - path: ball_particle18
+        weight: 1
+      - path: ball_particle19
+        weight: 1
+      - path: ball_particle20
+        weight: 1
+      - path: ball_particle21
+        weight: 1
+      - path: ball_particle22
+        weight: 1
+      - path: ball_particle23
+        weight: 1
+      - path: ball_particle24
+        weight: 1
+      - path: ball_particle25
+        weight: 1
+      - path: ball_particle26
+        weight: 1
+      - path: ball_particle27
+        weight: 1
+      - path: ball_particle28
+        weight: 1
+      - path: ball_particle29
+        weight: 1
+      - path: ball_particle30
+        weight: 1
+      - path: ball_particle31
+        weight: 1
+      - path: ball_particle32
+        weight: 1
+      - path: ball_particle33
+        weight: 1
+      - path: ball_particle34
+        weight: 1
+      - path: ball_particle35
+        weight: 1
+      - path: ball_particle36
+        weight: 1
+      - path: ball_particle37
+        weight: 1
+      - path: ball_particle38
+        weight: 1
+      - path: ball_particle39
+        weight: 1
+      - path: ball_particle40
+        weight: 1
+      - path: ball_particle41
+        weight: 1
+      - path: ball_particle42
+        weight: 1
+      - path: ball_particle43
+        weight: 1
+      - path: ball_particle44
+        weight: 1
+      - path: ball_particle45
+        weight: 1
+      - path: ball_particle46
+        weight: 1
+      - path: ball_particle47
+        weight: 1
+      - path: ball_particle48
+        weight: 1
+      - path: ball_particle49
+        weight: 1
+      - path: ball_particle50
+        weight: 1
+      - path: ball_particle51
+        weight: 1
+      - path: ball_particle52
+        weight: 1
+      - path: ball_particle53
+        weight: 1
+      - path: ball_particle54
+        weight: 1
+      - path: ball_particle55
+        weight: 1
+      - path: ball_particle56
+        weight: 1
+      - path: ball_particle57
+        weight: 1
+      - path: ball_particle58
+        weight: 1
+      - path: ball_particle59
+        weight: 1
+      - path: ball_particle60
+        weight: 1
+      - path: ball_particle61
+        weight: 1
+      - path: ball_particle62
+        weight: 1
+      - path: ball_particle63
+        weight: 1
+      - path: ball_particle64
+        weight: 1
+      - path: ball_particle65
+        weight: 1
+      - path: ball_particle66
+        weight: 1
+      - path: ball_particle67
+        weight: 1
+      - path: ball_particle68
+        weight: 1
+      - path: ball_particle69
+        weight: 1
+      - path: ball_particle70
+        weight: 1
+      - path: ball_particle71
+        weight: 1
+      - path: ball_particle72
+        weight: 1
+      - path: ball_particle73
+        weight: 1
+      - path: ball_particle74
+        weight: 1
+      - path: ball_particle75
+        weight: 1
+      - path: ball_particle76
+        weight: 1
+      - path: ball_particle77
+        weight: 1
+      - path: ball_particle78
+        weight: 1
+      - path: ball_particle79
+        weight: 1
+      - path: ball_particle80
+        weight: 1
+      - path: ball_particle81
+        weight: 1
+      - path: ball_particle82
+        weight: 1
+      - path: ball_particle83
+        weight: 1
+      - path: ball_particle84
+        weight: 1
+      - path: ball_particle85
+        weight: 1
+      - path: ball_particle86
+        weight: 1
+      - path: ball_particle87
+        weight: 1
+      - path: ball_particle88
+        weight: 1
+      - path: ball_particle89
+        weight: 1
+      - path: ball_particle90
+        weight: 1
+      - path: ball_particle91
+        weight: 1
+      - path: ball_particle92
+        weight: 1
+      - path: ball_particle93
+        weight: 1
+      - path: ball_particle94
+        weight: 1
+      - path: ball_particle95
+        weight: 1
+      - path: ball_particle96
+        weight: 1
+      - path: ball_particle97
+        weight: 1
+      - path: ball_particle98
+        weight: 1
+      - path: ball_particle99
+        weight: 1
+      - path: ball_particle100
+        weight: 1
+      - path: ball_particle101
+        weight: 1
+      - path: ball_particle102
+        weight: 1
+      - path: ball_particle103
+        weight: 1
+      - path: ball_particle104
+        weight: 1
+      - path: ball_particle105
+        weight: 1
+      - path: ball_particle106
+        weight: 1
+      - path: ball_particle107
+        weight: 1
+      - path: ball_particle108
+        weight: 1
+      - path: ball_particle109
+        weight: 1
+      - path: ball_particle110
+        weight: 1
+      - path: ball_particle111
+        weight: 1
+      - path: ball_particle112
+        weight: 1
+      - path: ball_particle113
+        weight: 1
+      - path: ball_particle114
+        weight: 1
+      - path: ball_particle115
+        weight: 1
+      - path: ball_particle116
+        weight: 1
+      - path: ball_particle117
+        weight: 1
+      - path: ball_particle118
+        weight: 1
+      - path: ball_particle119
+        weight: 1
+      - path: ball_particle120
+        weight: 1
+      - path: ball_particle121
+        weight: 1
+      - path: ball_particle122
+        weight: 1
+      - path: ball_particle123
+        weight: 1
+      - path: ball_particle124
+        weight: 1
+      - path: ball_particle125
+        weight: 1
+      - path: ball_particle126
+        weight: 1
+      - path: ball_particle127
+        weight: 1
+      - path: ball_particle128
+        weight: 1
+      - path: ball_particle129
+        weight: 1
+      - path: ball_particle130
+        weight: 1
+      - path: ball_particle131
+        weight: 1
+      - path: ball_particle132
+        weight: 1
+      - path: ball_particle133
+        weight: 1
+      - path: ball_particle134
+        weight: 1
+      - path: ball_particle135
+        weight: 1
+      - path: ball_particle136
+        weight: 1
+      - path: ball_particle137
+        weight: 1
+      - path: ball_particle138
+        weight: 1
+      - path: ball_particle139
+        weight: 1
+      - path: ball_particle140
+        weight: 1
+      - path: ball_particle141
+        weight: 1
+      - path: ball_particle142
+        weight: 1
+      - path: ball_particle143
+        weight: 1
+      - path: ball_particle144
+        weight: 1
+      - path: ball_particle145
+        weight: 1
+      - path: ball_particle146
+        weight: 1
+      - path: ball_particle147
+        weight: 1
+      - path: ball_particle148
+        weight: 1
+      - path: ball_particle149
+        weight: 1
+      - path: ball_particle150
+        weight: 1
+      - path: ball_particle151
+        weight: 1
+      - path: ball_particle152
+        weight: 1
+      - path: ball_particle153
+        weight: 1
+      - path: ball_particle154
+        weight: 1
+      - path: ball_particle155
+        weight: 1
+      - path: ball_particle156
+        weight: 1
+      - path: ball_particle157
+        weight: 1
+      - path: ball_particle158
+        weight: 1
+      - path: ball_particle159
+        weight: 1
+      - path: ball_particle160
+        weight: 1
+      - path: ball_particle161
+        weight: 1
+      - path: ball_particle162
+        weight: 1
+      - path: ball_particle163
+        weight: 1
+      - path: ball_particle164
+        weight: 1
+      - path: ball_particle165
+        weight: 1
+      - path: ball_particle166
+        weight: 1
+      - path: ball_particle167
+        weight: 1
+      - path: ball_particle168
+        weight: 1
+      - path: ball_particle169
+        weight: 1
+      - path: ball_particle170
+        weight: 1
+      - path: ball_particle171
+        weight: 1
+      - path: ball_particle172
+        weight: 1
+      - path: ball_particle173
+        weight: 1
+      - path: ball_particle174
+        weight: 1
+      - path: ball_particle175
+        weight: 1
+      - path: ball_particle176
+        weight: 1
+      - path: ball_particle177
+        weight: 1
+      - path: ball_particle178
+        weight: 1
+      - path: ball_particle179
+        weight: 1
+      - path: ball_particle180
+        weight: 1
+      - path: ball_particle181
+        weight: 1
+      - path: ball_particle182
+        weight: 1
+      - path: ball_particle183
+        weight: 1
+      - path: ball_particle184
+        weight: 1
+      - path: ball_particle185
+        weight: 1
+      - path: ball_particle186
+        weight: 1
+      - path: ball_particle187
+        weight: 1
+      - path: ball_particle188
+        weight: 1
+      - path: ball_particle189
+        weight: 1
+      - path: ball_particle190
+        weight: 1
+      - path: ball_particle191
+        weight: 1
+      - path: ball_particle192
+        weight: 1
+      - path: ball_particle193
+        weight: 1
+      - path: ball_particle194
+        weight: 1
+      - path: ball_particle195
+        weight: 1
+      - path: ball_particle196
+        weight: 1
+      - path: ball_particle197
+        weight: 1
+      - path: ball_particle198
+        weight: 1
+      - path: ball_particle199
+        weight: 1
+      - path: ball_particle200
+        weight: 1
+      - path: ball_particle201
+        weight: 1
+      - path: ball_particle202
+        weight: 1
+      - path: ball_particle203
+        weight: 1
+      - path: ball_particle204
+        weight: 1
+      - path: ball_particle205
+        weight: 1
+      - path: ball_particle206
+        weight: 1
+      - path: ball_particle207
+        weight: 1
+      - path: ball_particle208
+        weight: 1
+      - path: ball_particle209
+        weight: 1
+      - path: ball_particle210
+        weight: 1
+      - path: ball_particle211
+        weight: 1
+      - path: ball_particle212
+        weight: 1
+      - path: ball_particle213
+        weight: 1
+      - path: ball_particle214
+        weight: 1
+      - path: ball_particle215
+        weight: 1
+      - path: ball_particle216
+        weight: 1
+      - path: ball_particle217
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 50
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
