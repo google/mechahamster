@@ -36,6 +36,9 @@ namespace Hamster.States {
     // Tracks if the score being shown has been uploaded.
     private bool ScoreUploaded { get; set; }
 
+    // Unity component for the GUI Menu.
+    Menus.LevelFinishedGUI dialogComponent;
+
     public override void Initialize() {
       Time.timeScale = 1.0f;
       StartTime = Time.realtimeSinceStartup;
@@ -43,14 +46,16 @@ namespace Hamster.States {
       ElapsedGameTime = CommonData.gameWorld.ElapsedGameTimeMs;
       ScoreUploaded = false;
 
-      // TODO(ccornell) Remove once we get menus!  [daydream scaffolding]
-      if (CommonData.inVrMode)
-        manager.SwapState(new Gameplay());
-      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
+      dialogComponent = SpawnUI<Menus.LevelFinishedGUI>(StringConstants.PrefabsLevelFinishedMenu);
+      dialogComponent.NewRecordText.gameObject.SetActive(false);
+      dialogComponent.SubmitButton.gameObject.SetActive(!CommonData.gameWorld.HasPendingEdits);
+      dialogComponent.ElapsedTimeText.text = string.Format(StringConstants.FinishedTimeText,
+          Utilities.StringHelper.FormatTime(ElapsedGameTime));
     }
 
     public override void Resume(StateExitValue results) {
-      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
+      dialogComponent.SubmitButton.gameObject.SetActive(
+        !CommonData.gameWorld.HasPendingEdits && !ScoreUploaded);
       if (results != null) {
         if (results.sourceState == typeof(UploadTime)) {
           ScoreUploaded = (bool)results.data;
@@ -61,12 +66,12 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
-      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
+      dialogComponent.gameObject.SetActive(false);
       Time.timeScale = 0.0f;
     }
 
     public override StateExitValue Cleanup() {
-      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
+      DestroyUI();
       Time.timeScale = 0.0f;
       return null;
     }
@@ -80,37 +85,16 @@ namespace Hamster.States {
       }
     }
 
-    public override void OnGUI() {
-      float menuWidth = MenuWidth * Screen.width;
-      float menuHeight = MenuHeight * Screen.height;
-      GUI.skin = CommonData.prefabs.guiSkin;
-
-      GUILayout.BeginArea(
-          new Rect((Screen.width - menuWidth) / 2, (Screen.height - menuHeight) / 2,
-          menuWidth, menuHeight));
-
-      GUILayout.Label(StringConstants.FinishedTopText);
-
-      GUILayout.Label(string.Format(StringConstants.FinishedTimeText,
-        Utilities.StringHelper.FormatTime(ElapsedGameTime)));
-
-      GUILayout.BeginVertical();
-      if (GUILayout.Button(StringConstants.ButtonRetry)) {
-        manager.SwapState(new Gameplay());
-      }
-      if (!ScoreUploaded && !CommonData.gameWorld.HasPendingEdits) {
-        // Only allow uploads if the score hasn't been uploaded already,
-        // and there are no pending edits that the database doesn't know of.
-        if (GUILayout.Button(StringConstants.ButtonUploadTime)) {
-          manager.PushState(new UploadTime(ElapsedGameTime));
-        }
-      }
-      if (GUILayout.Button(StringConstants.ButtonExit)) {
+    public override void HandleUIEvent(GameObject source, object eventData) {
+      if (source == dialogComponent.LevelsButton.gameObject) {
         manager.PopState();
+      } else if (source == dialogComponent.RetryButton.gameObject) {
+        manager.SwapState(new Gameplay());
+      } else if (source == dialogComponent.SubmitButton.gameObject) {
+        manager.PushState(new UploadTime(ElapsedGameTime));
+      } else if (source == dialogComponent.MainButton.gameObject) {
+        manager.ClearStack(new MainMenu());
       }
-      GUILayout.EndVertical();
-
-      GUILayout.EndArea();
     }
   }
 }

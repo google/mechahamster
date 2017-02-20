@@ -24,16 +24,18 @@ namespace Hamster {
   public class CameraController : MonoBehaviour {
 
     // Set by the inspector:
+    // Default angle for viewing.  (0, 3, -2) is standard.
+    // (Three forward, two down, so looking downward at ~34 degrees)
     public Vector3 ViewAngleVector;
     // Distance between the camera and the ground.
     public float ViewDistance = 10.0f;
     // How fast you pan in the editor.
-    public float EditorScrollSpeed = 0.3f;
+    public float EditorScrollSpeed = 8.0f;
     // How fast the camera zooms to its new target:
     public float CameraZoom = 0.05f;
     // How far away the camera goes during menus.
     // (Needed to make sure the level doesn't clip through the menu.)
-    public float CameraScaleInMenus = 1.5f;
+    public float CameraScaleInMenus = 2.0f;
 
     // Values representing various modes the camera can be in.
     public enum CameraMode {
