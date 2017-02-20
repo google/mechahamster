@@ -43,11 +43,9 @@ namespace Hamster {
 
         GameObject pointer = Instantiate(VRControllerPointer);
         pointer.transform.SetParent(CameraHolder.transform);
-        #if UNITY_EDITOR
-        // Make it easier to see the controller pointer in editor's game view,
-        // but leave controller positioning up to GVR arm model in final build.
+        // Spawn the VR pointer slightly forward, so it doesn't
+        // intersect our camera's clip-plane.
         pointer.transform.localPosition = .25f * Vector3.forward;
-        #endif
 
         eventSystem.gameObject.AddComponent<GvrPointerInputModule>();
         eventSystem.gameObject.AddComponent<GvrPointerManager>();
