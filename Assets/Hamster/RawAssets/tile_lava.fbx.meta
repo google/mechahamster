@@ -38,6 +38,15 @@ ModelImporter:
     100060: joint7
     100062: joint8
     100064: tile_lava
+    100066: fire1
+    100068: fire2
+    100070: fire3
+    100072: fire4
+    100074: fire5
+    100076: fire6
+    100078: fire7
+    100080: fire9
+    100082: polySurface56
     400000: fire8
     400002: fire_grp
     400004: lava_tile
@@ -71,6 +80,15 @@ ModelImporter:
     400060: joint7
     400062: joint8
     400064: tile_lava
+    400066: fire1
+    400068: fire2
+    400070: fire3
+    400072: fire4
+    400074: fire5
+    400076: fire6
+    400078: fire7
+    400080: fire9
+    400082: polySurface56
     2300000: lava_tile
     2300002: molten_lava
     2300004: //RootNode
@@ -80,8 +98,26 @@ ModelImporter:
     4300000: lava_tile
     4300002: molten_lava
     4300004: pit_lava
+    4300006: fire1
+    4300008: fire2
+    4300010: fire3
+    4300012: fire4
+    4300014: fire5
+    4300016: fire6
+    4300018: fire7
+    4300020: polySurface56
+    4300022: fire9
     7400000: Take 001
     9500000: //RootNode
+    13700000: fire1
+    13700002: fire2
+    13700004: fire3
+    13700006: fire4
+    13700008: fire5
+    13700010: fire6
+    13700012: fire7
+    13700014: fire9
+    13700016: polySurface56
   materials:
     importMaterials: 1
     materialName: 0

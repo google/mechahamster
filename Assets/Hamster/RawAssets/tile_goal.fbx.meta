@@ -11,27 +11,224 @@ ModelImporter:
     100006: target_circle1
     100008: target_circle2
     100010: //RootNode
+    100012: blue_particles
+    100014: blue_particles1
+    100016: blue_particles10
+    100018: blue_particles11
+    100020: blue_particles12
+    100022: blue_particles13
+    100024: blue_particles14
+    100026: blue_particles15
+    100028: blue_particles16
+    100030: blue_particles17
+    100032: blue_particles18
+    100034: blue_particles19
+    100036: blue_particles2
+    100038: blue_particles20
+    100040: blue_particles21
+    100042: blue_particles22
+    100044: blue_particles23
+    100046: blue_particles24
+    100048: blue_particles25
+    100050: blue_particles26
+    100052: blue_particles27
+    100054: blue_particles28
+    100056: blue_particles29
+    100058: blue_particles3
+    100060: blue_particles30
+    100062: blue_particles31
+    100064: blue_particles32
+    100066: blue_particles33
+    100068: blue_particles34
+    100070: blue_particles35
+    100072: blue_particles36
+    100074: blue_particles37
+    100076: blue_particles4
+    100078: blue_particles5
+    100080: blue_particles6
+    100082: blue_particles7
+    100084: blue_particles8
+    100086: blue_particles9
+    100088: goal_tile1
+    100090: particles
     400000: goal_target
     400002: goal_tile
     400004: goal_type
     400006: target_circle1
     400008: target_circle2
     400010: //RootNode
+    400012: blue_particles
+    400014: blue_particles1
+    400016: blue_particles10
+    400018: blue_particles11
+    400020: blue_particles12
+    400022: blue_particles13
+    400024: blue_particles14
+    400026: blue_particles15
+    400028: blue_particles16
+    400030: blue_particles17
+    400032: blue_particles18
+    400034: blue_particles19
+    400036: blue_particles2
+    400038: blue_particles20
+    400040: blue_particles21
+    400042: blue_particles22
+    400044: blue_particles23
+    400046: blue_particles24
+    400048: blue_particles25
+    400050: blue_particles26
+    400052: blue_particles27
+    400054: blue_particles28
+    400056: blue_particles29
+    400058: blue_particles3
+    400060: blue_particles30
+    400062: blue_particles31
+    400064: blue_particles32
+    400066: blue_particles33
+    400068: blue_particles34
+    400070: blue_particles35
+    400072: blue_particles36
+    400074: blue_particles37
+    400076: blue_particles4
+    400078: blue_particles5
+    400080: blue_particles6
+    400082: blue_particles7
+    400084: blue_particles8
+    400086: blue_particles9
+    400088: goal_tile1
+    400090: particles
     2300000: goal_target
     2300002: goal_tile
     2300004: goal_type
     2300006: target_circle1
     2300008: target_circle2
+    2300010: blue_particles
+    2300012: blue_particles1
+    2300014: blue_particles10
+    2300016: blue_particles11
+    2300018: blue_particles12
+    2300020: blue_particles13
+    2300022: blue_particles14
+    2300024: blue_particles15
+    2300026: blue_particles16
+    2300028: blue_particles17
+    2300030: blue_particles18
+    2300032: blue_particles19
+    2300034: blue_particles2
+    2300036: blue_particles20
+    2300038: blue_particles21
+    2300040: blue_particles22
+    2300042: blue_particles23
+    2300044: blue_particles24
+    2300046: blue_particles25
+    2300048: blue_particles26
+    2300050: blue_particles27
+    2300052: blue_particles28
+    2300054: blue_particles29
+    2300056: blue_particles3
+    2300058: blue_particles30
+    2300060: blue_particles31
+    2300062: blue_particles32
+    2300064: blue_particles33
+    2300066: blue_particles34
+    2300068: blue_particles35
+    2300070: blue_particles36
+    2300072: blue_particles37
+    2300074: blue_particles4
+    2300076: blue_particles5
+    2300078: blue_particles6
+    2300080: blue_particles7
+    2300082: blue_particles8
+    2300084: blue_particles9
+    2300086: goal_tile1
     3300000: goal_target
     3300002: goal_tile
     3300004: goal_type
     3300006: target_circle1
     3300008: target_circle2
+    3300010: blue_particles
+    3300012: blue_particles1
+    3300014: blue_particles10
+    3300016: blue_particles11
+    3300018: blue_particles12
+    3300020: blue_particles13
+    3300022: blue_particles14
+    3300024: blue_particles15
+    3300026: blue_particles16
+    3300028: blue_particles17
+    3300030: blue_particles18
+    3300032: blue_particles19
+    3300034: blue_particles2
+    3300036: blue_particles20
+    3300038: blue_particles21
+    3300040: blue_particles22
+    3300042: blue_particles23
+    3300044: blue_particles24
+    3300046: blue_particles25
+    3300048: blue_particles26
+    3300050: blue_particles27
+    3300052: blue_particles28
+    3300054: blue_particles29
+    3300056: blue_particles3
+    3300058: blue_particles30
+    3300060: blue_particles31
+    3300062: blue_particles32
+    3300064: blue_particles33
+    3300066: blue_particles34
+    3300068: blue_particles35
+    3300070: blue_particles36
+    3300072: blue_particles37
+    3300074: blue_particles4
+    3300076: blue_particles5
+    3300078: blue_particles6
+    3300080: blue_particles7
+    3300082: blue_particles8
+    3300084: blue_particles9
+    3300086: goal_tile1
     4300000: goal_tile
     4300002: goal_target
     4300004: target_circle1
     4300006: target_circle2
     4300008: goal_type
+    4300010: goal_tile1
+    4300012: blue_particles
+    4300014: blue_particles1
+    4300016: blue_particles2
+    4300018: blue_particles3
+    4300020: blue_particles4
+    4300022: blue_particles5
+    4300024: blue_particles6
+    4300026: blue_particles7
+    4300028: blue_particles8
+    4300030: blue_particles9
+    4300032: blue_particles10
+    4300034: blue_particles11
+    4300036: blue_particles12
+    4300038: blue_particles13
+    4300040: blue_particles14
+    4300042: blue_particles15
+    4300044: blue_particles16
+    4300046: blue_particles17
+    4300048: blue_particles18
+    4300050: blue_particles19
+    4300052: blue_particles20
+    4300054: blue_particles21
+    4300056: blue_particles22
+    4300058: blue_particles23
+    4300060: blue_particles24
+    4300062: blue_particles25
+    4300064: blue_particles26
+    4300066: blue_particles27
+    4300068: blue_particles28
+    4300070: blue_particles29
+    4300072: blue_particles30
+    4300074: blue_particles31
+    4300076: blue_particles32
+    4300078: blue_particles33
+    4300080: blue_particles34
+    4300082: blue_particles35
+    4300084: blue_particles36
+    4300086: blue_particles37
     7400000: Take 001
     9500000: //RootNode
   materials:
@@ -44,6 +241,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -59,7 +258,7 @@ ModelImporter:
       name: Take 001
       takeName: Take 001
       firstFrame: 1
-      lastFrame: 40
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -67,7 +266,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 0
+      loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -84,11 +283,85 @@ ModelImporter:
         weight: 1
       - path: goal_target
         weight: 1
-      - path: goal_tile
+      - path: goal_tile1
         weight: 1
-      - path: goal_type
+      - path: particles
         weight: 1
-      - path: target_circle1
+      - path: particles/blue_particles
+        weight: 1
+      - path: particles/blue_particles1
+        weight: 1
+      - path: particles/blue_particles2
+        weight: 1
+      - path: particles/blue_particles3
+        weight: 1
+      - path: particles/blue_particles4
+        weight: 1
+      - path: particles/blue_particles5
+        weight: 1
+      - path: particles/blue_particles6
+        weight: 1
+      - path: particles/blue_particles7
+        weight: 1
+      - path: particles/blue_particles8
+        weight: 1
+      - path: particles/blue_particles9
+        weight: 1
+      - path: particles/blue_particles10
+        weight: 1
+      - path: particles/blue_particles11
+        weight: 1
+      - path: particles/blue_particles12
+        weight: 1
+      - path: particles/blue_particles13
+        weight: 1
+      - path: particles/blue_particles14
+        weight: 1
+      - path: particles/blue_particles15
+        weight: 1
+      - path: particles/blue_particles16
+        weight: 1
+      - path: particles/blue_particles17
+        weight: 1
+      - path: particles/blue_particles18
+        weight: 1
+      - path: particles/blue_particles19
+        weight: 1
+      - path: particles/blue_particles20
+        weight: 1
+      - path: particles/blue_particles21
+        weight: 1
+      - path: particles/blue_particles22
+        weight: 1
+      - path: particles/blue_particles23
+        weight: 1
+      - path: particles/blue_particles24
+        weight: 1
+      - path: particles/blue_particles25
+        weight: 1
+      - path: particles/blue_particles26
+        weight: 1
+      - path: particles/blue_particles27
+        weight: 1
+      - path: particles/blue_particles28
+        weight: 1
+      - path: particles/blue_particles29
+        weight: 1
+      - path: particles/blue_particles30
+        weight: 1
+      - path: particles/blue_particles31
+        weight: 1
+      - path: particles/blue_particles32
+        weight: 1
+      - path: particles/blue_particles33
+        weight: 1
+      - path: particles/blue_particles34
+        weight: 1
+      - path: particles/blue_particles35
+        weight: 1
+      - path: particles/blue_particles36
+        weight: 1
+      - path: particles/blue_particles37
         weight: 1
       - path: target_circle2
         weight: 1
