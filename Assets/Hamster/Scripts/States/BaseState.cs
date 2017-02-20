@@ -19,6 +19,11 @@ using UnityEngine;
 namespace Hamster.States {
 
   public class BaseState {
+    // Depth to spawn UI, when running in mobile mode.
+    const float UIDepthMobile = 6.0f;
+    // Depth to spawn UI, when running in VR mode.
+    const float UIDepthVR = 10.0f;
+
     // A link to the state manager, used any time we need to switch states.
     public StateManager manager;
 
@@ -57,6 +62,7 @@ namespace Hamster.States {
     // Spawn a UI Prefab, and return the component associated with it.
     protected T SpawnUI<T>(string prefabLookup) {
       gui = GameObject.Instantiate(CommonData.prefabs.menuLookup[prefabLookup]);
+      gui.transform.position = new Vector3(0, 0, CommonData.inVrMode ? UIDepthVR : UIDepthMobile);
       gui.transform.SetParent(CommonData.mainCamera.transform, false);
       return gui.GetComponent<T>();
     }
