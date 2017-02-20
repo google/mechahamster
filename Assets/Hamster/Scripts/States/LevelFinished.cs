@@ -46,9 +46,11 @@ namespace Hamster.States {
       // TODO(ccornell) Remove once we get menus!  [daydream scaffolding]
       if (CommonData.inVrMode)
         manager.SwapState(new Gameplay());
+      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
     }
 
     public override void Resume(StateExitValue results) {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
       if (results != null) {
         if (results.sourceState == typeof(UploadTime)) {
           ScoreUploaded = (bool)results.data;
@@ -59,10 +61,12 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       Time.timeScale = 0.0f;
     }
 
     public override StateExitValue Cleanup() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       Time.timeScale = 0.0f;
       return null;
     }

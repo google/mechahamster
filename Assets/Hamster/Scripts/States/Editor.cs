@@ -53,9 +53,12 @@ namespace Hamster.States {
 
     // Tell the camera controller if the special tool Camera is selected.
     private void UpdateCameraController() {
-      CameraController c = CommonData.mainCamera.GetComponent<CameraController>();
-      if (c != null) {
-        c.MouseControlsEditorCamera = mapToolSelection == (int)SpecialTools.Camera;
+      if (mapToolSelection == (int)SpecialTools.Camera) {
+        CommonData.mainCamera.MouseControlsEditorCamera = true;
+        CommonData.mainCamera.mode = CameraController.CameraMode.Dragging;
+      } else {
+        CommonData.mainCamera.MouseControlsEditorCamera = false;
+        CommonData.mainCamera.mode = CameraController.CameraMode.Editor;
       }
     }
 
@@ -71,10 +74,16 @@ namespace Hamster.States {
           mapId, CommonData.currentUser.data.id, null);
 
       UpdateCameraController();
+      CommonData.mainCamera.mode = CameraController.CameraMode.Editor;
+    }
+
+    public override void Suspend() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
     }
 
     // Clean up when we exit the state.
     public override StateExitValue Cleanup() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       CommonData.gameWorld.DisposeWorld();
       return null;
     }
@@ -84,6 +93,7 @@ namespace Hamster.States {
     // optional object containing any results/data.  Results
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Editor;
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
           var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
@@ -109,18 +119,22 @@ namespace Hamster.States {
           int selection = mapToolSelection - specialToolCount;
           string brushElementType = CommonData.prefabs.prefabNames[selection];
           float rayDist;
-          Ray cameraRay = CommonData.mainCamera.ScreenPointToRay(Input.mousePosition);
-          if (CommonData.kZeroPlane.Raycast(cameraRay, out rayDist)) {
-            MapElement element = new MapElement();
-            Vector3 pos = cameraRay.GetPoint(rayDist);
-            pos.x = Mathf.RoundToInt(pos.x);
-            pos.y = Mathf.RoundToInt(pos.y);
-            pos.z = Mathf.RoundToInt(pos.z);
-            element.position = pos;
-            element.type = brushElementType;
-            element.orientation = currentOrientation;
+          Camera camera = CommonData.mainCamera.GetComponentInChildren<Camera>();
+          Ray cameraRay;
+          if (camera != null) {
+            cameraRay = camera.ScreenPointToRay(Input.mousePosition);
+            if (CommonData.kZeroPlane.Raycast(cameraRay, out rayDist)) {
+              MapElement element = new MapElement();
+              Vector3 pos = cameraRay.GetPoint(rayDist);
+              pos.x = Mathf.RoundToInt(pos.x);
+              pos.y = Mathf.RoundToInt(pos.y);
+              pos.z = Mathf.RoundToInt(pos.z);
+              element.position = pos;
+              element.type = brushElementType;
+              element.orientation = currentOrientation;
 
-            CommonData.gameWorld.PlaceTile(element);
+              CommonData.gameWorld.PlaceTile(element);
+            }
           }
         }
       }

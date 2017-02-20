@@ -41,10 +41,12 @@ namespace Hamster.States {
     }
 
     public override void Initialize() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
       TimeUploaded = false;
     }
 
     public override void Resume(StateExitValue results) {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
       if (results != null) {
         if (results.sourceState == typeof(WaitForTask)) {
           WaitForTask.Results resultData = results.data as WaitForTask.Results;
@@ -69,7 +71,12 @@ namespace Hamster.States {
       }
     }
 
+    public override void Suspend() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
+    }
+
     public override StateExitValue Cleanup() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       // Save what the user typed into the name for next time.
       PlayerPrefs.SetString(StringConstants.UploadScoreNameKey, Name);
       return new StateExitValue(typeof(UploadTime), TimeUploaded);

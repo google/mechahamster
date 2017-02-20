@@ -32,6 +32,17 @@ namespace Hamster {
     // How fast the camera zooms to its new target:
     public float kCameraZoom = 0.05f;
 
+    // Values representing various modes the camera can be in.
+    public enum CameraMode {
+      Gameplay,
+      Menu,
+      Editor,
+      Dragging
+    }
+
+    // Current behavior mode the camera is in.
+    public CameraMode mode = CameraMode.Menu;
+
     private MainGame mainGame;
     private Vector3 editorCam = new Vector3(0, 0, 0);
     private static Vector3 kUpVector = new Vector3(0, 1, 1);
@@ -58,50 +69,64 @@ namespace Hamster {
     }
 
     void LateUpdate() {
-      if (mainGame.isGameRunning()) {
-        // Gameplay mode:  Camera should follow the player:
-        if (player == null)
-          player = FindObjectOfType<PlayerController>();
-        if (player != null) {
-          transform.position = player.transform.position +
-              kViewAngleVector * kViewDistance;
-          transform.LookAt(player.transform.position, kUpVector);
-        }
-      } else if (MouseControlsEditorCamera && Input.GetMouseButton(0)) {
-        Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-        float dist;
-        if (CommonData.kZeroPlane.Raycast(ray, out dist)) {
-          if (Input.GetMouseButtonDown(0)) {
-            // Save where the mouse went down, as we want that to stay under the mouse.
-            pinnedLocation = ray.GetPoint(dist);
-          } else {
-            // Move the camera based on how far the mouse was dragged.
-            Vector3 diff = pinnedLocation - ray.GetPoint(dist);
-            transform.position += diff;
-            editorCam += diff;
+      switch (mode) {
+        case CameraMode.Gameplay:
+          // Gameplay mode:  Camera should follow the player:
+          if (player == null)
+            player = FindObjectOfType<PlayerController>();
+          if (player != null) {
+            transform.position = player.transform.position +
+                kViewAngleVector * kViewDistance;
+            transform.LookAt(player.transform.position, kUpVector);
           }
-        }
-      } else {
-        // Editor mode:  Camera should be user-controlled.
-        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
-          PanCamera(Vector3.forward);
-        }
-        if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
-          PanCamera(Vector3.back);
-        }
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
-          PanCamera(Vector3.left);
-        }
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
-          PanCamera(Vector3.right);
-        }
+          break;
+        case CameraMode.Dragging:
+          Ray ray = GetComponentInChildren<Camera>().ScreenPointToRay(Input.mousePosition);
+          float dist;
+          if (CommonData.kZeroPlane.Raycast(ray, out dist)) {
+            if (Input.GetMouseButtonDown(0)) {
+              // Save where the mouse went down, as we want that to stay under the mouse.
+              pinnedLocation = ray.GetPoint(dist);
+            } else if (Input.GetMouseButton(0)) {
+              // Move the camera based on how far the mouse was dragged.
+              Vector3 diff = pinnedLocation - ray.GetPoint(dist);
+              transform.position += diff;
+              editorCam += diff;
+            }
+          }
+          break;
+        case CameraMode.Editor:
+          // Editor mode:  Camera should be user-controlled.
+          if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) {
+            PanCamera(Vector3.forward);
+          }
+          if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
+            PanCamera(Vector3.back);
+          }
+          if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
+            PanCamera(Vector3.left);
+          }
+          if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+            PanCamera(Vector3.right);
+          }
 
-        Vector3 cameraTarget = editorCam + kViewAngleVector * kViewDistance;
+          Vector3 cameraTarget = editorCam + kViewAngleVector * kViewDistance;
 
-        transform.position = cameraTarget * kCameraZoom
-            + transform.position * (1.0f - kCameraZoom);
+          transform.position = cameraTarget * kCameraZoom
+              + transform.position * (1.0f - kCameraZoom);
 
-        transform.LookAt(transform.position - kViewAngleVector, kUpVector);
+          transform.LookAt(transform.position - kViewAngleVector, kUpVector);
+          break;
+        case CameraMode.Menu:
+          // Menu mode.  User is in a menu.
+
+          Vector3 menuCameraTarget = editorCam + kViewAngleVector * kViewDistance;
+
+          transform.position = menuCameraTarget * kCameraZoom
+              + transform.position * (1.0f - kCameraZoom);
+
+          transform.LookAt(transform.position - kViewAngleVector, kUpVector);
+          break;
       }
     }
   }
