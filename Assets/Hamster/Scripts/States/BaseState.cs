@@ -57,7 +57,7 @@ namespace Hamster.States {
     // Spawn a UI Prefab, and return the component associated with it.
     protected T SpawnUI<T>(string prefabLookup) {
       gui = GameObject.Instantiate(CommonData.prefabs.menuLookup[prefabLookup]);
-      gui.transform.SetParent(CommonData.mainCamera.gameObject.transform.parent, false);
+      gui.transform.SetParent(CommonData.mainCamera.transform, false);
       return gui.GetComponent<T>();
     }
 

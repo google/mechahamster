@@ -54,9 +54,11 @@ namespace Hamster.States {
         manager.PushState(new WaitForTask(
           TimeData.GetTopTimes(CommonData.gameWorld.worldMap)));
       }
+      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
     }
 
     public override void Resume(StateExitValue results) {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
       if (results != null) {
         if (results.sourceState == typeof(WaitForTask)) {
           WaitForTask.Results resultData = results.data as WaitForTask.Results;
@@ -70,7 +72,12 @@ namespace Hamster.States {
       }
     }
 
+    public override void Suspend() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
+    }
+
     public override StateExitValue Cleanup() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       return new StateExitValue(typeof(TopTimes));
     }
 

@@ -24,7 +24,7 @@ namespace Hamster {
   class CommonData {
     public static PrefabList prefabs;
     public static GameWorld gameWorld;
-    public static Camera mainCamera;
+    public static CameraController mainCamera;
     public static Firebase.FirebaseApp app;
     public static MainGame mainGame;
     public static DBStruct<UserData> currentUser;

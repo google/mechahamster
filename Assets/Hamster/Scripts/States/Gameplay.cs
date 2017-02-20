@@ -31,6 +31,7 @@ namespace Hamster.States {
       Physics.gravity = new Vector3(0, (float)gravity_y, 0);
       CommonData.gameWorld.ResetMap();
       Utilities.HideDuringGameplay.OnGameplayStateChange(true);
+      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
     }
 
     // Resume the state.  Called when the state becomes active
@@ -39,9 +40,11 @@ namespace Hamster.States {
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
       Time.timeScale = 1.0f;
+      CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
     }
 
     public override StateExitValue Cleanup() {
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       Utilities.HideDuringGameplay.OnGameplayStateChange(false);
       Time.timeScale = 0.0f;
       return new StateExitValue(typeof(Gameplay));
@@ -49,6 +52,7 @@ namespace Hamster.States {
 
     public override void Suspend() {
       Time.timeScale = 0.0f;
+      CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
     }
 
     // Called once per frame when the state is active.
