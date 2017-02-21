@@ -46,6 +46,12 @@ namespace Hamster.States {
       ElapsedGameTime = CommonData.gameWorld.ElapsedGameTimeMs;
       ScoreUploaded = false;
 
+      // Only log completion if the level is not being edited, to ignore in progress levels.
+      if (!CommonData.gameWorld.HasPendingEdits) {
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(StringConstants.AnalyticsEventMapFinished,
+          StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
+      }
+
       dialogComponent = SpawnUI<Menus.LevelFinishedGUI>(StringConstants.PrefabsLevelFinishedMenu);
       dialogComponent.NewRecordText.gameObject.SetActive(false);
       dialogComponent.SubmitButton.gameObject.SetActive(!CommonData.gameWorld.HasPendingEdits);
@@ -54,15 +60,17 @@ namespace Hamster.States {
     }
 
     public override void Resume(StateExitValue results) {
-      dialogComponent.SubmitButton.gameObject.SetActive(
-        !CommonData.gameWorld.HasPendingEdits && !ScoreUploaded);
       if (results != null) {
         if (results.sourceState == typeof(UploadTime)) {
-          ScoreUploaded = (bool)results.data;
+          ScoreUploaded = ScoreUploaded || (bool)results.data;
         } else if (results.sourceState == typeof(TopTimes)) {
           ScoreUploaded = true;
         }
       }
+
+      dialogComponent.gameObject.SetActive(true);
+      dialogComponent.SubmitButton.gameObject.SetActive(
+        !CommonData.gameWorld.HasPendingEdits && !ScoreUploaded);
     }
 
     public override void Suspend() {

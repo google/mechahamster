@@ -89,6 +89,9 @@ namespace Hamster.States {
       dbLevel.Initialize(currentLevel);
       dbLevel.PushData();
 
+      Firebase.Analytics.FirebaseAnalytics.LogEvent(StringConstants.AnalyticsEventMapCreated,
+        StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
+
       CommonData.currentUser.data.AddMap(currentLevel.name, currentLevel.mapId);
       CommonData.currentUser.PushData();
       manager.PopState();

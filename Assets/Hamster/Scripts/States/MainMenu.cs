@@ -81,6 +81,7 @@ namespace Hamster.States {
       if (source == menuComponent.PlayButton.gameObject) {
         manager.SwapState(new LevelSelect());
       } else if (source == menuComponent.EditorButton.gameObject) {
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(StringConstants.AnalyticsEventEditorOpened);
         manager.SwapState(new Editor());
       } else if (source == menuComponent.SharedLevelsButton.gameObject) {
         manager.SwapState(new SharedLevelSelect());

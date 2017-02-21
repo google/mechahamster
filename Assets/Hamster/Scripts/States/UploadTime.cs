@@ -43,6 +43,9 @@ namespace Hamster.States {
     public override void Initialize() {
       CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
       TimeUploaded = false;
+
+      Firebase.Analytics.FirebaseAnalytics.LogEvent(StringConstants.AnalyticsEventTimeUploadStarted,
+        StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
     }
 
     public override void Resume(StateExitValue results) {
@@ -58,6 +61,9 @@ namespace Hamster.States {
           }
 
           TimeUploaded = true;
+          Firebase.Analytics.FirebaseAnalytics.LogEvent(
+            StringConstants.AnalyticsEventTimeUploadFinished,
+            StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
 
           // Show the top times for the level, highlighting which one was just uploaded.
           var task =

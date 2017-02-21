@@ -54,6 +54,8 @@ namespace Hamster.States {
         if (task.IsFaulted) {
           Debug.LogError("Invite failed!\n" + task.Exception);
         } else {
+          Firebase.Analytics.FirebaseAnalytics.LogEvent(StringConstants.AnalyticsEventMapShared,
+            StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
           SetMapToShared();
         }
       });

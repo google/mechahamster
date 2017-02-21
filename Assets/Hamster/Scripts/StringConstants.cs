@@ -169,6 +169,12 @@ namespace Hamster {
     // Properties:
     // AnalyticsParamMapId : string representing the mapid of the level.
     public const string AnalyticsEventMapStart = "map_start";
+    public const string AnalyticsEventEditorOpened = "editor_opened";
+    public const string AnalyticsEventMapCreated = "map_created";
+    public const string AnalyticsEventMapShared = "map_shared";
+    public const string AnalyticsEventMapFinished = "map_finished";
+    public const string AnalyticsEventTimeUploadStarted = "time_upload_started";
+    public const string AnalyticsEventTimeUploadFinished = "time_upload_finished";
 
     // Analytics properties:
     //--------------------------
