@@ -22,11 +22,11 @@ namespace Hamster.Menus {
   public class MainMenuGUI : BaseMenu {
 
     // These fields are set in the inspector.
-    public UnityEngine.UI.Button PlayButton;
-    public UnityEngine.UI.Button EditorButton;
-    public UnityEngine.UI.Button AccountButton;
-    public UnityEngine.UI.Button SharedLevelsButton;
-    public UnityEngine.UI.Button BonusLevelsButton;
+    public GUIButton PlayButton;
+    public GUIButton EditorButton;
+    public GUIButton AccountButton;
+    public GUIButton SharedLevelsButton;
+    public GUIButton BonusLevelsButton;
   }
 
 }

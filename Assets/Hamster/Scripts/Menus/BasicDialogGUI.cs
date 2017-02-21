@@ -22,7 +22,7 @@ namespace Hamster.Menus {
   public class BasicDialogGUI : BaseMenu {
 
     // These fields are set in the inspector.
-    public UnityEngine.UI.Button OkayButton;
+    public GUIButton OkayButton;
     public UnityEngine.UI.Text DialogText;
   }
 

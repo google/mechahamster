@@ -25,10 +25,10 @@ namespace Hamster.Menus {
     // These fields are set in the inspector.
     public UnityEngine.UI.Text ElapsedTimeText;
     public UnityEngine.UI.Text NewRecordText;
-    public UnityEngine.UI.Button SubmitButton;
-    public UnityEngine.UI.Button RetryButton;
-    public UnityEngine.UI.Button MainButton;
-    public UnityEngine.UI.Button LevelsButton;
+    public GUIButton SubmitButton;
+    public GUIButton RetryButton;
+    public GUIButton MainButton;
+    public GUIButton LevelsButton;
   }
 
 }
