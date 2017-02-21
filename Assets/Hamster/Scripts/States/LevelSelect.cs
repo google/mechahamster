@@ -128,7 +128,11 @@ namespace Hamster.States {
       if (source == menuComponent.MainButton.gameObject) {
         manager.SwapState(new MainMenu());
       } else if (source == menuComponent.PlayButton.gameObject) {
-        manager.PushState(new Gameplay());
+        if (CommonData.inVrMode) {
+          manager.PushState(new ControllerHelp());
+        }  else {
+          manager.PushState(new Gameplay());
+        }
       } else if (source == menuComponent.BackButton.gameObject) {
         ChangePage(-1);
       } else if (source == menuComponent.ForwardButton.gameObject) {

@@ -33,9 +33,6 @@ namespace Hamster {
     public float EditorScrollSpeed = 8.0f;
     // How fast the camera zooms to its new target:
     public float CameraZoom = 0.05f;
-    // How far away the camera goes during menus.
-    // (Needed to make sure the level doesn't clip through the menu.)
-    public float CameraScaleInMenus = 2.0f;
 
     // Values representing various modes the camera can be in.
     public enum CameraMode {
@@ -82,7 +79,9 @@ namespace Hamster {
           if (player != null) {
             transform.position = player.transform.position +
                 ViewAngleVector * ViewDistance;
-            transform.LookAt(player.transform.position, kUpVector);
+            if (!CommonData.inVrMode) {
+              transform.LookAt(player.transform.position, kUpVector);
+            }
           }
           break;
         case CameraMode.Dragging:
@@ -120,17 +119,21 @@ namespace Hamster {
           transform.position = cameraTarget * CameraZoom
               + transform.position * (1.0f - CameraZoom);
 
-          transform.LookAt(transform.position - ViewAngleVector, kUpVector);
+          if (!CommonData.inVrMode) {
+            transform.LookAt(transform.position - ViewAngleVector, kUpVector);
+          }
           break;
         case CameraMode.Menu:
           // Menu mode.  User is in a menu.
           Vector3 menuCameraTarget =
-            editorCam + ViewAngleVector * ViewDistance * CameraScaleInMenus;
+            editorCam + ViewAngleVector * ViewDistance;
 
           transform.position = menuCameraTarget * CameraZoom
               + transform.position * (1.0f - CameraZoom);
 
-          transform.LookAt(transform.position - ViewAngleVector, kUpVector);
+          if (!CommonData.inVrMode) {
+            transform.LookAt(transform.position - ViewAngleVector, kUpVector);
+          }
           break;
       }
     }

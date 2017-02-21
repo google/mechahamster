@@ -154,7 +154,6 @@ MonoBehaviour:
   ViewDistance: 10
   EditorScrollSpeed: 8
   CameraZoom: 0.05
-  CameraScaleInMenus: 1.5
   mode: 1
 --- !u!1 &170869238
 GameObject:
@@ -367,6 +366,8 @@ MonoBehaviour:
     prefab: {fileID: 1555570376085334, guid: ce0cddd9505130e439942eee7c9d1191, type: 2}
   - name: LevelFinishedMenu
     prefab: {fileID: 1895746255891146, guid: b297aa0e44aa09949b0a31819ef09e8f, type: 2}
+  - name: ControllerHelp
+    prefab: {fileID: 1815537628908230, guid: 8209177f0e65e80489cddb326a9a0e32, type: 2}
   prefabNames: []
 --- !u!4 &489996880
 Transform:
@@ -540,7 +541,6 @@ MonoBehaviour:
   ViewDistance: 10
   EditorScrollSpeed: 0.3
   CameraZoom: 0.05
-  CameraScaleInMenus: 1.5
   mode: 1
 --- !u!82 &1298557707
 AudioSource:
