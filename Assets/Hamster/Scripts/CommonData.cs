@@ -41,6 +41,7 @@ namespace Hamster {
 
     // Whether we're in VR mode or not.  Set at startup by VRSystemSetup.
     public static bool inVrMode = false;
+    public static GameObject vrPointer;
 
   }
 }
