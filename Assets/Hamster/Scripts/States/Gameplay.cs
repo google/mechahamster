@@ -24,6 +24,7 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
+      CommonData.vrPointer.SetActive(false);
       Time.timeScale = 1.0f;
       double gravity_y =
         Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
@@ -39,11 +40,13 @@ namespace Hamster.States {
     // optional object containing any results/data.  Results
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
+      CommonData.vrPointer.SetActive(false);
       Time.timeScale = 1.0f;
       CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
     }
 
     public override StateExitValue Cleanup() {
+      CommonData.vrPointer.SetActive(true);
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       Utilities.HideDuringGameplay.OnGameplayStateChange(false);
       Time.timeScale = 0.0f;
@@ -51,6 +54,7 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
+      CommonData.vrPointer.SetActive(true);
       Time.timeScale = 0.0f;
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
     }

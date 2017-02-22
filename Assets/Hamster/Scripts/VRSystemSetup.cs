@@ -46,6 +46,7 @@ namespace Hamster {
         // Spawn the VR pointer slightly forward, so it doesn't
         // intersect our camera's clip-plane.
         pointer.transform.localPosition = .25f * Vector3.forward;
+        CommonData.vrPointer = pointer;
 
         eventSystem.gameObject.AddComponent<GvrPointerInputModule>();
         eventSystem.gameObject.AddComponent<GvrPointerManager>();
