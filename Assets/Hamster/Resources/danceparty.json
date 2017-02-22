@@ -1,6 +1,6 @@
 {
-    "name": "Unnamed Map",
-    "mapId": "<<default mapid>>",
+    "name": "Dance Party",
+    "mapId": "danceparty",
     "ownerId": "<<ownerId>>",
     "isShared": false,
     "elements": {

@@ -1,6 +1,6 @@
 {
-    "name": "Unnamed Map",
-    "mapId": "<<default mapid>>",
+    "name": "Blasting Off",
+    "mapId": "blastingoff",
     "ownerId": "<<ownerId>>",
     "isShared": false,
     "elements": {

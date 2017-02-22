@@ -72,7 +72,7 @@ namespace Hamster.States {
           if (task != null) {
             times = task.Result;
           }
-          manager.SwapState(new TopTimes(times, UploadedTimeData));
+          manager.SwapState(new TopTimes(times));
         }
       }
     }

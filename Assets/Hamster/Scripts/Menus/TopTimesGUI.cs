@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using UnityEngine;
-using System.Collections.Generic;
-
 namespace Hamster.Menus {
 
   // Interface class for providing code access to the GUI
-  // elements in the level selection prefab.  Used by several
-  // states that allow the player to select a level from a list.
-  public class LevelSelectGUI : BaseMenu {
+  // elements in the high score menu prefab.
+  public class TopTimesGUI : BaseMenu {
 
     // These fields are set in the inspector.
-    public UnityEngine.UI.Text SelectionText;
-    public GUIButton MainButton;
-    public GUIButton TopTimesButton;
-    public GUIButton PlayButton;
-    public GameObject Panel;
+    public UnityEngine.UI.Text LevelName;
+    public UnityEngine.UI.Text RecordNames;
+    public UnityEngine.UI.Text RecordTimes;
     public GUIButton BackButton;
-    public GUIButton ForwardButton;
   }
 
 }

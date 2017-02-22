@@ -115,6 +115,8 @@ namespace Hamster.States {
           source.GetComponent<Menus.LevelSelectButtonGUI>();
       if (source == menuComponent.MainButton.gameObject) {
         manager.SwapState(new MainMenu());
+      } else if (source == menuComponent.TopTimesButton.gameObject) {
+        manager.PushState(new TopTimes(null));
       } else if (source == menuComponent.PlayButton.gameObject) {
         if (CommonData.inVrMode) {
           manager.PushState(new ControllerHelp());

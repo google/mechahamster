@@ -211,5 +211,6 @@ namespace Hamster {
     public const string PrefabsLevelSelectButton = "LevelSelectButton";
     public const string PrefabsLevelFinishedMenu = "LevelFinishedMenu";
     public const string PrefabsControllerHelp = "ControllerHelp";
+    public const string PrefabsTopTimes = "TopTimes";
   }
 }
