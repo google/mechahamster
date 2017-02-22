@@ -16,14 +16,48 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Hamster.States {
-  // Select a bonus map!  Uses the general level select template. (BaseLevelSelect)
+  // Select a map that has been shared!  Uses the general level select template. (BaseLevelSelect)
   class BonusLevelSelect : BaseLevelSelect {
+
+    Dictionary<int, string> levelMap;
+
     // Initialization method.  Called after the state is added to the stack.
     public override void Initialize() {
-      mapDBPath = CommonData.DBBonusMapTablePath;
-      mapSourceList = CommonData.currentUser.data.bonusMaps;
+      List<MapListEntry> levelDir = CommonData.currentUser.data.bonusMaps;
+      string[] levelNames = new string[levelDir.Count];
+      levelMap = new Dictionary<int, string>();
 
-      base.Initialize();
+      // Generate a list of level names.
+      int index = 0;
+      foreach (MapListEntry mapListEntry in levelDir) {
+        levelMap.Add(index, mapListEntry.mapId);
+        levelNames[index] = mapListEntry.name;
+        index++;
+      }
+      MenuStart(levelNames, StringConstants.BonusLevelScreenTitle);
+    }
+
+    // Called whenever a level is selected in the menu.
+    protected override void LoadLevel(int i) {
+      manager.PushState(new WaitingForDBLoad<LevelMap>(
+          CommonData.DBBonusMapTablePath + levelMap[i]));
+    }
+
+    public override void Resume(StateExitValue results) {
+      base.Resume(results);
+      if (results != null) {
+        if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
+          var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
+          if (resultData.wasSuccessful) {
+            currentLevel = resultData.results;
+            currentLevel.DatabasePath = resultData.path;
+            CommonData.gameWorld.DisposeWorld();
+            CommonData.gameWorld.SpawnWorld(currentLevel);
+          } else {
+            manager.PushState(new BasicDialog("Unable to load map."));
+          }
+        }
+      }
     }
   }
 }
