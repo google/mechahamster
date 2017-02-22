@@ -372,6 +372,24 @@ MonoBehaviour:
     prefab: {fileID: 1302684690844548, guid: ef4db3fbceeb44541a0f887a25925ed9, type: 2}
   - name: SettingsMenu
     prefab: {fileID: 1045455071129728, guid: f5c6776be76e99242ad1f09892d20cc3, type: 2}
+  - name: SignInMenu
+    prefab: {fileID: 1652821866044610, guid: 02cfa18234ad9ce4d8640660cba1d479, type: 2}
+  - name: ChooseSignInMenu
+    prefab: {fileID: 1931634210592058, guid: 318a12654ee7e4947bb0550e36338cb4, type: 2}
+  - name: NewAccountMenu
+    prefab: {fileID: 1092802617523984, guid: d272283832356274bacb699c040ebff2, type: 2}
+  - name: AddEmailMenu
+    prefab: {fileID: 1206184912755400, guid: 62497592c94510e469072053059445c1, type: 2}
+  - name: 
+    prefab: {fileID: 0}
+  - name: 
+    prefab: {fileID: 0}
+  - name: 
+    prefab: {fileID: 0}
+  - name: 
+    prefab: {fileID: 0}
+  - name: 
+    prefab: {fileID: 0}
   prefabNames: []
 --- !u!4 &489996880
 Transform:

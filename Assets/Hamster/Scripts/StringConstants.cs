@@ -93,6 +93,7 @@ namespace Hamster {
     public const string LabelSignIn = "Sign In!";
     public const string LabelCreateAccount = "Create an Account!";
     public const string LabelAddEmail = "Add an Email!";
+    public const string LabelLinkingAccount = "Linking account";
 
     public const string LabelEmail = "Email:";
     public const string LabelPassword = "Password:";
@@ -217,5 +218,9 @@ namespace Hamster {
     public const string PrefabsControllerHelp = "ControllerHelp";
     public const string PrefabsTopTimes = "TopTimes";
     public const string PrefabsSettingsMenu = "SettingsMenu";
+    public const string PrefabsSignInMenu = "SignInMenu";
+    public const string PrefabsChooseSigninMenu = "ChooseSignInMenu";
+    public const string PrefabsAddEmailMenu = "AddEmailMenu";
+    public const string PrefabsNewAccountMenu = "NewAccountMenu";
   }
 }

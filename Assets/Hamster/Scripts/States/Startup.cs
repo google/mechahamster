@@ -46,7 +46,7 @@ namespace Hamster.States {
               manager.PushState(new WaitForTask(auth.SignInAnonymouslyAsync(),
                   StringConstants.LabelSigningIn, true));
         } else {
-          manager.PushState(new SignInMenu());
+          manager.PushState(new ChooseSignInMenu());
         }
       } else {
         manager.PushState(new States.FetchUserData(auth.CurrentUser.UserId));
@@ -59,7 +59,7 @@ namespace Hamster.States {
     // If we got back from login, request/start a user with that ID.
     // If we got back from fetching user data, start the game.
     public override void Resume(StateExitValue results) {
-      if (results.sourceState == typeof(SignInMenu) ||
+      if (results.sourceState == typeof(ChooseSignInMenu) ||
           results.sourceState == typeof(WaitForTask)) {
           // We just got back from trying to sign in anonymously.
           // Did it work?

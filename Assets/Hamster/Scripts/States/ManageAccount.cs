@@ -58,7 +58,7 @@ namespace Hamster.States {
       if (auth.CurrentUser.IsAnonymous) {
         GUILayout.Label(StringConstants.LabelAnonymousAccount);
         if (GUILayout.Button(StringConstants.ButtonAddEmailPassword)) {
-          manager.PushState(new AddEmailToAccount());
+          manager.PushState(new AddEmail());
         }
       } else {
         GUILayout.Label(StringConstants.LabelPasswordAccount + auth.CurrentUser.Email);

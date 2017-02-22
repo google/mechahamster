@@ -17,27 +17,32 @@ using System.Collections;
 using System.Collections.Generic;
 using Firebase.Unity.Editor;
 
-
 namespace Hamster.States {
-  // State for basic dialog boxes on the screen.
-  // Simply displays a message, and waits for the user to click the
-  // button, and then returns to the previous state.
-  class BasicDialog : BaseState {
+  // State for requesting user sign-in details.
+  class CreateAccount : BaseState {
 
-    string dialogText;
-    Menus.BasicDialogGUI dialogComponent;
-
-    public BasicDialog(string dialogText) {
-      this.dialogText = dialogText;
-    }
+    Firebase.Auth.FirebaseAuth auth;
+    Menus.CreateAccountGUI dialogComponent;
+    bool canceled = false;
 
     public override void Initialize() {
-      dialogComponent = SpawnUI<Menus.BasicDialogGUI>(StringConstants.PrefabBasicDialog);
-      dialogComponent.DialogText.text = dialogText;
+      auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+      dialogComponent = SpawnUI<Menus.CreateAccountGUI>(StringConstants.PrefabsNewAccountMenu);
     }
 
     public override void Resume(StateExitValue results) {
       dialogComponent.gameObject.SetActive(true);
+      if (results != null) {
+        if (results.sourceState == typeof(WaitForTask)) {
+          WaitForTask.Results taskResults = results.data as WaitForTask.Results;
+          if (taskResults.task.IsFaulted) {
+            manager.PushState(new BasicDialog("Could not create account:\n" +
+                taskResults.task.Exception.ToString()));
+          } else {
+            manager.PopState();
+          }
+        }
+      }
     }
 
     public override void Suspend() {
@@ -46,12 +51,16 @@ namespace Hamster.States {
 
     public override StateExitValue Cleanup() {
       DestroyUI();
-      return null;
+      return new StateExitValue(typeof(CreateAccount), new SignInResult(canceled));
     }
 
     public override void HandleUIEvent(GameObject source, object eventData) {
-      if (source == dialogComponent.OkayButton.gameObject) {
+      if (source == dialogComponent.CancelButton.gameObject) {
+        canceled = true;
         manager.PopState();
+      } else if (source == dialogComponent.ContinueButton.gameObject) {
+        manager.PushState(new WaitForTask(auth.CreateUserWithEmailAndPasswordAsync(
+            dialogComponent.Email.text, dialogComponent.Password.text)));
       }
     }
   }
