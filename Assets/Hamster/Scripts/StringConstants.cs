@@ -80,6 +80,8 @@ namespace Hamster {
 
     // Level selection text
     public const string BuiltinLevelScreenTitle = "Hammy's Adventures";
+    public const string SharedLevelScreenTitle = "Shared Maps";
+    public const string BonusLevelScreenTitle = "Bonus Maps";
 
     // Auth:
     //--------------------------

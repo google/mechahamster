@@ -659,6 +659,7 @@ MonoBehaviour:
     elements:
       Keys: []
       Values: []
+  destroyOnReset: []
 --- !u!4 &1417960289
 Transform:
   m_ObjectHideFlags: 0

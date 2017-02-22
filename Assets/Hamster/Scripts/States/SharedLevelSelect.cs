@@ -1,4 +1,4 @@
-﻿// Copyright 2017 Google Inc. All rights reserved.
+﻿ // Copyright 2017 Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,15 +16,48 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Hamster.States {
-  // Select a map that has bene shared!  Uses the general level select template. (BaseLevelSelect)
+  // Select a map that has been shared!  Uses the general level select template. (BaseLevelSelect)
   class SharedLevelSelect : BaseLevelSelect {
+
+    Dictionary<int, string> levelMap;
 
     // Initialization method.  Called after the state is added to the stack.
     public override void Initialize() {
-      mapDBPath = CommonData.DBMapTablePath;
-      mapSourceList = CommonData.currentUser.data.sharedMaps;
+      List<MapListEntry> levelDir = CommonData.currentUser.data.sharedMaps;
+      string[] levelNames = new string[levelDir.Count];
+      levelMap = new Dictionary<int, string>();
 
-      base.Initialize();
+      // Generate a list of level names.
+      int index = 0;
+      foreach (MapListEntry mapListEntry in levelDir) {
+        levelMap.Add(index, mapListEntry.mapId);
+        levelNames[index] = mapListEntry.name;
+        index++;
+      }
+      MenuStart(levelNames, StringConstants.SharedLevelScreenTitle);
+    }
+
+    // Called whenever a level is selected in the menu.
+    protected override void LoadLevel(int i) {
+      manager.PushState(new WaitingForDBLoad<LevelMap>(
+          CommonData.DBMapTablePath + levelMap[i]));
+    }
+
+    public override void Resume(StateExitValue results) {
+      base.Resume(results);
+      if (results != null) {
+        if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
+          var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
+          if (resultData.wasSuccessful) {
+            currentLevel = resultData.results;
+            currentLevel.DatabasePath = resultData.path;
+            CommonData.gameWorld.DisposeWorld();
+            CommonData.gameWorld.SpawnWorld(currentLevel);
+          } else {
+            manager.PushState(new BasicDialog("Unable to load map."));
+          }
+        }
+      }
     }
   }
 }

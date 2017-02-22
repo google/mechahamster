@@ -17,40 +17,20 @@ using System.Collections.Generic;
 
 namespace Hamster.States {
   class BaseLevelSelect : BaseState {
-    // Width/Height of the menu, expressed as a portion of the screen width:
-    private const float MenuWidth = 0.25f;
-    private const float MenuHeight = 0.75f;
-    private const float ColumnWidth = 0.33f;
+    Menus.LevelSelectGUI menuComponent;
 
-    // GUI state.
-    private Vector2 scrollViewPosition;
-    private int mapSelection = 0;
+    protected int mapSelection = 0;
+    protected int currentPage = 0;
+    protected LevelMap currentLevel;
+    protected string[] levelNames;
 
-    private LevelMap currentLevel;
-    private GUIStyle titleStyle;
-    private GUIStyle descriptionStyle;
-    private string[] levelNames;
+    protected int currentLoadedMap = -1;
 
-    private int currentLoadedMap = -1;
+    // Layout constants.
+    private const int ButtonsPerPage = 5;
+    private const float ColumnPadding = 50;
 
-    private const float kUIColumnWidth = 0.33f;
-
-    // Subclasses need to set these:
-    protected List<MapListEntry> mapSourceList;
-    protected string mapDBPath;
-
-    public BaseLevelSelect() {
-      // Initialize some styles that we'll for the title.
-      titleStyle = new GUIStyle();
-      titleStyle.alignment = TextAnchor.UpperCenter;
-      titleStyle.fontSize = 50;
-      titleStyle.normal.textColor = Color.white;
-
-      descriptionStyle = new GUIStyle();
-      descriptionStyle.alignment = TextAnchor.UpperCenter;
-      descriptionStyle.fontSize = 20;
-      descriptionStyle.normal.textColor = Color.white;
-    }
+    Dictionary<int, GameObject> levelButtons = new Dictionary<int, GameObject>();
 
     // Update function, which gets called once per frame.
     public override void Update() {
@@ -58,76 +38,105 @@ namespace Hamster.States {
       // load the new one!
       if (currentLoadedMap != mapSelection) {
         currentLoadedMap = mapSelection;
-        manager.PushState(new WaitingForDBLoad<LevelMap>(
-          mapDBPath + mapSourceList[mapSelection].mapId));
+        LoadLevel(mapSelection);
+      }
+    }
+
+    // This needs to be called with a list of maps to display.
+    protected virtual void MenuStart(string[] levelNames, string title) {
+      this.levelNames = levelNames;
+
+      menuComponent = SpawnUI<Menus.LevelSelectGUI>(StringConstants.PrefabsLevelSelectMenu);
+      menuComponent.SelectionText.text = title;
+
+      SpawnLevelButtons(currentPage);
+      ChangePage(0);
+    }
+
+    // Called whenever a level is selected in the menu.
+    protected virtual void LoadLevel(int i) { }
+
+    // Initialization method.  Called after the state is added to the stack.
+    public override void Initialize() { }
+
+    // Removes all buttons from the screen.
+    void ClearCurrentButtons() {
+      foreach (KeyValuePair<int, GameObject> pair in levelButtons) {
+        GameObject.Destroy(pair.Value);
+      }
+      levelButtons.Clear();
+    }
+
+    // Creates one page worth of level buttons for a given page.  Sets their names
+    // and properties, and makes sure they're in the correct part of the window.
+    // Also removes any existing level buttons.
+    void SpawnLevelButtons(int page) {
+      ClearCurrentButtons();
+      int maxButtonIndex = (currentPage + 1) * ButtonsPerPage;
+      if (maxButtonIndex > levelNames.Length) maxButtonIndex = levelNames.Length;
+      for (int i = currentPage * ButtonsPerPage; i < maxButtonIndex; i++) {
+        GameObject button = GameObject.Instantiate(
+            CommonData.prefabs.menuLookup[StringConstants.PrefabsLevelSelectButton]);
+        Menus.LevelSelectButtonGUI component = button.GetComponent<Menus.LevelSelectButtonGUI>();
+        if (component != null) {
+          component.buttonId = i;
+          levelButtons[i] = button;
+          button.transform.SetParent(menuComponent.Panel.transform, false);
+          component.ButtonText.text = levelNames[i];
+        } else {
+          Debug.LogError("Level select button prefab had no LevelSelectButtionGUI component.");
+        }
+
+        gui.transform.SetParent(CommonData.mainCamera.transform, false);
       }
     }
 
     public override void Resume(StateExitValue results) {
-      if (results != null) {
-        if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
-          var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
-          if (resultData.wasSuccessful) {
-            currentLevel = resultData.results;
-            currentLevel.DatabasePath = resultData.path;
-            CommonData.gameWorld.DisposeWorld();
-            CommonData.gameWorld.SpawnWorld(currentLevel);
-            Debug.Log("Map load complete!");
-          } else {
-            Debug.LogWarning("Map load complete, but not successful...");
-          }
-        }
-      }
+      menuComponent.gameObject.SetActive(true);
     }
 
-    // Initialization method.  Called after the state is added to the stack.
-    public override void Initialize() {
-      levelNames = new string[mapSourceList.Count];
+    public override void Suspend() {
+      menuComponent.gameObject.SetActive(false);
+    }
 
-      for (int i = 0; i < mapSourceList.Count; i++) {
-        levelNames[i] = mapSourceList[i].name;
+    void ChangePage(int delta) {
+      currentPage += delta;
+      int pageMax = (int)((levelNames.Length) / ButtonsPerPage);
+      if (currentPage <= 0) currentPage = 0;
+      if (currentPage >= pageMax) currentPage = pageMax;
+
+      menuComponent.BackButton.gameObject.SetActive(currentPage != 0);
+      menuComponent.ForwardButton.gameObject.SetActive(currentPage != pageMax);
+      SpawnLevelButtons(currentPage);
+    }
+
+    public override void HandleUIEvent(GameObject source, object eventData) {
+      Menus.LevelSelectButtonGUI buttonComponent =
+          source.GetComponent<Menus.LevelSelectButtonGUI>();
+      if (source == menuComponent.MainButton.gameObject) {
+        manager.SwapState(new MainMenu());
+      } else if (source == menuComponent.PlayButton.gameObject) {
+        if (CommonData.inVrMode) {
+          manager.PushState(new ControllerHelp());
+        } else {
+          manager.PushState(new Gameplay());
+        }
+      } else if (source == menuComponent.BackButton.gameObject) {
+        ChangePage(-1);
+      } else if (source == menuComponent.ForwardButton.gameObject) {
+        ChangePage(1);
+      } else if (buttonComponent != null) {
+        // They pressed one of the buttons for a level.
+        mapSelection = buttonComponent.buttonId;
       }
     }
 
     // Clean up when we exit the state.
     public override StateExitValue Cleanup() {
+      DestroyUI();
       CommonData.gameWorld.DisposeWorld();
       return null;
     }
-
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-
-      GUILayout.BeginHorizontal();
-
-      scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition,
-          GUILayout.MaxWidth(Screen.width * ColumnWidth));
-      mapSelection = GUILayout.SelectionGrid(
-          mapSelection, levelNames, 1);
-      GUILayout.EndScrollView();
-
-      GUILayout.BeginVertical(GUILayout.MaxWidth(Screen.width * kUIColumnWidth));
-      GUILayout.Label(mapSourceList[mapSelection].name, titleStyle);
-      GUILayout.EndVertical();
-
-      GUILayout.BeginVertical(GUILayout.MaxWidth(Screen.width * kUIColumnWidth));
-      if (GUILayout.Button(StringConstants.ButtonPlay)) {
-        Firebase.Analytics.FirebaseAnalytics.LogEvent(
-            StringConstants.AnalyticsEventMapStart,
-            StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
-
-        manager.PushState(new Gameplay());
-      }
-      if (GUILayout.Button(StringConstants.ButtonTopTimes)) {
-        manager.PushState(new TopTimes(null));
-      }
-      if (GUILayout.Button(StringConstants.ButtonCancel)) {
-        manager.SwapState(new MainMenu());
-      }
-      GUILayout.EndVertical();
-
-      GUILayout.EndHorizontal();
-    }
   }
+
 }
