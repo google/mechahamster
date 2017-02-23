@@ -63,7 +63,9 @@ namespace Hamster {
     public void SpawnWorld(LevelMap map) {
       foreach (MapElement element in map.elements.Values) {
         GameObject obj = PlaceTile(element);
-        obj.transform.localScale = element.scale;
+        if (obj != null) {
+          obj.transform.localScale = element.scale;
+        }
       }
       worldMap.SetProperties(map.name, map.mapId, map.ownerId, map.DatabasePath);
       HasPendingEdits = false;
@@ -96,6 +98,10 @@ namespace Hamster {
 
     // Spawns a single object in the world, based on a map element.
     public GameObject PlaceTile(MapElement element) {
+      if (string.IsNullOrEmpty(element.type)) {
+        return null;
+      }
+
       string key = element.GetStringKey();
 
       PrefabList.PrefabEntry prefabEntry = CommonData.prefabs.lookup[element.type];
