@@ -13,21 +13,23 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Hamster.Menus {
 
   // Interface class for providing code access to the GUI
-  // elements in the main menu prefab.
-  public class MainMenuGUI : BaseMenu {
+  // elements in the settings prefab.
+  public class SettingsGUI : BaseMenu {
 
     // These fields are set in the inspector.
-    public GUIButton PlayButton;
-    public GUIButton EditorButton;
-    public GUIButton AccountButton;
-    public GUIButton SharedLevelsButton;
-    public GUIButton BonusLevelsButton;
-    public GUIButton SettingsButton;
-  }
+    public GUIButton MainButton;
+    public GameObject MusicButtonHolders;
+    public GameObject SoundFxButtonHolders;
 
+    // The prefab of the volume buttons, that are spawned into the holders.
+    public GameObject VolumeButtonPrefab;
+
+    // The colors used when the volume button should be on/off.
+    public Color VolumeOn;
+    public Color VolumeOff;
+  }
 }

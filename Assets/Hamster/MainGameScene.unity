@@ -370,6 +370,8 @@ MonoBehaviour:
     prefab: {fileID: 1815537628908230, guid: 8209177f0e65e80489cddb326a9a0e32, type: 2}
   - name: TopTimes
     prefab: {fileID: 1302684690844548, guid: ef4db3fbceeb44541a0f887a25925ed9, type: 2}
+  - name: SettingsMenu
+    prefab: {fileID: 1045455071129728, guid: f5c6776be76e99242ad1f09892d20cc3, type: 2}
   prefabNames: []
 --- !u!4 &489996880
 Transform:

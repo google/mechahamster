@@ -89,6 +89,8 @@ namespace Hamster.States {
         manager.SwapState(new BonusLevelSelect());
       } else if (source == menuComponent.AccountButton.gameObject) {
         manager.SwapState(new ManageAccount());
+      } else if (source == menuComponent.SettingsButton.gameObject) {
+        manager.PushState(new SettingsMenu());
       }
     }
 

@@ -83,6 +83,10 @@ namespace Hamster {
     public const string SharedLevelScreenTitle = "Shared Maps";
     public const string BonusLevelScreenTitle = "Bonus Maps";
 
+    // Key used for volume settings
+    public const string MusicVolume = "music_volume";
+    public const string SoundFxVolume = "sound_fx_volume";
+
     // Auth:
     //--------------------------
 
@@ -212,5 +216,6 @@ namespace Hamster {
     public const string PrefabsLevelFinishedMenu = "LevelFinishedMenu";
     public const string PrefabsControllerHelp = "ControllerHelp";
     public const string PrefabsTopTimes = "TopTimes";
+    public const string PrefabsSettingsMenu = "SettingsMenu";
   }
 }

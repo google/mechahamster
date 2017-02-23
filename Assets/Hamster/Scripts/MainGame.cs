@@ -40,6 +40,36 @@ namespace Hamster {
 
     public DBStruct<UserData> currentUser;
 
+    // Volume is treated as an int for the UI display.
+    public const int MaxVolumeValue = 6;
+    private int musicVolume = 0;
+    public int MusicVolume {
+      get {
+        return musicVolume;
+      }
+      set {
+        musicVolume = value;
+        PlayerPrefs.SetInt(StringConstants.MusicVolume, musicVolume);
+        // Music volume is controlled on the music source, which is set to
+        // ignore the volume settings of the listener.
+        CommonData.mainCamera.GetComponentInChildren<AudioSource>().volume =
+          (float)musicVolume / MaxVolumeValue;
+      }
+    }
+    private int soundFxVolume = 0;
+    public int SoundFxVolume {
+      get {
+        return soundFxVolume;
+      }
+      set {
+        soundFxVolume = value;
+        PlayerPrefs.SetInt(StringConstants.SoundFxVolume, soundFxVolume);
+        // Sound effect volumes are controlled by setting the listeners volume,
+        // instead of each effect individually.
+        AudioListener.volume = (float)soundFxVolume / MaxVolumeValue;
+      }
+    }
+
     void Start() {
       InitializeFirebaseAndStart();
     }
@@ -185,6 +215,12 @@ namespace Hamster {
 
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
       currentUser = new DBStruct<UserData>("user", CommonData.app);
+
+      // Set up volume settings.
+      MusicVolume = PlayerPrefs.GetInt(StringConstants.MusicVolume, MaxVolumeValue);
+      // Set the music to ignore the listeners volume, which is used for sound effects.
+      CommonData.mainCamera.GetComponentInChildren<AudioSource>().ignoreListenerVolume = true;
+      SoundFxVolume = PlayerPrefs.GetInt(StringConstants.SoundFxVolume, MaxVolumeValue);
 
       stateManager.PushState(new States.Startup());
     }
