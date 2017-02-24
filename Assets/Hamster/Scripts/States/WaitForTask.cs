@@ -23,13 +23,12 @@ namespace Hamster.States {
   // Returns the result in the result struct.
   class WaitForTask : BaseState {
 
-    static int LabelHeight = 100;
-    static int LabelWidth = 800;
-
     protected bool isComplete = false;
     string waitText;
     bool useDots;
     System.Threading.Tasks.Task task;
+
+    Menus.SingleLabelGUI menuComponent;
 
     public WaitForTask(System.Threading.Tasks.Task task, string waitText = "",
                        bool useDots = false) {
@@ -38,25 +37,30 @@ namespace Hamster.States {
       this.useDots = useDots;
     }
 
+    public override void Initialize() {
+      menuComponent = SpawnUI<Menus.SingleLabelGUI>(StringConstants.PrefabsSingleLabelMenu);
+      UpdateLabelText();
+    }
+
     // Called once per frame when the state is active.
     public override void Update() {
       if (task.IsCompleted) {
         manager.PopState();
+      } else {
+        UpdateLabelText();
+      }
+    }
+
+    private void UpdateLabelText() {
+      if (menuComponent != null) {
+        menuComponent.LabelText.text =
+          waitText + (useDots ? Utilities.StringHelper.CycleDots() : "");
       }
     }
 
     public override StateExitValue Cleanup() {
+      DestroyUI();
       return new StateExitValue(typeof(WaitForTask), new Results(task));
-    }
-
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      UnityEngine.GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
-      centeredStyle.alignment = TextAnchor.UpperCenter;
-      GUI.Label(new Rect(Screen.width / 2 - LabelWidth/2,
-        Screen.height / 2 - LabelHeight/2, LabelWidth, LabelHeight),
-        waitText + (useDots ? Utilities.StringHelper.CycleDots() : ""), centeredStyle);
     }
 
     // Class for encapsulating the results of the database load, as

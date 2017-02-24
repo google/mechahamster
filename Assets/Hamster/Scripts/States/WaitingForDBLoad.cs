@@ -34,6 +34,8 @@ namespace Hamster.States {
 
     Firebase.Database.FirebaseDatabase database;
 
+    Menus.SingleLabelGUI menuComponent;
+
     public WaitingForDBLoad(string path) {
       this.path = path;
     }
@@ -43,6 +45,8 @@ namespace Hamster.States {
     public override void Initialize() {
       database = Firebase.Database.FirebaseDatabase.GetInstance(CommonData.app);
       database.GetReference(path).GetValueAsync().ContinueWith(HandleResult);
+      menuComponent = SpawnUI<Menus.SingleLabelGUI>(StringConstants.PrefabsSingleLabelMenu);
+      UpdateLabelText();
     }
 
     protected virtual void HandleResult(
@@ -66,6 +70,15 @@ namespace Hamster.States {
     public override void Update() {
       if (isComplete) {
         manager.PopState();
+      } else {
+        UpdateLabelText();
+      }
+    }
+
+    private void UpdateLabelText() {
+      if (menuComponent != null) {
+        menuComponent.LabelText.text =
+          StringConstants.LabelLoading + Utilities.StringHelper.CycleDots();
       }
     }
 
@@ -85,19 +98,9 @@ namespace Hamster.States {
     }
 
     public override StateExitValue Cleanup() {
+      DestroyUI();
       return new StateExitValue(
         typeof(WaitingForDBLoad<T>), new Results(path, result, wasSuccessful));
-    }
-
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      UnityEngine.GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
-      centeredStyle.alignment = TextAnchor.UpperCenter;
-      GUI.Label(new Rect(Screen.width / 2 - 400,
-        Screen.height / 2 - 50, 800, 100),
-        StringConstants.LabelLoading + Utilities.StringHelper.CycleDots(),
-        centeredStyle);
     }
 
     // Class for encapsulating the results of the database load, as

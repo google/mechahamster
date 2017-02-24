@@ -63,11 +63,5 @@ namespace Hamster.States {
       // Otherwise, fetch the map name, and tell them cool stuff.
       manager.PushState(new WaitingForDBString(CommonData.DBMapTablePath + mapId + "/name"));
     }
-
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      GUILayout.BeginVertical();
-      GUILayout.EndVertical();
-    }
   }
 }

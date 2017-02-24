@@ -65,20 +65,11 @@ namespace Hamster.States {
             CommonData.currentUser.Initialize(temp);
             CommonData.currentUser.PushData();
           }
-          // Whether we successfully fetched, or had to make a new user,
-          // return control to the calling state.
-          manager.PopState();
         }
       }
-    }
-
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      UnityEngine.GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
-      centeredStyle.alignment = TextAnchor.UpperCenter;
-      GUI.Label(new Rect(Screen.width / 2 - 400,
-        Screen.height / 2 - 50, 800, 100), StringConstants.LabelFetchingUserData, centeredStyle);
+      // Whether we successfully fetched, or had to make a new user,
+      // return control to the calling state.
+      manager.PopState();
     }
   }
 }

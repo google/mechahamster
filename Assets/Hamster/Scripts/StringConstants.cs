@@ -223,5 +223,6 @@ namespace Hamster {
     public const string PrefabsAddEmailMenu = "AddEmailMenu";
     public const string PrefabsNewAccountMenu = "NewAccountMenu";
     public const string PrefabsManageAccountMenu = "ManageAccountMenu";
+    public const string PrefabsSingleLabelMenu = "SingleLabelMenu";
   }
 }

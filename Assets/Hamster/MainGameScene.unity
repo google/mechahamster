@@ -382,6 +382,8 @@ MonoBehaviour:
     prefab: {fileID: 1206184912755400, guid: 62497592c94510e469072053059445c1, type: 2}
   - name: ManageAccountMenu
     prefab: {fileID: 1742604449623746, guid: 0bdf1c82b4571704cb82d0017e70c475, type: 2}
+  - name: SingleLabelMenu
+    prefab: {fileID: 1227514634359870, guid: 258e57aca9d4cf54e8ee9dd971859240, type: 2}
   prefabNames: []
 --- !u!4 &489996880
 Transform:

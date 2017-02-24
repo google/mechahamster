@@ -69,11 +69,5 @@ namespace Hamster.States {
           break;
       }
     }
-
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      GUILayout.BeginVertical();
-      GUILayout.EndVertical();
-    }
   }
 }
