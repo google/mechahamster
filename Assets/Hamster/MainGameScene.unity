@@ -232,63 +232,119 @@ MonoBehaviour:
   prefabs:
   - name: Empty
     prefab: {fileID: 0}
+    buttonPrefab: {fileID: 1907753751831270, guid: 9fb7540466626d644bcb8ebacc972ab5,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Player Start
     prefab: {fileID: 1640089751301338, guid: 14f9722887fcda141a857225def72aa2, type: 2}
+    buttonPrefab: {fileID: 1432171579906654, guid: 26352571e12a9ae48832ef2c4d641c5c,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 1
   - name: Goal
     prefab: {fileID: 1000010396292050, guid: dc4f96adbd6cc6e498b5d19ebdf5c589, type: 2}
+    buttonPrefab: {fileID: 1873596403031770, guid: 7921cfa039a45cc408848fb85fb5d3b6,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Wall
     prefab: {fileID: 1000013217471512, guid: 89f5bfd194807ed48ba4388a609e550a, type: 2}
+    buttonPrefab: {fileID: 1122023101921376, guid: cc1ee1429152b3047a3017634fc0737c,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Floor
     prefab: {fileID: 1000010910874200, guid: 3aebd366a476f4e6799605470f74b365, type: 2}
+    buttonPrefab: {fileID: 1768797022913972, guid: 83d971ae2d92ce44f92ee60601969f9e,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Jump Tile
     prefab: {fileID: 1000012415800088, guid: 5b52de807ceec4cabbcebcd8d3d01e2d, type: 2}
+    buttonPrefab: {fileID: 1105457086738104, guid: 09b10974cf09ee54fbe29c1fe8138a28,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Player
     prefab: {fileID: 1130139028330910, guid: 6909568afabe72941b740a9d3b768cc9, type: 2}
+    buttonPrefab: {fileID: 0}
     includeInToolPalette: 0
     maxCount: 0
   - name: Ramp
     prefab: {fileID: 1633995981044064, guid: 62715cf115358504ab8b0b742b1bafd0, type: 2}
+    buttonPrefab: {fileID: 1434650289287460, guid: 5023f056c3fe24c498a490524a9631bd,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: ZoomTile
     prefab: {fileID: 1723608468413280, guid: 9267a0538f837974ca3bb97fddb1a7d9, type: 2}
+    buttonPrefab: {fileID: 1288798886247706, guid: 9592427516dd5b74ca3b5dc1fd0b2ccd,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: TeleportTile
     prefab: {fileID: 1129170301622010, guid: e6fa0d989b725764e90aa272ef589d41, type: 2}
+    buttonPrefab: {fileID: 1661774430038486, guid: 60c77e86cbbcb834eacd4876e11bc47a,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 2
   - name: Mine
     prefab: {fileID: 1887872253074472, guid: 106e82e1065408348ab4d059f8eb4d07, type: 2}
+    buttonPrefab: {fileID: 1443566102292634, guid: 417ecbe92653c174eb8c029d6a2c4544,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Sand Trap
     prefab: {fileID: 1883130435826018, guid: 34b7089ac07c33f4aa72ca41041dfc35, type: 2}
+    buttonPrefab: {fileID: 1243428841519550, guid: 9628b46c620a83143be94f3f3807bc74,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Switch
     prefab: {fileID: 1301325228326724, guid: 052b05cbff4e9d44599a5622249ac01b, type: 2}
+    buttonPrefab: {fileID: 1961494930083174, guid: 5633bcd88d3f0b849a50a4e91ab41038,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Spikes (Up)
     prefab: {fileID: 1896143142498782, guid: 17b5ebbb2dddd7a4da83feeba7276128, type: 2}
+    buttonPrefab: {fileID: 1099855727997232, guid: d2d1656ed6ad9654bb36db04234501f1,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Spikes (Down)
     prefab: {fileID: 1452249573567748, guid: 77bf33f4734115242b050b81df383976, type: 2}
+    buttonPrefab: {fileID: 1803533687017644, guid: 1ffec18c405b1154794d9cee458d3c0a,
+      type: 2}
     includeInToolPalette: 1
+    maxCount: 0
+  - name: 
+    prefab: {fileID: 0}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 0
+    maxCount: 0
+  - name: Camera
+    prefab: {fileID: 0}
+    buttonPrefab: {fileID: 1402853740056512, guid: 1fde140fa4ca3b8418b9cf334061d871,
+      type: 2}
+    includeInToolPalette: 0
+    maxCount: 0
+  - name: ArrowButton
+    prefab: {fileID: 0}
+    buttonPrefab: {fileID: 1371059451940454, guid: b68d78caca2955f4a8757e419c66a3ea,
+      type: 2}
+    includeInToolPalette: 0
+    maxCount: 0
+  - name: 
+    prefab: {fileID: 0}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 0
+    maxCount: 0
+  - name: 
+    prefab: {fileID: 0}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 0
     maxCount: 0
   desktopOnlyProps:
   - name: CloudGrp1
@@ -313,6 +369,84 @@ MonoBehaviour:
     maxCount: 0
   - name: FloatingRockGrp5
     prefab: {fileID: 1267627518417690, guid: 1256561ca049e4051b72f54a9493360e, type: 2}
+  - name: Platform1
+    prefab: {fileID: 1833020268970284, guid: da9e216c6eed81f409ad44f04ed02222, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform2
+    prefab: {fileID: 1761489372376914, guid: 6c240a235a4756a4a8785c9bc58baef7, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform3
+    prefab: {fileID: 1954632356606946, guid: 8ea223298b718ce4d938665c7044e562, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform4
+    prefab: {fileID: 1540548066998060, guid: 2f4d446e06a6375499347cb3319486a4, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform5
+    prefab: {fileID: 1722245333578176, guid: 702bba2a85fc65445ad2d52537773271, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Mountain1
+    prefab: {fileID: 1749822681919356, guid: bc8dde989d581c44fbce4bd8c850487a, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Mountain2
+    prefab: {fileID: 1651466491220184, guid: 56b5661fb95564e4892e5a35728c5bd8, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Mountain3
+    prefab: {fileID: 1025209478919984, guid: 7e5c953c73679514b8c4f81037ca9c42, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Mountain4
+    prefab: {fileID: 1217218217734474, guid: 6cb240133ce7c2746ada0cefb7202627, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Mountain5
+    prefab: {fileID: 1598774635238638, guid: b7e400d47570e064e83739b96128b6e8, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud1
+    prefab: {fileID: 1655925206683906, guid: 1030cce340ab9984685c25d56e638897, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud2
+    prefab: {fileID: 1235165524410104, guid: cedf5fbb89a6f1e42bd91237df9dc41c, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud3
+    prefab: {fileID: 1131663619410824, guid: 9982f05adc911c4489326e3222e4fdb5, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud4
+    prefab: {fileID: 1302911180047432, guid: 7972c03ce94a3764c9518bfd0d30115c, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud5
+    prefab: {fileID: 1263740400051884, guid: 29c15721c4e628244af4ea75691bafa3, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud6
+    prefab: {fileID: 1738260220896348, guid: 3a766f13b310ed640ad2e1975cafc8d6, type: 2}
+    buttonPrefab: {fileID: 0}
     includeInToolPalette: 1
     maxCount: 0
   menuScreens:
@@ -344,8 +478,18 @@ MonoBehaviour:
     prefab: {fileID: 1742604449623746, guid: 0bdf1c82b4571704cb82d0017e70c475, type: 2}
   - name: SingleLabelMenu
     prefab: {fileID: 1227514634359870, guid: 258e57aca9d4cf54e8ee9dd971859240, type: 2}
-  DefaultClickAudio: {fileID: 8300000, guid: 81665ffde63f90b4494949dbfd1b64d1, type: 3}
+  - name: EditorMenu
+    prefab: {fileID: 1108940163947352, guid: f025942e1fe3a1745b8425b6c1fb7168, type: 2}
+  - name: EditorToolButton
+    prefab: {fileID: 1790006156012490, guid: 50c55bb5c3410c9498ccc65a69b7200a, type: 2}
+  - name: 
+    prefab: {fileID: 0}
+  - name: 
+    prefab: {fileID: 0}
+  - name: 
+    prefab: {fileID: 0}
   prefabNames: []
+  DefaultClickAudio: {fileID: 8300000, guid: 81665ffde63f90b4494949dbfd1b64d1, type: 3}
 --- !u!4 &489996880
 Transform:
   m_ObjectHideFlags: 0

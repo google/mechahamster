@@ -28,6 +28,10 @@ namespace Hamster.Menus {
     // Audio clip that is played when the button is clicked.
     public AudioClip OnClicked;
 
+    // General list of every game object that is currently being
+    // hovered over.
+    public static List<GameObject> allActiveButtons = new List<GameObject>();
+
     // How much the scale oscilates in either direction while the button hovers.
     const float ButtonScaleRange = 0.15f;
     // The frequency of the oscilations, in oscilations-per-2Pi seconds.
@@ -37,15 +41,21 @@ namespace Hamster.Menus {
     // How fast the scale transitions when changing states, in %-per-frame.
     const float transitionSpeed = 0.09f;
 
-    bool hover = false;
-    bool press = false;
+    //  True if the mouse/pointer is hovering over this element.
+    public bool hover = false;
+    //  True if the mouse/pointer is pressing this element.
+    public bool press = false;
+
     float currentScale = 1.0f;
     float hoverStartTime;
-
     Vector3 startingScale;
 
     private void Awake() {
       startingScale = transform.localScale;
+    }
+
+    private void OnDestroy() {
+      allActiveButtons.Remove(gameObject);
     }
 
     private void Update() {
@@ -80,10 +90,12 @@ namespace Hamster.Menus {
     public void OnPointerEnter(PointerEventData eventData) {
       hoverStartTime = Time.realtimeSinceStartup;
       hover = true;
+      allActiveButtons.Add(gameObject);
     }
 
     public void OnPointerExit(PointerEventData eventData) {
       hover = false;
+      allActiveButtons.Remove(gameObject);
     }
   }
 

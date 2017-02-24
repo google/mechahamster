@@ -98,15 +98,17 @@ namespace Hamster {
 
     [System.Serializable]
     public struct PrefabEntry {
-      public PrefabEntry(string name, GameObject prefab,
+      public PrefabEntry(string name, GameObject prefab, GameObject buttonPrefab,
           bool includeInToolPalette, int maxCount) {
         this.name = name;
         this.prefab = prefab;
+        this.buttonPrefab = buttonPrefab;
         this.includeInToolPalette = includeInToolPalette;
         this.maxCount = maxCount;
       }
       public string name;
       public GameObject prefab;
+      public GameObject buttonPrefab;
       public bool includeInToolPalette;
       // The max number of that tile type allowed. 0 is unlimited.
       public int maxCount;

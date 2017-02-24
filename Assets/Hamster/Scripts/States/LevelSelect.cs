@@ -18,8 +18,7 @@ using System.Collections.Generic;
 namespace Hamster.States {
   class LevelSelect : BaseLevelSelect {
     private LevelDirectory levelDir;
-    const string kLevelDirectoryJson = "LevelList";
-    Dictionary<int, GameObject> levelButtons = new Dictionary<int, GameObject>();
+    const string LevelDirectoryJson = "LevelList";
 
     // Called whenever a level is selected in the menu.
     protected override void LoadLevel(int i) {
@@ -32,7 +31,7 @@ namespace Hamster.States {
 
     // Initialization method.  Called after the state is added to the stack.
     public override void Initialize() {
-      TextAsset json = Resources.Load(kLevelDirectoryJson) as TextAsset;
+      TextAsset json = Resources.Load(LevelDirectoryJson) as TextAsset;
       levelDir = JsonUtility.FromJson<LevelDirectory>(json.ToString());
 
       string[] levelNames = new string[levelDir.levels.Count];
@@ -43,8 +42,6 @@ namespace Hamster.States {
       }
       MenuStart(levelNames, StringConstants.BuiltinLevelScreenTitle);
     }
-
-
 
     [System.Serializable]
     public class LevelDirectory {

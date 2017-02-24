@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: wall_decos1_tex
   m_Shader: {fileID: 4800000, guid: 4655725b2dce446479af513730b80aad, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
   m_CustomRenderQueue: -1
