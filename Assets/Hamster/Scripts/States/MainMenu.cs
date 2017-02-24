@@ -47,22 +47,32 @@ namespace Hamster.States {
     public override void Initialize() {
       SetFirebaseMessagingListeners();
       SetFirebaseInvitesListeners();
-      menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
-
-      // Editor is disabled in VR mode.
-      menuComponent.EditorButton.gameObject.SetActive(!CommonData.inVrMode);
-      // Only display the shared/bonus levels if the user has at least one.
-      menuComponent.SharedLevelsButton.gameObject.SetActive(
-        CommonData.currentUser.data.sharedMaps.Count > 0);
-      menuComponent.BonusLevelsButton.gameObject.SetActive(
-          CommonData.currentUser.data.bonusMaps.Count > 0);
+      InitializeUI();
     }
 
     public override void Resume(StateExitValue results) {
       SetFirebaseMessagingListeners();
       SetFirebaseInvitesListeners();
+      InitializeUI();
+    }
+
+    private void InitializeUI() {
       menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
       menuComponent.gameObject.SetActive(true);
+
+      // Editor is disabled in VR mode.
+      menuComponent.EditorButton.gameObject.SetActive(!CommonData.inVrMode);
+      // Only display the account button if not on desktop
+#if UNITY_EDITOR
+      menuComponent.AccountButton.gameObject.SetActive(false);
+#else
+      menuComponent.AccountButton.gameObject.SetActive(true);
+#endif
+      // Only display the shared/bonus levels if the user has at least one.
+      menuComponent.SharedLevelsButton.gameObject.SetActive(
+        CommonData.currentUser.data.sharedMaps.Count > 0);
+      menuComponent.BonusLevelsButton.gameObject.SetActive(
+          CommonData.currentUser.data.bonusMaps.Count > 0);
     }
 
     public override void Suspend() {
@@ -88,7 +98,7 @@ namespace Hamster.States {
       } else if (source == menuComponent.BonusLevelsButton.gameObject) {
         manager.SwapState(new BonusLevelSelect());
       } else if (source == menuComponent.AccountButton.gameObject) {
-        manager.SwapState(new ManageAccount());
+        manager.PushState(new ManageAccount());
       } else if (source == menuComponent.SettingsButton.gameObject) {
         manager.PushState(new SettingsMenu());
       }

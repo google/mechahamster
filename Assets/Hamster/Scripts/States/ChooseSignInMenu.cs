@@ -35,9 +35,13 @@ namespace Hamster.States {
     public override void Resume(StateExitValue results) {
       dialogComponent.gameObject.SetActive(true);
 
+      // SignInResult is used with a email/password, while WaitForTask.Results
+      // is used when signing in with an anonymous account.
       SignInResult result = results.data as SignInResult;
+      WaitForTask.Results taskResult = results.data as WaitForTask.Results;
 
-      if (result != null && !result.Canceled) {
+      if ((result != null && !result.Canceled) ||
+          (taskResult != null && !taskResult.task.IsCanceled)) {
 #if UNITY_EDITOR
         manager.PopState();
 #else

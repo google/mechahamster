@@ -23,18 +23,19 @@ namespace Hamster.States {
   // an email to your anonymous account, or to log out.
   class ManageAccount : BaseState {
 
-    string message = "";
+    private Menus.ManageAccountGUI menuComponent;
 
     Firebase.Auth.FirebaseAuth auth;
 
     public override void Resume(StateExitValue results) {
+      InitializeUI();
+
       if (results != null) {
         if (results.sourceState == typeof(WaitForTask)) {
           WaitForTask.Results taskResults = results.data as WaitForTask.Results;
           if (taskResults.task.IsFaulted) {
-            message = "Could not sign in: " + taskResults.task.Exception.ToString();
-          } else {
-            manager.PopState();
+            manager.PushState(new BasicDialog("Could not sign in:\n" +
+                taskResults.task.Exception.InnerException.ToString()));
           }
         }
       }
@@ -44,34 +45,42 @@ namespace Hamster.States {
     // is added to the stack.
     public override void Initialize() {
       auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+      InitializeUI();
     }
 
-    // Called once per frame for GUI creation, if the state is active.
-    // TODO(ccornell): This needs some layout attention, if it's going
-    // to see much use.  Needs to be centered at a minimum.
-    public override void OnGUI() {
+    private void InitializeUI() {
+      menuComponent = SpawnUI<Menus.ManageAccountGUI>(StringConstants.PrefabsManageAccountMenu);
+      menuComponent.gameObject.SetActive(true);
 
-      GUI.skin = CommonData.prefabs.guiSkin;
-      GUILayout.BeginVertical();
+      bool isAnon = auth.CurrentUser == null || auth.CurrentUser.IsAnonymous;
+      menuComponent.SignedIntoEmailText.gameObject.SetActive(!isAnon);
+      menuComponent.EmailText.gameObject.SetActive(!isAnon);
+      menuComponent.SignedIntoAnonText.gameObject.SetActive(isAnon);
+      menuComponent.AddEmailButton.gameObject.SetActive(isAnon);
 
-      // Anonymous account:
-      if (auth.CurrentUser.IsAnonymous) {
-        GUILayout.Label(StringConstants.LabelAnonymousAccount);
-        if (GUILayout.Button(StringConstants.ButtonAddEmailPassword)) {
-          manager.PushState(new AddEmail());
-        }
-      } else {
-        GUILayout.Label(StringConstants.LabelPasswordAccount + auth.CurrentUser.Email);
+      if (!isAnon) {
+        menuComponent.EmailText.text = auth.CurrentUser.Email;
       }
+    }
 
-      if (GUILayout.Button(StringConstants.ButtonLogout)) {
+    public override void Suspend() {
+      menuComponent.gameObject.SetActive(false);
+    }
+
+    public override StateExitValue Cleanup() {
+      DestroyUI();
+      return new StateExitValue(typeof(ManageAccount));
+    }
+
+    public override void HandleUIEvent(GameObject source, object eventData) {
+      if (source == menuComponent.AddEmailButton.gameObject) {
+        manager.PushState(new AddEmail());
+      } else if (source == menuComponent.SignOutButton.gameObject) {
         auth.SignOut();
         // TODO(ccornell): if anonymous, clear out their user data
         // and any maps they've saved, so our DB doesn't get orphans.
         manager.ClearStack(new Startup());
-      }
-
-      if (GUILayout.Button(StringConstants.ButtonOkay)) {
+      } else if (source == menuComponent.MainButton.gameObject) {
         manager.PopState();
       }
     }

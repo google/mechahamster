@@ -19,15 +19,15 @@ using Firebase.Unity.Editor;
 
 namespace Hamster.States {
   // State for requesting username/password from the user for
-  // signing in with a preregistered email account.
+  // adding email to an existing account.
   class AddEmail : BaseState {
 
     Firebase.Auth.FirebaseAuth auth;
-    Menus.SignInGUI dialogComponent;
+    Menus.AddEmailGUI dialogComponent;
 
     public override void Initialize() {
       auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-      dialogComponent = SpawnUI<Menus.SignInGUI>(StringConstants.PrefabsChooseSigninMenu);
+      dialogComponent = SpawnUI<Menus.AddEmailGUI>(StringConstants.PrefabsAddEmailMenu);
     }
 
     public override void Suspend() {
@@ -37,14 +37,12 @@ namespace Hamster.States {
     public override void Resume(StateExitValue results) {
       dialogComponent.gameObject.SetActive(true);
       if (results != null) {
-        if (results.sourceState == typeof(WaitForTask)) {
-          WaitForTask.Results taskResults = results.data as WaitForTask.Results;
-          if (taskResults.task.IsFaulted) {
-            manager.PushState(new BasicDialog("Could not sign in:\n" +
-                taskResults.task.Exception.ToString()));
-          } else {
-            manager.PopState();
-          }
+        WaitForTask.Results taskResults = results.data as WaitForTask.Results;
+        if (taskResults != null && taskResults.task.IsFaulted) {
+          manager.PushState(new BasicDialog("Could not sign in:\n" +
+              taskResults.task.Exception.ToString()));
+        } else {
+          manager.PopState();
         }
       }
     }
@@ -58,15 +56,11 @@ namespace Hamster.States {
       if (source == dialogComponent.CancelButton.gameObject) {
         manager.PopState();
       } else if (source == dialogComponent.ContinueButton.gameObject) {
-        manager.PushState(new WaitForTask(auth.SignInWithEmailAndPasswordAsync(
-            dialogComponent.Email.text, dialogComponent.Password.text)));
-
         Firebase.Auth.Credential credential =
             Firebase.Auth.EmailAuthProvider.GetCredential(
             dialogComponent.Email.text, dialogComponent.Password.text);
         manager.PushState(new WaitForTask(auth.CurrentUser.LinkWithCredentialAsync(credential),
             StringConstants.LabelLinkingAccount, true));
-
       }
     }
   }
