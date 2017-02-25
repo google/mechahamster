@@ -384,6 +384,7 @@ MonoBehaviour:
     prefab: {fileID: 1742604449623746, guid: 0bdf1c82b4571704cb82d0017e70c475, type: 2}
   - name: SingleLabelMenu
     prefab: {fileID: 1227514634359870, guid: 258e57aca9d4cf54e8ee9dd971859240, type: 2}
+  DefaultClickAudio: {fileID: 8300000, guid: 81665ffde63f90b4494949dbfd1b64d1, type: 3}
   prefabNames: []
 --- !u!4 &489996880
 Transform:

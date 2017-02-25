@@ -51,6 +51,9 @@ namespace Hamster {
     // processed into a dictionary at runtime to make lookups easier.
     public MenuEntry[] menuScreens;
 
+    // The default audio clip that is used when a GUIButton is clicked.
+    public AudioClip DefaultClickAudio;
+
     // Lookup dictionaries, for quickly finding the prefab, given a name.
     [HideInInspector]
     public Dictionary<string, PrefabEntry> lookup;

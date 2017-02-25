@@ -25,6 +25,9 @@ namespace Hamster.Menus {
   public class GUIButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
       IPointerDownHandler, IPointerUpHandler, IPointerClickHandler {
 
+    // Audio clip that is played when the button is clicked.
+    public AudioClip OnClicked;
+
     // How much the scale oscilates in either direction while the button hovers.
     const float ButtonScaleRange = 0.15f;
     // The frequency of the oscilations, in oscilations-per-2Pi seconds.
@@ -60,6 +63,10 @@ namespace Hamster.Menus {
 
     public void OnPointerClick(PointerEventData eventData) {
       CommonData.mainGame.stateManager.HandleUIEvent(gameObject, null);
+      AudioClip clip = OnClicked ? OnClicked : CommonData.prefabs.DefaultClickAudio;
+      if (clip != null) {
+        AudioSource.PlayClipAtPoint(clip, gameObject.transform.position);
+      }
     }
 
     public void OnPointerDown(PointerEventData eventData) {
