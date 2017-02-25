@@ -59,7 +59,14 @@ namespace Hamster.States {
       menuComponent.AddEmailButton.gameObject.SetActive(isAnon);
 
       if (!isAnon) {
-        menuComponent.EmailText.text = auth.CurrentUser.Email;
+        string text;
+        if (!string.IsNullOrEmpty(auth.CurrentUser.DisplayName)) {
+          text = auth.CurrentUser.DisplayName + '\n';
+        } else {
+          text = StringConstants.UploadScoreDefaultName + '\n';
+        }
+        text += auth.CurrentUser.Email;
+        menuComponent.EmailText.text = text;
       }
     }
 
