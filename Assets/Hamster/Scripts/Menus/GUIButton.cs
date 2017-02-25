@@ -30,15 +30,14 @@ namespace Hamster.Menus {
     // The frequency of the oscilations, in oscilations-per-2Pi seconds.
     const float ButtonScaleFrequency = 6.0f;
     // How the scale increase when the button is being pressed.
-    const float ButtonScalePressed = 0.4f;
+    const float ButtonScalePressed = 0.5f;
     // How fast the scale transitions when changing states, in %-per-frame.
-    const float transitionSpeed = 0.08f;
+    const float transitionSpeed = 0.09f;
 
     bool hover = false;
     bool press = false;
     float currentScale = 1.0f;
-
-    UnityEngine.UI.Button buttonComponent;
+    float hoverStartTime;
 
     Vector3 startingScale;
 
@@ -49,10 +48,11 @@ namespace Hamster.Menus {
     private void Update() {
       float targetScale = 1.0f;
       if (press) {
-        targetScale = 1.0f + ButtonScalePressed * 3.0f;
+        targetScale = 1.0f + ButtonScalePressed;
       } else if (hover) {
-        targetScale = 1.0f + ButtonScaleRange +
-            Mathf.Sin(Time.realtimeSinceStartup * ButtonScaleFrequency) * ButtonScaleRange;
+        targetScale = 1.0f + ButtonScaleRange + Mathf.Cos(
+            (hoverStartTime - Time.realtimeSinceStartup) * ButtonScaleFrequency) *
+            ButtonScaleRange;
       }
       currentScale = currentScale * (1.0f - transitionSpeed) + targetScale * transitionSpeed;
       transform.localScale = startingScale * currentScale;
@@ -71,6 +71,7 @@ namespace Hamster.Menus {
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
+      hoverStartTime = Time.realtimeSinceStartup;
       hover = true;
     }
 
