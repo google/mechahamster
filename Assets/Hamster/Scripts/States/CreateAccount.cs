@@ -39,6 +39,14 @@ namespace Hamster.States {
             manager.PushState(new BasicDialog("Could not create account:\n" +
                 taskResults.task.Exception.ToString()));
           } else {
+            if (!string.IsNullOrEmpty(dialogComponent.DisplayName.text)) {
+              Firebase.Auth.UserProfile profile =
+                new Firebase.Auth.UserProfile();
+              profile.DisplayName = dialogComponent.DisplayName.text;
+              // We are fine with this happening in the background,
+              // so just return to the previous state after triggering the update.
+              auth.CurrentUser.UpdateUserProfileAsync(profile);
+            }
             manager.PopState();
           }
         }

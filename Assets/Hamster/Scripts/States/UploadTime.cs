@@ -19,12 +19,6 @@ namespace Hamster.States {
 
   // State used to upload the time taken to beat the current level to the database.
   class UploadTime : BaseState {
-    // Width/Height of the menu, expressed as a portion of the screen width:
-    const float MenuWidth = 0.40f;
-    const float MenuHeight = 0.75f;
-
-    // The name the time will be saved under.
-    public string Name { get; private set; }
     // The time that will be saved.
     public long Time { get; private set; }
 
@@ -35,8 +29,6 @@ namespace Hamster.States {
     public TimeData UploadedTimeData { get; private set; }
 
     public UploadTime(long time) {
-      Name = PlayerPrefs.GetString(StringConstants.UploadScoreNameKey,
-        StringConstants.UploadScoreDefaultName);
       Time = time;
     }
 
@@ -46,6 +38,16 @@ namespace Hamster.States {
 
       Firebase.Analytics.FirebaseAnalytics.LogEvent(StringConstants.AnalyticsEventTimeUploadStarted,
         StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
+
+      Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+      string name = (auth.CurrentUser != null && !string.IsNullOrEmpty(auth.CurrentUser.DisplayName))
+        ? auth.CurrentUser.DisplayName
+        : StringConstants.UploadScoreDefaultName;
+
+      UploadedTimeData = new TimeData(name, Time);
+      manager.PushState(new WaitForTask(
+        UploadedTimeData.UploadTime(CommonData.gameWorld.worldMap),
+          StringConstants.UploadTimeTitle, true));
     }
 
     public override void Resume(StateExitValue results) {
@@ -73,7 +75,12 @@ namespace Hamster.States {
             times = task.Result;
           }
           manager.SwapState(new TopTimes(times));
+          return;
         }
+      }
+      // This is a passthrough state, so if we are still the top, pop ourselves.
+      if (manager.CurrentState() == this) {
+        manager.PopState();
       }
     }
 
@@ -83,43 +90,7 @@ namespace Hamster.States {
 
     public override StateExitValue Cleanup() {
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
-      // Save what the user typed into the name for next time.
-      PlayerPrefs.SetString(StringConstants.UploadScoreNameKey, Name);
       return new StateExitValue(typeof(UploadTime), TimeUploaded);
-    }
-
-    public override void OnGUI() {
-      float menuWidth = MenuWidth * Screen.width;
-      float menuHeight = MenuHeight * Screen.height;
-      GUI.skin = CommonData.prefabs.guiSkin;
-
-      GUILayout.BeginArea(
-          new Rect((Screen.width - menuWidth) / 2, (Screen.height - menuHeight) / 2,
-          menuWidth, menuHeight));
-
-      GUILayout.Label(StringConstants.UploadTimeTitle);
-
-      Name = GUILayout.TextField(Name, 16);
-      GUILayout.Label(string.Format(StringConstants.FinishedTimeText,
-        Utilities.StringHelper.FormatTime(Time)));
-
-      GUILayout.BeginVertical();
-
-      GUILayout.Space(20);
-
-      if (GUILayout.Button(StringConstants.ButtonUploadTime)) {
-        UploadedTimeData = new TimeData(Name, Time);
-        manager.PushState(new WaitForTask(
-          UploadedTimeData.UploadTime(CommonData.gameWorld.worldMap),
-            StringConstants.UploadTimeTitle, true));
-      }
-      if (GUILayout.Button(StringConstants.ButtonCancel)) {
-        TimeUploaded = false;
-        manager.PopState();
-      }
-      GUILayout.EndVertical();
-
-      GUILayout.EndArea();
     }
   }
 }
