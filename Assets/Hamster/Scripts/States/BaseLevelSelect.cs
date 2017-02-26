@@ -128,9 +128,9 @@ namespace Hamster.States {
         manager.PushState(new TopTimes(null));
       } else if (source == menuComponent.PlayButton.gameObject) {
         if (CommonData.inVrMode) {
-          manager.PushState(new ControllerHelp());
+          manager.PushState(new ControllerHelp(Gameplay.GameplayMode.Gameplay));
         } else {
-          manager.PushState(new Gameplay());
+          manager.PushState(new Gameplay(Gameplay.GameplayMode.Gameplay));
         }
       } else if (source == menuComponent.BackButton.gameObject) {
         ChangePage(-1);

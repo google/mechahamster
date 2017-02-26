@@ -214,7 +214,7 @@ namespace Hamster.States {
       } else if (source == menuComponent.ShareButton.gameObject) {
         manager.PushState(new SendInvite());
       } else if (source == menuComponent.PlayButton.gameObject) {
-        manager.PushState(new Gameplay());
+        manager.PushState(new Gameplay(Gameplay.GameplayMode.Editor));
       } else if (source == menuComponent.RotateButton.gameObject) {
         currentOrientation = (currentOrientation + 1) % 4;
         UpdateOrientationIndicator();

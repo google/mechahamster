@@ -39,6 +39,11 @@ namespace Hamster.States {
 
     Menus.ControllerHelpGUI guiComponent;
 
+    Gameplay.GameplayMode mode;
+    public ControllerHelp(Gameplay.GameplayMode mode) {
+      this.mode = mode;
+    }
+
     public override void Initialize() {
       stateStartedTime = Time.realtimeSinceStartup;
       guiComponent = SpawnUI<Menus.ControllerHelpGUI>(StringConstants.PrefabsControllerHelp);
@@ -88,7 +93,7 @@ namespace Hamster.States {
       }
 
       if (stateEnding) {
-        manager.SwapState(new Gameplay());
+        manager.SwapState(new Gameplay(mode));
       }
     }
 

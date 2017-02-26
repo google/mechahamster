@@ -39,6 +39,12 @@ namespace Hamster.States {
     // Unity component for the GUI Menu.
     Menus.LevelFinishedGUI dialogComponent;
 
+
+    Gameplay.GameplayMode mode;
+    public LevelFinished(Gameplay.GameplayMode mode) {
+      this.mode = mode;
+    }
+
     public override void Initialize() {
       Time.timeScale = 1.0f;
       StartTime = Time.realtimeSinceStartup;
@@ -57,6 +63,22 @@ namespace Hamster.States {
       dialogComponent.SubmitButton.gameObject.SetActive(!CommonData.gameWorld.HasPendingEdits);
       dialogComponent.ElapsedTimeText.text = string.Format(StringConstants.FinishedTimeText,
           Utilities.StringHelper.FormatTime(ElapsedGameTime));
+
+      if (mode == Gameplay.GameplayMode.Editor) {
+        // A few minor differences in edit mode:
+        // * There is no "main menu" button
+        // * The "levels" button is replaced by an "editor" button.
+        // * "editor" is moved over to the left.
+        dialogComponent.MainButton.gameObject.SetActive(false);
+        UnityEngine.UI.Text textComponent =
+          dialogComponent.LevelsButton.gameObject.GetComponentInChildren<UnityEngine.UI.Text>();
+        if (textComponent != null) {
+          textComponent.text = StringConstants.ButtonEditor;
+        }
+        dialogComponent.LevelsButton.transform.position =
+            dialogComponent.MainButton.transform.position;
+      }
+
     }
 
     public override void Resume(StateExitValue results) {
@@ -97,7 +119,7 @@ namespace Hamster.States {
       if (source == dialogComponent.LevelsButton.gameObject) {
         manager.PopState();
       } else if (source == dialogComponent.RetryButton.gameObject) {
-        manager.SwapState(new Gameplay());
+        manager.SwapState(new Gameplay(mode));
       } else if (source == dialogComponent.SubmitButton.gameObject) {
         manager.PushState(new UploadTime(ElapsedGameTime));
       } else if (source == dialogComponent.MainButton.gameObject) {

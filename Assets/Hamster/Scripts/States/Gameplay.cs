@@ -21,6 +21,17 @@ using Firebase.Unity.Editor;
 namespace Hamster.States {
   class Gameplay : BaseState {
 
+    public enum GameplayMode {
+      Gameplay,
+      Editor
+    }
+
+    GameplayMode mode;
+
+    public Gameplay(GameplayMode mode) {
+      this.mode = mode;
+    }
+
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
@@ -78,7 +89,7 @@ namespace Hamster.States {
       // If the goal was reached, then we want to finish the Gameplay state.
       if (CommonData.mainGame.PlayerController != null &&
           CommonData.mainGame.PlayerController.ReachedGoal) {
-        manager.SwapState(new LevelFinished());
+        manager.SwapState(new LevelFinished(mode));
         return;
       }
     }
