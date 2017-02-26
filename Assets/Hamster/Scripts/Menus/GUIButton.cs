@@ -84,6 +84,7 @@ namespace Hamster.Menus {
     }
 
     public void OnPointerUp(PointerEventData eventData) {
+      hover = false;
       press = false;
     }
 

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace Hamster.States {
   class BaseLevelSelect : BaseState {
-    Menus.LevelSelectGUI menuComponent;
+    protected Menus.LevelSelectGUI menuComponent;
 
     protected int mapSelection = 0;
     protected int currentPage = 0;
@@ -53,8 +53,17 @@ namespace Hamster.States {
       ChangePage(0);
     }
 
-    // Called whenever a level is selected in the menu.
-    protected virtual void LoadLevel(int i) { }
+    // Called whenever a level is selected in the menu
+    protected virtual void LevelSelected(int index) { }
+
+    // Called when the cancel button is pressed.
+    protected virtual void CancelButtonPressed() {
+      manager.SwapState(new MainMenu());
+    }
+
+    // Called whenever a level needs to be loaded.  The argument passed
+    // in is the index of the map that needs loading.
+    protected virtual void LoadLevel(int index) { }
 
     // Initialization method.  Called after the state is added to the stack.
     public override void Initialize() { }
@@ -92,11 +101,11 @@ namespace Hamster.States {
     }
 
     public override void Resume(StateExitValue results) {
-      menuComponent.gameObject.SetActive(true);
+      ShowUI();
     }
 
     public override void Suspend() {
-      menuComponent.gameObject.SetActive(false);
+      HideUI();
     }
 
     void ChangePage(int delta) {
@@ -113,8 +122,8 @@ namespace Hamster.States {
     public override void HandleUIEvent(GameObject source, object eventData) {
       Menus.LevelSelectButtonGUI buttonComponent =
           source.GetComponent<Menus.LevelSelectButtonGUI>();
-      if (source == menuComponent.MainButton.gameObject) {
-        manager.SwapState(new MainMenu());
+      if (source == menuComponent.CancelButton.gameObject) {
+        CancelButtonPressed();
       } else if (source == menuComponent.TopTimesButton.gameObject) {
         manager.PushState(new TopTimes(null));
       } else if (source == menuComponent.PlayButton.gameObject) {
@@ -130,6 +139,7 @@ namespace Hamster.States {
       } else if (buttonComponent != null) {
         // They pressed one of the buttons for a level.
         mapSelection = buttonComponent.buttonId;
+        LevelSelected(mapSelection);
       }
     }
 

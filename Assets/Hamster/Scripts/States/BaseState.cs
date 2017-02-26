@@ -67,6 +67,18 @@ namespace Hamster.States {
       return gui.GetComponent<T>();
     }
 
+    // Shows any UI that is currently hidden.
+    protected void ShowUI() {
+      gui.SetActive(true);
+    }
+
+    // Hides all active GUI, and clears it from the ActiveButtonList.
+    protected void HideUI() {
+      gui.SetActive(false);
+      Menus.GUIButton.allActiveButtons.Clear();
+    }
+
+
     // Destroy the UI prefab.
     protected void DestroyUI() {
       if (gui != null) {

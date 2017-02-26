@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 114818076672879270}
   - component: {fileID: 114530201690691590}
   m_Layer: 5
-  m_Name: MainButton
+  m_Name: CancelButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -250,6 +250,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c868088a12620ec4283cc19532736712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClicked: {fileID: 0}
+  hover: 0
+  press: 0
 --- !u!114 &114062204021428728
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -295,7 +298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelectionText: {fileID: 114062204021428728}
-  MainButton: {fileID: 114530201690691590}
+  CancelButton: {fileID: 114530201690691590}
   TopTimesButton: {fileID: 114524991895944344}
   PlayButton: {fileID: 114031858679190856}
   Panel: {fileID: 1846056377094266}
@@ -405,6 +408,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c868088a12620ec4283cc19532736712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClicked: {fileID: 0}
+  hover: 0
+  press: 0
 --- !u!114 &114341333041492448
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -416,6 +422,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c868088a12620ec4283cc19532736712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClicked: {fileID: 0}
+  hover: 0
+  press: 0
 --- !u!114 &114505771825634984
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -454,6 +463,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c868088a12620ec4283cc19532736712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClicked: {fileID: 0}
+  hover: 0
+  press: 0
 --- !u!114 &114530201690691590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -465,6 +477,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c868088a12620ec4283cc19532736712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClicked: {fileID: 0}
+  hover: 0
+  press: 0
 --- !u!114 &114545425292009200
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -540,9 +555,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Main
-
-'
+  m_Text: Cancel
 --- !u!114 &114636718622567420
 MonoBehaviour:
   m_ObjectHideFlags: 1

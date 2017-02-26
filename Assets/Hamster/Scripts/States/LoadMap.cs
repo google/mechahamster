@@ -17,37 +17,55 @@ using System.Collections;
 using System.Collections.Generic;
 using Firebase.Unity.Editor;
 
-
 namespace Hamster.States {
-  // State for handling UI for loading new maps.  Presents the user with
-  // a list of all maps associated with the current userID, and loads any
-  // map selected.
-  class LoadMap : BaseState {
+  class LoadMap : BaseLevelSelect {
+    const string LevelDirectoryJson = "LevelList";
+    string[] levelIds;
 
-    Vector2 scrollViewPosition;
+    // Levels are loaded slightly differently here - when you click
+    // a map name, it loads.  (So it's handled in the selection
+    // routine instead of the load.)
+    protected override void LoadLevel(int index) { }
 
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      GUILayout.BeginVertical();
-      GUILayout.Label(StringConstants.LabelLoadMap);
-      string selectedId = null;
-      scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition);
-      foreach (MapListEntry mapEntry in CommonData.currentUser.data.maps) {
-        if (GUILayout.Button(mapEntry.name)) {
-          selectedId = mapEntry.mapId;
-        }
-      }
-      GUILayout.EndScrollView();
-      if (GUILayout.Button(StringConstants.ButtonCancel)) {
-        manager.PopState();
-      }
-      GUILayout.EndVertical();
-
-      if (selectedId != null) {
-        manager.SwapState(
-          new WaitingForDBLoad<LevelMap>(CommonData.DBMapTablePath + selectedId));
-      }
+    protected override void LevelSelected(int index) {
+      // Since this is a state swap instead of push, this will
+      // also end the menu state and return to the previous state
+      // when it concludes.
+      manager.SwapState(
+        new WaitingForDBLoad<LevelMap>(CommonData.DBMapTablePath + levelIds[index]));
     }
+
+    // Initialization method.  Called after the state is added to the stack.
+    public override void Initialize() {
+      string[] levelNames = new string[CommonData.currentUser.data.maps.Count];
+      levelIds = new string[CommonData.currentUser.data.maps.Count];
+
+      int i = 0;
+      foreach (MapListEntry mapEntry in CommonData.currentUser.data.maps) {
+        levelNames[i] = mapEntry.name;
+        levelIds[i] = mapEntry.mapId;
+        i++;
+      }
+      // Necessary to make sure it doesn't try to load a new map in the background.
+      currentLoadedMap = 0;
+
+      MenuStart(levelNames, StringConstants.LabelLoadMap);
+
+      // Hide the "top times" and "let's roll!" buttons in this menu:
+      menuComponent.TopTimesButton.gameObject.SetActive(false);
+      menuComponent.PlayButton.gameObject.SetActive(false);
+    }
+
+    protected override void CancelButtonPressed() {
+      manager.PopState();
+    }
+
+    // Clean up when we exit the state.
+    public override StateExitValue Cleanup() {
+      DestroyUI();
+      return new StateExitValue(typeof(BaseLevelSelect));
+    }
+
   }
+
 }

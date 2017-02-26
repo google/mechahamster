@@ -34,7 +34,6 @@ namespace Hamster.States {
 
     const float ButtonHighlightScale = 1.2f;
 
-    Vector2 scrollViewPosition;
     int mapToolSelection = 0;
 
     // Rotation is in 90 degree increments.
@@ -83,8 +82,8 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
+      HideUI();
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
-      menuComponent.gameObject.SetActive(false);
     }
 
     // Clean up when we exit the state.
@@ -100,7 +99,7 @@ namespace Hamster.States {
     // optional object containing any results/data.  Results
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
-      menuComponent.gameObject.SetActive(true);
+      ShowUI();
       CommonData.mainCamera.mode = CameraController.CameraMode.Editor;
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {

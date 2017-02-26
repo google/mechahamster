@@ -24,7 +24,7 @@ namespace Hamster.Menus {
 
     // These fields are set in the inspector.
     public UnityEngine.UI.Text SelectionText;
-    public GUIButton MainButton;
+    public GUIButton CancelButton;
     public GUIButton TopTimesButton;
     public GUIButton PlayButton;
     public GameObject Panel;
