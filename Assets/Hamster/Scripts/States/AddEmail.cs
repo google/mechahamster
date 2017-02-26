@@ -31,11 +31,11 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
-      dialogComponent.gameObject.SetActive(false);
+      HideUI();
     }
 
     public override void Resume(StateExitValue results) {
-      dialogComponent.gameObject.SetActive(true);
+      ShowUI();
       if (results != null) {
         WaitForTask.Results taskResults = results.data as WaitForTask.Results;
         if (taskResults != null && taskResults.task.IsFaulted) {

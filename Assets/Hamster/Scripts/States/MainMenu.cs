@@ -57,8 +57,10 @@ namespace Hamster.States {
     }
 
     private void InitializeUI() {
-      menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
-      menuComponent.gameObject.SetActive(true);
+      if (menuComponent == null) {
+        menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
+      }
+      ShowUI();
 
       // Editor is disabled in VR mode.
       menuComponent.EditorButton.gameObject.SetActive(!CommonData.inVrMode);
@@ -78,7 +80,7 @@ namespace Hamster.States {
     public override void Suspend() {
       RemoveFirebaseMessagingListeners();
       RemoveFirebaseInvitesListeners();
-      menuComponent.gameObject.SetActive(false);
+      HideUI();
     }
 
     public override StateExitValue Cleanup() {

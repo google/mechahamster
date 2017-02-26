@@ -49,9 +49,10 @@ namespace Hamster.States {
     }
 
     private void InitializeUI() {
-      menuComponent = SpawnUI<Menus.ManageAccountGUI>(StringConstants.PrefabsManageAccountMenu);
-      menuComponent.gameObject.SetActive(true);
-
+      if (menuComponent == null) {
+        menuComponent = SpawnUI<Menus.ManageAccountGUI>(StringConstants.PrefabsManageAccountMenu);
+      }
+      ShowUI();
       bool isAnon = auth.CurrentUser == null || auth.CurrentUser.IsAnonymous;
       menuComponent.SignedIntoEmailText.gameObject.SetActive(!isAnon);
       menuComponent.EmailText.gameObject.SetActive(!isAnon);
@@ -71,7 +72,7 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
-      menuComponent.gameObject.SetActive(false);
+      HideUI();
     }
 
     public override StateExitValue Cleanup() {

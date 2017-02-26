@@ -68,13 +68,13 @@ namespace Hamster.States {
         }
       }
 
-      dialogComponent.gameObject.SetActive(true);
+      ShowUI();
       dialogComponent.SubmitButton.gameObject.SetActive(
         !CommonData.gameWorld.HasPendingEdits && !ScoreUploaded);
     }
 
     public override void Suspend() {
-      dialogComponent.gameObject.SetActive(false);
+      HideUI();
       Time.timeScale = 0.0f;
     }
 

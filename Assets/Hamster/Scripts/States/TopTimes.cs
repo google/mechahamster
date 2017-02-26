@@ -72,8 +72,10 @@ namespace Hamster.States {
     }
 
     private void InitializeUI() {
-      menuComponent = SpawnUI<Menus.TopTimesGUI>(StringConstants.PrefabsTopTimes);
-      menuComponent.gameObject.SetActive(true);
+      if (menuComponent == null) {
+        menuComponent = SpawnUI<Menus.TopTimesGUI>(StringConstants.PrefabsTopTimes);
+      }
+      ShowUI();
 
       menuComponent.LevelName.text = CommonData.gameWorld.worldMap.name;
       menuComponent.RecordNames.text = "";
@@ -87,9 +89,7 @@ namespace Hamster.States {
 
     public override void Suspend() {
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
-      if (menuComponent != null) {
-        menuComponent.gameObject.SetActive(false);
-      }
+      HideUI();
     }
 
     public override StateExitValue Cleanup() {

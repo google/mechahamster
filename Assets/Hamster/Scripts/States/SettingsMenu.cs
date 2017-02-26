@@ -33,8 +33,10 @@ namespace Hamster.States {
     }
 
     private void InitializeUI() {
-      menuComponent = SpawnUI<Menus.SettingsGUI>(StringConstants.PrefabsSettingsMenu);
-      menuComponent.gameObject.SetActive(true);
+      if (menuComponent == null) {
+        menuComponent = SpawnUI<Menus.SettingsGUI>(StringConstants.PrefabsSettingsMenu);
+      }
+      ShowUI();
 
       // Set up the buttons that control the music volume.
       if (MusicVolumeButtons.Count != MainGame.MaxVolumeValue + 1) {
@@ -79,7 +81,7 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
-      menuComponent.gameObject.SetActive(false);
+      HideUI();
     }
 
     public override StateExitValue Cleanup() {

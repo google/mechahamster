@@ -45,11 +45,11 @@ namespace Hamster.States {
     }
 
     public override void Resume(StateExitValue results) {
-      guiComponent.gameObject.SetActive(true);
+      ShowUI();
     }
 
     public override void Suspend() {
-      guiComponent.gameObject.SetActive(false);
+      HideUI();
     }
 
     public override StateExitValue Cleanup() {

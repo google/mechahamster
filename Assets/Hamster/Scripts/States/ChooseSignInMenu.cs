@@ -33,7 +33,7 @@ namespace Hamster.States {
     }
 
     public override void Resume(StateExitValue results) {
-      dialogComponent.gameObject.SetActive(true);
+      ShowUI();
 
       // SignInResult is used with a email/password, while WaitForTask.Results
       // is used when signing in with an anonymous account.
@@ -55,7 +55,7 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
-      dialogComponent.gameObject.SetActive(false);
+      HideUI();
     }
 
     // Initialization method.  Called after the state
