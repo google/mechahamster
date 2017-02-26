@@ -349,26 +349,34 @@ MonoBehaviour:
   desktopOnlyProps:
   - name: CloudGrp1
     prefab: {fileID: 1817211566583172, guid: c42afe47c1bf14f509138db2421bad39, type: 2}
+    buttonPrefab: {fileID: 0}
     includeInToolPalette: 1
     maxCount: 0
   - name: CloudGrp2
     prefab: {fileID: 1839926412109082, guid: 460ffe4c91f654bbb9f73ee4b5491c5f, type: 2}
+    buttonPrefab: {fileID: 0}
     includeInToolPalette: 1
     maxCount: 0
   - name: FloatingRockGrp2
     prefab: {fileID: 1546523441223900, guid: eab53b96cefe541908703bfec4942a67, type: 2}
+    buttonPrefab: {fileID: 0}
     includeInToolPalette: 1
     maxCount: 0
   - name: FloatingRockGrp3
     prefab: {fileID: 1366367393868174, guid: d247213c6e1eb479aafc5ccff032245e, type: 2}
+    buttonPrefab: {fileID: 0}
     includeInToolPalette: 1
     maxCount: 0
   - name: FloatingRockGrp4
     prefab: {fileID: 1294614285703134, guid: 62ca857c9ffa9403ab9aacd3e73e6ceb, type: 2}
+    buttonPrefab: {fileID: 0}
     includeInToolPalette: 1
     maxCount: 0
   - name: FloatingRockGrp5
     prefab: {fileID: 1267627518417690, guid: 1256561ca049e4051b72f54a9493360e, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 0
+    maxCount: 0
   - name: Platform1
     prefab: {fileID: 1833020268970284, guid: da9e216c6eed81f409ad44f04ed02222, type: 2}
     buttonPrefab: {fileID: 0}
@@ -482,14 +490,14 @@ MonoBehaviour:
     prefab: {fileID: 1108940163947352, guid: f025942e1fe3a1745b8425b6c1fb7168, type: 2}
   - name: EditorToolButton
     prefab: {fileID: 1790006156012490, guid: 50c55bb5c3410c9498ccc65a69b7200a, type: 2}
+  - name: SaveMapMenu
+    prefab: {fileID: 1813079757316424, guid: 52ccbaab92e918f428b8b6e27c57e27b, type: 2}
   - name: 
     prefab: {fileID: 0}
   - name: 
     prefab: {fileID: 0}
-  - name: 
-    prefab: {fileID: 0}
-  prefabNames: []
   DefaultClickAudio: {fileID: 8300000, guid: 81665ffde63f90b4494949dbfd1b64d1, type: 3}
+  prefabNames: []
 --- !u!4 &489996880
 Transform:
   m_ObjectHideFlags: 0

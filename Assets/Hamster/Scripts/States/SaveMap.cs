@@ -26,15 +26,14 @@ namespace Hamster.States {
   // exists.)
   class SaveMap : BaseState {
 
+    Menus.SaveMapGUI dialogComponent;
     Vector2 scrollViewPosition;
-    string mapName;
+
     bool mapAlreadySaved = false;
 
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      mapName = CommonData.gameWorld.worldMap.name;
-
       // Check if this map has already been saved, or if it's a new map:
       foreach (MapListEntry entry in CommonData.currentUser.data.maps) {
         if (entry.mapId == CommonData.gameWorld.worldMap.mapId) {
@@ -42,34 +41,34 @@ namespace Hamster.States {
           break;
         }
       }
+      dialogComponent = SpawnUI<Menus.SaveMapGUI>(StringConstants.PrefabSaveMapMenu);
+      dialogComponent.MapName.text = CommonData.gameWorld.worldMap.name;
+      // Only display the plain "save" button if they've already
+      // saved the map once.
+      dialogComponent.SaveButton.gameObject.SetActive(mapAlreadySaved);
     }
 
-    // Called once per frame for GUI creation, if the state is active.
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      GUILayout.BeginVertical();
+    public override void Resume(StateExitValue results) {
+      dialogComponent.gameObject.SetActive(true);
+    }
 
-      GUILayout.Label(StringConstants.LabelSaveMap);
+    public override void Suspend() {
+      dialogComponent.gameObject.SetActive(false);
+    }
 
-      GUILayout.BeginHorizontal();
-      GUILayout.Label(StringConstants.LabelName);
-      mapName = GUILayout.TextField(mapName, GUILayout.Width(Screen.width / 2));
-      GUILayout.EndHorizontal();
+    public override StateExitValue Cleanup() {
+      DestroyUI();
+      return null;
+    }
 
-      if (mapAlreadySaved) {
-        if (GUILayout.Button(StringConstants.ButtonSaveUpdate)) {
-          SaveMapToDB(CommonData.gameWorld.worldMap.mapId);
-        }
-      }
-      if (GUILayout.Button(StringConstants.ButtonSaveInNew)) {
+    public override void HandleUIEvent(GameObject source, object eventData) {
+      if (source == dialogComponent.SaveAsNewButton.gameObject) {
         SaveMapToDB(null);
-      }
-
-      if (GUILayout.Button(StringConstants.ButtonCancel)) {
+      } else if (source == dialogComponent.SaveButton.gameObject) {
+        SaveMapToDB(CommonData.gameWorld.worldMap.mapId);
+      } else if (source == dialogComponent.CancelButton.gameObject) {
         manager.PopState();
       }
-
-      GUILayout.EndVertical();
     }
 
     // Save the current map to the database.  If no mapID is provided,
@@ -83,7 +82,8 @@ namespace Hamster.States {
 
       LevelMap currentLevel = CommonData.gameWorld.worldMap;
 
-      currentLevel.SetProperties(mapName, mapId, CommonData.currentUser.data.id, path);
+      currentLevel.SetProperties(dialogComponent.MapName.text,
+          mapId, CommonData.currentUser.data.id, path);
       CommonData.gameWorld.OnSave();
 
       dbLevel.Initialize(currentLevel);
