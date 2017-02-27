@@ -377,6 +377,61 @@ MonoBehaviour:
     buttonPrefab: {fileID: 0}
     includeInToolPalette: 1
     maxCount: 0
+  - name: Cloud1
+    prefab: {fileID: 1655925206683906, guid: 1030cce340ab9984685c25d56e638897, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud2
+    prefab: {fileID: 1235165524410104, guid: cedf5fbb89a6f1e42bd91237df9dc41c, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud3
+    prefab: {fileID: 1131663619410824, guid: 9982f05adc911c4489326e3222e4fdb5, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud4
+    prefab: {fileID: 1302911180047432, guid: 7972c03ce94a3764c9518bfd0d30115c, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud5
+    prefab: {fileID: 1263740400051884, guid: 29c15721c4e628244af4ea75691bafa3, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Cloud6
+    prefab: {fileID: 1738260220896348, guid: 3a766f13b310ed640ad2e1975cafc8d6, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform1
+    prefab: {fileID: 1833020268970284, guid: da9e216c6eed81f409ad44f04ed02222, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform2
+    prefab: {fileID: 1761489372376914, guid: 6c240a235a4756a4a8785c9bc58baef7, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform3
+    prefab: {fileID: 1954632356606946, guid: 8ea223298b718ce4d938665c7044e562, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform4
+    prefab: {fileID: 1540548066998060, guid: 2f4d446e06a6375499347cb3319486a4, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
+  - name: Platform5
+    prefab: {fileID: 1722245333578176, guid: 702bba2a85fc65445ad2d52537773271, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 1
+    maxCount: 0
   menuScreens:
   - name: MainMenu
     prefab: {fileID: 1690053025725844, guid: 0256cf881a9c84143a13af165ce80e68, type: 2}
