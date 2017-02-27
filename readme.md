@@ -7,7 +7,7 @@ safety?
 
 ## Motivation
 
-[MechaHamster][] serves as a demonstration, sample, and reference for integrating the
+[MechaHamster][] serves as a demonstration, sample, and reference for integrating
 [Firebase][] with the [Firebase Unity SDK][], and [Daydream][] with the [Google VR SDK for Unity][]
 into a game project.
 
