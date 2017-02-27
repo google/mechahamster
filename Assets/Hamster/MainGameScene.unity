@@ -347,89 +347,58 @@ MonoBehaviour:
     includeInToolPalette: 0
     maxCount: 0
   desktopOnlyProps:
-  - name: CloudGrp1
-    prefab: {fileID: 1817211566583172, guid: c42afe47c1bf14f509138db2421bad39, type: 2}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 1
-    maxCount: 0
-  - name: CloudGrp2
-    prefab: {fileID: 1839926412109082, guid: 460ffe4c91f654bbb9f73ee4b5491c5f, type: 2}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 1
-    maxCount: 0
   - name: FloatingRockGrp2
     prefab: {fileID: 1546523441223900, guid: eab53b96cefe541908703bfec4942a67, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1402853740056512, guid: 1fde140fa4ca3b8418b9cf334061d871,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: FloatingRockGrp3
     prefab: {fileID: 1366367393868174, guid: d247213c6e1eb479aafc5ccff032245e, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1105457086738104, guid: 09b10974cf09ee54fbe29c1fe8138a28,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: FloatingRockGrp4
     prefab: {fileID: 1294614285703134, guid: 62ca857c9ffa9403ab9aacd3e73e6ceb, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1873596403031770, guid: 7921cfa039a45cc408848fb85fb5d3b6,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: FloatingRockGrp5
     prefab: {fileID: 1267627518417690, guid: 1256561ca049e4051b72f54a9493360e, type: 2}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 1
-    maxCount: 0
-  - name: Cloud1
-    prefab: {fileID: 1655925206683906, guid: 1030cce340ab9984685c25d56e638897, type: 2}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 1
-    maxCount: 0
-  - name: Cloud2
-    prefab: {fileID: 1235165524410104, guid: cedf5fbb89a6f1e42bd91237df9dc41c, type: 2}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 1
-    maxCount: 0
-  - name: Cloud3
-    prefab: {fileID: 1131663619410824, guid: 9982f05adc911c4489326e3222e4fdb5, type: 2}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 1
-    maxCount: 0
-  - name: Cloud4
-    prefab: {fileID: 1302911180047432, guid: 7972c03ce94a3764c9518bfd0d30115c, type: 2}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 1
-    maxCount: 0
-  - name: Cloud5
-    prefab: {fileID: 1263740400051884, guid: 29c15721c4e628244af4ea75691bafa3, type: 2}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 1
-    maxCount: 0
-  - name: Cloud6
-    prefab: {fileID: 1738260220896348, guid: 3a766f13b310ed640ad2e1975cafc8d6, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1099855727997232, guid: d2d1656ed6ad9654bb36db04234501f1,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Platform1
     prefab: {fileID: 1833020268970284, guid: da9e216c6eed81f409ad44f04ed02222, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1768797022913972, guid: 83d971ae2d92ce44f92ee60601969f9e,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Platform2
     prefab: {fileID: 1761489372376914, guid: 6c240a235a4756a4a8785c9bc58baef7, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1243428841519550, guid: 9628b46c620a83143be94f3f3807bc74,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Platform3
     prefab: {fileID: 1954632356606946, guid: 8ea223298b718ce4d938665c7044e562, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1961494930083174, guid: 5633bcd88d3f0b849a50a4e91ab41038,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Platform4
     prefab: {fileID: 1540548066998060, guid: 2f4d446e06a6375499347cb3319486a4, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1661774430038486, guid: 60c77e86cbbcb834eacd4876e11bc47a,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   - name: Platform5
     prefab: {fileID: 1722245333578176, guid: 702bba2a85fc65445ad2d52537773271, type: 2}
-    buttonPrefab: {fileID: 0}
+    buttonPrefab: {fileID: 1288798886247706, guid: 9592427516dd5b74ca3b5dc1fd0b2ccd,
+      type: 2}
     includeInToolPalette: 1
     maxCount: 0
   menuScreens:
