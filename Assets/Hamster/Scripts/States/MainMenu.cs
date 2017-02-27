@@ -103,6 +103,8 @@ namespace Hamster.States {
         manager.PushState(new ManageAccount());
       } else if (source == menuComponent.SettingsButton.gameObject) {
         manager.PushState(new SettingsMenu());
+      } else if (source == menuComponent.LicenseButton.gameObject) {
+        manager.PushState(new LicenseDialog());
       }
     }
 

@@ -212,6 +212,7 @@ namespace Hamster {
     //--------------------------
     public const string PrefabMainMenu = "MainMenu";
     public const string PrefabBasicDialog = "BasicDialog";
+    public const string PrefabLicenseDialog = "LicenseDialog";
     public const string PrefabsLevelSelectMenu = "LevelSelectMenu";
     public const string PrefabsLevelSelectButton = "LevelSelectButton";
     public const string PrefabsLevelFinishedMenu = "LevelFinishedMenu";

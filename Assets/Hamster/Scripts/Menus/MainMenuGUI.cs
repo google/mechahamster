@@ -28,6 +28,7 @@ namespace Hamster.Menus {
     public GUIButton SharedLevelsButton;
     public GUIButton BonusLevelsButton;
     public GUIButton SettingsButton;
+    public GUIButton LicenseButton;
   }
 
 }
