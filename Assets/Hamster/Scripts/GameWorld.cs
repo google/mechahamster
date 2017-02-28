@@ -63,9 +63,6 @@ namespace Hamster {
     public void SpawnWorld(LevelMap map) {
       foreach (MapElement element in map.elements.Values) {
         GameObject obj = PlaceTile(element);
-        if (obj != null) {
-          obj.transform.localScale = element.scale;
-        }
       }
       worldMap.SetProperties(map.name, map.mapId, map.ownerId, map.DatabasePath);
       HasPendingEdits = false;
