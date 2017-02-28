@@ -72,3 +72,6 @@ GvrIgnoreCompatibilityCheck.txt.meta
 # Daydream Demos:
 Assets/GoogleVR/Demos
 Assets/GoogleVR/Demos.meta
+
+# iOS system files
+.DS_Store
