@@ -1,9 +1,29 @@
 {
     "levels": [
         {
-            "name": "First Level",
-            "description": "A good place to start",
-            "filename": "level1"
+            "name": "Easy Peezie",
+            "description": "",
+            "filename": "map01"
+        },
+        {
+            "name": "Bouncy",
+            "description": "",
+            "filename": "map02"
+        },
+        {
+            "name": "Boom",
+            "description": "",
+            "filename": "map03"
+        },
+        {
+            "name": "Spikes",
+            "description": "",
+            "filename": "map04"
+        },
+        {
+            "name": "Teleporters",
+            "description": "",
+            "filename": "map05"
         },
         {
             "name": "Jumping!",
@@ -41,17 +61,6 @@
             "description": "It hurts!",
             "filename": "spikyq"
         },
-        {
-            "name": "Synthesis",
-            "description": "Putting it all together!",
-            "filename": "level3"
-        },
-        {
-            "name": "Weaving",
-            "description": "Mind the pits!",
-            "filename": "level2"
-        },
-
         {
             "name": "Warping 201",
             "description": "Things you never needed to know about teleporting!",
