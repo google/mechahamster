@@ -28,6 +28,8 @@ namespace Hamster.Menus {
     public GUIButton ClearButton;
     public GUIButton ShareButton;
     public GUIButton PlayButton;
+    public GUIButton ExportButton;
+    public GUIButton BonusButton;
     public GameObject ToolPanel;
     public GameObject Highlight;
     public GUIButton RotateButton;

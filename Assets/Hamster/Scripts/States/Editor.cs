@@ -79,6 +79,16 @@ namespace Hamster.States {
 
       SpawnToolButtons(0);
       UpdateOrientationIndicator();
+
+#if !UNITY_EDITOR
+      // This button is a debug function, for easily exporting premade
+      // maps during development.  It should never show up on
+      // actual release builds.
+      menuComponent.ExportButton.gameObject.SetActive(false);
+      // This button is a developer tool, for easily creating bonus levels.
+      // It is not intended to be public-facing.
+      menuComponent.BonusButton.gameObject.SetActive(false);
+#endif
     }
 
     public override void Suspend() {
@@ -218,6 +228,12 @@ namespace Hamster.States {
       } else if (source == menuComponent.RotateButton.gameObject) {
         currentOrientation = (currentOrientation + 1) % 4;
         UpdateOrientationIndicator();
+#if UNITY_EDITOR
+      } else if (source == menuComponent.ExportButton.gameObject) {
+        manager.PushState(new ExportMap(CommonData.gameWorld.worldMap));
+      } else if (source == menuComponent.BonusButton.gameObject) {
+        manager.PushState(new SaveBonusMap());
+#endif
       } else {
         Menus.GUIEditorButton editorButton = source.GetComponent<Menus.GUIEditorButton>();
         if (editorButton!= null) {
