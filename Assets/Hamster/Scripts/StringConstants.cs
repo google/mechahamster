@@ -133,6 +133,9 @@ namespace Hamster {
 
     // Remote Config:
     //--------------------------
+    // Scale for the camera height, in VR mode.
+    public const string RemoteConfigVRHeightScale = "VR_height_scale";
+    // Gravity of the world.
     public const string RemoteConfigPhysicsGravity = "physics_gravity";
     // AccelerationTile
     public const string RemoteConfigAccelerationTileForce = "acceleration_tile_force";

@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ViewAngleVector: {x: 0, y: 3, z: -2}
+  VrViewAngleVector: {x: 0, y: 2, z: -2}
   ViewDistance: 10
   EditorScrollSpeed: 8
   CameraZoom: 0.05
@@ -610,6 +611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ViewAngleVector: {x: 0, y: 0, z: 0}
+  VrViewAngleVector: {x: 0, y: 0, z: 0}
   ViewDistance: 10
   EditorScrollSpeed: 0.3
   CameraZoom: 0.05

@@ -34,6 +34,9 @@ namespace Hamster {
     // How fast the camera zooms to its new target:
     public float CameraZoom = 0.05f;
 
+    // The height is a lowered in VR mode.
+    const float VRHeightScalar = 0.75f;
+
     // Values representing various modes the camera can be in.
     public enum CameraMode {
       Gameplay,
@@ -60,6 +63,19 @@ namespace Hamster {
       mainGame = FindObjectOfType<MainGame>();
       // Needs to be normalized because it was set via the inspector.
       ViewAngleVector.Normalize();
+      if (CommonData.inVrMode) {
+        float VRHeightScalar;
+        try {
+          VRHeightScalar =
+          (float)Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
+          StringConstants.RemoteConfigVRHeightScale).DoubleValue;
+        } catch (System.Exception e) {
+          // If the RemoteConfig failed, use a sensible value.
+          VRHeightScalar = 0.65;
+        }
+        ViewAngleVector = new Vector3(
+          ViewAngleVector.x, ViewAngleVector.y * VRHeightScalar, ViewAngleVector.z);
+      }
     }
 
     // Pans the camera in a direction during edit mode.

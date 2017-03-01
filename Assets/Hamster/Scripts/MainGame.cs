@@ -137,9 +137,10 @@ namespace Hamster {
     System.Threading.Tasks.Task InitializeRemoteConfig() {
       Dictionary<string, object> defaults = new Dictionary<string, object>();
 
+      // VR Viewing height:
+      defaults.Add(StringConstants.RemoteConfigVRHeightScale, 0.65f);
       // Physics defaults:
       defaults.Add(StringConstants.RemoteConfigPhysicsGravity, -20.0f);
-
       // Invites defaults:
       defaults.Add(StringConstants.RemoteConfigInviteTitleText,
           StringConstants.DefaultInviteTitleText);
