@@ -128,9 +128,10 @@ namespace Hamster.States {
       UpdateCameraController();
     }
 
-    // Tell the camera controller if the special tool Camera is selected.
+    // Tell the camera controller if the special tool Camera is selected and
+    // they are clicking.
     private void UpdateCameraController() {
-      if (mapToolSelection == (int)SpecialTools.Camera) {
+      if (mapToolSelection == (int)SpecialTools.Camera && (Input.GetMouseButton(0))) {
         CommonData.mainCamera.MouseControlsEditorCamera = true;
         CommonData.mainCamera.mode = CameraController.CameraMode.Dragging;
       } else {
@@ -263,7 +264,6 @@ namespace Hamster.States {
           Quaternion.AngleAxis(-90 * currentOrientation, Vector3.forward);
     }
 
-
     // Tests to see if the pointer is currently over any UI.
     // (Because we don't want to place world elements if they're just trying
     // to click a UI button.)
@@ -282,7 +282,9 @@ namespace Hamster.States {
         // pointer here.
         selectionRay = new Ray(Vector3.zero, Vector3.up);
       }
-
+      if (mapToolSelection == (int)SpecialTools.Camera) {
+        UpdateCameraController();
+      }
       if (Input.GetMouseButton(0) && !IsClickBlockedByUI()) {
         int specialToolCount = System.Enum.GetNames(typeof(SpecialTools)).Length;
         if (mapToolSelection >= specialToolCount) {

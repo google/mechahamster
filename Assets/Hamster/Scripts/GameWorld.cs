@@ -66,6 +66,12 @@ namespace Hamster {
       }
       worldMap.SetProperties(map.name, map.mapId, map.ownerId, map.DatabasePath);
       HasPendingEdits = false;
+
+      // Set the camera to the start position:
+      MapObjects.StartPosition startPos = FindObjectOfType<MapObjects.StartPosition>();
+      if (startPos) {
+        CommonData.mainCamera.MoveCameraTo(startPos.gameObject.transform.position);
+      }
     }
 
     public void DisposeWorld() {

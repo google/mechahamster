@@ -70,6 +70,11 @@ namespace Hamster {
       editorCam += direction * EditorScrollSpeed * mainGame.TimeSinceLastUpdate;
     }
 
+
+    public void MoveCameraTo(Vector3 newPos) {
+      editorCam = newPos;
+    }
+
     void LateUpdate() {
       switch (mode) {
         case CameraMode.Gameplay:
