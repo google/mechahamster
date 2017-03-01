@@ -18,12 +18,16 @@ namespace Hamster.Utilities {
 
   // Slowly rotates the skybox.
   class RotateBackground : MonoBehaviour {
-    // Rotation in Euler angles
+    // Rotation in Euler angles, set in editor.
     public Vector3 rotation;
 
     Quaternion quat;
     void Start() {
       quat = Quaternion.Euler(rotation);
+      if (CommonData.inVrMode) {
+        // Remove Rotation in VR mode.
+        Destroy(this);
+      }
     }
 
     void Update() {
