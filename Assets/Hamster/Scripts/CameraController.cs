@@ -71,7 +71,7 @@ namespace Hamster {
           StringConstants.RemoteConfigVRHeightScale).DoubleValue;
         } catch (System.Exception e) {
           // If the RemoteConfig failed, use a sensible value.
-          VRHeightScalar = 0.65;
+          VRHeightScalar = 0.65f;
         }
         ViewAngleVector = new Vector3(
           ViewAngleVector.x, ViewAngleVector.y * VRHeightScalar, ViewAngleVector.z);
