@@ -5,15 +5,24 @@ MechaHamster
 create mazes of their own, and share them with friends.  Can you guide Major Hammy D. Hamster to
 safety?
 
+<img src="docs/title_screen.png" style="height: 20em"/>
+
+<img src="docs/gameplay1.png" style="height: 20em"/>
+
 ## Motivation
 
 [MechaHamster][] serves as a demonstration, sample, and reference for integrating
 [Firebase][] with the [Firebase Unity SDK][], and [Daydream][] with the [Google VR SDK for Unity][]
 into a game project.
 
+<iframe width="560" height="315"
+    src="https://www.youtube.com/embed/0mhYrDJ5Dfw"
+    frameborder="0" allowfullscreen>
+</iframe>
+
 ## Overview
 
-MechaHamster demostrates the following concepts:
+MechaHamster demonstrates the following concepts:
 
    * Mobile and [Daydream][] play modes.
    * [Firebase Analytics][] to measure various aspects of user behavior.
@@ -24,6 +33,8 @@ MechaHamster demostrates the following concepts:
    * [Firebase App Invites][] to share user generated content with other players.
    * [Firebase Remote Config][] to allow game admins to run experiments on game data without
      redeploying a new build of the game.
+
+<img src="docs/editor.png" style="height: 20em"/>
 
 ## Downloading
 
@@ -50,6 +61,8 @@ MechaHamster demostrates the following concepts:
 
 ## Documentation
 To contribute the this project see [CONTRIBUTING][].
+
+<img src="docs/gameplay2.png" style="height: 20em"/>
 
   [Android]: https://www.android.com/
   [CONTRIBUTING]: https://github.com/google/mechahamster/blob/master/CONTRIBUTING.txt
