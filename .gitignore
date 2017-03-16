@@ -69,3 +69,6 @@ Assets/GoogleVR/Demos.meta
 
 # iOS system files
 .DS_Store
+
+# Docs output
+/docs/html/
