@@ -3,7 +3,7 @@ guid: 327adabb3a81a4e4197a4a30bfe5987d
 timeCreated: 1485515993
 licenseType: Pro
 ModelImporter:
-  serializedVersion: 18
+  serializedVersion: 19
   fileIDToRecycleName:
     100000: break_tile_main
     100002: breakable_bits18
@@ -174,7 +174,8 @@ ModelImporter:
     4300060: breakable_bits32
     4300062: breakable_bits33
     4300064: breakable_bits34
-    7400000: Take 001
+    7400000: Break
+    7400002: Idle
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -183,19 +184,218 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     animationCompression: 1
-    animationRotationError: .5
-    animationPositionError: .5
-    animationScaleError: .5
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Break
+      takeName: Take 001
+      firstFrame: 8
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: break_tile_main
+        weight: 1
+      - path: break_tile_main/breakable_bits18
+        weight: 1
+      - path: break_tile_main/breakable_bits19
+        weight: 1
+      - path: break_tile_main/breakable_bits20
+        weight: 1
+      - path: break_tile_main/breakable_bits21
+        weight: 1
+      - path: break_tile_main/breakable_bits22
+        weight: 1
+      - path: break_tile_main/breakable_bits23
+        weight: 1
+      - path: break_tile_main/breakable_bits24
+        weight: 1
+      - path: break_tile_main/breakable_bits25
+        weight: 1
+      - path: break_tile_main/breakable_bits26
+        weight: 1
+      - path: break_tile_main/breakable_bits27
+        weight: 1
+      - path: break_tile_main/breakable_bits28
+        weight: 1
+      - path: break_tile_main/breakable_bits29
+        weight: 1
+      - path: break_tile_main/breakable_bits30
+        weight: 1
+      - path: break_tile_main/breakable_bits31
+        weight: 1
+      - path: break_tile_main/breakable_bits32
+        weight: 1
+      - path: break_tile_main/breakable_bits33
+        weight: 1
+      - path: break_tile_main/breakable_bits34
+        weight: 1
+      - path: break_tile_main/breakable_bits35
+        weight: 1
+      - path: break_tile_main/breakable_bits36
+        weight: 1
+      - path: break_tile_main/breakable_bits37
+        weight: 1
+      - path: break_tile_main/breakable_bits38
+        weight: 1
+      - path: break_tile_main/breakable_bits39
+        weight: 1
+      - path: break_tile_main/breakable_bits40
+        weight: 1
+      - path: break_tile_main/breakable_bits41
+        weight: 1
+      - path: break_tile_main/breakable_bits42
+        weight: 1
+      - path: break_tile_main/breakable_bits43
+        weight: 1
+      - path: break_tile_main/breakable_bits44
+        weight: 1
+      - path: break_tile_main/breakable_bits45
+        weight: 1
+      - path: break_tile_main/breakable_bits46
+        weight: 1
+      - path: break_tile_main/breakable_bits47
+        weight: 1
+      - path: break_tile_main/breakable_bits48
+        weight: 1
+      - path: break_tile_main/breakable_bits49
+        weight: 1
+      - path: break_tile_main/breakable_bits50
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Idle
+      takeName: Take 001
+      firstFrame: 2
+      lastFrame: 4
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: break_tile_main
+        weight: 1
+      - path: break_tile_main/breakable_bits18
+        weight: 1
+      - path: break_tile_main/breakable_bits19
+        weight: 1
+      - path: break_tile_main/breakable_bits20
+        weight: 1
+      - path: break_tile_main/breakable_bits21
+        weight: 1
+      - path: break_tile_main/breakable_bits22
+        weight: 1
+      - path: break_tile_main/breakable_bits23
+        weight: 1
+      - path: break_tile_main/breakable_bits24
+        weight: 1
+      - path: break_tile_main/breakable_bits25
+        weight: 1
+      - path: break_tile_main/breakable_bits26
+        weight: 1
+      - path: break_tile_main/breakable_bits27
+        weight: 1
+      - path: break_tile_main/breakable_bits28
+        weight: 1
+      - path: break_tile_main/breakable_bits29
+        weight: 1
+      - path: break_tile_main/breakable_bits30
+        weight: 1
+      - path: break_tile_main/breakable_bits31
+        weight: 1
+      - path: break_tile_main/breakable_bits32
+        weight: 1
+      - path: break_tile_main/breakable_bits33
+        weight: 1
+      - path: break_tile_main/breakable_bits34
+        weight: 1
+      - path: break_tile_main/breakable_bits35
+        weight: 1
+      - path: break_tile_main/breakable_bits36
+        weight: 1
+      - path: break_tile_main/breakable_bits37
+        weight: 1
+      - path: break_tile_main/breakable_bits38
+        weight: 1
+      - path: break_tile_main/breakable_bits39
+        weight: 1
+      - path: break_tile_main/breakable_bits40
+        weight: 1
+      - path: break_tile_main/breakable_bits41
+        weight: 1
+      - path: break_tile_main/breakable_bits42
+        weight: 1
+      - path: break_tile_main/breakable_bits43
+        weight: 1
+      - path: break_tile_main/breakable_bits44
+        weight: 1
+      - path: break_tile_main/breakable_bits45
+        weight: 1
+      - path: break_tile_main/breakable_bits46
+        weight: 1
+      - path: break_tile_main/breakable_bits47
+        weight: 1
+      - path: break_tile_main/breakable_bits48
+        weight: 1
+      - path: break_tile_main/breakable_bits49
+        weight: 1
+      - path: break_tile_main/breakable_bits50
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -216,23 +416,26 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 4
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human: []
     skeleton: []
-    armTwist: .5
-    foreArmTwist: .5
-    upperLegTwist: .5
-    legTwist: .5
-    armStretch: .0500000007
-    legStretch: .0500000007
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1

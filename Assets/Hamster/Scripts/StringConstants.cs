@@ -209,7 +209,9 @@ namespace Hamster {
     // The state of the spikes idling in the down/up positions.
     public const string AnimationSpikesIdleDown = "IdleDown";
     public const string AnimationSpikesIdleUp = "IdleUp";
-
+    // The trigger and idle state for the breakable tile.
+    public const string AnimationBreakTile = "break";
+    public const string AnimationBreakIdleState = "Idle";
 
     // Menu identifiers:
     //--------------------------

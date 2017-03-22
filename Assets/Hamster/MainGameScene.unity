@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45131868, g: 0.50081015, b: 0.57223046, a: 1}
+  m_IndirectSpecularColor: {r: 0.45140266, g: 0.50089556, b: 0.5723192, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 8
+    serializedVersion: 7
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -71,7 +71,7 @@ LightmapSettings:
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
-    m_MixedBakeMode: 1
+    m_StationaryBakeMode: 3
     m_BakeBackend: 0
     m_PVRSampling: 1
     m_PVRSampleCount: 500
@@ -86,6 +86,7 @@ LightmapSettings:
     m_PVRFilteringAtrousNormalSigma: 1
     m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 0}
+  m_RuntimeCPUUsage: 25
   m_ShadowMaskMode: 2
 --- !u!196 &4
 NavMeshSettings:
@@ -318,10 +319,11 @@ MonoBehaviour:
       type: 2}
     includeInToolPalette: 1
     maxCount: 0
-  - name: 
-    prefab: {fileID: 0}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 0
+  - name: Breakable
+    prefab: {fileID: 1767511410091246, guid: 8f2df071bd7619243b140fbe6774f1fb, type: 2}
+    buttonPrefab: {fileID: 1288798886247706, guid: ba1205d9b85574740bd76a575d3b604d,
+      type: 2}
+    includeInToolPalette: 1
     maxCount: 0
   - name: Camera
     prefab: {fileID: 0}
@@ -333,16 +335,6 @@ MonoBehaviour:
     prefab: {fileID: 0}
     buttonPrefab: {fileID: 1371059451940454, guid: b68d78caca2955f4a8757e419c66a3ea,
       type: 2}
-    includeInToolPalette: 0
-    maxCount: 0
-  - name: 
-    prefab: {fileID: 0}
-    buttonPrefab: {fileID: 0}
-    includeInToolPalette: 0
-    maxCount: 0
-  - name: 
-    prefab: {fileID: 0}
-    buttonPrefab: {fileID: 0}
     includeInToolPalette: 0
     maxCount: 0
   desktopOnlyProps:
@@ -860,7 +852,8 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: cb6ff255d747c47e6909c425e7346154, type: 3}
   m_ParentPrefab: {fileID: 100100000, guid: cb6ff255d747c47e6909c425e7346154, type: 3}
   m_IsPrefabParent: 0
 --- !u!1 &1848390473
