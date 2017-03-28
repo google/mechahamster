@@ -5,20 +5,11 @@ MechaHamster    {#mechahamster_readme}
 create mazes of their own, and share them with friends.  Can you guide Major Hammy D. Hamster to
 safety?
 
-
 ## Motivation
 
 [MechaHamster][] serves as a demonstration, sample, and reference for integrating
 [Firebase][] with the [Firebase Unity SDK][], and [Daydream][] with the [Google VR SDK for Unity][]
 into a game project.
-
-
-\htmlonly
-<iframe width="560" height="315"
-    src="https://www.youtube.com/embed/0mhYrDJ5Dfw"
-    frameborder="0" allowfullscreen>
-</iframe>
-\endhtmlonly
 
 ## Overview
 
