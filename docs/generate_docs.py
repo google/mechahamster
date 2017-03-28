@@ -15,6 +15,14 @@
 
 """Generate html documentation from markdown and doxygen comments."""
 
+#  Note - This script requires that fplutil be in a folder at the same
+#      level as mechahamster.  fplutil can be downloaded from:
+#      https://github.com/google/fplutil
+#
+# This script also requires that Doxygen 1.8.6 be installed and
+# available via the command-line.  (Higher versions of doxygen will
+# still build the docs, but the style sheet will not work.)
+
 import os
 import sys
 
