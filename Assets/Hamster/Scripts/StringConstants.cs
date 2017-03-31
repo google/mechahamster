@@ -233,5 +233,6 @@ namespace Hamster {
     public const string PrefabEditorMenu = "EditorMenu";
     public const string PrefabEditorToolButton = "EditorToolButton";
     public const string PrefabSaveMapMenu = "SaveMapMenu";
+    public const string PrefabConfirmationDialog = "ConfirmationDialog";
   }
 }
