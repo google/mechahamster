@@ -429,7 +429,7 @@ MonoBehaviour:
     prefab: {fileID: 1813079757316424, guid: 52ccbaab92e918f428b8b6e27c57e27b, type: 2}
   - name: LicenseDialog
     prefab: {fileID: 1634202481453850, guid: 3f16683dc0f5e497f8e5a031c519410f, type: 2}
-  - name: YesNoDialog
+  - name: ConfirmationDialog
     prefab: {fileID: 1428124404678162, guid: 606f13ff905e32f4d95740fad91f4e68, type: 2}
   - name: 
     prefab: {fileID: 0}

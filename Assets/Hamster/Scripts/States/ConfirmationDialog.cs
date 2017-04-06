@@ -32,14 +32,38 @@ namespace Hamster.States {
     Menus.ConfirmationDialogGUI dialogComponent;
     bool userIsSure = false;
 
-    public ConfirmationDialog(string dialogTitle, string dialogText, string dialogId = "") {
+    // An optional pair of states that we should jump to if
+    // the user says "yes" or "no" to the dialog.  Makes it easier
+    // to implement the common use-case of asking "are you sure you
+    // want to do X?" and then jump to a new state based on the answer.
+    BaseState NewStateIfConfirmed;
+    BaseState NewStateIfNotConfirmed;
+
+    public ConfirmationDialog(string dialogTitle, string dialogText,
+        BaseState NewStateIfConfirmed = null, BaseState NewStateIfNotConfirmed = null) {
+      ConstructorHelper(dialogTitle, dialogText, "",
+          NewStateIfConfirmed, NewStateIfNotConfirmed);
+    }
+
+    public ConfirmationDialog(string dialogTitle, string dialogText, string dialogId = "",
+        BaseState NewStateIfConfirmed = null, BaseState NewStateIfNotConfirmed = null) {
+      ConstructorHelper(dialogTitle, dialogText, dialogId,
+          NewStateIfConfirmed, NewStateIfNotConfirmed);
+    }
+
+    // Setup function used by the constructors.
+    private void ConstructorHelper(string dialogTitle, string dialogText, string dialogId = "",
+        BaseState NewStateIfConfirmed = null, BaseState NewStateIfNotConfirmed = null) {
       this.dialogTitle = dialogTitle;
       this.dialogText = dialogText;
       this.dialogId = dialogId;
+      this.NewStateIfConfirmed = NewStateIfConfirmed;
+      this.NewStateIfNotConfirmed = NewStateIfNotConfirmed;
     }
 
     public override void Initialize() {
-      dialogComponent = SpawnUI<Menus.ConfirmationDialogGUI>(StringConstants.PrefabConfirmationDialog);
+      dialogComponent =
+          SpawnUI<Menus.ConfirmationDialogGUI>(StringConstants.PrefabConfirmationDialog);
       dialogComponent.DialogTitle.text = dialogTitle;
       dialogComponent.DialogText.text = dialogText;
     }
@@ -60,11 +84,19 @@ namespace Hamster.States {
     public override void HandleUIEvent(GameObject source, object eventData) {
       if (source == dialogComponent.OkayButton.gameObject) {
         userIsSure = true;
-        manager.PopState();
+        if (NewStateIfConfirmed != null) {
+          manager.SwapState(NewStateIfConfirmed);
+        } else {
+          manager.PopState();
+        }
       }
       if (source == dialogComponent.CancelButton.gameObject) {
         userIsSure = false;
-        manager.PopState();
+        if (NewStateIfNotConfirmed != null) {
+          manager.SwapState(NewStateIfNotConfirmed);
+        } else {
+          manager.PopState();
+        }
       }
     }
 

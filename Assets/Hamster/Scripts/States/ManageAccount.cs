@@ -58,6 +58,7 @@ namespace Hamster.States {
       menuComponent.EmailText.gameObject.SetActive(!isAnon);
       menuComponent.SignedIntoAnonText.gameObject.SetActive(isAnon);
       menuComponent.AddEmailButton.gameObject.SetActive(isAnon);
+      menuComponent.SignOutButton.gameObject.SetActive(!isAnon);
 
       if (!isAnon) {
         string text;
@@ -85,9 +86,10 @@ namespace Hamster.States {
         manager.PushState(new AddEmail());
       } else if (source == menuComponent.SignOutButton.gameObject) {
         auth.SignOut();
-        // TODO(ccornell): if anonymous, clear out their user data
-        // and any maps they've saved, so our DB doesn't get orphans.
         manager.ClearStack(new Startup());
+      } else if (source == menuComponent.DeleteAccountButton.gameObject) {
+        manager.SwapState(new ConfirmationDialog(StringConstants.DeleteAccountDialogTitle,
+          StringConstants.DeleteAccountDialogMessage, new DeleteAccount(), null));
       } else if (source == menuComponent.MainButton.gameObject) {
         manager.PopState();
       }

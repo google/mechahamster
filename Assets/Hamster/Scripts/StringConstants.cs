@@ -213,6 +213,15 @@ namespace Hamster {
     public const string AnimationBreakTile = "break";
     public const string AnimationBreakIdleState = "Idle";
 
+    // Deleting accounts:
+    //--------------------------
+    public const string DeleteAccountMessage = "Deleting Account";
+    public const string DeleteAccountFail = "Account deletion failed.";
+    public const string DeleteAccountSuccess = "Account has been deleted.";
+    public const string DeleteAccountDialogTitle = "Delete Account?";
+    public const string DeleteAccountDialogMessage =
+        "This will delete your account, and all saved maps.  Are you sure?";
+
     // Menu identifiers:
     //--------------------------
     public const string PrefabMainMenu = "MainMenu";
