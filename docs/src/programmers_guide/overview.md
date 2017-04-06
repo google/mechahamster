@@ -4,6 +4,9 @@ High-Level Overview {#mechahamster_guide_overview}
 MechaHamster has a number of parts and components.  This document
 is intended to make it easier to find the pieces you're looking for!
 
+# Downloading Source Code
+Sorce code for MechaHamster is available for download from [Github.][]
+
 # Directory Layout
 The bulk of the project exists in the `/Assets/Hamster` directory.
 Some other useful paths to know about for the project include:
@@ -72,4 +75,4 @@ the `/Assets/Hamster/Scripts/MapObjects` directory.
 
   [Google VR SDK for Unity]: https://developers.google.com/vr/unity/
   [Firebase]: https://firebase.google.com/docs/
-
+  [GitHub.]: https://github.com/google/mechahamster

@@ -1,11 +1,22 @@
 MechaHamster    {#mechahamster_index}
 ======
 
-<img src="title_screen.png" style="height: 20em"/>
+MechaHamster is a game of guiding a futuristic hamster ball through
+dangerous levels, creating mazes with the built-in map editor, and
+sharing them with friends.
 
-MechaHamster is a game where players guide a futuristic hamster ball through
-dangerous levels, create mazes of their own, and share them with friends.
-Can you get Major Hammy D. Hamster through in one piece?
+Can you guide Major Hammy D. Hamster through danger in one piece?
+
+
+## Downloading and Building
+
+MechaHamster's source code is provided as a free, open-source project,
+available via [GitHub][].
+
+[Download the source code!][]
+
+[Instructions for building MechaHamster][] can be found in the [Programmer's Guide.][]
+
 
 
 ## Media
@@ -16,6 +27,8 @@ Can you get Major Hammy D. Hamster through in one piece?
     frameborder="0" allowfullscreen>
 </iframe>
 \endhtmlonly
+
+<img src="title_screen.png" style="height: 20em"/>
 
 <img src="editor.png" style="height: 20em"/>
 
@@ -54,13 +67,6 @@ MechaHamster has been tested on the following platforms:
 The game is authored in [Unity][], and requires version 5.6.0b6.
 
 
-## Download
-
-MechaHamster can be downloaded from:
-   * [GitHub][] (source)
-   * [GitHub Releases Page][] (source)
-
-
 ## Feedback and Reporting Bugs
 
    * File issues on the [MechaHamster Issues Tracker][].
@@ -95,5 +101,8 @@ MechaHamster can be downloaded from:
 
   [GitHub]: https://github.com/google/mechahamster
   [GitHub Releases Page]: http://github.com/google/mechahamster/releases
+  [Download the source code!]: https://github.com/google/mechahamster
   [stackoverflow.com]: http://stackoverflow.com/search?q=mechahamster
   [MechaHamster Issues Tracker]: http://github.com/google/mechahamster/issues
+  [Instructions for building MechaHamster]: @ref mechahamster_guide_building
+  [Programmer's Guide.]: @ref mechahamster_guide_overview
