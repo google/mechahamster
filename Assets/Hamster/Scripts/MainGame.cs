@@ -38,8 +38,6 @@ namespace Hamster {
       }
     }
 
-    public DBStruct<UserData> currentUser;
-
     // Volume is treated as an int for the UI display.
     public const int MaxVolumeValue = 6;
     private int musicVolume = 0;
@@ -215,7 +213,6 @@ namespace Hamster {
       Screen.orientation = ScreenOrientation.Landscape;
 
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
-      currentUser = new DBStruct<UserData>("user", CommonData.app);
 
       // Set up volume settings.
       MusicVolume = PlayerPrefs.GetInt(StringConstants.MusicVolume, MaxVolumeValue);
