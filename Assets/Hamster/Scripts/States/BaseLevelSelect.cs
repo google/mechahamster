@@ -110,7 +110,7 @@ namespace Hamster.States {
 
     void ChangePage(int delta) {
       currentPage += delta;
-      int pageMax = (int)((levelNames.Length) / ButtonsPerPage);
+      int pageMax = (int)Mathf.Ceil((levelNames.Length - 1) / ButtonsPerPage);
       if (currentPage <= 0) currentPage = 0;
       if (currentPage >= pageMax) currentPage = pageMax;
 
