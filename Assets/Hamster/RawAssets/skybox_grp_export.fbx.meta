@@ -1,15 +1,37 @@
 fileFormatVersion: 2
-guid: cb6ff255d747c47e6909c425e7346154
-timeCreated: 1486766988
+guid: a2e0ee75f308b40999cad9e710e735bc
+timeCreated: 1492132056
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: space_skybox
+    100000: blue_planet
+    100002: green_planet
+    100004: moon
+    100006: purple_planet
+    100008: //RootNode
+    100010: space_skybox
+    400000: blue_planet
+    400002: green_planet
+    400004: moon
+    400006: purple_planet
+    400008: //RootNode
+    400010: space_skybox
+    2300000: blue_planet
+    2300002: green_planet
+    2300004: moon
+    2300006: purple_planet
+    2300008: space_skybox
+    3300000: blue_planet
+    3300002: green_planet
+    3300004: moon
+    3300006: purple_planet
+    3300008: space_skybox
+    4300000: blue_planet
+    4300002: green_planet
+    4300004: space_skybox
+    4300006: purple_planet
+    4300008: moon
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -21,6 +43,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
