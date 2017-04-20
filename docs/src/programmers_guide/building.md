@@ -1,6 +1,9 @@
 Building MechaHamster {#mechahamster_guide_building}
 ================
 
+### Downloading Source Code
+Sorce code for MechaHamster is available for download from [Github.][]
+
 ### Overview
 
 The MechaHamster project was built using version 5.6.06b of the Unity
@@ -49,3 +52,4 @@ download the files necessary to link it to MechaHamster:
   [MechaHamster]: @ref #mechahamster_index
   [Firebase Unity SDK]: https://firebase.google.com/docs/unity/setup
   [Firebase Console]: https://console.firebase.google.com/
+  [GitHub.]: https://github.com/google/mechahamster
