@@ -2,7 +2,7 @@ Building MechaHamster {#mechahamster_guide_building}
 ================
 
 ### Downloading Source Code
-Sorce code for MechaHamster is available for download from [Github.][]
+Source code for MechaHamster is available for download from [Github.][]
 
 ### Overview
 

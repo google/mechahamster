@@ -5,7 +5,7 @@ MechaHamster has a number of parts and components.  This document
 is intended to make it easier to find the pieces you're looking for!
 
 # Downloading Source Code
-Sorce code for MechaHamster is available for download from [Github.][]
+Source code for MechaHamster is available for download from [Github.][]
 
 # Directory Layout
 The bulk of the project exists in the `/Assets/Hamster` directory.
