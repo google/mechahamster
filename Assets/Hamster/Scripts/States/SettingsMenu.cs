@@ -93,6 +93,10 @@ namespace Hamster.States {
     public override void HandleUIEvent(GameObject source, object eventData) {
       if (source == menuComponent.MainButton.gameObject) {
         manager.PopState();
+      } else if (source == menuComponent.PrivacyButton.gameObject) {
+        Application.OpenURL(StringConstants.PrivacyPolicyURL);
+      } else if (source == menuComponent.TermsAndServicesButton.gameObject) {
+        Application.OpenURL(StringConstants.TermsAndServicesURL);
       } else {
         // Check the volume buttons, and update the appropriate volume if necessary.
         bool volumeChanged = false;

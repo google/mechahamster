@@ -22,6 +22,8 @@ namespace Hamster.Menus {
 
     // These fields are set in the inspector.
     public GUIButton MainButton;
+    public GUIButton TermsAndServicesButton;
+    public GUIButton PrivacyButton;
     public GameObject MusicButtonHolders;
     public GameObject SoundFxButtonHolders;
 

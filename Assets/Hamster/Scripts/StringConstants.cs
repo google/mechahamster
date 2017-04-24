@@ -21,6 +21,9 @@ namespace Hamster {
 
   // String constants used by MechaHamster.
   class StringConstants {
+    // External Links
+    public const string PrivacyPolicyURL = "https://www.google.com/policies/privacy/";
+    public const string TermsAndServicesURL = "https://www.google.com/policies/terms/";
 
     // Names for Buttons:
     public const string ButtonSave = "Save";
