@@ -39,10 +39,6 @@ namespace Hamster.States {
     // Rotation is in 90 degree increments.
     int currentOrientation = 0;
 
-    // Strings to graphically represent orientation.  Placeholder
-    // until we get art.
-    static string[] orientationStrings = new string[] { "^", ">", "v", "<" };
-
     // Special tools that get prepended to the list.
     enum SpecialTools {
       Camera = 0,
