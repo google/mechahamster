@@ -33,6 +33,9 @@ namespace Hamster {
     public float EditorScrollSpeed = 8.0f;
     // How fast the camera zooms to its new target:
     public float CameraZoom = 0.05f;
+    // Height of the object the camera focuses on.  (Normally
+    // the center of the hamster ball.)
+    public float CameraFocusHeight = 0.5f;
 
     // The height is a lowered in VR mode.
     const float VRHeightScalar = 0.75f;
@@ -98,8 +101,9 @@ namespace Hamster {
           if (player == null)
             player = FindObjectOfType<PlayerController>();
           if (player != null) {
-            transform.position = player.transform.position +
-                ViewAngleVector * ViewDistance;
+            Vector3 camTarget = player.transform.position;
+            camTarget.y = CameraFocusHeight;
+            transform.position = camTarget + ViewAngleVector * ViewDistance;
             if (!CommonData.inVrMode) {
               transform.LookAt(player.transform.position, kUpVector);
             }
