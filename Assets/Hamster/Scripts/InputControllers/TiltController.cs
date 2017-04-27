@@ -35,8 +35,6 @@ namespace Hamster.InputControllers {
     static float MaxAngleSinSquared =
       Mathf.Sin(MaxAngleDifference) * Mathf.Sin(MaxAngleDifference);
 
-    // TODO(ccornell) move these constants into remote-config.
-
     Vector3 currentDownVector;
     public TiltController() {
       currentDownVector = Input.acceleration.normalized;

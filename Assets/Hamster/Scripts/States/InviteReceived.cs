@@ -51,7 +51,6 @@ namespace Hamster.States {
     }
 
     public override void Initialize() {
-      // TODO(ccornell): This is a hack - need to make a more robust parsing.
       string[] splitString = args.DeepLink.Query.Split(new string[] { "?mapid=" }, 2, System.StringSplitOptions.None);
       if (splitString.Length != 2) {
         Debug.LogError("Received an unkown invite format: " + args.DeepLink.Query);

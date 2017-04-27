@@ -47,7 +47,6 @@ namespace Hamster {
           throw new System.Exception("map already exists");
       }
 
-      // TODO(ccornell) write this using transactions.
       mapList.Add(new MapListEntry(mapName, mapId));
     }
 

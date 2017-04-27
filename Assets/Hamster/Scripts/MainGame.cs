@@ -124,9 +124,6 @@ namespace Hamster {
         Firebase.Analytics.FirebaseAnalytics.UserPropertySignUpMethod,
         "Google");
 
-      // TODO(ccornell): replace this with a real user token
-      // once Auth gets hooked up.
-      // Set the user ID.
       Firebase.Analytics.FirebaseAnalytics.SetUserId("desktop_user");
     }
 

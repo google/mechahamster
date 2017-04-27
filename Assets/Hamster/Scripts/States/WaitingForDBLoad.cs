@@ -29,7 +29,6 @@ namespace Hamster.States {
     protected string path;
     protected int failedFetches = 0;
 
-    // TODO(ccornell): Put this into a remote config variable.
     const int MaxDatabaseRetries = 5;
 
     Firebase.Database.FirebaseDatabase database;
