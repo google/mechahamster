@@ -64,7 +64,29 @@ namespace Hamster.States {
       gui = GameObject.Instantiate(CommonData.prefabs.menuLookup[prefabLookup]);
       gui.transform.position = new Vector3(0, 0, CommonData.inVrMode ? UIDepthVR : UIDepthMobile);
       gui.transform.SetParent(CommonData.mainCamera.transform, false);
+      ResizeUI(gui);
       return gui.GetComponent<T>();
+    }
+
+    // Sets the size of the UI and makes sure it fits on the screen, etc.
+    protected virtual void ResizeUI(GameObject gui) {
+      Camera camera = CommonData.mainCamera.GetComponentInChildren<Camera>();
+      RectTransform rt = gui.gameObject.GetComponent<RectTransform>();
+      Vector2 LowerLeft =
+          camera.WorldToScreenPoint(rt.TransformPoint(rt.anchorMin + rt.offsetMin));
+      Vector2 UpperRight =
+          camera.WorldToScreenPoint(rt.TransformPoint(rt.anchorMax + rt.offsetMax));
+
+      float totalWidth = Mathf.Abs(UpperRight.x - LowerLeft.x);
+      float totalHeight = Mathf.Abs(UpperRight.y - LowerLeft.y);
+      float guiScale = 1.0f;
+      if (totalWidth > Screen.width) {
+        guiScale = Screen.width / totalWidth;
+      }
+      if (totalHeight > Screen.height) {
+        guiScale = Math.Min(Screen.height / totalHeight, guiScale);
+      }
+      gui.transform.localScale *= guiScale;
     }
 
     // Shows any UI that is currently hidden.
