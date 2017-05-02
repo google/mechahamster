@@ -142,7 +142,7 @@ PlayerSettings:
     tvOS: com.google.fpl.mechahamster
   buildNumber:
     iOS: 0
-  AndroidBundleVersionCode: 23
+  AndroidBundleVersionCode: 24
   AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
