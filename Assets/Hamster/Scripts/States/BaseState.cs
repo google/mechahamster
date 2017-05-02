@@ -71,14 +71,14 @@ namespace Hamster.States {
     // Sets the size of the UI and makes sure it fits on the screen, etc.
     protected virtual void ResizeUI(GameObject gui) {
       Camera camera = CommonData.mainCamera.GetComponentInChildren<Camera>();
-      RectTransform rt = gui.gameObject.GetComponent<RectTransform>();
-      Vector2 LowerLeft =
+      RectTransform rt = gui.GetComponent<RectTransform>();
+      Vector2 lowerLeft =
           camera.WorldToScreenPoint(rt.TransformPoint(rt.anchorMin + rt.offsetMin));
-      Vector2 UpperRight =
+      Vector2 upperRight =
           camera.WorldToScreenPoint(rt.TransformPoint(rt.anchorMax + rt.offsetMax));
 
-      float totalWidth = Mathf.Abs(UpperRight.x - LowerLeft.x);
-      float totalHeight = Mathf.Abs(UpperRight.y - LowerLeft.y);
+      float totalWidth = Mathf.Abs(upperRight.x - lowerLeft.x);
+      float totalHeight = Mathf.Abs(upperRight.y - lowerLeft.y);
       float guiScale = 1.0f;
       if (totalWidth > Screen.width) {
         guiScale = Screen.width / totalWidth;
