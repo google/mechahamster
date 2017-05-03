@@ -55,9 +55,9 @@ namespace Hamster.MapObjects {
         StringConstants.RemoteConfigMineTileUpwardsMod).DoubleValue;
     }
 
-    public void Update() {
+    public void FixedUpdate() {
       if (Cooldown > 0.0f) {
-        Cooldown -= Time.deltaTime;
+        Cooldown -= Time.fixedDeltaTime;
         if (Cooldown <= 0.0f) {
           FinishCooldown();
         }

@@ -64,9 +64,9 @@ namespace Hamster.MapObjects {
       FinishCooldown();
     }
 
-    void Update() {
+    void FixedUpdate() {
       if (Cooldown > 0.0f) {
-        Cooldown -= Time.deltaTime;
+        Cooldown -= Time.fixedDeltaTime;
         if (Cooldown <= 0.0f) {
           FinishCooldown();
         }

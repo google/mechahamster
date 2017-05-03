@@ -34,7 +34,7 @@ namespace Hamster.MapObjects {
           StringConstants.RemoteConfigAccelerationTileForce).DoubleValue;
     }
 
-    public void Update() {
+    public void FixedUpdate() {
       triggeredThisFrame = false;
     }
 

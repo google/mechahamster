@@ -34,6 +34,12 @@ namespace Hamster {
     public List<Utilities.DestroyOnReset> destroyOnReset =
       new List<Hamster.Utilities.DestroyOnReset>();
 
+    public int mapHash {
+      get {
+        return JsonUtility.ToJson(worldMap).GetHashCode();
+      }
+    }
+
     // When spawning in elements, adjust their positions by this amount.
     Vector3 elementAdjust = new Vector3(0.0f, -0.5f, 0.0f);
 

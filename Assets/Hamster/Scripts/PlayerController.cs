@@ -19,7 +19,7 @@ namespace Hamster {
 
   // Class to controll the player's avatar.  (The ball)
   public class PlayerController : MonoBehaviour {
-    InputControllers.BasePlayerController inputController;
+    public InputControllers.BasePlayerController inputController;
 
     // Game object that is spawned when the ball falls below the kill plane.
     public GameObject OnFallSpawn;

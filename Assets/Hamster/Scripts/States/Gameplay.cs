@@ -19,7 +19,7 @@ using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
-  class Gameplay : BaseState {
+  public class Gameplay : BaseState {
 
     public enum GameplayMode {
       Gameplay,
@@ -32,9 +32,25 @@ namespace Hamster.States {
       this.mode = mode;
     }
 
+    // Number of fixedupdates that have happened so far in this
+    // gameplay session.  Used for replay synchronization.
+    public int fixedUpdateTimestamp { get; private set;  }
+
+    // Are we currently recording for a gameplay playback?
+    // This is never set true in the game.  It is intended as a
+    // temporary option for developers to record levels.
+    const bool recordGameplay = false;
+
+    // The file name to save the replay under.
+    const string gameplayReplayFileName = "test_replay.json";
+
+    // Data structure that handles the actual recording of the gameplay.
+    private GameplayRecorder gameplayRecorder;
+
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
+      fixedUpdateTimestamp = 0;
       if (CommonData.vrPointer != null) {
         CommonData.vrPointer.SetActive(false);
       }
@@ -46,6 +62,10 @@ namespace Hamster.States {
       CommonData.gameWorld.ResetMap();
       Utilities.HideDuringGameplay.OnGameplayStateChange(true);
       CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
+
+      if (recordGameplay) {
+        gameplayRecorder = new GameplayRecorder(CommonData.gameWorld.worldMap.name);
+      }
     }
 
     // Resume the state.  Called when the state becomes active
@@ -79,18 +99,40 @@ namespace Hamster.States {
     }
 
     // Called once per frame when the state is active.
-    public override void Update() {
+    public override void FixedUpdate() {
       if (Input.GetKeyDown(KeyCode.Escape)) {
         CommonData.gameWorld.ResetMap();
         manager.PopState();
         return;
       }
+      if (CommonData.mainGame.PlayerController != null) {
+        if (recordGameplay) {
+          gameplayRecorder.Update(CommonData.mainGame.PlayerController, fixedUpdateTimestamp);
+        }
 
-      // If the goal was reached, then we want to finish the Gameplay state.
-      if (CommonData.mainGame.PlayerController != null &&
-          CommonData.mainGame.PlayerController.ReachedGoal) {
-        manager.SwapState(new LevelFinished(mode));
-        return;
+        // If the goal was reached, then we want to finish the Gameplay state.
+        if (CommonData.mainGame.PlayerController.ReachedGoal) {
+          if (recordGameplay) {
+            gameplayRecorder.OutputToFile(gameplayReplayFileName);
+          }
+          manager.SwapState(new LevelFinished(mode));
+          return;
+        }
+      }
+      fixedUpdateTimestamp++;
+    }
+
+    // Set the player's position directly.  Only really used by replay
+    // playerinputcontrollers, to compenstate for drift in the physics playback.
+    public void SetPlayerPosition(Vector3 position, Quaternion rotation,
+        Vector3 velocity, Vector3 angularVelocity) {
+      if (CommonData.mainGame.PlayerController != null) {
+        Transform transform = CommonData.mainGame.PlayerController.GetComponent<Transform>();
+        Rigidbody rigidbody = CommonData.mainGame.PlayerController.GetComponent<Rigidbody>();
+        rigidbody.position = position;
+        rigidbody.rotation = rotation;
+        rigidbody.velocity = velocity;
+        rigidbody.angularVelocity = angularVelocity;
       }
     }
 

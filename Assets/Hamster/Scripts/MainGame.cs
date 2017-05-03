@@ -78,6 +78,10 @@ namespace Hamster {
       stateManager.Update();
     }
 
+    void FixedUpdate() {
+      stateManager.FixedUpdate();
+    }
+
     // Utility function to check the time since the last update.
     // Needed, since we can't use Time.deltaTime, as we are adjusting the
     // simulation timestep.  (Setting it to 0 to pause the world.)

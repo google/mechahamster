@@ -82,6 +82,13 @@ namespace Hamster.States {
       CurrentState().Update();
     }
 
+    // Called by the main game every fixed update.
+    // Note that during most UI and menus, the update timestep
+    // is set to 0, so this function will not fire.
+    public void FixedUpdate() {
+      CurrentState().FixedUpdate();
+    }
+
     // Called by the main game every UI update.
     public void OnGUI() {
       CurrentState().OnGUI();

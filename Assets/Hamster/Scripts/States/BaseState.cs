@@ -53,6 +53,10 @@ namespace Hamster.States {
     // Called once per frame when the state is active.
     public virtual void Update() { }
 
+    // Called at fixed timesteps during gameplay.  Will not normally
+    // be called during UI, as timestep is set to 0 during those times.
+    public virtual void FixedUpdate() { }
+
     // Called once per frame for GUI creation, if the state is active.
     public virtual void OnGUI() { }
 

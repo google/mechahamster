@@ -26,7 +26,7 @@ namespace Hamster.MapObjects {
     // Prefab to use when spawning a new player avatar at level start.
     public GameObject playerPrefab;
 
-    public void Update() {
+    public void FixedUpdate() {
       if (CommonData.mainGame.isGameRunning()) {
         if (CommonData.mainGame.player == null) {
           GameObject player = CommonData.mainGame.SpawnPlayer();
