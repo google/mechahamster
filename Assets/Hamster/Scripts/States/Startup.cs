@@ -42,7 +42,7 @@ namespace Hamster.States {
       // If we need to sign in, do that.  Otherwise, if we know who we are,
       // so fetch the user data.
       if (auth.CurrentUser == null) {
-        if (CommonData.inVrMode) {
+        if (CommonData.inVrMode || CommonData.inTestLoop) {
               manager.PushState(new WaitForTask(auth.SignInAnonymouslyAsync(),
                   StringConstants.LabelSigningIn, true));
         } else {
@@ -89,7 +89,12 @@ namespace Hamster.States {
         if (CommonData.currentUser.data != null) {
           // Yes.  Ready to start!
           InitializeAnalytics();
-          manager.SwapState(new States.MainMenu());
+
+          if (CommonData.inTestLoop) {
+            manager.SwapState(new States.TestLoop());
+          } else {
+            manager.SwapState(new States.MainMenu());
+          }
         } else {
           // Nope.  Problems.
           manager.PushState(new FatalError("Could not fetch or create user data."));

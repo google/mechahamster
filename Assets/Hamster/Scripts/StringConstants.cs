@@ -25,6 +25,10 @@ namespace Hamster {
     public const string PrivacyPolicyURL = "https://www.google.com/policies/privacy/";
     public const string TermsAndServicesURL = "https://www.google.com/policies/terms/";
 
+    // Data used for test loops.
+    public const string TestLoopLevel = "blastingoff";
+    public const string TestLoopReplayData = "replays/blast_off_replay_01";
+
     // Names for Buttons:
     public const string ButtonSave = "Save";
     public const string ButtonLoad = "Load";

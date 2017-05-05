@@ -23,7 +23,8 @@ namespace Hamster.States {
 
     public enum GameplayMode {
       Gameplay,
-      Editor
+      Editor,
+      TestLoop
     }
 
     GameplayMode mode;
@@ -115,7 +116,11 @@ namespace Hamster.States {
           if (recordGameplay) {
             gameplayRecorder.OutputToFile(gameplayReplayFileName);
           }
-          manager.SwapState(new LevelFinished(mode));
+          if (mode == GameplayMode.TestLoop) {
+            manager.PopState();
+          } else {
+            manager.SwapState(new LevelFinished(mode));
+          }
           return;
         }
       }

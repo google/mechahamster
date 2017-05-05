@@ -35,7 +35,13 @@ namespace Hamster {
 
     void Start() {
       IsProcessingDeath = false;
-      inputController = new InputControllers.MultiInputController();
+      if (!CommonData.inTestLoop) {
+        inputController = new InputControllers.MultiInputController();
+      } else {
+        inputController = new InputControllers.ReplayController(
+            StringConstants.TestLoopReplayData,
+            CommonData.mainGame.stateManager.CurrentState() as States.Gameplay);
+      }
     }
 
     // Height of the kill-plane.

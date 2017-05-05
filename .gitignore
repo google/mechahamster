@@ -38,8 +38,6 @@ sysinfo.txt
 /Assets/Firebase.meta
 /Assets/PlayServicesResolver.meta
 /Assets/Editor\ Default\ Resources.meta
-/Assets/Plugins/Android/AndroidManifest.xml
-/Assets/Plugins/Android/AndroidManifest.xml.meta
 /Assets/Plugins/Android/firebase*
 /Assets/Plugins/Android/Firebase.meta
 /Assets/Plugins/Android/libmessaging_unity_player_activity.jar

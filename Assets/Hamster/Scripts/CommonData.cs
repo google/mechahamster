@@ -43,5 +43,8 @@ namespace Hamster {
     public static bool inVrMode = false;
     public static GameObject vrPointer;
 
+    // Whether we're in in a test mode or not.  Set at startup by MainGame.
+    public static bool inTestLoop = false;
+
   }
 }
