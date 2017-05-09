@@ -55,6 +55,12 @@ sysinfo.txt
 /Assets/Plugins/x86_64/Firebase/
 /Assets/Plugins/x86_64/firebase*
 
+# Credential files:
+/Assets/Hamster/GoogleService-Info.plist
+/Assets/Hamster/GoogleService-Info.plist.meta
+/Assets/Hamster/google-services.json
+/Assets/Hamster/google-services.json.meta
+
 # Daydream state files:
 GvrIgnoreManifestMergeCheck.txt
 GvrIgnoreManifestMergeCheck.txt.meta
