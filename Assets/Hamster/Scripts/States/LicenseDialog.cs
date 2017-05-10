@@ -19,14 +19,14 @@ using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
-  // State for basic dialog boxes on the screen.
-  // Simply displays a message, and waits for the user to click the
-  // button, and then returns to the previous state.
+  // State for license dialogs.  They contain a long text field,
+  // with the license information, and a single button to return
+  // to the previous state.
   class LicenseDialog : BaseState {
 
     string dialogText;
-    Menus.BasicDialogGUI dialogComponent;
-    string LicenseFileName = "License";
+    Menus.LongTextDialogGUI dialogComponent;
+    string LicenseFileName = "StandaloneLicense";
 
     public LicenseDialog() {
       TextAsset license = Resources.Load(LicenseFileName, typeof(TextAsset)) as TextAsset;
@@ -34,10 +34,9 @@ namespace Hamster.States {
     }
 
     public override void Initialize() {
-      // License Dialog uses the BasicGUI interface class, but has a differently
-      // structured prefab.
-      dialogComponent = SpawnUI<Menus.BasicDialogGUI>(StringConstants.PrefabLicenseDialog);
-      dialogComponent.DialogText.text = dialogText;
+      dialogComponent = SpawnUI<Menus.LongTextDialogGUI>(StringConstants.PrefabLicenseDialog);
+      dialogComponent.LongText.SpawnText(dialogText);
+      dialogComponent.ScrollRect.verticalNormalizedPosition = 1.0f;
     }
 
     public override void Resume(StateExitValue results) {
