@@ -67,6 +67,7 @@ namespace Hamster.States {
       if (recordGameplay) {
         gameplayRecorder = new GameplayRecorder(CommonData.gameWorld.worldMap.name);
       }
+      Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
     // Resume the state.  Called when the state becomes active
@@ -79,6 +80,7 @@ namespace Hamster.States {
       }
       Time.timeScale = 1.0f;
       CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
+      Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
     public override StateExitValue Cleanup() {
@@ -88,6 +90,7 @@ namespace Hamster.States {
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       Utilities.HideDuringGameplay.OnGameplayStateChange(false);
       Time.timeScale = 0.0f;
+      Screen.sleepTimeout = SleepTimeout.SystemSetting;
       return new StateExitValue(typeof(Gameplay));
     }
 
@@ -97,6 +100,7 @@ namespace Hamster.States {
       }
       Time.timeScale = 0.0f;
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
+      Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
     // Called once per frame when the state is active.
