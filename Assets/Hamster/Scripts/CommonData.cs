@@ -46,5 +46,7 @@ namespace Hamster {
     // Whether we're in in a test mode or not.  Set at startup by MainGame.
     public static bool inTestLoop = false;
 
+    // Whether we're signed in or not.
+    public static bool isNotSignedIn = false;
   }
 }

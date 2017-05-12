@@ -25,7 +25,8 @@ namespace Hamster.Menus {
     // These fields are set in the inspector.
     public GUIButton SignInButton;
     public GUIButton CreateAccountButton;
-    public GUIButton SignInLaterButton;
+    public GUIButton AnonymousSignIn;
+    public GUIButton DontSignIn;
   }
 
 }

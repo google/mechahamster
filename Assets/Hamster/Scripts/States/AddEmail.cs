@@ -39,8 +39,8 @@ namespace Hamster.States {
       if (results != null) {
         WaitForTask.Results taskResults = results.data as WaitForTask.Results;
         if (taskResults != null && taskResults.task.IsFaulted) {
-          manager.PushState(new BasicDialog("Could not sign in:\n" +
-              taskResults.task.Exception.ToString()));
+          manager.PushState(new BasicDialog(
+              Utilities.StringHelper.SigninInFailureString(taskResults.task)));
         } else {
           manager.PopState();
         }

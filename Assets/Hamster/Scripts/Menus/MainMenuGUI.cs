@@ -29,6 +29,6 @@ namespace Hamster.Menus {
     public GUIButton BonusLevelsButton;
     public GUIButton SettingsButton;
     public GUIButton LicenseButton;
+    public GUIButton SignInButton;
   }
-
 }

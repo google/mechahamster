@@ -79,8 +79,9 @@ namespace Hamster.States {
           // Yes!  Continue!
           manager.PushState(new FetchUserData(auth.CurrentUser.UserId));
         } else {
-          // Nope.  Problems.
-          manager.PushState(new FatalError("Could not log in anonymously."));
+          // Nope.  Couldn't sign in.
+          CommonData.isNotSignedIn = true;
+          manager.SwapState(new States.MainMenu());
         }
       }
       if (results.sourceState == typeof(FetchUserData))

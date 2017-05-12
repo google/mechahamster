@@ -134,8 +134,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
@@ -910,8 +910,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b616b729869c71c4581b8eba9135f774, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   OkayButton: {fileID: 0}
   DialogText: {fileID: 0}
 --- !u!114 &386401386
@@ -924,8 +924,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
@@ -1274,8 +1274,8 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Padding:
     m_Left: 20
     m_Right: 20
@@ -1297,8 +1297,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0.039215688, a: 0.392}
   m_RaycastTarget: 1
@@ -1715,8 +1715,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc20acc2f69b1e4479d1ead8af3eeaf8, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   PlayButton: {fileID: 0}
   EditorButton: {fileID: 0}
   AccountButton: {fileID: 0}
@@ -1724,6 +1724,7 @@ MonoBehaviour:
   BonusLevelsButton: {fileID: 0}
   SettingsButton: {fileID: 0}
   LicenseButton: {fileID: 0}
+  SignInButton: {fileID: 0}
 --- !u!114 &1080814710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1734,8 +1735,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
@@ -1836,8 +1837,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Padding:
     m_Left: 10
     m_Right: 10
@@ -1859,8 +1860,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0.039215688, a: 0.392}
   m_RaycastTarget: 1
@@ -1949,7 +1950,7 @@ Prefab:
     - target: {fileID: 224981770444430508, guid: 318a12654ee7e4947bb0550e36338cb4,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 130
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 224981770444430508, guid: 318a12654ee7e4947bb0550e36338cb4,
         type: 2}
@@ -2021,6 +2022,26 @@ Prefab:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 224866586507139096, guid: 318a12654ee7e4947bb0550e36338cb4,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224866586507139096, guid: 318a12654ee7e4947bb0550e36338cb4,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224866586507139096, guid: 318a12654ee7e4947bb0550e36338cb4,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 224866586507139096, guid: 318a12654ee7e4947bb0550e36338cb4,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 224963631278814018, guid: 318a12654ee7e4947bb0550e36338cb4,
         type: 2}
       propertyPath: m_AnchorMin.y
@@ -2040,10 +2061,6 @@ Prefab:
         type: 2}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1931634210592058, guid: 318a12654ee7e4947bb0550e36338cb4, type: 2}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 318a12654ee7e4947bb0550e36338cb4, type: 2}
@@ -2334,22 +2351,22 @@ Prefab:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 224416339561130118, guid: 0256cf881a9c84143a13af165ce80e68,
+    - target: {fileID: 224081235301387760, guid: 0256cf881a9c84143a13af165ce80e68,
         type: 2}
       propertyPath: m_AnchorMin.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 224416339561130118, guid: 0256cf881a9c84143a13af165ce80e68,
+    - target: {fileID: 224081235301387760, guid: 0256cf881a9c84143a13af165ce80e68,
         type: 2}
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 224416339561130118, guid: 0256cf881a9c84143a13af165ce80e68,
+    - target: {fileID: 224081235301387760, guid: 0256cf881a9c84143a13af165ce80e68,
         type: 2}
       propertyPath: m_AnchoredPosition.x
       value: 250
       objectReference: {fileID: 0}
-    - target: {fileID: 224416339561130118, guid: 0256cf881a9c84143a13af165ce80e68,
+    - target: {fileID: 224081235301387760, guid: 0256cf881a9c84143a13af165ce80e68,
         type: 2}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -2434,9 +2451,25 @@ Prefab:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1690053025725844, guid: 0256cf881a9c84143a13af165ce80e68, type: 2}
-      propertyPath: m_IsActive
+    - target: {fileID: 224416339561130118, guid: 0256cf881a9c84143a13af165ce80e68,
+        type: 2}
+      propertyPath: m_AnchorMin.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224416339561130118, guid: 0256cf881a9c84143a13af165ce80e68,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224416339561130118, guid: 0256cf881a9c84143a13af165ce80e68,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 224416339561130118, guid: 0256cf881a9c84143a13af165ce80e68,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0256cf881a9c84143a13af165ce80e68, type: 2}
@@ -2641,12 +2674,12 @@ Prefab:
     - target: {fileID: 114160975676105320, guid: 606f13ff905e32f4d95740fad91f4e68,
         type: 2}
       propertyPath: DialogTitle
-      value:
+      value: 
       objectReference: {fileID: 1736134775}
     - target: {fileID: 114160975676105320, guid: 606f13ff905e32f4d95740fad91f4e68,
         type: 2}
       propertyPath: DialogText
-      value:
+      value: 
       objectReference: {fileID: 1736134774}
     - target: {fileID: 224756304040235244, guid: 606f13ff905e32f4d95740fad91f4e68,
         type: 2}
@@ -3379,8 +3412,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1

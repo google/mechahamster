@@ -43,12 +43,15 @@ namespace Hamster.States {
       if ((result != null && !result.Canceled) ||
           (taskResult != null && !taskResult.task.IsCanceled)) {
 #if UNITY_EDITOR
+        CommonData.isNotSignedIn = false;
         manager.PopState();
 #else
         if (auth.CurrentUser != null) {
+          CommonData.isNotSignedIn = false;
           manager.PopState();
         } else {
-          manager.PushState(new BasicDialog("Error signing in."));
+          manager.PushState(new BasicDialog(
+              Utilities.StringHelper.SigninInFailureString(taskResult.task)));
         }
 #endif
       }
@@ -70,10 +73,13 @@ namespace Hamster.States {
         manager.PushState(new CreateAccount());
       } else if (source == dialogComponent.SignInButton.gameObject) {
         manager.PushState(new SignInWithEmail());
-      } else if (source == dialogComponent.SignInLaterButton.gameObject) {
+      } else if (source == dialogComponent.AnonymousSignIn.gameObject) {
         manager.PushState(
             new WaitForTask(auth.SignInAnonymouslyAsync(),
               StringConstants.LabelSigningIn, true));
+      } else if (source == dialogComponent.DontSignIn.gameObject) {
+        CommonData.isNotSignedIn = true;
+        manager.PopState();
       }
     }
   }

@@ -120,7 +120,16 @@ namespace Hamster {
     public const string ButtonAddEmailPassword = "Add Email/Password";
     public const string ButtonLogout = "Log out";
     public const string LabelAnonymousWarning = "You are currently using an anonymous account.\n" +
-        "If you log out, you will lose anything you have saved.\nAre you sure you want to log out?";
+        "If you log out, you will lose anything you have saved.\n" +
+        "Are you sure you want to log out?";
+
+    public const string SignInCanceled = "Could not sign in:\nSign in was canceled.";
+    public const string SignInFailed = "Sign in failed.\n" +
+        "Sign in can fail if you use an invalid username/password, " +
+        "are not connected to the internet, or " +
+        "if there is a problem connecting with our servers.";
+
+    public const string SignInSuccessful = "Sign in successful.";
 
     // Invites:
     //--------------------------

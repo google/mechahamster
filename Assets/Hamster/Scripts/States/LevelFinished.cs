@@ -60,7 +60,10 @@ namespace Hamster.States {
 
       dialogComponent = SpawnUI<Menus.LevelFinishedGUI>(StringConstants.PrefabsLevelFinishedMenu);
       dialogComponent.NewRecordText.gameObject.SetActive(false);
-      dialogComponent.SubmitButton.gameObject.SetActive(!CommonData.gameWorld.HasPendingEdits);
+      // We only allow them to submit times if we're online, and
+      // not on a map that has pending edits.
+      dialogComponent.SubmitButton.gameObject.SetActive(
+        !CommonData.gameWorld.HasPendingEdits && !CommonData.isNotSignedIn);
       dialogComponent.ElapsedTimeText.text = string.Format(StringConstants.FinishedTimeText,
           Utilities.StringHelper.FormatTime(ElapsedGameTime));
 
@@ -92,7 +95,7 @@ namespace Hamster.States {
 
       ShowUI();
       dialogComponent.SubmitButton.gameObject.SetActive(
-        !CommonData.gameWorld.HasPendingEdits && !ScoreUploaded);
+          !CommonData.gameWorld.HasPendingEdits && !ScoreUploaded && !CommonData.isNotSignedIn);
     }
 
     public override void Suspend() {

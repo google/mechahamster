@@ -36,8 +36,7 @@ namespace Hamster.States {
         if (results.sourceState == typeof(WaitForTask)) {
           WaitForTask.Results taskResults = results.data as WaitForTask.Results;
           if (taskResults.task.IsFaulted) {
-            manager.PushState(new BasicDialog("Could not create account:\n" +
-                taskResults.task.Exception.ToString()));
+            manager.PushState(new BasicDialog("Could not create account."));
           } else {
             if (!string.IsNullOrEmpty(dialogComponent.DisplayName.text)) {
               Firebase.Auth.UserProfile profile =

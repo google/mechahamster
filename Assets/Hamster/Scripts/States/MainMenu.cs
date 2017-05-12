@@ -61,20 +61,27 @@ namespace Hamster.States {
         menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
       }
       ShowUI();
+      // If you're not signed in, many features are disabled.
 
-      // Editor is disabled in VR mode.
-      menuComponent.EditorButton.gameObject.SetActive(!CommonData.inVrMode);
+      // Only display the shared/bonus levels if the user has at least one.
+      menuComponent.SharedLevelsButton.gameObject.SetActive(
+          !CommonData.isNotSignedIn && CommonData.currentUser.data.sharedMaps.Count > 0);
+      menuComponent.BonusLevelsButton.gameObject.SetActive(
+          !CommonData.isNotSignedIn && CommonData.currentUser.data.bonusMaps.Count > 0);
+
       // Only display the account button if not on desktop
 #if UNITY_EDITOR
       menuComponent.AccountButton.gameObject.SetActive(false);
 #else
-      menuComponent.AccountButton.gameObject.SetActive(true);
+      menuComponent.AccountButton.gameObject.SetActive(!CommonData.isNotSignedIn);
 #endif
-      // Only display the shared/bonus levels if the user has at least one.
-      menuComponent.SharedLevelsButton.gameObject.SetActive(
-        CommonData.currentUser.data.sharedMaps.Count > 0);
-      menuComponent.BonusLevelsButton.gameObject.SetActive(
-          CommonData.currentUser.data.bonusMaps.Count > 0);
+
+      // Editor is disabled in VR mode.
+      menuComponent.EditorButton.gameObject.SetActive(
+          !CommonData.inVrMode && !CommonData.isNotSignedIn);
+
+      // If you're NOT signed in, the main menu has a button to sign in:
+      menuComponent.SignInButton.gameObject.SetActive(CommonData.isNotSignedIn);
     }
 
     public override void Suspend() {
@@ -105,6 +112,8 @@ namespace Hamster.States {
         manager.PushState(new SettingsMenu());
       } else if (source == menuComponent.LicenseButton.gameObject) {
         manager.PushState(new LicenseDialog());
+      } else if (source == menuComponent.SignInButton.gameObject) {
+        manager.PushState(new ChooseSignInMenu());
       }
     }
 
