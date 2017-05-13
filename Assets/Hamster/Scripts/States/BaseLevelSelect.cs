@@ -75,7 +75,7 @@ namespace Hamster.States {
       }
       levelButtons.Clear();
       // We don't give the option to see top times if we're in offline mode:
-      menuComponent.TopTimesButton.gameObject.SetActive(!CommonData.isNotSignedIn);
+      menuComponent.TopTimesButton.gameObject.SetActive(CommonData.ShowInternetMenus());
     }
 
     // Creates one page worth of level buttons for a given page.  Sets their names

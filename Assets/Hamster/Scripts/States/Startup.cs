@@ -24,7 +24,7 @@ namespace Hamster.States {
   class Startup : BaseState {
 
     Firebase.Auth.FirebaseAuth auth;
-    const string DefaultDesktopID = "XYZZY";
+    public const string DefaultDesktopID = "XYZZY";
 
     // Initialization method.  Called after the state
     // is added to the stack.
@@ -63,7 +63,8 @@ namespace Hamster.States {
         Firebase.Analytics.FirebaseAnalytics.UserPropertySignUpMethod,
         "Google");
 
-      Firebase.Analytics.FirebaseAnalytics.SetUserId(CommonData.currentUser.data.id);
+      if (CommonData.currentUser != null)
+        Firebase.Analytics.FirebaseAnalytics.SetUserId(CommonData.currentUser.data.id);
     }
 
     // Got back from either fetching userdata from the database, or
@@ -73,8 +74,8 @@ namespace Hamster.States {
     public override void Resume(StateExitValue results) {
       if (results.sourceState == typeof(ChooseSignInMenu) ||
           results.sourceState == typeof(WaitForTask)) {
-          // We just got back from trying to sign in anonymously.
-          // Did it work?
+        // We just got back from trying to sign in anonymously.
+        // Did it work?
         if (auth.CurrentUser != null) {
           // Yes!  Continue!
           manager.PushState(new FetchUserData(auth.CurrentUser.UserId));
@@ -83,23 +84,22 @@ namespace Hamster.States {
           CommonData.isNotSignedIn = true;
           manager.SwapState(new States.MainMenu());
         }
-      }
-      if (results.sourceState == typeof(FetchUserData))
+      } else if (results.sourceState == typeof(FetchUserData)) {
         // Just got back from fetching the user.
         // Did THAT work?
-        if (CommonData.currentUser.data != null) {
-          // Yes.  Ready to start!
-          InitializeAnalytics();
-
-          if (CommonData.inTestLoop) {
-            manager.SwapState(new States.TestLoop());
-          } else {
-            manager.SwapState(new States.MainMenu());
-          }
+        InitializeAnalytics();
+        if (CommonData.inTestLoop) {
+          manager.SwapState(new States.TestLoop());
         } else {
-          // Nope.  Problems.
-          manager.PushState(new FatalError("Could not fetch or create user data."));
+          manager.SwapState(new States.MainMenu());
+          if (CommonData.currentUser == null) {
+            //  If we can't fetch data, tell the user.
+            manager.PushState(new BasicDialog(StringConstants.CouldNotFetchUserData));
+          }
         }
+      } else {
+        throw new System.Exception("Returned from unknown state: " + results.sourceState);
+      }
     }
   }
 }

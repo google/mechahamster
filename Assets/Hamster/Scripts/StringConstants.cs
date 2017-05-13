@@ -53,6 +53,8 @@ namespace Hamster {
     public const string TitleText = "MechaHamster!";
     public const string SubTitleText = "The thrilling adventures of Col. Hammy D. Hamster!";
     public const string LabelFetchingUserData = "Fetching User Data";
+    public const string CouldNotFetchUserData = "Could not connect to user database.\n" +
+        "Some features will be disabled.";
 
     // Save/Load screen text:
     public const string LabelSaveMap = "Save Map:";

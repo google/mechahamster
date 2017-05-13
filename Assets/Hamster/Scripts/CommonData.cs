@@ -48,5 +48,11 @@ namespace Hamster {
 
     // Whether we're signed in or not.
     public static bool isNotSignedIn = false;
+
+    // Utility function to see if we should be showing menu options that
+    // require internet access and a user profile.
+    public static bool ShowInternetMenus() {
+      return !(isNotSignedIn || currentUser == null);
+    }
   }
 }
