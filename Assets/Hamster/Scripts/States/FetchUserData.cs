@@ -35,7 +35,7 @@ namespace Hamster.States {
     // state to get user data, and then handle the logic of what to do with the results.
     public override void Initialize() {
       manager.PushState(
-        new States.WaitingForDBLoad<UserData>(CommonData.DBUserTablePath + userID));
+        new WaitingForDBLoad<UserData>(CommonData.DBUserTablePath + userID));
     }
 
     public override StateExitValue Cleanup() {
@@ -50,20 +50,27 @@ namespace Hamster.States {
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<UserData>)) {
           var resultData = results.data as WaitingForDBLoad<UserData>.Results;
-          CommonData.currentUser = new DBStruct<UserData>(
-            CommonData.DBUserTablePath + userID, CommonData.app);
           if (resultData.wasSuccessful) {
-            CommonData.currentUser.Initialize(resultData.results);
-            Debug.Log("Fetched user " + CommonData.currentUser.data.name);
+            if (resultData.results != null) {
+              // Got some results back!  Use this data.
+              CommonData.currentUser = new DBStruct<UserData>(
+                  CommonData.DBUserTablePath + userID, CommonData.app);
+              CommonData.currentUser.Initialize(resultData.results);
+              Debug.Log("Fetched user " + CommonData.currentUser.data.name);
+            } else {
+              // Make a new user, using default credentials.
+              Debug.Log("Could not find user " + userID + " - Creating new profile.");
+              UserData temp = new UserData();
+              temp.name = StringConstants.DefaultUserName;
+              temp.id = userID;
+              CommonData.currentUser = new DBStruct<UserData>(
+                CommonData.DBUserTablePath + userID, CommonData.app);
+              CommonData.currentUser.Initialize(temp);
+              CommonData.currentUser.PushData();
+            }
           } else {
-            // Make a new user, using default credentials.
-            Debug.Log("Could not find user " + CommonData.currentUser.data.name +
-               " - Creating new profile.");
-            UserData temp = new UserData();
-            temp.name = StringConstants.DefaultUserName;
-            temp.id = userID;
-            CommonData.currentUser.Initialize(temp);
-            CommonData.currentUser.PushData();
+            // Can't fetch data.  Assume internet problems, stay offline.
+            CommonData.currentUser = null;
           }
         }
       }

@@ -51,6 +51,22 @@ namespace Hamster.States {
     }
 
     public override void Resume(StateExitValue results) {
+      // Whenever we come back to the main menu, check:
+      // If we have authentication data, but haven't fetched user data
+      // yet, go try to get user data.
+      if (results == null ||
+          (results != null && results.sourceState != typeof(FetchUserData))) {
+#if UNITY_EDITOR
+        if (CommonData.currentUser == null) {
+          manager.PushState(new FetchUserData(Startup.DefaultDesktopID));
+#else
+        Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+        if (auth.CurrentUser != null && CommonData.currentUser == null) {
+          manager.PushState(new FetchUserData(auth.CurrentUser.UserId));
+#endif
+          return;
+        }
+      }
       SetFirebaseMessagingListeners();
       SetFirebaseInvitesListeners();
       InitializeUI();
@@ -65,20 +81,20 @@ namespace Hamster.States {
 
       // Only display the shared/bonus levels if the user has at least one.
       menuComponent.SharedLevelsButton.gameObject.SetActive(
-          !CommonData.isNotSignedIn && CommonData.currentUser.data.sharedMaps.Count > 0);
+          CommonData.ShowInternetMenus() && CommonData.currentUser.data.sharedMaps.Count > 0);
       menuComponent.BonusLevelsButton.gameObject.SetActive(
-          !CommonData.isNotSignedIn && CommonData.currentUser.data.bonusMaps.Count > 0);
+          CommonData.ShowInternetMenus() && CommonData.currentUser.data.bonusMaps.Count > 0);
 
       // Only display the account button if not on desktop
 #if UNITY_EDITOR
       menuComponent.AccountButton.gameObject.SetActive(false);
 #else
-      menuComponent.AccountButton.gameObject.SetActive(!CommonData.isNotSignedIn);
+      menuComponent.AccountButton.gameObject.SetActive(CommonData.ShowInternetMenus());
 #endif
 
       // Editor is disabled in VR mode.
       menuComponent.EditorButton.gameObject.SetActive(
-          !CommonData.inVrMode && !CommonData.isNotSignedIn);
+          !CommonData.inVrMode && CommonData.ShowInternetMenus());
 
       // If you're NOT signed in, the main menu has a button to sign in:
       menuComponent.SignInButton.gameObject.SetActive(CommonData.isNotSignedIn);

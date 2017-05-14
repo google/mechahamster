@@ -110,7 +110,7 @@ namespace Hamster.States {
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {
           var resultData = results.data as WaitingForDBLoad<LevelMap>.Results;
-          if (resultData.wasSuccessful) {
+          if (resultData.wasSuccessful && resultData.results != null) {
             currentLevel = resultData.results;
             currentLevel.DatabasePath = resultData.path;
             CommonData.gameWorld.DisposeWorld();

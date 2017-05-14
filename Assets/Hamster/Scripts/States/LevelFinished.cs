@@ -63,7 +63,7 @@ namespace Hamster.States {
       // We only allow them to submit times if we're online, and
       // not on a map that has pending edits.
       dialogComponent.SubmitButton.gameObject.SetActive(
-        !CommonData.gameWorld.HasPendingEdits && !CommonData.isNotSignedIn);
+        !CommonData.gameWorld.HasPendingEdits && CommonData.ShowInternetMenus());
       dialogComponent.ElapsedTimeText.text = string.Format(StringConstants.FinishedTimeText,
           Utilities.StringHelper.FormatTime(ElapsedGameTime));
 
@@ -95,7 +95,8 @@ namespace Hamster.States {
 
       ShowUI();
       dialogComponent.SubmitButton.gameObject.SetActive(
-          !CommonData.gameWorld.HasPendingEdits && !ScoreUploaded && !CommonData.isNotSignedIn);
+          !CommonData.gameWorld.HasPendingEdits &&
+          !ScoreUploaded && CommonData.ShowInternetMenus());
     }
 
     public override void Suspend() {

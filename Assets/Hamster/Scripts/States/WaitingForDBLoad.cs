@@ -54,11 +54,11 @@ namespace Hamster.States {
         HandleFaultedFetch(task);
         return;
       } else if (task.IsCompleted) {
+        wasSuccessful = true;
         if (task.Result != null) {
           string json = task.Result.GetRawJsonValue();
           if (!string.IsNullOrEmpty(json)) {
             result = JsonUtility.FromJson<T>(json);
-            wasSuccessful = true;
           }
         }
       }
