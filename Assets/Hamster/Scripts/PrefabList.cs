@@ -54,6 +54,12 @@ namespace Hamster {
     // The default audio clip that is used when a GUIButton is clicked.
     public AudioClip DefaultClickAudio;
 
+    // Music to play at various points in the game.
+    public AudioClip[] menuMusic;
+    public AudioClip[] gameMusic;
+    public AudioClip[] winMusic;
+    public AudioClip[] loseMusic;
+
     // Lookup dictionaries, for quickly finding the prefab, given a name.
     [HideInInspector]
     public Dictionary<string, PrefabEntry> lookup;

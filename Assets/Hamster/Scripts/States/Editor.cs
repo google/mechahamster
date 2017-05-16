@@ -61,6 +61,7 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
+      CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
       menuComponent = SpawnUI<Menus.EditorGUI>(StringConstants.PrefabEditorMenu);
       // Set up our map to edit, and populate the data
       // structure with the necessary IDs.
@@ -105,6 +106,7 @@ namespace Hamster.States {
     // optional object containing any results/data.  Results
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
+      CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
       ShowUI();
       CommonData.mainCamera.mode = CameraController.CameraMode.Editor;
       if (results != null) {

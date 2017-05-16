@@ -121,6 +121,7 @@ namespace Hamster.States {
 
     public override void HandleUIEvent(GameObject source, object eventData) {
       if (source == dialogComponent.LevelsButton.gameObject) {
+        CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
         manager.PopState();
       } else if (source == dialogComponent.RetryButton.gameObject) {
         manager.SwapState(new Gameplay(mode));

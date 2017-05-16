@@ -31,6 +31,9 @@ namespace Hamster {
     [HideInInspector]
     public GameObject player;
 
+    // The player responsible for game music.
+    private AudioSource musicPlayer;
+
     // The PlayerController component on the active player object.
     public PlayerController PlayerController {
       get {
@@ -80,6 +83,22 @@ namespace Hamster {
 
     void FixedUpdate() {
       stateManager.FixedUpdate();
+    }
+
+    // Play an audio clip as music.  If that clip is already playing,
+    // we ignore it, and keep playing without restarting.
+    public void PlayMusic(AudioClip music, bool shouldLoop) {
+      if (musicPlayer.clip != music || !musicPlayer.isPlaying) {
+        musicPlayer.Stop();
+        musicPlayer.clip = music;
+        musicPlayer.Play();
+        musicPlayer.loop = shouldLoop;
+      }
+    }
+
+    // Utility function for picking a random track to play from a selection.
+    public void SelectAndPlayMusic(AudioClip[] musicArray, bool shouldLoop) {
+      PlayMusic(musicArray[Random.Range(0, musicArray.Length)], shouldLoop);
     }
 
     // Utility function to check the time since the last update.
@@ -219,10 +238,11 @@ namespace Hamster {
 
       Screen.orientation = ScreenOrientation.Landscape;
 
+      musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();
+
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
 
       CommonData.inTestLoop = IsInTestLoop();
-
 
       // Set up volume settings.
       MusicVolume = PlayerPrefs.GetInt(StringConstants.MusicVolume, MaxVolumeValue);

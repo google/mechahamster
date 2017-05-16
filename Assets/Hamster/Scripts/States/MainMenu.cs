@@ -45,12 +45,14 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
+      CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
       SetFirebaseMessagingListeners();
       SetFirebaseInvitesListeners();
       InitializeUI();
     }
 
     public override void Resume(StateExitValue results) {
+      CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
       // Whenever we come back to the main menu, check:
       // If we have authentication data, but haven't fetched user data
       // yet, go try to get user data.

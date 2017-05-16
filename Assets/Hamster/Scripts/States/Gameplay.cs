@@ -51,6 +51,7 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
+      CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.gameMusic, true);
       fixedUpdateTimestamp = 0;
       if (CommonData.vrPointer != null) {
         CommonData.vrPointer.SetActive(false);
@@ -75,6 +76,7 @@ namespace Hamster.States {
     // optional object containing any results/data.  Results
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
+      CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.gameMusic, true);
       if (CommonData.vrPointer != null) {
         CommonData.vrPointer.SetActive(false);
       }
@@ -121,8 +123,10 @@ namespace Hamster.States {
             gameplayRecorder.OutputToFile(gameplayReplayFileName);
           }
           if (mode == GameplayMode.TestLoop) {
+            CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
             manager.PopState();
           } else {
+            CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.winMusic, false);
             manager.SwapState(new LevelFinished(mode));
           }
           return;

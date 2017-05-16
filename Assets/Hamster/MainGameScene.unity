@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 7
+    serializedVersion: 8
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -71,9 +71,10 @@ LightmapSettings:
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
-    m_StationaryBakeMode: 3
+    m_MixedBakeMode: 3
     m_BakeBackend: 0
     m_PVRSampling: 1
+    m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
     m_PVRFiltering: 0
@@ -86,7 +87,6 @@ LightmapSettings:
     m_PVRFilteringAtrousNormalSigma: 1
     m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 0}
-  m_RuntimeCPUUsage: 25
   m_ShadowMaskMode: 2
 --- !u!196 &4
 NavMeshSettings:
@@ -154,6 +154,7 @@ MonoBehaviour:
   ViewDistance: 10
   EditorScrollSpeed: 8
   CameraZoom: 0.05
+  CameraFocusHeight: 0.5
   mode: 1
 --- !u!1 &170869238
 GameObject:
@@ -434,6 +435,18 @@ MonoBehaviour:
   - name: 
     prefab: {fileID: 0}
   DefaultClickAudio: {fileID: 8300000, guid: 81665ffde63f90b4494949dbfd1b64d1, type: 3}
+  menuMusic:
+  - {fileID: 8300000, guid: 5ec37491433187d44a4ec0542eb3c256, type: 3}
+  gameMusic:
+  - {fileID: 8300000, guid: db3e28e382b9d3a468bf8ea0c47c5019, type: 3}
+  winMusic:
+  - {fileID: 8300000, guid: c476a256ce66dc046ac29ed402ddf9d6, type: 3}
+  - {fileID: 8300000, guid: 47f9d73b82361ea439ef7cd480b8170a, type: 3}
+  - {fileID: 8300000, guid: 88bdceafc070e0f4383e84fc96e0cea2, type: 3}
+  loseMusic:
+  - {fileID: 8300000, guid: 353c0268b774d6f4482d100b11126120, type: 3}
+  - {fileID: 8300000, guid: 0719889efaf285f40ab8e7d40d28323f, type: 3}
+  - {fileID: 8300000, guid: a6e94eb913f153e41a6d546feb694032, type: 3}
   prefabNames: []
 --- !u!4 &489996880
 Transform:
@@ -657,6 +670,7 @@ MonoBehaviour:
   ViewDistance: 10
   EditorScrollSpeed: 0.3
   CameraZoom: 0.05
+  CameraFocusHeight: 0.5
   mode: 1
 --- !u!82 &1298557707
 AudioSource:
@@ -667,7 +681,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b2ce5896f0639294d80f696636a12159, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.15
   m_Pitch: 1
@@ -907,7 +921,8 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_CCT: 6570
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &1848390475
