@@ -105,6 +105,7 @@ namespace Hamster.States {
     }
 
     public override StateExitValue Cleanup() {
+      CommonData.gameWorld.ResetMap();
       DestroyUI();
       Time.timeScale = 0.0f;
       return null;
