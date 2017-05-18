@@ -432,8 +432,8 @@ MonoBehaviour:
     prefab: {fileID: 1634202481453850, guid: 3f16683dc0f5e497f8e5a031c519410f, type: 2}
   - name: ConfirmationDialog
     prefab: {fileID: 1428124404678162, guid: 606f13ff905e32f4d95740fad91f4e68, type: 2}
-  - name: 
-    prefab: {fileID: 0}
+  - name: FloatingButton
+    prefab: {fileID: 1876179501449842, guid: 5e6999b7bbba7a84798f53dd2433fb2f, type: 2}
   DefaultClickAudio: {fileID: 8300000, guid: 81665ffde63f90b4494949dbfd1b64d1, type: 3}
   menuMusic:
   - {fileID: 8300000, guid: 5ec37491433187d44a4ec0542eb3c256, type: 3}

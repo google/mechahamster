@@ -33,6 +33,8 @@ namespace Hamster.States {
       this.mode = mode;
     }
 
+    Menus.FloatingButtonGUI dialogComponent;
+
     // Number of fixedupdates that have happened so far in this
     // gameplay session.  Used for replay synchronization.
     public int fixedUpdateTimestamp { get; private set;  }
@@ -69,6 +71,9 @@ namespace Hamster.States {
         gameplayRecorder = new GameplayRecorder(CommonData.gameWorld.worldMap.name);
       }
       Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+      dialogComponent = SpawnUI<Menus.FloatingButtonGUI>(StringConstants.PrefabFloatingButton);
+      PositionButton();
     }
 
     // Resume the state.  Called when the state becomes active
@@ -76,6 +81,7 @@ namespace Hamster.States {
     // optional object containing any results/data.  Results
     // can also just be null, if no data is sent.
     public override void Resume(StateExitValue results) {
+      ShowUI();
       CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.gameMusic, true);
       if (CommonData.vrPointer != null) {
         CommonData.vrPointer.SetActive(false);
@@ -86,6 +92,7 @@ namespace Hamster.States {
     }
 
     public override StateExitValue Cleanup() {
+      DestroyUI();
       if (CommonData.vrPointer != null) {
         CommonData.vrPointer.SetActive(true);
       }
@@ -97,6 +104,7 @@ namespace Hamster.States {
     }
 
     public override void Suspend() {
+      HideUI();
       if (CommonData.vrPointer != null) {
         CommonData.vrPointer.SetActive(true);
       }
@@ -105,11 +113,47 @@ namespace Hamster.States {
       Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
+    // Moves the GUI to the upper right.
+    void PositionButton() {
+      Camera camera = CommonData.mainCamera.GetComponentInChildren<Camera>();
+      RectTransform rt = gui.GetComponent<RectTransform>();
+      // Locations of the corners of the button, in world units.
+      Vector3 worldLowerLeft = rt.TransformPoint(rt.anchorMin + rt.offsetMin);
+      Vector3 worldupperRight = rt.TransformPoint(rt.anchorMax + rt.offsetMax);
+
+      // Locations of the corners of the button, in screen space.
+      Vector2 screenLowerLeft =
+          camera.WorldToScreenPoint(worldLowerLeft);
+      Vector2 screenUpperRight =
+          camera.WorldToScreenPoint(worldupperRight);
+
+      // Dimensions of the button in world units:
+      float worldWidth = Mathf.Abs(worldLowerLeft.x - worldupperRight.x);
+      float worldHeight = Mathf.Abs(worldLowerLeft.y - worldupperRight.y);
+
+      float pixelsToWorldUnits = worldWidth / Mathf.Abs(screenLowerLeft.x - screenUpperRight.x);
+
+      gui.transform.localPosition = new Vector3(
+        gui.transform.localPosition.x + (Screen.width * pixelsToWorldUnits - worldWidth) / 2.0f,
+        gui.transform.localPosition.y + (Screen.height * pixelsToWorldUnits - worldHeight) / 2.0f,
+        gui.transform.localPosition.z);
+    }
+
+    public override void HandleUIEvent(GameObject source, object eventData) {
+      if (source == dialogComponent.FloatingButton.gameObject) {
+        ExitGameplay();
+      }
+    }
+
+    void ExitGameplay() {
+      CommonData.gameWorld.ResetMap();
+      manager.PopState();
+    }
+
     // Called once per frame when the state is active.
     public override void FixedUpdate() {
       if (Input.GetKeyDown(KeyCode.Escape)) {
-        CommonData.gameWorld.ResetMap();
-        manager.PopState();
+        ExitGameplay();
         return;
       }
       if (CommonData.mainGame.PlayerController != null) {
@@ -149,18 +193,5 @@ namespace Hamster.States {
       }
     }
 
-#if UNITY_IOS
-    public override void OnGUI() {
-      GUI.skin = CommonData.prefabs.guiSkin;
-      float buttonWidth = Screen.width * 0.2f;
-      float buttonHeight = Screen.height * 0.1f;
-      GUILayout.BeginArea(new Rect(Screen.width - buttonWidth - 10, Screen.height - buttonHeight,
-        buttonWidth, buttonHeight));
-      if (GUILayout.Button (StringConstants.ButtonExit)) {
-        manager.PopState ();
-      }
-    GUILayout.EndArea ();
-    }
-#endif
   }
 }
