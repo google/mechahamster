@@ -133,6 +133,9 @@ namespace Hamster {
 
     public const string SignInSuccessful = "Sign in successful.";
 
+    public const string SignInPasswordReset = "A password reset email has been sent to {0}";
+    public const string SignInPasswordResetError = "Could not reset password.";
+
     // Invites:
     //--------------------------
     public const string RemoteConfigInviteTitleText = "invite_title_text";
@@ -253,6 +256,7 @@ namespace Hamster {
     public const string PrefabsSettingsMenu = "SettingsMenu";
     public const string PrefabsSignInMenu = "SignInMenu";
     public const string PrefabsChooseSigninMenu = "ChooseSignInMenu";
+    public const string PrefabsPasswordResetMenu = "PasswordResetMenu";
     public const string PrefabsAddEmailMenu = "AddEmailMenu";
     public const string PrefabsNewAccountMenu = "NewAccountMenu";
     public const string PrefabsManageAccountMenu = "ManageAccountMenu";

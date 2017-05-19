@@ -18,16 +18,13 @@ using System.Collections.Generic;
 namespace Hamster.Menus {
 
   // Interface class for providing code access to the GUI
-  // elements in the login menu prefab.  This is the menu
-  // that actually asks for a user login and password.
-  public class SignInGUI : BaseMenu {
+  // elements in the pasword reset menu prefab.
+  public class PasswordResetGUI : BaseMenu {
 
     // These fields are set in the inspector.
     public UnityEngine.UI.InputField Email;
-    public UnityEngine.UI.InputField Password;
     public GUIButton CancelButton;
     public GUIButton ContinueButton;
-    public GUIButton ForgotPasswordButton;
   }
 
 }

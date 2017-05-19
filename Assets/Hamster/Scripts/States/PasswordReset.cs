@@ -18,17 +18,17 @@ using System.Collections.Generic;
 using Firebase.Unity.Editor;
 
 namespace Hamster.States {
-  // State for requesting username/password from the user for
-  // signing in with a preregistered email account.
-  class SignInWithEmail : BaseState {
+  // State for requesting an email from the user, for the purposes
+  // of letting them reset their password.
+  class PasswordReset : BaseState {
 
     Firebase.Auth.FirebaseAuth auth;
-    Menus.SignInGUI dialogComponent;
+    Menus.PasswordResetGUI dialogComponent;
     bool canceled = false;
 
     public override void Initialize() {
       auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-      dialogComponent = SpawnUI<Menus.SignInGUI>(StringConstants.PrefabsSignInMenu);
+      dialogComponent = SpawnUI<Menus.PasswordResetGUI>(StringConstants.PrefabsPasswordResetMenu);
     }
 
     public override void Suspend() {
@@ -41,10 +41,10 @@ namespace Hamster.States {
         if (results.sourceState == typeof(WaitForTask)) {
           WaitForTask.Results taskResults = results.data as WaitForTask.Results;
           if (taskResults.task.IsFaulted) {
-            manager.PushState(new BasicDialog(
-                Utilities.StringHelper.SigninInFailureString(taskResults.task)));
+            manager.SwapState(new BasicDialog(StringConstants.SignInPasswordResetError));
           } else {
-            manager.PopState();
+            manager.SwapState(new BasicDialog(string.Format(
+                StringConstants.SignInPasswordReset, dialogComponent.Email.text)));
           }
         }
       }
@@ -60,10 +60,8 @@ namespace Hamster.States {
         canceled = true;
         manager.PopState();
       } else if (source == dialogComponent.ContinueButton.gameObject) {
-        manager.PushState(new WaitForTask(auth.SignInWithEmailAndPasswordAsync(
-            dialogComponent.Email.text, dialogComponent.Password.text)));
-      } else if (source == dialogComponent.ForgotPasswordButton.gameObject) {
-        manager.PushState(new PasswordReset());
+        manager.PushState(new WaitForTask(
+            auth.SendPasswordResetEmailAsync(dialogComponent.Email.text)));
       }
     }
   }
