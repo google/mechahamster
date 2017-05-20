@@ -24,9 +24,8 @@ namespace Hamster {
   public class CameraController : MonoBehaviour {
 
     // Set by the inspector:
-    // Default angle for viewing.  (0, 3, -2) is standard.
-    // (Three forward, two down, so looking downward at ~34 degrees)
-    public Vector3 ViewAngleVector;
+    // Default camera view angle in degrees.
+    public float ViewAngle = -40.0f;
     // Distance between the camera and the ground.
     public float ViewDistance = 10.0f;
     // How fast you pan in the editor.
@@ -65,7 +64,6 @@ namespace Hamster {
     void Start() {
       mainGame = FindObjectOfType<MainGame>();
       // Needs to be normalized because it was set via the inspector.
-      ViewAngleVector.Normalize();
       if (CommonData.inVrMode) {
         float VRHeightScalar;
         try {
@@ -76,8 +74,6 @@ namespace Hamster {
           // If the RemoteConfig failed, use a sensible value.
           VRHeightScalar = 0.65f;
         }
-        ViewAngleVector = new Vector3(
-          ViewAngleVector.x, ViewAngleVector.y * VRHeightScalar, ViewAngleVector.z);
       }
     }
 
@@ -89,12 +85,13 @@ namespace Hamster {
       editorCam += direction * EditorScrollSpeed * mainGame.TimeSinceLastUpdate;
     }
 
-
     public void MoveCameraTo(Vector3 newPos) {
       editorCam = newPos;
     }
 
     void LateUpdate() {
+      Vector3 viewAngleVector = Quaternion.Euler(-ViewAngle, 0, 0) * -Vector3.forward;
+
       switch (mode) {
         case CameraMode.Gameplay:
           // Gameplay mode:  Camera should follow the player:
@@ -103,7 +100,7 @@ namespace Hamster {
           if (player != null) {
             Vector3 camTarget = player.transform.position;
             camTarget.y = CameraFocusHeight;
-            transform.position = camTarget + ViewAngleVector * ViewDistance;
+            transform.position = camTarget + viewAngleVector * ViewDistance;
             if (!CommonData.inVrMode) {
               transform.LookAt(player.transform.position, kUpVector);
             }
@@ -139,25 +136,25 @@ namespace Hamster {
             PanCamera(Vector3.right);
           }
 
-          Vector3 cameraTarget = editorCam + ViewAngleVector * ViewDistance;
+          Vector3 cameraTarget = editorCam + viewAngleVector * ViewDistance;
 
           transform.position = cameraTarget * CameraZoom
               + transform.position * (1.0f - CameraZoom);
 
           if (!CommonData.inVrMode) {
-            transform.LookAt(transform.position - ViewAngleVector, kUpVector);
+            transform.LookAt(transform.position - viewAngleVector, kUpVector);
           }
           break;
         case CameraMode.Menu:
           // Menu mode.  User is in a menu.
           Vector3 menuCameraTarget =
-            editorCam + ViewAngleVector * ViewDistance;
+            editorCam + viewAngleVector * ViewDistance;
 
           transform.position = menuCameraTarget * CameraZoom
               + transform.position * (1.0f - CameraZoom);
 
           if (!CommonData.inVrMode) {
-            transform.LookAt(transform.position - ViewAngleVector, kUpVector);
+            transform.LookAt(transform.position - viewAngleVector, kUpVector);
           }
           break;
       }

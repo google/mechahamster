@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26c486d75f1ac4b9f8a394d12dc89892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ViewAngleVector: {x: 0, y: 3, z: -2}
+  ViewAngle: -40
   ViewDistance: 10
   EditorScrollSpeed: 8
   CameraZoom: 0.05
@@ -572,7 +572,6 @@ GameObject:
   - component: {fileID: 1298557703}
   - component: {fileID: 1298557702}
   - component: {fileID: 1298557701}
-  - component: {fileID: 1298557706}
   - component: {fileID: 1298557707}
   m_Layer: 0
   m_Name: Main Camera
@@ -656,24 +655,6 @@ Transform:
   m_Father: {fileID: 8407452}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1298557706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114231434582791602, guid: 4a51443d744f65741b28c1491bc0138d,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1298557700}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26c486d75f1ac4b9f8a394d12dc89892, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ViewAngleVector: {x: 0, y: 0, z: 0}
-  ViewDistance: 10
-  EditorScrollSpeed: 0.3
-  CameraZoom: 0.05
-  CameraFocusHeight: 0.5
-  mode: 1
 --- !u!82 &1298557707
 AudioSource:
   m_ObjectHideFlags: 0
