@@ -130,6 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c868088a12620ec4283cc19532736712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClicked: {fileID: 0}
+  hover: 0
+  press: 0
 --- !u!222 &222116646040162286
 CanvasRenderer:
   m_ObjectHideFlags: 1
