@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ViewAngle: -40
-  ViewDistance: 10
+  ViewDistance: 13
   EditorScrollSpeed: 8
   CameraZoom: 0.05
   CameraFocusHeight: 0.5

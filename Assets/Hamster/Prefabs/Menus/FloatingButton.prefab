@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d405e4089d216a9488a88b75221d30f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FloatingButton: {fileID: 0}
+  FloatingButton: {fileID: 114681977431946196}
 --- !u!114 &114485019517981638
 MonoBehaviour:
   m_ObjectHideFlags: 1
