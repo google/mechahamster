@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 223026819696246118}
   - component: {fileID: 114166867569688464}
   - component: {fileID: 114524079676581702}
-  m_Layer: 5
+  m_Layer: 1
   m_Name: EditorMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,7 +459,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4649064859493010}
   - component: {fileID: 212860204367219416}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
