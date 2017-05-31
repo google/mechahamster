@@ -75,7 +75,11 @@ namespace Hamster.Menus {
       CommonData.mainGame.stateManager.HandleUIEvent(gameObject, null);
       AudioClip clip = OnClicked ? OnClicked : CommonData.prefabs.DefaultClickAudio;
       if (clip != null) {
+        float currentTimeScale = Time.timeScale;
+        // Sounds don't play if the timescale is 0 when they start.
+        Time.timeScale = 1.0f;
         AudioSource.PlayClipAtPoint(clip, gameObject.transform.position);
+        Time.timeScale = currentTimeScale;
       }
     }
 
