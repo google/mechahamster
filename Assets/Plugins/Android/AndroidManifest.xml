@@ -17,13 +17,6 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
       <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
-
-      <intent-filter>
-        <action android:name="com.google.intent.action.TEST_LOOP"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-        <data android:mimeType="application/javascript"/>
-      </intent-filter>
-
     </activity>
     <service android:name="com.google.firebase.messaging.MessageForwardingService"
              android:exported="false"/>

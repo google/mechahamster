@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 // Copyright 2016 Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +26,7 @@ inline float4 GvrUnityObjectToClipPos(in float3 pos) {
     // More efficient than computing M*VP matrix product
     return mul(UNITY_MATRIX_VP, mul(unity_ObjectToWorld, float4(pos, 1.0)));
 #else
-    return mul(UNITY_MATRIX_MVP, float4(pos, 1.0));
+    return UnityObjectToClipPos(float4(pos, 1.0));
 #endif  // defined(UNITY_SINGLE_PASS_STEREO) || defined(UNITY_USE_CONCATENATED_MATRICES)
 
 #endif  // defined(UNITY_5_4_OR_NEWER)

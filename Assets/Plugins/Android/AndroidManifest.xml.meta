@@ -1,8 +1,6 @@
 fileFormatVersion: 2
 guid: 20f9cbbac674479895a6bc23efe94670
-timeCreated: 1494010852
-licenseType: Pro
-TextScriptImporter:
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+time_created: 1480838400
+labels:
+- gvh
+- gvh_v3.0.3

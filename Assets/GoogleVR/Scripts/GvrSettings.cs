@@ -28,7 +28,6 @@ using UnityEditor;
 #endif  // UNITY_EDITOR
 
 public static class GvrSettings {
-
   private const string PACKAGE_UNITY_PLAYER = "com.unity3d.player.UnityPlayer";
   private const string METHOD_CURRENT_ACTIVITY = "currentActivity";
   private const string METHOD_GET_WINDOW = "getWindow";
@@ -42,7 +41,7 @@ public static class GvrSettings {
     Daydream
   }
   public static ViewerPlatformType ViewerPlatform {
-    // Expose a setter only for the edtior emulator, for development testing purposes.
+    // Expose a setter only for the editor emulator, for development testing purposes.
 #if UNITY_EDITOR
     get {
       return editorEmulatorOnlyViewerPlatformType;

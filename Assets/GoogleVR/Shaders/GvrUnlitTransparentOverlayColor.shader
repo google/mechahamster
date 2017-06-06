@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 // Copyright 2016 Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,7 +56,7 @@ Shader "GoogleVR/Unlit/Transparent Overlay Color" {
         float4 vertex4;
         vertex4.xyz = v.vertex;
         vertex4.w = 1.0;
-        o.vertex = mul(UNITY_MATRIX_MVP, vertex4);
+        o.vertex = UnityObjectToClipPos(vertex4);
         o.uv = TRANSFORM_TEX(v.uv, _MainTex);
         return o;
       }

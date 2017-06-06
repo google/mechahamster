@@ -1,4 +1,4 @@
-// Copyright 2016 Google Inc. All rights reserved.
+// Copyright 2017 Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -9,10 +9,9 @@
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissioßns and
+// See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if UNITY_HAS_GOOGLEVR && UNITY_ANDROID
 using UnityEngine;
 
 using System;
@@ -23,9 +22,9 @@ namespace Gvr.Internal {
   /// Controller Provider that uses the native GVR C API to communicate with controllers
   /// via Google VR Services on Android.
   class AndroidNativeControllerProvider : IControllerProvider {
-    // Minimum VrCore client API version that automatically handles recentering.
-    private const int MIN_VRCORE_API_VERSION_WITH_RECENTER = 8;
-
+#if !UNITY_HAS_GOOGLEVR || (!UNITY_ANDROID && !UNITY_EDITOR)
+    public void Dispose() { }
+#else
     // Note: keep structs and function signatures in sync with the C header file (gvr_controller.h).
     // GVR controller option flags.
     private const int GVR_CONTROLLER_ENABLE_ORIENTATION = 1 << 0;
@@ -165,7 +164,15 @@ namespace Gvr.Internal {
     [DllImport(dllName)]
     private static extern long gvr_controller_state_get_last_button_timestamp(IntPtr state);
 
-    private const string UNITY_PLAYER_CLASS = "com.unity3d.player.UnityPlayer";
+    [DllImport(dllName)]
+    private static extern byte gvr_controller_state_get_battery_charging(IntPtr state);
+
+    [DllImport(dllName)]
+    private static extern int gvr_controller_state_get_battery_level(IntPtr state);
+
+    [DllImport(dllName)]
+    private static extern long gvr_controller_state_get_last_battery_timestamp(IntPtr state);
+
     private const string VRCORE_UTILS_CLASS = "com.google.vr.vrcore.base.api.VrCoreUtils";
 
     private IntPtr api;
@@ -173,17 +180,15 @@ namespace Gvr.Internal {
     private AndroidJavaObject androidContext;
     private AndroidJavaObject classLoader;
 
-    private bool error;
-    private String errorDetails;
+    private bool error = false;
+    private string errorDetails = string.Empty;
 
     private IntPtr statePtr;
 
     private MutablePose3D pose3d = new MutablePose3D();
 
-    private int vrCoreClientApiVersion;
-    private bool vrCoreImplementsRecenter;
-
     internal AndroidNativeControllerProvider() {
+#if !UNITY_EDITOR
       Debug.Log("Initializing Daydream controller API.");
 
       int options = gvr_controller_get_default_options();
@@ -191,15 +196,14 @@ namespace Gvr.Internal {
       options |= GVR_CONTROLLER_ENABLE_GYRO;
 
       statePtr = gvr_controller_state_create();
-
       // Get a hold of the activity, context and class loader.
-      AndroidJavaObject activity = GetActivity();
+      AndroidJavaObject activity = GvrActivityHelper.GetActivity();
       if (activity == null) {
         error = true;
         errorDetails = "Failed to get Activity from Unity Player.";
         return;
       }
-      androidContext = GetApplicationContext(activity);
+      androidContext = GvrActivityHelper.GetApplicationContext(activity);
       if (androidContext == null) {
         error = true;
         errorDetails = "Failed to get Android application context from Activity.";
@@ -229,14 +233,10 @@ namespace Gvr.Internal {
         return;
       }
 
-      vrCoreClientApiVersion = GetVrCoreClientApiVersion(activity);
-
-      // Check whether or not VrCore implements recentering.
-      vrCoreImplementsRecenter = (vrCoreClientApiVersion >= MIN_VRCORE_API_VERSION_WITH_RECENTER);
-
       Debug.Log("GVR API successfully initialized. Now resuming it.");
       gvr_controller_resume(api);
       Debug.Log("GVR API resumed.");
+#endif
     }
 
     ~AndroidNativeControllerProvider() {
@@ -296,6 +296,11 @@ namespace Gvr.Internal {
       outState.appButtonUp =
         0 != gvr_controller_state_get_button_up(statePtr, GVR_CONTROLLER_BUTTON_APP);
 
+      outState.homeButtonDown =
+        0 != gvr_controller_state_get_button_down(statePtr, GVR_CONTROLLER_BUTTON_HOME);
+      outState.homeButtonState =
+        0 != gvr_controller_state_get_button_state(statePtr, GVR_CONTROLLER_BUTTON_HOME);
+
       outState.clickButtonDown =
         0 != gvr_controller_state_get_button_down(statePtr, GVR_CONTROLLER_BUTTON_CLICK);
       outState.clickButtonState =
@@ -307,10 +312,14 @@ namespace Gvr.Internal {
       outState.recentered = 0 != gvr_controller_state_get_recentered(statePtr);
       outState.gvrPtr = statePtr;
 
-      // If the controller was recentered, we may also need to request that the headset be
-      // recentered. We should do that only if VrCore does NOT implement recentering.
-      outState.headsetRecenterRequested = outState.recentered && !vrCoreImplementsRecenter;
-    }
+      // Update battery information.
+      try {
+        outState.isCharging = 0 != gvr_controller_state_get_battery_charging(statePtr);
+        outState.batteryLevel = (GvrControllerBatteryLevel)gvr_controller_state_get_battery_level(statePtr);
+      } catch (EntryPointNotFoundException) {
+        // Older VrCore version. Does not support battery indicator.
+      }
+   }
 
     public void OnPause() {
       if (IntPtr.Zero != api) {
@@ -357,29 +366,6 @@ namespace Gvr.Internal {
       }
     }
 
-    private static AndroidJavaObject GetActivity() {
-      AndroidJavaClass jc = new AndroidJavaClass(UNITY_PLAYER_CLASS);
-      if (jc == null) {
-        Debug.LogErrorFormat("Failed to get Unity Player class, {0}", UNITY_PLAYER_CLASS);
-        return null;
-      }
-      AndroidJavaObject activity = jc.GetStatic<AndroidJavaObject>("currentActivity");
-      if (activity == null) {
-        Debug.LogError("Failed to obtain Android Activity from Unity Player class.");
-        return null;
-      }
-      return activity;
-    }
-
-    private static AndroidJavaObject GetApplicationContext(AndroidJavaObject activity) {
-      AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
-      if (context == null) {
-        Debug.LogErrorFormat("Failed to get application context from Activity.");
-        return null;
-      }
-      return context;
-    }
-
     private static AndroidJavaObject GetClassLoaderFromActivity(AndroidJavaObject activity) {
       AndroidJavaObject result = activity.Call<AndroidJavaObject>("getClassLoader");
       if (result == null) {
@@ -404,8 +390,7 @@ namespace Gvr.Internal {
         return 0;
       }
     }
+#endif  // !UNITY_HAS_GOOGLEVR || (!UNITY_ANDROID && !UNITY_EDITOR)
   }
 }
 /// @endcond
-
-#endif  // UNITY_HAS_GOOGLEVR && UNITY_ANDROID

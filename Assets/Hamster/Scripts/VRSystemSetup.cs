@@ -36,10 +36,6 @@ namespace Hamster {
       if (CommonData.inVrMode) {
         GameObject viewer = Instantiate(VRViewer);
         Instantiate(VRController);
-        GvrViewer gvrViewer = viewer.GetComponent<GvrViewer>();
-        if (gvrViewer) {
-          gvrViewer.VRModeEnabled = false;
-        }
 
         GameObject pointer = Instantiate(VRControllerPointer);
         pointer.transform.SetParent(CameraHolder.transform);
