@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+using FirebaseTestLab;
 
 namespace Hamster {
 
@@ -43,8 +42,8 @@ namespace Hamster {
     public static bool inVrMode = false;
     public static GameObject vrPointer;
 
-    // Whether we're in in a test mode or not.  Set at startup by MainGame.
-    public static bool inTestLoop = false;
+    // TestLabManager to track the state of the tests coming in from the intent
+    public static TestLabManager testLab = TestLabManager.Instantiate();
 
     // Whether we're signed in or not.
     public static bool isNotSignedIn = false;

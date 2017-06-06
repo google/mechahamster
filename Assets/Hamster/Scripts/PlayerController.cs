@@ -35,7 +35,7 @@ namespace Hamster {
 
     void Start() {
       IsProcessingDeath = false;
-      if (!CommonData.inTestLoop) {
+      if (!CommonData.testLab.IsTestingScenario) {
         inputController = new InputControllers.MultiInputController();
       } else {
         inputController = new InputControllers.ReplayController(

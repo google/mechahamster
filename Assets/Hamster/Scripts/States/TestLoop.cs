@@ -13,25 +13,29 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using Firebase.Unity.Editor;
 
 namespace Hamster.States {
   // Test loop class, for automated testing.
   // Loads up a level + replay data, plays through it,
   // and then exits the app.
-  class TestLoop : BaseState {
-    public TestLoop() { }
+  internal class TestLoop : BaseState {
+    private readonly int _scenario;
+
+    public TestLoop(int scenario) {
+      _scenario = scenario;
+    }
 
     // When we get back from the gameplay state, exit the app:
     public override void Resume(StateExitValue results) {
       Debug.Log("Shutting down!");
+
+      CommonData.testLab.NotifyHarnessTestIsComplete();
+
       Application.Quit();
     }
 
     public override void Initialize() {
-      TextAsset json = Resources.Load(StringConstants.TestLoopLevel) as TextAsset;
+      TextAsset json = Resources.Load(StringConstants.TestLoopLevel[_scenario - 1]) as TextAsset;
       LevelMap currentLevel = JsonUtility.FromJson<LevelMap>(json.ToString());
       currentLevel.DatabasePath = null;
       CommonData.gameWorld.DisposeWorld();
@@ -39,7 +43,5 @@ namespace Hamster.States {
 
       manager.PushState(new Gameplay(Gameplay.GameplayMode.TestLoop));
     }
-
   }
-
 }

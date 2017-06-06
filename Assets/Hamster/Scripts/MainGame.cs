@@ -204,25 +204,6 @@ namespace Hamster {
         ).ContinueWith(task => { StartGame(); });
     }
 
-    // Checks to see if the app was launched using the android TEST_LOOP intent.
-    // If so, we have a slightly modified game flow, for testing.
-    bool IsInTestLoop() {
-#if (UNITY_ANDROID && !UNITY_EDITOR)
-      AndroidJavaClass UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-      AndroidJavaObject currentActivity =
-          UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-      AndroidJavaObject intent = currentActivity.Call<AndroidJavaObject>("getIntent");
-
-      string action = intent.Call<string>("getAction");
-
-      if (action == "com.google.intent.action.TEST_LOOP") {
-        return true;
-      }
-#endif
-      return false;
-    }
-
-
     // Actually start the game, once we've verified that everything
     // is working and we have the firebase prerequisites ready to go.
     void StartGame() {
@@ -241,8 +222,6 @@ namespace Hamster {
       musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();
 
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
-
-      CommonData.inTestLoop = IsInTestLoop();
 
       // Set up volume settings.
       MusicVolume = PlayerPrefs.GetInt(StringConstants.MusicVolume, MaxVolumeValue);
