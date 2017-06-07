@@ -13,6 +13,9 @@ ModelImporter:
     100010: lightning_export_lightning8
     100012: lightning_export_lightning9
     100014: //RootNode
+    100016: lightning_export_lightning12
+    100018: lightning_export_lightning13
+    100020: lightning_export_lightning14
     400000: lightning_export_lightning10
     400002: lightning_export_lightning11
     400004: lightning_export_lightning5
@@ -21,6 +24,9 @@ ModelImporter:
     400010: lightning_export_lightning8
     400012: lightning_export_lightning9
     400014: //RootNode
+    400016: lightning_export_lightning12
+    400018: lightning_export_lightning13
+    400020: lightning_export_lightning14
     2300000: lightning_export_lightning10
     2300002: lightning_export_lightning11
     2300004: lightning_export_lightning5
@@ -28,6 +34,9 @@ ModelImporter:
     2300008: lightning_export_lightning7
     2300010: lightning_export_lightning8
     2300012: lightning_export_lightning9
+    2300014: lightning_export_lightning12
+    2300016: lightning_export_lightning13
+    2300018: lightning_export_lightning14
     3300000: lightning_export_lightning10
     3300002: lightning_export_lightning11
     3300004: lightning_export_lightning5
@@ -35,6 +44,9 @@ ModelImporter:
     3300008: lightning_export_lightning7
     3300010: lightning_export_lightning8
     3300012: lightning_export_lightning9
+    3300014: lightning_export_lightning12
+    3300016: lightning_export_lightning13
+    3300018: lightning_export_lightning14
     4300000: lightning_export_lightning5
     4300002: lightning_export_lightning6
     4300004: lightning_export_lightning7
@@ -42,6 +54,9 @@ ModelImporter:
     4300008: lightning_export_lightning9
     4300010: lightning_export_lightning10
     4300012: lightning_export_lightning11
+    4300014: lightning_export_lightning12
+    4300016: lightning_export_lightning13
+    4300018: lightning_export_lightning14
     7400000: Take 001
     9500000: //RootNode
   materials:
@@ -54,6 +69,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
