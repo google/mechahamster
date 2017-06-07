@@ -20,7 +20,7 @@ namespace FirebaseTestLab {
     public abstract void NotifyHarnessTestIsComplete();
 
     public static TestLabManager Instantiate() {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
       return new AndroidTestLabManager();
 #else
       return new DummyTestLabManager();
