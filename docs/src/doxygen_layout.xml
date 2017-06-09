@@ -23,7 +23,7 @@
              title="Overview"/>
         <tab type="user" url="@ref mechahamster_guide_building"
              title="Building"/>
-      <tab type="usergroup" url="@ref mechahamster_guide_firebase_setup"
+      <tab type="usergroup" url="@ref mechahamster_guide_building"
            title="Firebase Features">
         <tab type="user" url="@ref mechahamster_guide_analytics"
              title="Analytics"/>
