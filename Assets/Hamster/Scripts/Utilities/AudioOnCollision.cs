@@ -29,12 +29,37 @@ namespace Hamster.Utilities {
 
     // The audio source component to play the clips one.
     AudioSource AudioSource { get; set; }
+    // The time to wait for until disabling the audio source, in seconds.
+    private float disableAtTime = 0;
 
     private void Start() {
       // Get the audio source, adding one if necessary.
       AudioSource = GetComponent<AudioSource>();
       if (AudioSource == null) {
         AudioSource = gameObject.AddComponent<AudioSource>();
+      }
+      // We disable the AudioSource by default, and only enable it when we are playing a clip.
+      // We do this since it seems even when no clip is playing the AudioSources are still taking
+      // update time. Note, this script will not work with other scripts that try to use the
+      // AudioSource.
+      AudioSource.enabled = false;
+    }
+
+    private void Update() {
+      // If the clip has finished, disable the AudioSource to potentially save update time.
+      if (Time.realtimeSinceStartup >= disableAtTime) {
+        AudioSource.enabled = false;
+      }
+    }
+
+    // Helper function to play a random clip. Handles enabling/disabling the AudioSource.
+    private void PlayRandomClip() {
+      AudioSource.enabled = true;
+      AudioClip clip = AudioSource.PlayRandom(AudioClips);
+      if (clip != null) {
+        disableAtTime = Time.realtimeSinceStartup + clip.length;
+      } else {
+        AudioSource.enabled = false;
       }
     }
 
@@ -48,12 +73,12 @@ namespace Hamster.Utilities {
       float volume =
         Mathf.InverseLerp(MinImpulseMagnitude, MaxImpulseMagnitude, magnitude);
       AudioSource.volume = volume;
-      AudioSource.PlayRandom(AudioClips);
+      PlayRandomClip();
     }
 
     // If the game object uses triggers, play the audio whenever the trigger enter happens.
     private void OnTriggerEnter(Collider other) {
-      AudioSource.PlayRandom(AudioClips);
+      PlayRandomClip();
     }
   }
 }
