@@ -24,9 +24,9 @@ namespace Hamster.MapObjects {
     // How long to wait between collision and breaking the tile, in seconds.
     public float BreakDelayTime = 0.5f;
     // How long to wait after breaking the tile to hide the renderables, in seconds.
-    public float HideRenderableStartTime = 1.0f;
+    public float HideRenderableStartTime = 0.15f;
     // How long to shrink the renderables before hiding, in seconds.
-    public float HideRenderableShrinkTime = 0.5f;
+    public float HideRenderableShrinkTime = 0.25f;
 
     // Tracks if the tile is breaking away, to prevent multiple triggers.
     private bool IsBroken = false;
@@ -44,9 +44,10 @@ namespace Hamster.MapObjects {
         });
       gameObject.ForEachRootChildOfType<Collider>(c => c.enabled = true);
 
-      // Reset the animation back to default.
-      gameObject.ForEachRootChildOfType<Animator>(
-        a => a.Play(StringConstants.AnimationBreakIdleState));
+      foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+        animator.enabled = true;
+        animator.SetTrigger(StringConstants.AnimationBreakIdleState);
+      }
     }
 
     void OnTriggerEnter(Collider collider) {
@@ -61,8 +62,11 @@ namespace Hamster.MapObjects {
       yield return new WaitForSeconds(BreakDelayTime);
 
       // Start the animation of the tile breaking away.
-      gameObject.ForEachRootChildOfType<Animator>(
-        a => a.SetTrigger(StringConstants.AnimationBreakTile));
+      foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+        animator.enabled = true;
+        animator.SetTrigger(StringConstants.AnimationBreakTile);
+      }
+
       // Disable any colliders.
       gameObject.ForEachRootChildOfType<Collider>(c => c.enabled = false);
       // After starting the animation, we want to eventually hide the renderables.

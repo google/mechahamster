@@ -41,6 +41,7 @@ namespace Hamster.MapObjects {
     public override void Reset() {
       // Reset the animation back to default.
       foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+        animator.enabled = true;
         animator.Play(StringConstants.AnimationSpringIdleState);
       }
     }
@@ -50,6 +51,7 @@ namespace Hamster.MapObjects {
         // Trigger the spring animation for all the components that this shares the
         // root entity with.
         foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+          animator.enabled = true;
           animator.SetTrigger(StringConstants.AnimationSpring);
         }
 

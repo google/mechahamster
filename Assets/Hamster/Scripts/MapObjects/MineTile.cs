@@ -80,6 +80,7 @@ namespace Hamster.MapObjects {
       FinishCooldown();
       // Reset the animation back to default.
       foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+        animator.enabled = true;
         animator.Play(StringConstants.AnimationMineIdleState);
       }
     }
@@ -90,6 +91,7 @@ namespace Hamster.MapObjects {
         StartCooldown();
         // Trigger the mine animation.
         foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+          animator.enabled = true;
           animator.SetTrigger(StringConstants.AnimationLaunchMine);
         }
 

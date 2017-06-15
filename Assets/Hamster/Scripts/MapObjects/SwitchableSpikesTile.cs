@@ -57,6 +57,7 @@ namespace Hamster.MapObjects {
     void ForceState(bool state) {
       SetNonAnimationState(state);
       foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+        animator.enabled = true;
         animator.Play(state ? StringConstants.AnimationSpikesIdleUp :
           StringConstants.AnimationSpikesIdleDown);
       }
@@ -66,6 +67,7 @@ namespace Hamster.MapObjects {
     void TransitionState(bool state) {
       SetNonAnimationState(state);
       foreach (Animator animator in transform.root.GetComponentsInChildren<Animator>()) {
+        animator.enabled = true;
         animator.SetTrigger(state ? StringConstants.AnimationSpikesUp :
           StringConstants.AnimationSpikesDown);
         // Reset the other trigger, to prevent both happening in the same frame.

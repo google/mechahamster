@@ -2558,5 +2558,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BreakDelayTime: 0.5
-  HideRenderableStartTime: 1
-  HideRenderableShrinkTime: 0.5
+  HideRenderableStartTime: 0.15
+  HideRenderableShrinkTime: 0.25
