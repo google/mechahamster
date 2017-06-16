@@ -751,6 +751,7 @@ INPUT                  = "index.md" \
                          "programmers_guide/fb_database.md" \
                          "programmers_guide/fb_remoteconfig.md" \
                          "programmers_guide/fb_messaging.md" \
+                         "programmers_guide/fb_testlab.md" \
                          "programmers_guide/building.md" \
                          "programmers_guide/overview.md" \
                          "programmers_guide/gameplay.md" \
