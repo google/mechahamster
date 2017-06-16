@@ -187,7 +187,7 @@ namespace Hamster.States {
         SpawnButton(buttonPrefab, i);
       }
 
-      if (maxButtonIndex < Tools.Length) {
+      if ((currentPage + 1) * ButtonsPerPage < Tools.Length - 1) {
           GameObject button = SpawnButton(arrowButtonPrefab, DownArrowId);
           RectTransform rt = button.GetComponent<RectTransform>();
           rt.localRotation = Quaternion.AngleAxis(180, Vector3.forward);
