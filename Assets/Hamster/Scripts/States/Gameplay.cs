@@ -74,6 +74,8 @@ namespace Hamster.States {
 
       dialogComponent = SpawnUI<Menus.FloatingButtonGUI>(StringConstants.PrefabFloatingButton);
       PositionButton();
+
+      CommonData.gameWorld.MergeMeshes();
     }
 
     // Resume the state.  Called when the state becomes active

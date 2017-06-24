@@ -108,6 +108,7 @@ namespace Hamster.States {
     public override void Resume(StateExitValue results) {
       CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
       ShowUI();
+      CommonData.gameWorld.RespawnWorld();
       CommonData.mainCamera.mode = CameraController.CameraMode.Editor;
       if (results != null) {
         if (results.sourceState == typeof(WaitingForDBLoad<LevelMap>)) {

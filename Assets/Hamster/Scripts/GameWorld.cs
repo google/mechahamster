@@ -28,12 +28,21 @@ namespace Hamster {
     public LevelMap worldMap = new LevelMap();
     // Tracks the map objects that there is a max count limit of.
     Dictionary<string, List<string>> limitedMapObjects =
-      new Dictionary<string, List<string>>();
+        new Dictionary<string, List<string>>();
 
     // Tracks the extra objects, like particles, that need to be destroyed on reset.
     public List<Utilities.DestroyOnReset> destroyOnReset =
-      new List<Hamster.Utilities.DestroyOnReset>();
+        new List<Hamster.Utilities.DestroyOnReset>();
 
+    // Gameobject used to hold all the meshes, after we stitch them together.s
+    GameObject mergedMeshHolder;
+
+    // Check to see if the meshes have been merged yet.
+    public bool areMeshesMerged {
+      get { return mergedMeshHolder != null; }
+    }
+
+    // Gets the hash code of the current map.
     public int mapHash {
       get {
         return JsonUtility.ToJson(worldMap).GetHashCode();
@@ -50,6 +59,7 @@ namespace Hamster {
         return Time.time - GameStartTime;
       }
     }
+
     // Returns the amount of time the current level has been played, in milliseconds.
     public long ElapsedGameTimeMs {
       get {
@@ -80,13 +90,23 @@ namespace Hamster {
       }
     }
 
-    public void DisposeWorld() {
-      worldMap.elements.Clear();
+    // Removes the gameobjects that represent the map onscreen.
+    // Leaves the data representation (worldMap) intact.
+    private void ClearMapGameObjects() {
       foreach (GameObject obj in sceneObjects.Values) {
         Destroy(obj);
       }
+      Destroy(mergedMeshHolder);
+      mergedMeshHolder = null;
       sceneObjects.Clear();
+    }
+
+    // Removes the game world, and all gameobjects associated with it.
+    public void DisposeWorld() {
+      ClearMapGameObjects();
+      worldMap.elements.Clear();
       limitedMapObjects.Clear();
+
       worldMap.ResetProperties();
       worldMap.DatabasePath = null;
       HasPendingEdits = false;
@@ -144,6 +164,8 @@ namespace Hamster {
       return obj;
     }
 
+    // Spawns an element in the world as a GameObject, and performs
+    // the necessary bookkeeping to track it.
     GameObject SpawnElement(MapElement element) {
       GameObject obj = null;
       PrefabList.PrefabEntry elementDef;
@@ -202,6 +224,77 @@ namespace Hamster {
         if (switchable != null) {
           switchable.OnSwitchTriggered();
         }
+      }
+    }
+
+    // Respawns the world.  Useful for splitting things back up into individual
+    // meshes, once they've been merged.  (Usually when we are in the editor,
+    // transitioning from testing the level, back into edit mode.)
+    public void RespawnWorld() {
+      ClearMapGameObjects();
+      foreach (MapElement element in worldMap.elements.Values) {
+        string key = element.GetStringKey();
+        GameObject obj = SpawnElement(element);
+        if (obj != null) {
+          sceneObjects.Add(element.GetStringKey(), obj);
+        }
+      }
+      Destroy(mergedMeshHolder);
+      mergedMeshHolder = null;
+    }
+
+    // Merge meshes together for faster drawing.
+    public void MergeMeshes() {
+      if (areMeshesMerged) {
+        return;
+      }
+
+      // First make a list of all top-level child meshes that don't
+      // have animators attached.
+      Dictionary<Material, List<MeshRenderer>> staticMeshes =
+          new Dictionary<Material, List<MeshRenderer>>();
+
+      mergedMeshHolder = new GameObject();
+      mergedMeshHolder.name = "MergedMeshHolder";
+
+      foreach(GameObject obj in sceneObjects.Values) {
+        foreach (Transform child in obj.transform) {
+          bool hasAnimator = child.GetComponentsInChildren<Animator>().Length > 0;
+          if (!hasAnimator) {
+            foreach (MeshRenderer meshRenderer in child.GetComponentsInChildren<MeshRenderer>()) {
+              if (meshRenderer.enabled) {
+                int materialHash = meshRenderer.sharedMaterial.GetHashCode();
+                if (!staticMeshes.ContainsKey(meshRenderer.sharedMaterial)) {
+                  staticMeshes.Add(meshRenderer.sharedMaterial, new List<MeshRenderer>());
+                }
+                staticMeshes[meshRenderer.sharedMaterial].Add(meshRenderer);
+                Destroy(meshRenderer);
+              }
+            }
+          }
+        }
+      }
+      foreach (Material mat in staticMeshes.Keys) {
+        List<MeshRenderer> meshList = staticMeshes[mat];
+        CombineInstance[] combineArray = new CombineInstance[meshList.Count];
+        int i = 0;
+        foreach (MeshRenderer meshRenderer in meshList) {
+          MeshFilter meshFilter = meshRenderer.gameObject.GetComponent<MeshFilter>();
+          if (meshFilter != null) {
+            combineArray[i].mesh = meshFilter.mesh;
+            combineArray[i].transform = meshFilter.transform.localToWorldMatrix;
+            i++;
+          }
+        }
+        GameObject meshHolder = new GameObject();
+        meshHolder.name = "MeshHolder";
+
+        meshHolder.transform.SetParent(mergedMeshHolder.transform, false);
+        MeshRenderer newRenderer = meshHolder.AddComponent<MeshRenderer>();
+        MeshFilter newFilter = meshHolder.AddComponent<MeshFilter>();
+        newFilter.mesh = new Mesh();
+        newFilter.mesh.CombineMeshes(combineArray, true);
+        newRenderer.material = mat;
       }
     }
   }
