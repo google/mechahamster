@@ -34,11 +34,11 @@ namespace Hamster {
     public List<Utilities.DestroyOnReset> destroyOnReset =
         new List<Hamster.Utilities.DestroyOnReset>();
 
-    // Gameobject used to hold all the meshes, after we stitch them together.s
+    // Gameobject used to hold all the meshes, after we stitch them together.
     GameObject mergedMeshHolder;
 
     // Check to see if the meshes have been merged yet.
-    public bool areMeshesMerged {
+    public bool AreMeshesMerged {
       get { return mergedMeshHolder != null; }
     }
 
@@ -96,8 +96,10 @@ namespace Hamster {
       foreach (GameObject obj in sceneObjects.Values) {
         Destroy(obj);
       }
-      Destroy(mergedMeshHolder);
-      mergedMeshHolder = null;
+      if (mergedMeshHolder != null) {
+        Destroy(mergedMeshHolder);
+        mergedMeshHolder = null;
+      }
       sceneObjects.Clear();
     }
 
@@ -239,13 +241,11 @@ namespace Hamster {
           sceneObjects.Add(element.GetStringKey(), obj);
         }
       }
-      Destroy(mergedMeshHolder);
-      mergedMeshHolder = null;
     }
 
     // Merge meshes together for faster drawing.
     public void MergeMeshes() {
-      if (areMeshesMerged) {
+      if (AreMeshesMerged) {
         return;
       }
 
