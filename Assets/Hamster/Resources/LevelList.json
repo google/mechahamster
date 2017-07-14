@@ -3,12 +3,14 @@
         {
             "name": "Easy Peezie",
             "description": "",
-            "filename": "map01"
+            "filename": "map01",
+            "replay": "replays/map01"
         },
         {
             "name": "Bouncy",
             "description": "",
-            "filename": "map02"
+            "filename": "map02",
+            "replay": "replays/map02"
         },
         {
             "name": "Boom",
@@ -38,10 +40,11 @@
         {
             "name": "Warping 101",
             "description": "Everything you ever wondered about teleporting!",
-            "filename": "teleporterintro"
+            "filename": "teleporterintro",
+            "replay": "replays/warping"
         },
         {
-            "name": "Spikes",
+            "name": "More Spikes",
             "description": "Watch out!",
             "filename": "spikesandpits"
         },
@@ -59,7 +62,8 @@
         {
             "name": "Painful Q",
             "description": "It hurts!",
-            "filename": "spikyq"
+            "filename": "spikyq",
+            "replay": "replays/spikeyq"
         },
         {
             "name": "Warping 201",

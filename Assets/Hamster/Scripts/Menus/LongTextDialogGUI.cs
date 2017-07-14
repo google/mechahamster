@@ -24,6 +24,7 @@ namespace Hamster.Menus {
 
     // These fields are set in the inspector.
     public GUIButton OkayButton;
+    public GUIButton SecretButton;
     public Utilities.LongTextField LongText;
     public UnityEngine.UI.ScrollRect ScrollRect;
   }

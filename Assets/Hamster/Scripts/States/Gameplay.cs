@@ -24,7 +24,7 @@ namespace Hamster.States {
     public enum GameplayMode {
       Gameplay,
       Editor,
-      TestLoop
+      TestLoop,
     }
 
     GameplayMode mode;

@@ -89,6 +89,7 @@ namespace Hamster.States {
         // Did THAT work?
         InitializeAnalytics();
         if (CommonData.testLab.IsTestingScenario) {
+          CommonData.currentReplayData = StringConstants.TestLoopReplayData;
           manager.SwapState(new States.TestLoop(CommonData.testLab.ScenarioNumber));
         } else {
           manager.SwapState(new States.MainMenu());

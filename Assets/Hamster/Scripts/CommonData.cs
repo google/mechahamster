@@ -42,6 +42,9 @@ namespace Hamster {
     public static bool inVrMode = false;
     public static GameObject vrPointer;
 
+    // Data to be used in current replay.  Null, if no replay is playing.
+    public static string currentReplayData = null;
+
     // TestLabManager to track the state of the tests coming in from the intent
     public static TestLabManager testLab = TestLabManager.Instantiate();
 

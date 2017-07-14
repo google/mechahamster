@@ -36,9 +36,11 @@ namespace Hamster.InputControllers {
       replayData = JsonUtility.FromJson<ReplayData>(json.ToString());
 
       if (replayData.mapHash != CommonData.gameWorld.mapHash) {
-        Debug.LogWarning("Warning:  Map does not match playback data!");
+        Debug.LogWarning("Warning:  Map does not match playback data!\n" +
+          "Replay: " + replayData.mapHash + "\n" +
+          "Map:" + CommonData.gameWorld.mapHash);
+        }
       }
-    }
 
     public override Vector2 GetInputVector() {
       int timestamp = gameplayState.fixedUpdateTimestamp;
@@ -63,6 +65,11 @@ namespace Hamster.InputControllers {
         if (inputDataIndex < replayData.inputData.Length &&
             replayData.inputData[inputDataIndex].timestamp == timestamp) {
           playerInputVector = replayData.inputData[inputDataIndex].playerInputVector;
+        }
+
+        // If we run out of replay data, count it as a finishing the level.
+        if (inputDataIndex >= replayData.inputData.Length) {
+          CommonData.mainGame.PlayerController.HandleGoalCollision();
         }
 
       }

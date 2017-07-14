@@ -35,11 +35,11 @@ namespace Hamster {
 
     void Start() {
       IsProcessingDeath = false;
-      if (!CommonData.testLab.IsTestingScenario) {
+      if (CommonData.currentReplayData == null) {
         inputController = new InputControllers.MultiInputController();
       } else {
         inputController = new InputControllers.ReplayController(
-            StringConstants.TestLoopReplayData,
+            CommonData.currentReplayData,
             CommonData.mainGame.stateManager.CurrentState() as States.Gameplay);
       }
     }

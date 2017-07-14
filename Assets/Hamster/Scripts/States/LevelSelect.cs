@@ -18,7 +18,7 @@ using System.Collections.Generic;
 namespace Hamster.States {
   class LevelSelect : BaseLevelSelect {
     private LevelDirectory levelDir;
-    const string LevelDirectoryJson = "LevelList";
+    public const string LevelDirectoryJson = "LevelList";
 
     // Called whenever a level is selected in the menu.
     protected override void LoadLevel(int i) {
@@ -60,6 +60,7 @@ namespace Hamster.States {
       public string name;
       public string description;
       public string filename;
+      public string replay;
 
       public PremadeLevelEntry() {}
 

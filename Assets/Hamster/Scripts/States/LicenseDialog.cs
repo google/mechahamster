@@ -27,6 +27,8 @@ namespace Hamster.States {
     string dialogText;
     Menus.LongTextDialogGUI dialogComponent;
     string LicenseFileName = "StandaloneLicense";
+    int secretButtonPressCount = 0;
+    const int SecretButtonThreshold = 4;
 
     public LicenseDialog() {
       TextAsset license = Resources.Load(LicenseFileName, typeof(TextAsset)) as TextAsset;
@@ -54,7 +56,15 @@ namespace Hamster.States {
 
     public override void HandleUIEvent(GameObject source, object eventData) {
       if (source == dialogComponent.OkayButton.gameObject) {
-        manager.PopState();
+        // If they pressed the secret button exactly the right number of times,
+        // launch the profiling tool.
+        if (secretButtonPressCount == SecretButtonThreshold) {
+          manager.SwapState(new FullLevelTest());
+        } else {
+          manager.PopState();
+        }
+      } else if (source == dialogComponent.SecretButton.gameObject) {
+        secretButtonPressCount++;
       }
     }
   }
