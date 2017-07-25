@@ -33,13 +33,6 @@ namespace Hamster.States {
     }
 
     public override void Initialize() {
-      var notification = messageArgs.Message.Notification;
-
-      if (notification == null) {
-        Debug.LogError("Got a message with no notification.\n" + messageArgs.ToString());
-        manager.PopState();
-      }
-
       if (messageArgs.Message.Data.Count > 0) {
         foreach (System.Collections.Generic.KeyValuePair<string, string> iter in
                  messageArgs.Message.Data) {
@@ -61,6 +54,9 @@ namespace Hamster.States {
           // Now tell them about it!
           manager.SwapState(new BasicDialog(string.Format(StringConstants.BonusMapUserMessage,
             messageValues[StringConstants.MessageDataMapName])));
+          break;
+        case StringConstants.MessageTypeText:
+          manager.SwapState(new BasicDialog(messageValues[StringConstants.MessageDataText]));
           break;
         default:
           Debug.LogError("Received an unknown message key type: " +

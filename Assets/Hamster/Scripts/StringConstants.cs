@@ -199,8 +199,16 @@ namespace Hamster {
     public const string MessageDataMapName = "map_name";
 
     public const string BonusMapUserMessage = "You received the bonus map:\n" +
-      "{0}\n Play it from the main menu!  Be careful - you can only play it once!";
+      "{0}\n Play it from the main menu!";
 
+    // Text message.
+    // Sends the user a text message.
+    // Params:
+    // MessageDataText
+    public const string MessageTypeText = "text_message";
+
+    // The plaintext name of the map being sent.  Usually for a new bonus level.
+    public const string MessageDataText = "text";
 
     // Analytics tags:
     //--------------------------
