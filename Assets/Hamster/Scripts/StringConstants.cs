@@ -147,13 +147,21 @@ namespace Hamster {
     // Invites:
     //--------------------------
     public const string RemoteConfigInviteTitleText = "invite_title_text";
-    public const string DefaultInviteTitleText = "Try out this map I made!";
+    public const string DefaultInviteTitleText = "Share your map with your friends!";
 
     public const string RemoteConfigInviteMessageText = "invite_message_text";
     public const string DefaultInviteMessageText = "Try out this map I made for MechaHamster!";
 
     public const string RemoteConfigInviteCallToActionText = "invite_call_to_action_text";
-    public const string DefaultInviteCallToActionText = "Play my map!";
+    public const string DefaultInviteCallToActionText = "Play it!";
+
+    public const string RemoteConfigEmailSubjectText = "email_subject_text";
+    public const string DefaultEmailSubjectText = "I've sent you a map for MechaHamster!";
+
+    public const string RemoteConfigEmailContentHtml = "email_contents_html";
+    public const string DefaultEmailContentHtml =
+      "I made this map for MechaHamster, and I'm sharing it with you!  " +
+      "<a href=\"%%APPINVITE_LINK_PLACEHOLDER%%\">Click here</a> to play it!";
 
     public const string DefaultInviteDeepLinkUrl = "https://firebase.google.com/?mapid={0}";
 

@@ -41,9 +41,14 @@ namespace Hamster.States {
       invite.TitleText = Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
         StringConstants.RemoteConfigInviteTitleText).StringValue;
       invite.MessageText = Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
-        StringConstants.RemoteConfigInviteTitleText).StringValue;
+        StringConstants.RemoteConfigInviteMessageText).StringValue;
       invite.CallToActionText = Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
         StringConstants.RemoteConfigInviteCallToActionText).StringValue;
+
+      invite.EmailContentHtml = Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigEmailContentHtml).StringValue;
+      invite.EmailSubjectText = Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigEmailSubjectText).StringValue;
 
       invite.DeepLinkUrl = new System.Uri(
           string.Format(StringConstants.DefaultInviteDeepLinkUrl,

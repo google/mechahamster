@@ -156,6 +156,10 @@ namespace Hamster {
           StringConstants.DefaultInviteMessageText);
       defaults.Add(StringConstants.RemoteConfigInviteCallToActionText,
           StringConstants.DefaultInviteCallToActionText);
+      defaults.Add(StringConstants.RemoteConfigEmailContentHtml,
+          StringConstants.DefaultEmailContentHtml);
+      defaults.Add(StringConstants.RemoteConfigEmailSubjectText,
+          StringConstants.DefaultEmailSubjectText);
 
       // Defaults for Map Objects:
       // Acceleration Tile
