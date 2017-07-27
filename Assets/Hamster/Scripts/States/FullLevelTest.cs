@@ -98,6 +98,7 @@ namespace Hamster.States {
         nextLevelIndex++;
       }
       if (nextLevelIndex >= levelDir.levels.Count) {
+        CommonData.currentReplayData = null;
         return false;
       }
 
