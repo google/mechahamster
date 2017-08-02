@@ -54,6 +54,8 @@ sysinfo.txt
 /Assets/Plugins/iOS/firebase*
 /Assets/Plugins/x86_64/Firebase/
 /Assets/Plugins/x86_64/firebase*
+/Assets/Parse/
+/Assets/Parse.meta
 
 # Credential files:
 /Assets/Hamster/GoogleService-Info.plist
