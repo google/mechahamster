@@ -37,6 +37,7 @@ namespace Hamster.States {
 
     // Initialization method.  Called after the state is added to the stack.
     public override void Initialize() {
+      mapSelection = -1;
       string[] levelNames = new string[CommonData.currentUser.data.maps.Count];
       levelIds = new string[CommonData.currentUser.data.maps.Count];
 

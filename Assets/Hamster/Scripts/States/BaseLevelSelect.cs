@@ -26,6 +26,12 @@ namespace Hamster.States {
 
     protected int currentLoadedMap = -1;
 
+    // Color: 9, 125, 255 - light blue
+    static Color ActiveButtonColor = new Color(0.35f, 0.49f, 1.0f);
+
+    // Color: 251, 243, 25 - Yellow
+    static Color SelectedButtonColor = new Color(0.98f, 0.95f, 0.1f);
+
     // Layout constants.
     private const int ButtonsPerPage = 5;
     private const float ColumnPadding = 50;
@@ -100,6 +106,16 @@ namespace Hamster.States {
 
         gui.transform.SetParent(CommonData.mainCamera.transform, false);
       }
+      SetButtonColors(mapSelection);
+    }
+
+    protected void SetButtonColors(int selection) {
+      foreach (KeyValuePair<int, GameObject> pair in levelButtons) {
+        Menus.LevelSelectButtonGUI levelSelectButton =
+            pair.Value.GetComponent<Menus.LevelSelectButtonGUI>();
+        levelSelectButton.ButtonText.color =
+            (levelSelectButton.buttonId == selection) ? SelectedButtonColor : ActiveButtonColor;
+      }
     }
 
     public override void Resume(StateExitValue results) {
@@ -141,6 +157,7 @@ namespace Hamster.States {
       } else if (buttonComponent != null) {
         // They pressed one of the buttons for a level.
         mapSelection = buttonComponent.buttonId;
+        SetButtonColors(mapSelection);
         LevelSelected(mapSelection);
       }
     }
