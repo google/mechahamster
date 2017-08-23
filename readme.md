@@ -24,6 +24,8 @@ MechaHamster demonstrates the following concepts:
    * [Firebase App Invites][] to share user generated content with other players.
    * [Firebase Remote Config][] to allow game admins to run experiments on game data without
      redeploying a new build of the game.
+   * [Firebase Test Lab][] to allow developers to test their game across a wide variety of hardware
+     and device configurations at once.
 
 ## Downloading
 
@@ -69,3 +71,4 @@ To contribute the this project see [CONTRIBUTING][].
   [Firebase Cloud Messaging]: https://firebase.google.com/docs/cloud-messaging/
   [Firebase Remote Config]: https://firebase.google.com/docs/remote-config/
   [Firebase App Invites]: https://firebase.google.com/docs/invites/
+  [Firebase Test Lab]: https://firebase.google.com/docs/test-lab/
