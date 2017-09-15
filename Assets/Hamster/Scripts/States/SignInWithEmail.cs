@@ -61,7 +61,7 @@ namespace Hamster.States {
         manager.PopState();
       } else if (source == dialogComponent.ContinueButton.gameObject) {
         manager.PushState(new WaitForTask(auth.SignInWithEmailAndPasswordAsync(
-            dialogComponent.Email.text, dialogComponent.Password.text)));
+          dialogComponent.Email.text, dialogComponent.Password.text).ContinueWith(t=>{SignInState.SetState(SignInState.State.Email);})));
       } else if (source == dialogComponent.ForgotPasswordButton.gameObject) {
         manager.PushState(new PasswordReset());
       }

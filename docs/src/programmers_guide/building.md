@@ -57,6 +57,8 @@ Note:  This is only necessary when building for Android devices.  You do not nee
 3. Enter your signing certificate's SHA-1 in the indicated field.  (Instructions for
 calculating your certificate's fingerprint can be found
 [here](https://developers.google.com/android/guides/client-auth))
+4. After the change, you need to re-download `google-services.json` again.  You can find the
+download button in the same page.  Then replace the one you stored in your `/Assets` directory.
 
 
 #### (iOS Only) Set App Capabilities
@@ -140,6 +142,27 @@ Mechahamster, you'll need set up the database access rules.
 
 (MechaHamster uses the name 'XYZZY' to represent desktop users,
 since Firebase Authentication only functions on mobile devices.)
+
+#### Update Firebase url in the script
+
+MechaHamster can access Firebase Realtime Database in the Unity Editor.  Set Database url to your
+project's database url using the SetEditorDatabaseUrl() function.
+
+1. Open `\Assets\Hamster\Scripts\MainGame.cs` in the text editor.
+2. Find the line with `SetEditorDatabaseUrl`.  For instance,
+~~~~
+    void StartGame() {
+      ...
+      CommonData.app.SetEditorDatabaseUrl("https://hamster-demo.firebaseio.com/");
+      ...
+    }
+~~~~
+3. Change the url to "https://YOUR-FIREBASE-APP.firebaseio.com/".  "YOUR-FIREBASE-APP" is your
+   project ID which you can find from the [Firebase Console][] .  You can also find the url in
+   `google-services.json` (android) or `GoogleService-Info.plist` (iOS).
+4. Save the script and rebuild with the Unity Editor.
+
+Currently this affects non-editor build as well.
 
 <br>
 

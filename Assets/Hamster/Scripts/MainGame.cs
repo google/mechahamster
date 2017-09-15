@@ -16,6 +16,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Firebase.Unity.Editor;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using UnityEngine.SocialPlatforms;
 
 namespace Hamster {
 
@@ -73,6 +76,7 @@ namespace Hamster {
 
     void Start() {
       Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
+      InitializeGooglePlayGames();
       InitializeFirebaseAndStart();
     }
 
@@ -181,6 +185,16 @@ namespace Hamster {
       return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);
     }
 
+    void InitializeGooglePlayGames() {
+      PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+        .RequestServerAuthCode(false /*forceRefresh*/)
+        .Build();
+
+      PlayGamesPlatform.InitializeInstance(config);
+      PlayGamesPlatform.DebugLogEnabled = true;
+      PlayGamesPlatform.Activate();
+    }
+
     // When the app starts, check to make sure that we have
     // the required dependencies to use Firebase, and if not,
     // add them if possible.
@@ -220,8 +234,9 @@ namespace Hamster {
       CommonData.mainGame = this;
       Firebase.AppOptions ops = new Firebase.AppOptions();
       CommonData.app = Firebase.FirebaseApp.Create(ops);
-      CommonData.app.SetEditorDatabaseUrl("https://hamster-demo.firebaseio.com/");
-
+#if UNITY_EDITOR
+      CommonData.app.SetEditorDatabaseUrl("https://hamster-sandbox.firebaseio.com/");
+#endif
       Screen.orientation = ScreenOrientation.Landscape;
 
       musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();

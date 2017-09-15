@@ -68,7 +68,19 @@ over it, and then plays an animation and launches the ball into the air.
 All of the various map tiles and their associated classes can be found in
 the `/Assets/Hamster/Scripts/MapObjects` directory.
 
+### Google Play Games Services (Experimental)
 
+MechaHamster supports signing in using Google Play Games Services (GPGS)
+(Android-only). The codebase illustrates using GPGS to introduce
+achievements.
+
+In order to build MechaHampster with GPGS support, please follow these
+steps (requires Unity 2017.2 or higher):
+
+1. Follow the instructions at [Authenticate in Unity Using Google Play Games Services]
+2. In the Player settings, add the <b>GPGS</b> preprocessor symbol to "Scripting Define Symbols"
+3. In the Google Play console, ensure the achievements match the ones already defined
+   in the game (see Assets/GPGSIds.cs)
 
 <br>
 
@@ -76,3 +88,4 @@ the `/Assets/Hamster/Scripts/MapObjects` directory.
   [Google VR SDK for Unity]: https://developers.google.com/vr/unity/
   [Firebase]: https://firebase.google.com/docs/
   [GitHub.]: https://github.com/google/mechahamster
+  [Authenticate in Unity Using Google Play Games Services]: https://firebase.google.com/docs/auth/unity/play-games

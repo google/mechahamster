@@ -77,6 +77,11 @@ namespace Hamster.States {
       // Whether we successfully fetched, or had to make a new user,
       // return control to the calling state.
       manager.PopState();
+      if (GooglePlayServicesSignIn.CanAutoSignIn()) {
+        manager.PushState(
+          new WaitForTask(GooglePlayServicesSignIn.SignIn(),
+            StringConstants.LabelSigningIn, true));
+      }
     }
   }
 }

@@ -46,7 +46,13 @@ namespace Hamster.States {
               manager.PushState(new WaitForTask(auth.SignInAnonymouslyAsync(),
                   StringConstants.LabelSigningIn, true));
         } else {
-          manager.PushState(new ChooseSignInMenu());
+          if (GooglePlayServicesSignIn.CanAutoSignIn()) {
+            manager.PushState(
+              new WaitForTask(GooglePlayServicesSignIn.SignIn(),
+                StringConstants.LabelSigningIn, true));
+          } else {
+            manager.PushState(new ChooseSignInMenu());
+          }
         }
       } else {
         manager.PushState(new States.FetchUserData(auth.CurrentUser.UserId));

@@ -32,7 +32,7 @@ namespace Hamster {
 
     private void Awake() {
       CommonData.inVrMode =
-          UnityEngine.VR.VRSettings.enabled || (Application.isEditor && SimulateVRInEditor);
+          UnityEngine.XR.XRSettings.enabled || (Application.isEditor && SimulateVRInEditor);
       if (CommonData.inVrMode) {
         GameObject viewer = Instantiate(VRViewer);
         Instantiate(VRController);

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if UNITY_5_6_OR_NEWER && (UNITY_ANDROID || UNITY_IOS)
+#if UNITY_2017_2_OR_NEWER && (UNITY_ANDROID || UNITY_IOS)
 using UnityEngine;
 using UnityEngine.VR;
 using UnityEditor;
@@ -34,12 +34,12 @@ class GvrBuildProcessor : IPreprocessBuild {
   public void OnPreprocessBuild(BuildTarget target, string path) {
     if (PlayerSettings.virtualRealitySupported) {
       bool isAndroid = (target == BuildTarget.Android);
-      if (!VRSettings.supportedDevices.Contains("daydream") &&
-          !VRSettings.supportedDevices.Contains("cardboard")) {
+      if (!UnityEngine.XR.XRSettings.supportedDevices.Contains("daydream") &&
+          !UnityEngine.XR.XRSettings.supportedDevices.Contains("cardboard")) {
         EditorUtility.DisplayDialog(ERROR_TITLE,
           isAndroid ? ANDROID_ERROR_MESSAGE : IOS_ERROR_MESSAGE, "OK");
       }
     }
   }
 }
-#endif  // UNITY_5_6_OR_NEWER && (UNITY_ANDROID || UNITY_IOS)
+#endif  // UNITY_2017_2_OR_NEWER && (UNITY_ANDROID || UNITY_IOS)

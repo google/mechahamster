@@ -28,6 +28,7 @@ sysinfo.txt
 
 # Builds
 *.apk
+*.symbols.zip
 *.unitypackage
 
 # Unique to MechaHamster:
@@ -57,11 +58,23 @@ sysinfo.txt
 /Assets/Parse/
 /Assets/Parse.meta
 
+# Android SDK
+Assets/Plugins/Android/com.google.firebase.*
+Assets/Plugins/Android/com.google.android.gms.*
+Assets/Plugins/Android/com.android.support.*
+Assets/Plugins/Android/com.google.games.*
+ProjectSettings/AndroidResolverDependencies.xml
+ProjectSettings/GvhProjectSettings.xml
+
 # Credential files:
+Assets/google-services.json*
 /Assets/Hamster/GoogleService-Info.plist
 /Assets/Hamster/GoogleService-Info.plist.meta
 /Assets/Hamster/google-services.json
 /Assets/Hamster/google-services.json.meta
+
+# Keystore
+mechahamster.keystore
 
 # Daydream state files:
 GvrIgnoreManifestMergeCheck.txt
@@ -72,6 +85,10 @@ GvrIgnoreCompatibilityCheck.txt.meta
 # Daydream Demos:
 Assets/GoogleVR/Demos
 Assets/GoogleVR/Demos.meta
+
+# Google Play Games
+Assets/GooglePlayGames
+Assets/GooglePlayGames.meta
 
 # iOS system files
 .DS_Store
