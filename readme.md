@@ -46,11 +46,13 @@ MechaHamster demonstrates the following concepts:
       * FirebaseRemoteConfig.unitypackage
    * Select a target platform (iOS or Android) using the `File > Build Settings` menu option.
    * Add Firebase to your app using either the [Firebase Unity SDK iOS Setup][] or
-     [Firebase Unity SDK Android Setup][].
-   * Wait for the spinner (compiling) icon to stop in the bottom right corner of the Unity status bar.
+     [Firebase Unity SDK Android Setup][].  For more information see [Building MechaHamster][].
+   * Wait for the spinner (compiling) icon to stop in the bottom right corner of the Unity status
+     bar.
    * Finally, select the `File > Build Settings` menu option then click `Build and Run`.
 
 ## Documentation
+For more information about MechaHamster see [MechaHamster Document][]
 To contribute the this project see [CONTRIBUTING][].
 
   [Android]: https://www.android.com/
@@ -72,3 +74,5 @@ To contribute the this project see [CONTRIBUTING][].
   [Firebase Remote Config]: https://firebase.google.com/docs/remote-config/
   [Firebase App Invites]: https://firebase.google.com/docs/invites/
   [Firebase Test Lab]: https://firebase.google.com/docs/test-lab/
+  [MechaHamster Documentation]: https://google.github.io/mechahamster/
+  [Building MechaHamster]: https://google.github.io/mechahamster/mechahamster_guide_building.html
