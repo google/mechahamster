@@ -39,13 +39,16 @@ namespace Hamster.States {
     // gameplay session.  Used for replay synchronization.
     public int fixedUpdateTimestamp { get; private set;  }
 
-    // Are we currently recording for a gameplay playback?
+    // Gameplay Recording Feature Flag
+    bool gameplayRecordingEnabled = false;
+
+    // Are we saving gameplay replay to local file?
     // This is never set true in the game.  It is intended as a
     // temporary option for developers to record levels.
-    const bool recordGameplay = false;
+    const bool saveReplayToFile = false;
 
     // The file name to save the replay under.
-    const string gameplayReplayFileName = "test_replay.json";
+    const string gameplayReplayFileName = "test_replay.bytes";
 
     // Data structure that handles the actual recording of the gameplay.
     private GameplayRecorder gameplayRecorder;
@@ -67,7 +70,10 @@ namespace Hamster.States {
       Utilities.HideDuringGameplay.OnGameplayStateChange(true);
       CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
 
-      if (recordGameplay) {
+      gameplayRecordingEnabled = Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
+        StringConstants.RemoteConfigGameplayRecordingEnabled).BooleanValue;
+
+      if (gameplayRecordingEnabled) {
         gameplayRecorder = new GameplayRecorder(CommonData.gameWorld.worldMap.name);
       }
       Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -159,15 +165,19 @@ namespace Hamster.States {
         return;
       }
       if (CommonData.mainGame.PlayerController != null) {
-        if (recordGameplay) {
+        if (gameplayRecordingEnabled) {
           gameplayRecorder.Update(CommonData.mainGame.PlayerController, fixedUpdateTimestamp);
         }
 
         // If the goal was reached, then we want to finish the Gameplay state.
         if (CommonData.mainGame.PlayerController.ReachedGoal) {
-          if (recordGameplay) {
-            gameplayRecorder.OutputToFile(gameplayReplayFileName);
+          if (gameplayRecordingEnabled) {
+            // Save to local file
+            if (saveReplayToFile) {
+              gameplayRecorder.OutputToFile(gameplayReplayFileName);
+            }
           }
+
           if (mode == GameplayMode.TestLoop) {
             CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
             manager.PopState();

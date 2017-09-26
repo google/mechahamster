@@ -176,6 +176,8 @@ namespace Hamster {
       defaults.Add(StringConstants.RemoteConfigSpikesTileForce, 10.0f);
       defaults.Add(StringConstants.RemoteConfigSpikesTileRadius, 1.0f);
       defaults.Add(StringConstants.RemoteConfigSpikesTileUpwardsMod, -0.5f);
+      // Feature Flags
+      defaults.Add(StringConstants.RemoteConfigGameplayRecordingEnabled, true);
 
       Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
       return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);

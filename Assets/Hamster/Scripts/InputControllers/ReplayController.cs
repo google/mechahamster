@@ -32,8 +32,10 @@ namespace Hamster.InputControllers {
 
     public ReplayController(string replayFileName, States.Gameplay gameplayState) {
       this.gameplayState = gameplayState;
-      TextAsset json = Resources.Load(replayFileName) as TextAsset;
-      replayData = JsonUtility.FromJson<ReplayData>(json.ToString());
+
+      // Load binary replay file as TextAsset.  Unity supports .bytes extension.
+      TextAsset asset = Resources.Load(replayFileName) as TextAsset;
+      replayData = ReplayData.CreateFromStream(new System.IO.MemoryStream(asset.bytes));
 
       if (replayData.mapHash != CommonData.gameWorld.mapHash) {
         Debug.LogWarning("Warning:  Map does not match playback data!\n" +

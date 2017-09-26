@@ -188,6 +188,9 @@ namespace Hamster {
     public const string RemoteConfigSpikesTileForce = "spikes_tile_force";
     public const string RemoteConfigSpikesTileRadius = "spikes_tile_radius";
     public const string RemoteConfigSpikesTileUpwardsMod = "spikes_tile_upwards_mod";
+    // Feature Flags
+    public const string RemoteConfigGameplayRecordingEnabled = "feature_gameplay_recording";
+
 
     // Messaging:
     //--------------------------
