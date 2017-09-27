@@ -39,10 +39,16 @@ namespace Hamster {
     // The current gameplay state.  Needed for timestamp synchronization.
     States.Gameplay gameplayState;
 
-    // Constants for controlling how often input and position records are recorded.
-    const int positionRecordFrequencyInHz = 30;
+    // Variable for controlling how many frames until the next position data is recorded.
+    uint positionRecordInterval = 1;
 
-    public GameplayRecorder(string mapId) {
+    // Record maximum 20000 records of position and/or input data
+    // (About 5.5 minutes if record every frame in 60fps)
+    const int maxRecords = 20000;
+
+    public GameplayRecorder(string mapId, uint sampleInternal) {
+      positionRecordInterval = sampleInternal;
+
       Reset(mapId);
     }
 
@@ -57,25 +63,27 @@ namespace Hamster {
     // Update function, called once per frame.  Records the current inputs, and
     // occasionally physics + position data, to compensate for floating point drift.
     public void Update(PlayerController playerBall, int timestamp) {
-      InputControllers.BasePlayerController playerController = playerBall.inputController;
+      // Only record before maximum frames of position data has been recorded.
+      if (positionData.Count < maxRecords && inputData.Count < maxRecords) {
+        InputControllers.BasePlayerController playerController = playerBall.inputController;
+        if (timestamp % positionRecordInterval == 0) {
+          Rigidbody rigidbody = playerBall.gameObject.GetComponent<Rigidbody>();
+          PositionDataEntry positionDataEntry = new PositionDataEntry(
+              timestamp,
+              rigidbody.position,
+              rigidbody.rotation,
+              rigidbody.velocity,
+              rigidbody.angularVelocity);
 
-      if (timestamp % positionRecordFrequencyInHz == 0) {
-        Rigidbody rigidbody = playerBall.gameObject.GetComponent<Rigidbody>();
-        PositionDataEntry positionDataEntry = new PositionDataEntry(
-            timestamp,
-            rigidbody.position,
-            rigidbody.rotation,
-            rigidbody.velocity,
-            rigidbody.angularVelocity);
+          positionData.Add(positionDataEntry);
+        }
+        Vector2 playerInputVector = playerBall.inputController.GetInputVector();
+        if (previousPlayerInputVector != playerInputVector) {
+          InputDataEntry inputDataEntry = new InputDataEntry(timestamp, playerInputVector);
 
-        positionData.Add(positionDataEntry);
-      }
-      Vector2 playerInputVector = playerBall.inputController.GetInputVector();
-      if (previousPlayerInputVector != playerInputVector) {
-        InputDataEntry inputDataEntry = new InputDataEntry(timestamp, playerInputVector);
-
-        inputData.Add(inputDataEntry);
-        previousPlayerInputVector = playerInputVector;
+          inputData.Add(inputDataEntry);
+          previousPlayerInputVector = playerInputVector;
+        }
       }
     }
 

@@ -74,7 +74,7 @@ namespace Hamster.States {
         StringConstants.RemoteConfigGameplayRecordingEnabled).BooleanValue;
 
       if (gameplayRecordingEnabled) {
-        gameplayRecorder = new GameplayRecorder(CommonData.gameWorld.worldMap.name);
+        gameplayRecorder = new GameplayRecorder(CommonData.gameWorld.worldMap.name, 1);
       }
       Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
