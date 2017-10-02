@@ -176,6 +176,8 @@ namespace Hamster.States {
             if (saveReplayToFile) {
               gameplayRecorder.OutputToFile(gameplayReplayFileName);
             }
+
+            CommonData.gameWorld.PreviousReplayData = gameplayRecorder.CreateReplayData();
           }
 
           if (mode == GameplayMode.TestLoop) {

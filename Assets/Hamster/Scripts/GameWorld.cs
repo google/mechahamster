@@ -67,11 +67,15 @@ namespace Hamster {
       }
     }
 
+    // Reference to the replay data of previously played level.
+    public ReplayData PreviousReplayData;
+
     // Does the currently loaded map have pending edits not saved to the database.
     public bool HasPendingEdits { get; private set; }
 
     private void Start() {
       GameStartTime = Time.time;
+      PreviousReplayData = null;
       HasPendingEdits = false;
     }
 
@@ -205,6 +209,7 @@ namespace Hamster {
     // and the MapObjects
     public void ResetMap() {
       GameStartTime = Time.time;
+      PreviousReplayData = null;
       foreach (GameObject gameObject in sceneObjects.Values) {
         MapObjects.MapObject mapObject = gameObject.GetComponentInChildren<MapObjects.MapObject>();
         if (mapObject != null) {

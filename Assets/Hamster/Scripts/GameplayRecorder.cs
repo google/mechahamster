@@ -89,9 +89,14 @@ namespace Hamster {
 
     // Serializes and outputs the current recording to a file.
     public void OutputToFile(string fileName) {
-      ReplayData replayData = new ReplayData(mapId,
-        CommonData.gameWorld.mapHash, positionData.ToArray(), inputData.ToArray());
+      ReplayData replayData = CreateReplayData();
       replayData.WriteToFile(fileName);
+    }
+
+    // Create ReplayData object from recorded data.
+    public ReplayData CreateReplayData() {
+      return new ReplayData(mapId,
+        CommonData.gameWorld.mapHash, positionData.ToArray(), inputData.ToArray());
     }
   }
 

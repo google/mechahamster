@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Firebase.Database;
+using Firebase.Storage;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,30 +36,39 @@ namespace Hamster {
     }
 
     // Uploads the time data to the database, and returns the current top time list.
-    public Task<List<TimeData>> UploadTime(LevelMap map) {
+    public Task<List<TimeData>> UploadTime(LevelMap map, ReplayData replay) {
       DatabaseReference reference =
-        FirebaseDatabase.DefaultInstance.GetReference(GetPath(map));
-      return reference.RunTransaction(
-        mutableData => UploadScoreTransaction(mutableData, this))
-          .ContinueWith(task => {
-            return GetTimeList(task.Result);
-          });
+        FirebaseDatabase.DefaultInstance.GetReference(GetDBTimePath(map));
+      return reference.RunTransaction(mutableData => UploadScoreTransaction(mutableData, this))
+          .ContinueWith(task => UploadReplayData(GetTimeList(task.Result), map, replay, this))
+          .Unwrap();
+    }
+
+    // Gets the path, given the level's database path and map id.
+    private static string GetPath(LevelMap map) {
+      if (!string.IsNullOrEmpty(map.DatabasePath)) {
+        return map.DatabasePath;
+      } else {
+        return "OfflineMaps/" + map.mapId;
+      }
     }
 
     // Gets the path for the times on the database, given the level's database path
     // and map id.
-    private static string GetPath(LevelMap map) {
-        if (!string.IsNullOrEmpty(map.DatabasePath)) {
-          return map.DatabasePath + "/Times";
-        } else {
-          return "OfflineMaps/" + map.mapId + "/Times";
-        }
-      }
+    private static string GetDBTimePath(LevelMap map) {
+      return GetPath(map) + "/Times";
+    }
+
+    // Gets the path for replay data with highest score on the storage, given the
+    // level's database path and map id.
+    private static string GetBestReplayStoragePath(LevelMap map) {
+      return "/Replay/" + GetPath(map) + "/Highest_score.bytes";
+    }
 
     // Returns the top times, given the level's database path and map id.
     public static Task<List<TimeData>> GetTopTimes(LevelMap map) {
       DatabaseReference reference =
-        FirebaseDatabase.DefaultInstance.GetReference(GetPath(map));
+        FirebaseDatabase.DefaultInstance.GetReference(GetDBTimePath(map));
       return reference.GetValueAsync().ContinueWith(task => {
         return GetTimeList(task.Result);
       });
@@ -102,6 +112,62 @@ namespace Hamster {
 
       mutableData.Value = leaders;
       return TransactionResult.Success(mutableData);
+    }
+
+    // Upload the replay data to storage if necessary.  And return time list from previous task
+    // Use TaskCompletionSource to handle the following scenarios
+    // 1. If there is no need to upload replay data, complete the task immediately
+    //    (Ex. replay is disabled or the score is not the highest)
+    // 2. If the replay data is available and is best record, complete the task once uploading
+    //    is done (success or fail)
+    // Either way, the returned task should contain the list of top time records from previous task
+    private static Task<List<TimeData>> UploadReplayData(
+      List<TimeData> timeDataResult, LevelMap map, ReplayData replay, TimeData timeData) {
+      TaskCompletionSource<List<TimeData>> tComplete = new TaskCompletionSource<List<TimeData>>();
+
+      if (replay != null && IsHighestScore(timeData, timeDataResult)) {
+        string fileLocation = GetBestReplayStoragePath(map);
+        StorageReference storageRef =
+          FirebaseStorage.DefaultInstance.GetReferenceFromUrl(CommonData.storageBucketUrl +
+            fileLocation);
+
+        // Serializing replay data to byte array
+        System.IO.MemoryStream stream = new System.IO.MemoryStream();
+        replay.Serialize(stream);
+        stream.Position = 0;
+        byte[] serializedData = stream.ToArray();
+
+        // Add database path and time to file metadata for future usage
+        MetadataChange newMetadata = new MetadataChange {
+          CustomMetadata = new Dictionary<string, string> {
+            {"DatabasePath", GetDBTimePath(map)},
+            {"Time", timeData.time.ToString()}
+          }
+        };
+
+        storageRef.PutBytesAsync(serializedData, newMetadata).ContinueWith(uploadResult => {
+          tComplete.SetResult(timeDataResult);
+
+          if (uploadResult.IsFaulted) {
+            if (uploadResult.Exception != null) {
+              tComplete.SetException(uploadResult.Exception);
+            }
+          }
+        });
+      } else {
+        tComplete.SetResult(timeDataResult);
+      }
+      return tComplete.Task;
+    }
+
+    // Check if timeData has the highest score to every data in dataList.  Return true for a tie
+    private static bool IsHighestScore(TimeData timeData, List<TimeData> dataList) {
+      foreach (TimeData data in dataList) {
+        if(data.time < timeData.time) {
+          return false;
+        }
+      }
+      return true;
     }
 
     // Gets the current list of top times from a Database snapshot.

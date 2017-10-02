@@ -45,6 +45,9 @@ namespace Hamster {
     // Data to be used in current replay.  Null, if no replay is playing.
     public static string currentReplayData = null;
 
+    // Current storage bucket url for both the editor build and the Android/iOS build
+    public static string storageBucketUrl;
+
     // TestLabManager to track the state of the tests coming in from the intent
     public static TestLabManager testLab = TestLabManager.Instantiate();
 
