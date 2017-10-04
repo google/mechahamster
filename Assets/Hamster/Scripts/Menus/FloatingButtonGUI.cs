@@ -23,6 +23,10 @@ namespace Hamster.Menus {
 
     // These fields are set in the inspector.
     public GUIButton FloatingButton;
+
+    // Button and text component for replay
+    public GUIButton ReplayButton;
+    public UnityEngine.UI.Text ReplayButtonText;
   }
 
 }

@@ -190,6 +190,39 @@ namespace Hamster {
 
       return timeList;
     }
-  }
 
+    // Utility function to download the metadata of the best replay record for the given map
+    public static Task<StorageMetadata> GetBestRecordMetadataAsync(LevelMap map) {
+      string fileLocation = GetBestReplayStoragePath(map);
+      StorageReference storageRef =
+        FirebaseStorage.DefaultInstance.GetReferenceFromUrl(CommonData.storageBucketUrl +
+          fileLocation);
+
+      return storageRef.GetMetadataAsync();
+    }
+
+    // Utility function to download best replay record for the given map and deserialize into
+    // ReplayData struct
+    public static Task<ReplayData> DownloadBestRecordAsync(LevelMap map) {
+      TaskCompletionSource<ReplayData> tComplete = new TaskCompletionSource<ReplayData>();
+
+      string fileLocation = GetBestReplayStoragePath(map);
+      StorageReference storageRef =
+        FirebaseStorage.DefaultInstance.GetReferenceFromUrl(CommonData.storageBucketUrl +
+          fileLocation);
+
+      storageRef.GetStreamAsync( stream => {
+        tComplete.SetResult(ReplayData.CreateFromStream(stream));
+      }).ContinueWith(task => {
+        if (task.IsFaulted) {
+          tComplete.SetException(task.Exception);
+        }
+        if (task.IsCanceled) {
+          tComplete.SetCanceled();
+        }
+      });
+
+      return tComplete.Task;
+    }
+  }
 }

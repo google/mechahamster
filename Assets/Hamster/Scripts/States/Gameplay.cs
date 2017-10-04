@@ -53,6 +53,24 @@ namespace Hamster.States {
     // Data structure that handles the actual recording of the gameplay.
     private GameplayRecorder gameplayRecorder;
 
+    // Whether the best replay record of the current level is available in the storage.
+    // If true, the option to download and to play the record will be presented to the player.
+    private bool bestReplayAvailable = false;
+
+    // Downloaded replay data
+    private ReplayData bestReplayData = null;
+
+    // The state of a replay record
+    private enum ReplayState {
+      None,         // No record downloaded
+      Stopped,      // The record downloaded but not played
+      Downloading,  // Downloading the record
+      Playing       // Playing the record
+    }
+
+    // The state of the best replay record for current level
+    private ReplayState bestReplayState = ReplayState.None;
+
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
@@ -82,6 +100,13 @@ namespace Hamster.States {
       PositionButton();
 
       CommonData.gameWorld.MergeMeshes();
+
+      // Retrieve metadata from the storage bucket.  This is also a light-weighted way to check
+      // if the file exists.  If not, it returns 404 Not Found and the task would be in Faulted
+      // state.
+      TimeData.GetBestRecordMetadataAsync(CommonData.gameWorld.worldMap).ContinueWith(task => {
+        bestReplayAvailable = !task.IsFaulted && !task.IsCanceled;
+      });
     }
 
     // Resume the state.  Called when the state becomes active
@@ -121,35 +146,64 @@ namespace Hamster.States {
       Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
-    // Moves the GUI to the upper right.
+    // Moves the "back" button to upper right and "replay" button to upper left
     void PositionButton() {
       Camera camera = CommonData.mainCamera.GetComponentInChildren<Camera>();
-      RectTransform rt = gui.GetComponent<RectTransform>();
-      // Locations of the corners of the button, in world units.
-      Vector3 worldLowerLeft = rt.TransformPoint(rt.anchorMin + rt.offsetMin);
-      Vector3 worldupperRight = rt.TransformPoint(rt.anchorMax + rt.offsetMax);
+
+      GameObject backButton = dialogComponent.FloatingButton.gameObject;
+      RectTransform backRt = backButton.GetComponent<RectTransform>();
+      Vector2 backLocalLowerLeft = backRt.anchorMin + backRt.offsetMin;
+      Vector2 backLocalUpperRight = backRt.anchorMax + backRt.offsetMax;
 
       // Locations of the corners of the button, in screen space.
-      Vector2 screenLowerLeft =
-          camera.WorldToScreenPoint(worldLowerLeft);
-      Vector2 screenUpperRight =
-          camera.WorldToScreenPoint(worldupperRight);
+      Vector2 backScreenLowerLeft =
+          camera.WorldToScreenPoint(backRt.TransformPoint(backLocalLowerLeft));
+      Vector2 back_screenUpperRight =
+          camera.WorldToScreenPoint(backRt.TransformPoint(backLocalUpperRight));
 
-      // Dimensions of the button in world units:
-      float worldWidth = Mathf.Abs(worldLowerLeft.x - worldupperRight.x);
-      float worldHeight = Mathf.Abs(worldLowerLeft.y - worldupperRight.y);
+      Vector2 back_localDimension = new Vector2(
+        Mathf.Abs(backLocalUpperRight.x - backLocalLowerLeft.x),
+        Mathf.Abs(backLocalUpperRight.y - backLocalLowerLeft.y));
 
-      float pixelsToWorldUnits = worldWidth / Mathf.Abs(screenLowerLeft.x - screenUpperRight.x);
+      float pixelsToLocalUnits = back_localDimension.x /
+        Mathf.Abs(backScreenLowerLeft.x - back_screenUpperRight.x);
 
-      gui.transform.localPosition = new Vector3(
-        gui.transform.localPosition.x + (Screen.width * pixelsToWorldUnits - worldWidth) / 2.0f,
-        gui.transform.localPosition.y + (Screen.height * pixelsToWorldUnits - worldHeight) / 2.0f,
-        gui.transform.localPosition.z);
+      // Move back button to upper right corner
+      backButton.transform.localPosition = new Vector3(
+        backButton.transform.localPosition.x +
+        (Screen.width * pixelsToLocalUnits - back_localDimension.x) / 2.0f,
+        backButton.transform.localPosition.y +
+        (Screen.height * pixelsToLocalUnits - back_localDimension.y) / 2.0f,
+        backButton.transform.localPosition.z);
+
+      // Move replay button to upper left corner
+      GameObject replayButton = dialogComponent.ReplayButton.gameObject;
+      if (replayButton) {
+        RectTransform replayRt = replayButton.GetComponent<RectTransform>();
+        Vector2 replayLocalLowerLeft = replayRt.anchorMin + replayRt.offsetMin;
+        Vector2 replayLocalUpperRight = replayRt.anchorMax + replayRt.offsetMax;
+
+        Vector2 replayLocalDimension = new Vector2(
+          Mathf.Abs(replayLocalUpperRight.x - replayLocalLowerLeft.x),
+          Mathf.Abs(replayLocalUpperRight.y - replayLocalLowerLeft.y));
+
+        replayButton.transform.localPosition = new Vector3(
+          replayButton.transform.localPosition.x -
+          (Screen.width * pixelsToLocalUnits - replayLocalDimension.x) / 2.0f,
+          replayButton.transform.localPosition.y +
+          (Screen.height * pixelsToLocalUnits - replayLocalDimension.y) / 2.0f,
+          replayButton.transform.localPosition.z);
+
+        // Hide replay button by default
+        replayButton.SetActive(false);
+      }
     }
 
     public override void HandleUIEvent(GameObject source, object eventData) {
       if (source == dialogComponent.FloatingButton.gameObject) {
         ExitGameplay();
+      } else if (source == dialogComponent.ReplayButton.gameObject) {
+        ProcessReplayButtonEvent();
       }
     }
 
@@ -158,12 +212,75 @@ namespace Hamster.States {
       manager.PopState();
     }
 
+    void SetReplayState(ReplayState newState) {
+      if (this.bestReplayState == newState) {
+        return;
+      }
+
+      switch (newState) {
+        case ReplayState.Stopped:
+          dialogComponent.ReplayButton.gameObject.SetActive(true);
+          dialogComponent.ReplayButtonText.text = StringConstants.ButtonReplayPlay;
+          break;
+        case ReplayState.Downloading:
+          dialogComponent.ReplayButton.gameObject.SetActive(true);
+          dialogComponent.ReplayButtonText.text = StringConstants.ButtonReplayWait;
+          break;
+        case ReplayState.Playing:
+          dialogComponent.ReplayButton.gameObject.SetActive(true);
+          dialogComponent.ReplayButtonText.text = StringConstants.ButtonReplayStop;
+          break;
+        default:
+          dialogComponent.ReplayButton.gameObject.SetActive(false);
+          dialogComponent.ReplayButtonText.text = "";
+          break;
+      }
+
+      this.bestReplayState = newState;
+    }
+
+    void ProcessReplayButtonEvent() {
+      if (!bestReplayAvailable) {
+        return;
+      }
+
+      switch (this.bestReplayState) {
+        case ReplayState.Stopped:
+          if (this.bestReplayData == null) {
+            SetReplayState(ReplayState.Downloading);
+            TimeData.DownloadBestRecordAsync(CommonData.gameWorld.worldMap).ContinueWith(task => {
+              if (!task.IsFaulted && !task.IsCanceled && task.Result != null) {
+                this.bestReplayData = task.Result;
+              }
+            });
+          } else {
+            SetReplayState(ReplayState.Playing);
+          }
+          break;
+        case ReplayState.Playing:
+          SetReplayState(ReplayState.Stopped);
+          break;
+        case ReplayState.Downloading:
+        default:
+          break;
+      }
+    }
+
     // Called once per frame when the state is active.
     public override void FixedUpdate() {
       if (Input.GetKeyDown(KeyCode.Escape)) {
         ExitGameplay();
         return;
       }
+
+      // Change replay state in Main thread
+      if (this.bestReplayState == ReplayState.None && bestReplayAvailable) {
+        SetReplayState(ReplayState.Stopped);
+      }
+      if (this.bestReplayState == ReplayState.Downloading && this.bestReplayData != null) {
+        SetReplayState(ReplayState.Playing);
+      }
+
       if (CommonData.mainGame.PlayerController != null) {
         if (gameplayRecordingEnabled) {
           gameplayRecorder.Update(CommonData.mainGame.PlayerController, fixedUpdateTimestamp);

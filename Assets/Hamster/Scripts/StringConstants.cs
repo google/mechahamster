@@ -56,6 +56,9 @@ namespace Hamster {
     public const string ButtonOrientation = "Orientation: ";
     public const string ButtonTopTimes = "Top Times";
     public const string ButtonUploadTime = "Upload Time";
+    public const string ButtonReplayPlay = "Show";
+    public const string ButtonReplayWait = "Wait...";
+    public const string ButtonReplayStop = "Stop";
 
     // Title screen text:
     public const string TitleText = "MechaHamster!";
