@@ -338,6 +338,11 @@ MonoBehaviour:
       type: 2}
     includeInToolPalette: 0
     maxCount: 0
+  - name: ReplayPlayer
+    prefab: {fileID: 1009557169788652, guid: 3c6cb324dfb1b4848bc8ce999a82e4dc, type: 2}
+    buttonPrefab: {fileID: 0}
+    includeInToolPalette: 0
+    maxCount: 0
   desktopOnlyProps:
   - name: FloatingRockGrp2
     prefab: {fileID: 1546523441223900, guid: eab53b96cefe541908703bfec4942a67, type: 2}

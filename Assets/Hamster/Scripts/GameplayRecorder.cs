@@ -40,11 +40,11 @@ namespace Hamster {
     States.Gameplay gameplayState;
 
     // Variable for controlling how many frames until the next position data is recorded.
-    uint positionRecordInterval = 1;
+    uint positionRecordInterval = 3;
 
-    // Record maximum 20000 records of position and/or input data
-    // (About 5.5 minutes if record every frame in 60fps)
-    const int maxRecords = 20000;
+    // Record maximum 6000 records of position and/or input data
+    // (About 5 minutes if record every frame in 20fps)
+    const int maxRecords = 6000;
 
     public GameplayRecorder(string mapId, uint sampleInternal) {
       positionRecordInterval = sampleInternal;

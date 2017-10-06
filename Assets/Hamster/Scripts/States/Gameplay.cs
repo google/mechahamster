@@ -60,6 +60,12 @@ namespace Hamster.States {
     // Downloaded replay data
     private ReplayData bestReplayData = null;
 
+    // Prefab ID to spawn the object for replay animation
+    private const string replayPrefabID = "ReplayPlayer";
+
+    // Reference to spawned replay animator
+    private ReplayAnimator replayAnimator = null;
+
     // The state of a replay record
     private enum ReplayState {
       None,         // No record downloaded
@@ -133,6 +139,8 @@ namespace Hamster.States {
       Utilities.HideDuringGameplay.OnGameplayStateChange(false);
       Time.timeScale = 0.0f;
       Screen.sleepTimeout = SleepTimeout.SystemSetting;
+      DestroyReplayAnimator();
+
       return new StateExitValue(typeof(Gameplay));
     }
 
@@ -221,6 +229,7 @@ namespace Hamster.States {
         case ReplayState.Stopped:
           dialogComponent.ReplayButton.gameObject.SetActive(true);
           dialogComponent.ReplayButtonText.text = StringConstants.ButtonReplayPlay;
+          DestroyReplayAnimator();
           break;
         case ReplayState.Downloading:
           dialogComponent.ReplayButton.gameObject.SetActive(true);
@@ -229,6 +238,7 @@ namespace Hamster.States {
         case ReplayState.Playing:
           dialogComponent.ReplayButton.gameObject.SetActive(true);
           dialogComponent.ReplayButtonText.text = StringConstants.ButtonReplayStop;
+          SpawnReplayAnimator();
           break;
         default:
           dialogComponent.ReplayButton.gameObject.SetActive(false);
@@ -263,6 +273,31 @@ namespace Hamster.States {
         case ReplayState.Downloading:
         default:
           break;
+      }
+    }
+
+    void SpawnReplayAnimator() {
+      // Make sure there is only one copy of replay animator
+      DestroyReplayAnimator();
+
+      GameObject replayObj =
+        Object.Instantiate(CommonData.prefabs.lookup[replayPrefabID].prefab) as GameObject;
+      if (replayObj != null) {
+        replayAnimator = replayObj.GetComponent<ReplayAnimator>();
+        if (replayAnimator != null) {
+          replayAnimator.SetReplayData(bestReplayData);
+          replayAnimator.Play();
+          replayAnimator.FinishEvent.AddListener(() => {
+            SetReplayState(ReplayState.Stopped);
+          });
+        }
+      }
+    }
+
+    void DestroyReplayAnimator() {
+      if (replayAnimator != null) {
+        GameObject.Destroy(replayAnimator.gameObject);
+        replayAnimator = null;
       }
     }
 
