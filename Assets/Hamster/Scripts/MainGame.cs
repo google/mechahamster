@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 using Firebase.Unity.Editor;
@@ -40,6 +41,8 @@ namespace Hamster {
         return player != null ? player.GetComponent<PlayerController>() : null;
       }
     }
+
+    public UnityEvent PlayerSpawnedEvent = new UnityEvent();
 
     // Volume is treated as an int for the UI display.
     public const int MaxVolumeValue = 6;
@@ -123,6 +126,7 @@ namespace Hamster {
     public GameObject SpawnPlayer() {
       if (player == null) {
         player = (GameObject)Instantiate(CommonData.prefabs.lookup[PlayerPrefabID].prefab);
+        PlayerSpawnedEvent.Invoke();
       }
       return player;
     }

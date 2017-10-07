@@ -99,6 +99,9 @@ namespace Hamster.States {
 
       if (gameplayRecordingEnabled) {
         gameplayRecorder = new GameplayRecorder(CommonData.gameWorld.worldMap.name, 1);
+
+        // Subscribe player spawn event in order to reset replay data whenever it is triggered.
+        CommonData.mainGame.PlayerSpawnedEvent.AddListener(OnPlayerSpawned);
       }
       Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
@@ -141,6 +144,10 @@ namespace Hamster.States {
       Screen.sleepTimeout = SleepTimeout.SystemSetting;
       DestroyReplayAnimator();
 
+      if (gameplayRecordingEnabled) {
+        CommonData.mainGame.PlayerSpawnedEvent.RemoveListener(OnPlayerSpawned);
+      }
+
       return new StateExitValue(typeof(Gameplay));
     }
 
@@ -152,6 +159,17 @@ namespace Hamster.States {
       Time.timeScale = 0.0f;
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       Screen.sleepTimeout = SleepTimeout.NeverSleep;
+    }
+
+    // The event triggered when the player is spawned.
+    // This is primarily to reset replay data recording whenever the player respawns
+    // However, if saveReplayToFile is set to record replay data for testing, everything
+    // will be recorded even if the player dies several times before success.
+    void OnPlayerSpawned() {
+      if (gameplayRecorder != null && !saveReplayToFile) {
+        fixedUpdateTimestamp = 0;
+        gameplayRecorder.Reset(CommonData.gameWorld.worldMap.name);
+      }
     }
 
     // Moves the "back" button to upper right and "replay" button to upper left
