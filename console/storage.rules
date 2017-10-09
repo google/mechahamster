@@ -1,0 +1,15 @@
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /Replay/{mapType}/{mapId}/{replayFile} {
+       // Allow everyone to read
+       // (uncomment auth check for better security)
+       allow read //: if request.auth != null;
+
+       // Allow everyone to write as long as
+       // File size is less than 5MB
+       // (uncomment auth check for better security)
+       allow write: if request.resource.size < 5 * 1024 * 1024
+                    //&& request.auth != null;
+    }
+  }
+}

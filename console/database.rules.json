@@ -1,0 +1,37 @@
+{
+  "rules": {
+    // Bonus maps cannot be written to under normal circumstances.
+    "BonusMaps":  {
+      ".read": true,
+      ".write": false
+    },
+    // The DB_Users table contains all of the data for users.  It can only be read
+    // or written to if your auth ID matches the key you are trying to access.
+    "DB_Users":  {
+      "$uid": {
+        ".read": "(auth != null && $uid == auth.uid) || $uid == 'XYZZY'",
+        ".write": "(auth != null && $uid == auth.uid) || $uid == 'XYZZY'"
+      }
+    },
+    // Entries in the maplist can only be read if they are shared, or
+    // they are being modified by their owner.
+    "MapList": {
+      "$mapid": {
+        ".read": "data.child('isShared').val() == true || ((auth != null && data.child('ownerId').val() == auth.uid) || data.child('ownerId').val() == 'XYZZY')",
+        ".write": "!data.exists() || (auth != null && data.child('ownerId').val() == auth.uid) || data.child('ownerId').val() == 'XYZZY'"
+      }
+    },
+    // High score tables for the offline maps.
+    "OfflineMaps": {
+      "$mapid": {
+        "Times": {
+          ".read": true,
+          ".write": true,
+          "$rank": {
+            ".validate": "newData.child('name').isString() && newData.child('time').isNumber() && newData.child('name').val().length < 100"
+          }
+        }
+      }
+    }
+  }
+}

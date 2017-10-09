@@ -78,3 +78,9 @@ Assets/GoogleVR/Demos.meta
 
 # Docs output
 /docs/html/
+
+# Firebase CLI
+**/node_modules/*
+**/npm-debug.log
+console/.firebaserc
+console/firebase-debug.log
