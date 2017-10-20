@@ -56,8 +56,11 @@ namespace Hamster {
     // Property name of player display name stored in the database
     const string Database_Property_Name = "name";
 
-    // Property name of storage path for replay record stored in the database
+    // Property name of storage path to replay record stored in the database
     const string Database_Property_ReplayPath = "replayPath";
+
+    // Name of the property to determine whether the replay record is shared
+    const string Database_Property_IsShared = "isShared";
 
     // Configuration of key, filename and paths to upload time record and replay data
     private struct UploadConfig {
@@ -110,13 +113,13 @@ namespace Hamster {
     // Gets the path for the top ranks on the database, given the level's database path
     // and map id.
     private static string GetDBRankPath(LevelMap map) {
-      return GetPath(map) + Database_Ranks_Postfix;
+      return "Leaderboard/Map/" + GetPath(map) + Database_Ranks_Postfix;
     }
 
     // Gets the path for the top shared replays on the database, given the level's database path
     // and map id.  Note that not everyone wants to share replay record
     private static string GetDBSharedReplayPath(LevelMap map) {
-      return GetPath(map) + Database_Replays_Postfix;
+      return "Leaderboard/Map/" + GetPath(map) + Database_Replays_Postfix;
     }
 
     // Returns the top times, given the level's database path and map id.
@@ -153,14 +156,15 @@ namespace Hamster {
     }
 
     // Submit scores to Firebase Realtime Database using client-generated unique key
-    // This always adds a rank record to {MapType}/{MapID}/Top/{Database_Ranks_Postfix}/
+    // This always adds a record to Leaderboard/Map/{MapType}/{MapID}/Top/{Database_Ranks_Postfix}/
     // If the replay data exists and the player choose to share it, an additional record is added
-    // to {MapType}/{MapID}/Top/{Database_Replays_Postfix}/
+    // to Leaderboard/Map/{MapType}/{MapID}/Top/{Database_Replays_Postfix}/
     private static Task SubmitScore(TimeData timedata, UploadConfig config) {
       Dictionary<string, object> entryValues = new Dictionary<string, object>();
       entryValues[Database_Property_Name] = timedata.name;
       entryValues[Database_Property_Time] = timedata.time;
       entryValues[Database_Property_ReplayPath] = config.storagePath;
+      entryValues[Database_Property_IsShared] = config.shareReplay;
 
       Dictionary<string, object> childUpdates = new Dictionary<string, object>();
       childUpdates[config.dbRankPath] = entryValues;

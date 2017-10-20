@@ -1,0 +1,10 @@
+{
+  "name": "rank-and-replay-cleanup-functions",
+  "description": "Clean up ranks in the database and unferenced replay data in the storage",
+  "dependencies": {
+    "@google-cloud/storage": "^1.3.0",
+    "firebase-admin": "~5.4.0",
+    "firebase-functions": "^0.7.0"
+  },
+  "private": true
+}

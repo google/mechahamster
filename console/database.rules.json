@@ -1,9 +1,18 @@
 {
   "rules": {
-    // Bonus maps cannot be written to under normal circumstances.
+    // Bonus maps cannot be written to under normal circumstances, except for legacy time records
     "BonusMaps":  {
       ".read": true,
-      ".write": false
+      "$mapid": {
+        // Legacy place to store best scores as an array.
+        "Times": {
+          ".read": true,
+          ".write": true,
+          "$rank": {
+            ".validate": "newData.child('name').isString() && newData.child('time').isNumber() && newData.child('name').val().length < 100"
+          }
+        }
+      }
     },
     // The DB_Users table contains all of the data for users.  It can only be read
     // or written to if your auth ID matches the key you are trying to access.
@@ -18,40 +27,56 @@
     "MapList": {
       "$mapid": {
         ".read": "data.child('isShared').val() == true || ((auth != null && data.child('ownerId').val() == auth.uid) || data.child('ownerId').val() == 'XYZZY')",
-        ".write": "!data.exists() || (auth != null && data.child('ownerId').val() == auth.uid) || data.child('ownerId').val() == 'XYZZY'"
-      }
-    },
-    // High score tables for the offline maps.
-    "OfflineMaps": {
-      "$mapid": {
-        "Top" :{
-          // Top rank records using push ID as key and indexed by "time" property.
-          // This structure is better for cloud function to register add/delete event of each
-          // individual record.
-          "Ranks": {
-            ".read": true,
-            ".write": true,
-            ".indexOn": ["time"],
-            "$rank": {
-              ".validate": "newData.child('name').isString() && newData.child('name').val().length < 100 && newData.child('time').isNumber()"
-            }
-          },
-          // Entries in SharedReplays only store tops replays which was volunteerly shared by the player.
-          "SharedReplays": {
-            ".read": true,
-            ".write": true,
-            ".indexOn": ["time"],
-            "$rank": {
-              ".validate": "newData.child('name').isString() && newData.child('time').isNumber() && newData.child('name').val().length < 100"
-            }
-          }
-        },
+        ".write": "!data.exists() || (auth != null && data.child('ownerId').val() == auth.uid) || data.child('ownerId').val() == 'XYZZY'",
         // Legacy place to store best scores as an array.
         "Times": {
           ".read": true,
           ".write": true,
           "$rank": {
             ".validate": "newData.child('name').isString() && newData.child('time').isNumber() && newData.child('name').val().length < 100"
+          }
+        }
+      }
+    },
+    // High score tables for the offline maps.
+    "OfflineMaps": {
+      "$mapid": {
+        // Legacy place to store best scores as an array.
+        "Times": {
+          ".read": true,
+          ".write": true,
+          "$rank": {
+            ".validate": "newData.child('name').isString() && newData.child('time').isNumber() && newData.child('name').val().length < 100"
+          }
+        }
+      }
+    },
+    "Leaderboard" : {
+      "Map" : {
+        "$mapType": {
+          "$mapid": {
+            "Top" :{
+              // Top rank records using push ID as key and indexed by "time" property.
+              // This structure is better for cloud function to register add/delete event of each
+              // individual record.
+              "Ranks": {
+                ".read": true,
+                ".write": true,
+                ".indexOn": ["time"],
+                "$rank": {
+                  ".validate": "newData.child('name').isString() && newData.child('name').val().length < 100 && newData.child('time').isNumber()"
+                }
+              },
+              // Entries in SharedReplays only store tops replays which was volunteerly shared by the player.
+              "SharedReplays": {
+                ".read": true,
+                ".write": true,
+                ".indexOn": ["time"],
+                "$rank": {
+                  ".validate": "newData.child('name').isString() && newData.child('time').isNumber() && newData.child('name').val().length < 100"
+                }
+              }
+            }
           }
         }
       }
