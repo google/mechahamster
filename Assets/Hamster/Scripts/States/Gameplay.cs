@@ -55,7 +55,14 @@ namespace Hamster.States {
 
     // Whether the best replay record of the current level is available in the storage.
     // If true, the option to download and to play the record will be presented to the player.
-    private bool bestReplayAvailable = false;
+    private bool isBestReplayAvailable {
+      get {
+        return !string.IsNullOrEmpty(bestReplayPath);
+      }
+    }
+
+    // The storage path to the best replay record stored in the database
+    private string bestReplayPath = null;
 
     // Downloaded replay data
     private ReplayData bestReplayData = null;
@@ -113,8 +120,9 @@ namespace Hamster.States {
       // Retrieve metadata from the storage bucket.  This is also a light-weighted way to check
       // if the file exists.  If not, it returns 404 Not Found and the task would be in Faulted
       // state.
-      TimeData.GetBestRecordMetadataAsync(CommonData.gameWorld.worldMap).ContinueWith(task => {
-        bestReplayAvailable = !task.IsFaulted && !task.IsCanceled;
+      TimeDataUtil.GetBestSharedReplayPathAsync(CommonData.gameWorld.worldMap)
+        .ContinueWith(task => {
+        bestReplayPath = task.Result;
       });
     }
 
@@ -268,7 +276,7 @@ namespace Hamster.States {
     }
 
     void ProcessReplayButtonEvent() {
-      if (!bestReplayAvailable) {
+      if (!isBestReplayAvailable) {
         return;
       }
 
@@ -276,7 +284,7 @@ namespace Hamster.States {
         case ReplayState.Stopped:
           if (this.bestReplayData == null) {
             SetReplayState(ReplayState.Downloading);
-            TimeData.DownloadBestRecordAsync(CommonData.gameWorld.worldMap).ContinueWith(task => {
+            ReplayData.DownloadReplayRecordAsync(bestReplayPath).ContinueWith(task => {
               if (!task.IsFaulted && !task.IsCanceled && task.Result != null) {
                 this.bestReplayData = task.Result;
               }
@@ -327,7 +335,7 @@ namespace Hamster.States {
       }
 
       // Change replay state in Main thread
-      if (this.bestReplayState == ReplayState.None && bestReplayAvailable) {
+      if (this.bestReplayState == ReplayState.None && isBestReplayAvailable) {
         SetReplayState(ReplayState.Stopped);
       }
       if (this.bestReplayState == ReplayState.Downloading && this.bestReplayData != null) {

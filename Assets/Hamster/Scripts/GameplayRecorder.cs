@@ -167,6 +167,29 @@ namespace Hamster {
       replay.Deserialize(stream);
       return replay;
     }
+
+    // Utility function to download replay record from a given path and deserialize into
+    // ReplayData struct
+    public static Task<ReplayData> DownloadReplayRecordAsync(string replayPath) {
+      TaskCompletionSource<ReplayData> tComplete = new TaskCompletionSource<ReplayData>();
+
+      Firebase.Storage.StorageReference storageRef =
+        Firebase.Storage.FirebaseStorage.DefaultInstance.GetReferenceFromUrl(
+          CommonData.storageBucketUrl + "/" + replayPath);
+
+      storageRef.GetStreamAsync(stream => {
+        tComplete.SetResult(ReplayData.CreateFromStream(stream));
+      }).ContinueWith(task => {
+        if (task.IsFaulted) {
+          tComplete.SetException(task.Exception);
+        }
+        if (task.IsCanceled) {
+          tComplete.SetCanceled();
+        }
+      });
+
+      return tComplete.Task;
+    }
   }
 
   [System.Serializable]

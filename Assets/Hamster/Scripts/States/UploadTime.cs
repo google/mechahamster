@@ -46,7 +46,7 @@ namespace Hamster.States {
 
       UploadedTimeData = new TimeData(name, Time);
       manager.PushState(new WaitForTask(
-        UploadedTimeData.UploadTime(
+        TimeDataUtil.UploadTimeAndReplay(UploadedTimeData,
           CommonData.gameWorld.worldMap, CommonData.gameWorld.PreviousReplayData),
           StringConstants.UploadTimeTitle, true));
     }

@@ -48,7 +48,7 @@ namespace Hamster.States {
       // If no display times were provided, retrieve them from the database.
       if (DisplayTimes == null) {
         manager.PushState(new WaitForTask(
-          TimeData.GetTopTimes(CommonData.gameWorld.worldMap)));
+          TimeDataUtil.GetTopTimes(CommonData.gameWorld.worldMap)));
       } else {
         InitializeUI();
       }
