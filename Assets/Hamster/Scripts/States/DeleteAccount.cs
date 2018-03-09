@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using Firebase.Unity.Editor;
 using Firebase.Auth;
 using Firebase.Database;
-using GooglePlayGames;
 
 namespace Hamster.States {
   // Utility state for deleting a user account.  Displays a
@@ -60,7 +59,7 @@ namespace Hamster.States {
               path = CommonData.DBMapTablePath + map.mapId;
               database.GetReference(path).SetValueAsync(null);
             }
-            PlayGamesPlatform.Instance.SignOut();
+            GooglePlayServicesSignIn.SignOut();
             SignInState.SetState(SignInState.State.SignedOut);
 
             manager.SwapState(new ChooseSignInMenu());

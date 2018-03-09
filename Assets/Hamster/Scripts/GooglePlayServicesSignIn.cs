@@ -104,6 +104,27 @@ namespace Hamster
           });
       });
     }
+
+    /// <summary>
+    /// Signs out of GPGS.
+    /// </summary>
+    public static void SignOut() {
+      PlayGamesPlatform.Instance.SignOut();
+    }
+
+    /// <summary>
+    /// Initializes the Google Play Games Client.
+    /// </summary>
+    public static void InitializeGooglePlayGames()
+    {
+      PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+        .RequestServerAuthCode(false /*forceRefresh*/)
+        .Build();
+
+      PlayGamesPlatform.InitializeInstance(config);
+      PlayGamesPlatform.DebugLogEnabled = true;
+      PlayGamesPlatform.Activate();
+    }
   }
 }
 
@@ -148,6 +169,12 @@ namespace Hamster
       return false;
     }
 
+    public static void SignOut() {
+    }
+
+    public static void InitializeGooglePlayGames()
+    {
+    }
   }
 }
 

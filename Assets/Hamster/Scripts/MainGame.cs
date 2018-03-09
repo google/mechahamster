@@ -16,8 +16,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Firebase.Unity.Editor;
-using GooglePlayGames;
-using GooglePlayGames.BasicApi;
 using UnityEngine.SocialPlatforms;
 
 namespace Hamster {
@@ -76,7 +74,7 @@ namespace Hamster {
 
     void Start() {
       Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
-      InitializeGooglePlayGames();
+      GooglePlayServicesSignIn.InitializeGooglePlayGames();
       InitializeFirebaseAndStart();
     }
 
@@ -183,16 +181,6 @@ namespace Hamster {
 
       Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
       return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);
-    }
-
-    void InitializeGooglePlayGames() {
-      PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-        .RequestServerAuthCode(false /*forceRefresh*/)
-        .Build();
-
-      PlayGamesPlatform.InitializeInstance(config);
-      PlayGamesPlatform.DebugLogEnabled = true;
-      PlayGamesPlatform.Activate();
     }
 
     // When the app starts, check to make sure that we have

@@ -95,3 +95,6 @@ Assets/GooglePlayGames.meta
 
 # Docs output
 /docs/html/
+
+# Visual Studio
+.vs

@@ -16,7 +16,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Firebase.Unity.Editor;
-using GooglePlayGames;
 
 
 namespace Hamster.States {
@@ -88,7 +87,7 @@ namespace Hamster.States {
         manager.PushState(new AddEmail());
       } else if (source == menuComponent.SignOutButton.gameObject) {
         auth.SignOut();
-        PlayGamesPlatform.Instance.SignOut();
+        GooglePlayServicesSignIn.SignOut();
         SignInState.SetState(SignInState.State.SignedOut);
         manager.ClearStack(new Startup());
       } else if (source == menuComponent.DeleteAccountButton.gameObject) {
