@@ -212,6 +212,7 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <tr>
 <td>Firebase Remote Config </td><td>FirebaseRemoteConfig.unitypackage </td></tr>
 </table>
+<h3>Downloading Firebase Files</h3>
 <p>In addition to importing the Firebase Unity SDK packages you'll also need to create a a project in the <a href="https://console.firebase.google.com/">Firebase Console</a>, and download the files necessary to link it to MechaHamster:</p>
 <ol type="1">
 <li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>.</li>
@@ -220,6 +221,93 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <li>When prompted, enter the app's package name. (<code>com.google.fpl.mechahamster</code>)</li>
 <li>At the end, depending on your platform, you'll download a file named <code>google-services.json</code> (android) or <code>GoogleService-Info.plist</code> (iOS). Put this file somewhere in your <code>/Assets</code> directory. (You can re-download this file again at any time from the <a href="https://console.firebase.google.com/">Firebase Console</a>.)</li>
 </ol>
+<h3>Setting Project Properties and Permissions</h3>
+<h4>(Android Only) Add your signing key's SHA-1 to the project</h4>
+<p>In order to make use of several Firebase features, (Authentication and App Invites) you will need to calculate a SHA-1 hash from your signing key, and enter it into the Firebase console.</p>
+<p>Note: This is only necessary when building for Android devices. You do not need to enter the SHA-1 for iOS builds.</p>
+<ol type="1">
+<li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>.</li>
+<li>In the upper left, click on the gear, and select 'Project Settings'</li>
+<li>Enter your signing certificate's SHA-1 in the indicated field. (Instructions for calculating your certificate's fingerprint can be found <a href="https://developers.google.com/android/guides/client-auth">here</a>)</li>
+<li>After the change, you need to re-download <code>google-services.json</code> again. You can find the download button in the same page. Then replace the one you stored in your <code>/Assets</code> directory.</li>
+</ol>
+<h4>(iOS Only) Set App Capabilities</h4>
+<p>MechaHamster requires several capabilities to be enabled in XCode in order to function on iOS devices.</p>
+<ol type="1">
+<li>After doing an iOS build in Unity, open the resulting project in XCode.</li>
+<li>Go to the project's settings, click the 'Capabilities' tab.</li>
+<li>Enable 'Keychain Sharing'.</li>
+<li>Enable 'Push Notifications'.</li>
+<li>Enable 'Associated Domains'.</li>
+<li>Expand 'Associated Domains' and add "applinks:YOUR_DYNAMIC_LINKS_DOMAIN" to the list. You can find your project's Dynamic Links domain under the Dynamic Links tab of the <a href="https://console.firebase.google.com/">Firebase console</a>.</li>
+</ol>
+<h4>Enable Login Methods</h4>
+<p>Firebase Auth provides several methods by which a user can sign in and access their data. MechaHamster supports several of these, but they must be enabled in the Firebase console before they can be used. (They are all disabled by default.)</p>
+<ol type="1">
+<li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>, and select 'Authentication' from the side panel.</li>
+<li>Click on the 'Sign-In Method' tab.</li>
+<li>Select "Anonymous" from the list, enable it, and click 'Save'.</li>
+<li>Select "Email/Password" from the list, enable it, and click 'Save'.</li>
+</ol>
+<h4>Set up the database access rules</h4>
+<p>MechaHamster depends heavily on the Firebase Realtime Database for storage. In order to run Mechahamster, you'll need set up the database access rules.</p>
+<ol type="1">
+<li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>, and select 'Database' from the side panel.</li>
+<li>Click on the 'Rules' tab.</li>
+<li>Replace the rules text with the following code:</li>
+</ol>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;rules&quot;</span>: {</div>
+<div class="line">    <span class="comment">// Bonus maps cannot be written to under normal circumstances.</span></div>
+<div class="line">    <span class="stringliteral">&quot;BonusMaps&quot;</span>:  {</div>
+<div class="line">      <span class="stringliteral">&quot;.read&quot;</span>: <span class="keyword">true</span>,</div>
+<div class="line">      <span class="stringliteral">&quot;.write&quot;</span>: <span class="keyword">false</span></div>
+<div class="line">    },</div>
+<div class="line">    <span class="comment">// The DB_Users table contains all of the data for users.  It can only be read</span></div>
+<div class="line">    <span class="comment">// or written to if your auth ID matches the key you are trying to access.</span></div>
+<div class="line">    <span class="stringliteral">&quot;DB_Users&quot;</span>:  {</div>
+<div class="line">      <span class="stringliteral">&quot;$uid&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;.read&quot;</span>: <span class="stringliteral">&quot;(auth != null &amp;&amp; $uid == auth.uid) || $uid == &#39;XYZZY&#39;&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;.write&quot;</span>: <span class="stringliteral">&quot;(auth != null &amp;&amp; $uid == auth.uid) || $uid == &#39;XYZZY&#39;&quot;</span></div>
+<div class="line">      }</div>
+<div class="line">    },</div>
+<div class="line">    <span class="comment">// Entries in the maplist can only be read if they are shared, or</span></div>
+<div class="line">    <span class="comment">// they are being modified by their owner.</span></div>
+<div class="line">    <span class="stringliteral">&quot;MapList&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;$mapid&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;.read&quot;</span>: <span class="stringliteral">&quot;data.child(&#39;isShared&#39;).val() == true || ((auth != null &amp;&amp; data.child(&#39;ownerId&#39;).val() == auth.uid) || data.child(&#39;ownerId&#39;).val() == &#39;XYZZY&#39;)&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;.write&quot;</span>: <span class="stringliteral">&quot;!data.exists() || (auth != null &amp;&amp; data.child(&#39;ownerId&#39;).val() == auth.uid) || data.child(&#39;ownerId&#39;).val() == &#39;XYZZY&#39;&quot;</span></div>
+<div class="line">      }</div>
+<div class="line">    },</div>
+<div class="line">    <span class="comment">// High score tables for the offline maps.</span></div>
+<div class="line">    <span class="stringliteral">&quot;OfflineMaps&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;$mapid&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;Times&quot;</span>: {</div>
+<div class="line">          <span class="stringliteral">&quot;.read&quot;</span>: <span class="keyword">true</span>,</div>
+<div class="line">          <span class="stringliteral">&quot;.write&quot;</span>: <span class="keyword">true</span>,</div>
+<div class="line">          <span class="stringliteral">&quot;$rank&quot;</span>: {</div>
+<div class="line">            <span class="stringliteral">&quot;.validate&quot;</span>: <span class="stringliteral">&quot;newData.child(&#39;name&#39;).isString() &amp;&amp; newData.child(&#39;time&#39;).isNumber() &amp;&amp; newData.child(&#39;name&#39;).val().length &lt; 100&quot;</span></div>
+<div class="line">          }</div>
+<div class="line">        }</div>
+<div class="line">      }</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>(MechaHamster uses the name 'XYZZY' to represent desktop users, since Firebase Authentication only functions on mobile devices.)</p>
+<h4>Update Firebase url in the script</h4>
+<p>MechaHamster can access Firebase Realtime Database in the Unity Editor. Set Database url to your project's database url using the SetEditorDatabaseUrl() function.</p>
+<ol type="1">
+<li>Open <code>\Assets\Hamster\Scripts\MainGame.cs</code> in the text editor.</li>
+<li>Find the line with <code>SetEditorDatabaseUrl</code>. For instance, <div class="fragment"><div class="line"><span class="keywordtype">void</span> StartGame() {</div>
+<div class="line">  ...</div>
+<div class="line">  CommonData.app.SetEditorDatabaseUrl(<span class="stringliteral">&quot;https://hamster-demo.firebaseio.com/&quot;</span>);</div>
+<div class="line">  ...</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li>Change the url to "https://YOUR-FIREBASE-APP.firebaseio.com/". "YOUR-FIREBASE-APP" is your project ID which you can find from the <a href="https://console.firebase.google.com/">Firebase Console</a> . You can also find the url in <code>google-services.json</code> (android) or <code>GoogleService-Info.plist</code> (iOS).</li>
+<li>Save the script and rebuild with the Unity Editor.</li>
+</ol>
+<p>Currently this affects non-editor build as well.</p>
 <p><br/>
  </p>
 </div></div><!-- contents -->

@@ -220,6 +220,14 @@ $(document).ready(function(){initNavTree('mechahamster_guide_overview.html','');
 <h3>MapTiles</h3>
 <p>Each tile on the map is represented by a <code>GameObject</code> with an attached <code>MonoBehaviour</code>, which derives from <code>MapObject</code>, and controls the specific game logic of that tile. For example, the <code>JumpTile</code> class listens for collision events indicating that the ball has rolled over it, and then plays an animation and launches the ball into the air.</p>
 <p>All of the various map tiles and their associated classes can be found in the <code>/Assets/Hamster/Scripts/MapObjects</code> directory.</p>
+<h3>Google Play Games Services (Experimental)</h3>
+<p>MechaHamster supports signing in using Google Play Games Services (GPGS) (Android-only). The codebase illustrates using GPGS to introduce achievements.</p>
+<p>In order to build MechaHampster with GPGS support, please follow these steps (requires Unity 2017.2 or higher):</p>
+<ol type="1">
+<li>Follow the instructions at <a href="https://firebase.google.com/docs/auth/unity/play-games">Authenticate in Unity Using Google Play Games Services</a></li>
+<li>In the Player settings, add the <b>GPGS</b> preprocessor symbol to "Scripting Define Symbols"</li>
+<li>In the Google Play console, ensure the achievements match the ones already defined in the game (see Assets/GPGSIds.cs)</li>
+</ol>
 <p><br/>
  </p>
 </div></div><!-- contents -->
