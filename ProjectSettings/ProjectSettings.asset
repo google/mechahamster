@@ -239,8 +239,8 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: mechahamster.keystore
-  AndroidKeyaliasName: release
+  AndroidKeystoreName: 
+  AndroidKeyaliasName: 
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
@@ -613,7 +613,7 @@ PlayerSettings:
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
     4: NO_GPGS
-    7: GPGS
+    7: 
   platformArchitecture:
     iOS: 2
   scriptingBackend:
