@@ -2,6 +2,7 @@
 
 using System;
 using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 using UnityEngine;
 using System.Threading.Tasks;
 using Firebase.Auth;
