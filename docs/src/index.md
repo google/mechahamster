@@ -1,9 +1,9 @@
 MechaHamster    {#mechahamster_index}
 ======
 
-MechaHamster is a game of guiding a futuristic hamster ball through
-dangerous levels, creating mazes with the built-in map editor, and
-sharing them with friends.
+MechaHamster is a game where you guide a futuristic hamster ball through
+dangerous levels, create your own mazes with the built-in map editor and
+share them with friends.
 
 Can you guide Major Hammy D. Hamster through danger in one piece?
 
@@ -17,7 +17,16 @@ available via [GitHub][].
 
 [Instructions for building MechaHamster][] can be found in the [Programmer's Guide.][]
 
+And download the game to your mobile device from the AppStore and Google Play Store
 
+\htmlonly
+<a href="https://itunes.apple.com/us/app/mechahamster/id1286046770?mt=8&ign-mpt=uo%3D4">
+  <img src="app_store_badge.png" width="134px" alt="AppStore"
+</a> 
+<a href="https://play.google.com/store/apps/details?id=com.google.fpl.mechahamster&hl=en">
+  <img src="google_play_badge.png" width="150px" alt="PlayStore" 
+</a>
+\endhtmlonly
 
 ## Media
 
