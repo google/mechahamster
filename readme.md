@@ -31,6 +31,16 @@ MechaHamster demonstrates the following concepts:
 
 [MechaHamster][] source code can be downloaded from [Github][].
 
+And download the game to your mobile device from the AppStore and Google Play Store
+
+<a href="https://itunes.apple.com/us/app/mechahamster/id1286046770?mt=8&ign-mpt=uo%3D4">
+  <img src="docs/img/app_store_badge.png" width="134px" alt="AppStore"/>
+</a>
+<br>
+<a href="https://play.google.com/store/apps/details?id=com.google.fpl.mechahamster&hl=en">
+  <img src="docs/img/google_play_badge.png" width="150px" alt="PlayStore"/>
+</a>
+
 ## Building
 
    * Open the project in at least [Unity 5.6 beta][], this is required for the
