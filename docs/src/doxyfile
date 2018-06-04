@@ -1136,6 +1136,8 @@ HTML_EXTRA_STYLESHEET  = $(SHARED_DOCS_PATH)/style.css
 HTML_EXTRA_FILES       = "../img/editor.png" \
                          "../img/gameplay1.png" \
                          "../img/gameplay2.png" \
+                         "../img/app_store_badge.png" \
+                         "../img/google_play_badge.png" \
                          "../img/title_screen.png"
 
 
