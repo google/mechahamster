@@ -21,10 +21,10 @@ And download the game to your mobile device from the AppStore and Google Play St
 
 \htmlonly
 <a href="https://itunes.apple.com/us/app/mechahamster/id1286046770?mt=8&ign-mpt=uo%3D4">
-  <img src="app_store_badge.png" width="134px" alt="AppStore"
-</a> 
+  <img src="app_store_badge.png" width="134px" alt="AppStore"/>
+</a>
 <a href="https://play.google.com/store/apps/details?id=com.google.fpl.mechahamster&hl=en">
-  <img src="google_play_badge.png" width="150px" alt="PlayStore" 
+  <img src="google_play_badge.png" width="150px" alt="PlayStore"/>
 </a>
 \endhtmlonly
 
