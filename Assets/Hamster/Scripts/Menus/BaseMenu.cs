@@ -27,13 +27,13 @@ namespace Hamster.Menus {
 
     private void Awake() {
       Canvas canvas = GetComponent<Canvas>();
-      RectTransform rt = canvas.GetComponent<RectTransform>();
-      rt.SetPositionAndRotation(MenuOffset, Quaternion.identity);
       if (canvas == null) {
         // Prefabs that use this class are required to
         // have a canvas component.
         Debug.LogError("UI Menu could not find canvas!");
       } else {
+        RectTransform rt = canvas.GetComponent<RectTransform>();
+        rt.SetPositionAndRotation(MenuOffset, Quaternion.identity);
         // Set up canvas input.
         if (CommonData.inVrMode) {
           gameObject.AddComponent<GvrPointerGraphicRaycaster>();
