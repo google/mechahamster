@@ -39,6 +39,9 @@ sysinfo.txt
 /Assets/Firebase.meta
 /Assets/PlayServicesResolver.meta
 /Assets/Editor\ Default\ Resources.meta
+/Assets/Plugins/Android/android.arch.*
+/Assets/Plugins/Android/com.android.*
+/Assets/Plugins/Android/com.google.*
 /Assets/Plugins/Android/firebase*
 /Assets/Plugins/Android/Firebase.meta
 /Assets/Plugins/Android/libmessaging_unity_player_activity.jar
@@ -50,20 +53,22 @@ sysinfo.txt
 /Assets/Plugins/Android/support-annotations-*
 /Assets/Plugins/Android/support-*
 /Assets/Plugins/Android/Firebase/
-/Assets/Plugins/Android/firebase*
+/Assets/Plugins/Android/Firebase*
 /Assets/Plugins/iOS/Firebase/
-/Assets/Plugins/iOS/firebase*
+/Assets/Plugins/iOS/Firebase*
 /Assets/Plugins/x86_64/Firebase/
-/Assets/Plugins/x86_64/firebase*
+/Assets/Plugins/x86_64/Firebase*
 /Assets/Parse/
 /Assets/Parse.meta
 /remote_config_data
 
 # Credential files:
-/Assets/Hamster/GoogleService-Info.plist
-/Assets/Hamster/GoogleService-Info.plist.meta
-/Assets/Hamster/google-services.json
-/Assets/Hamster/google-services.json.meta
+**/GoogleService-Info.plist
+**/GoogleService-Info.plist.meta
+**/google-services.json
+**/google-services.json.meta
+/Assets/StreamingAssets*
+/Assets/StreamingAssets/
 
 # Keystore
 *.keystore
