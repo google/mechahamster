@@ -70,7 +70,7 @@ namespace Hamster {
           VRHeightScalar =
           (float)Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
           StringConstants.RemoteConfigVRHeightScale).DoubleValue;
-        } catch (System.Exception e) {
+        } catch (System.Exception) {
           // If the RemoteConfig failed, use a sensible value.
           VRHeightScalar = 0.65f;
         }

@@ -82,7 +82,7 @@ namespace Hamster {
     // Iterates through a map and spawns all the objects in it.
     public void SpawnWorld(LevelMap map) {
       foreach (MapElement element in map.elements.Values) {
-        GameObject obj = PlaceTile(element);
+        PlaceTile(element);
       }
       worldMap.SetProperties(map.name, map.mapId, map.ownerId, map.DatabasePath);
       HasPendingEdits = false;
@@ -240,7 +240,6 @@ namespace Hamster {
     public void RespawnWorld() {
       ClearMapGameObjects();
       foreach (MapElement element in worldMap.elements.Values) {
-        string key = element.GetStringKey();
         GameObject obj = SpawnElement(element);
         if (obj != null) {
           sceneObjects.Add(element.GetStringKey(), obj);

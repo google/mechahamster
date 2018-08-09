@@ -20,7 +20,7 @@ namespace Hamster.States {
 
   // Class for handling states and transitions between them.
   // Program flow is handled through state classes instead of
-  // scene changes, becuase we want to preserve the objects
+  // scene changes, because we want to preserve the objects
   // currently in the scene.
   public class StateManager {
     Stack<BaseState> stateStack;
