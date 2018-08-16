@@ -33,8 +33,12 @@ namespace Hamster {
     // Is the player object currently processing a death
     public bool IsProcessingDeath { get; private set; }
 
+    // How many times the player can hit mines, spikes and similar before the game is over.
+    public int HitPoints { get; private set; }
+
     void Start() {
       IsProcessingDeath = false;
+      HitPoints = kInitialHitPoints;
       if (CommonData.currentReplayData == null) {
         inputController = new InputControllers.MultiInputController();
       } else {
@@ -50,33 +54,19 @@ namespace Hamster {
     const float kFellOffLevelHeight = -10.0f;
     const float kMaxVelocity = 20f;
     const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
+    const int kInitialHitPoints = 3;
 
     // Since we're doing physics work, we use FixedUpdate instead of Update.
     void FixedUpdate() {
       if (IsProcessingDeath)
         return;
 
-      Rigidbody rigidBody = GetComponent<Rigidbody>();
-
       Vector2 input = inputController.GetInputVector();
+      Rigidbody rigidBody = GetComponent<Rigidbody>();
       rigidBody.AddForce(new Vector3(input.x, 0, input.y));
 
-      if (transform.position.y < kFellOffLevelHeight) {
-        if (OnFallSpawn != null) {
-          // Spawn in the death particles. Note that the particles should clean themselves up.
-          Instantiate(OnFallSpawn, transform.position, Quaternion.identity);
-
-          // We don't want the ball to keep the ball where it died, so that the camera can
-          // see the on death particles before respawning.
-          IsProcessingDeath = true;
-          rigidBody.isKinematic = true;
-          // Disable the children, which have the visible components of the ball.
-          foreach (Transform child in transform) {
-            child.gameObject.SetActive(false);
-          }
-          StartCoroutine(DelayedResetLevel());
-        }
-      }
+      if (transform.position.y < kFellOffLevelHeight)
+        EndGame();
     }
 
     // Triggers a delayed reset of the level, using coroutines.
@@ -87,6 +77,32 @@ namespace Hamster {
 
     public void HandleGoalCollision() {
       ReachedGoal = true;
+    }
+    public void Hit(int damageAmount) {
+      if (damageAmount == 0)
+        return;
+
+      HitPoints -= damageAmount;
+
+      if (HitPoints <= 0)
+        EndGame();
+    }
+    void EndGame() {
+      if (OnFallSpawn != null) {
+        // Spawn in the death particles. Note that the particles should clean themselves up.
+        Instantiate(OnFallSpawn, transform.position, Quaternion.identity);
+
+        // We don't want the ball to keep the ball where it died, so that the camera can
+        // see the on death particles before respawning.
+        IsProcessingDeath = true;
+        Rigidbody rigidBody = GetComponent<Rigidbody>();
+        rigidBody.isKinematic = true;
+        // Disable the children, which have the visible components of the ball.
+        foreach (Transform child in transform) {
+          child.gameObject.SetActive(false);
+        }
+        StartCoroutine(DelayedResetLevel());
+      }
     }
   }
 }
