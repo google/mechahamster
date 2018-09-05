@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Firebase.Database;
+using Firebase.Leaderboard;
 using Firebase.Storage;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,22 +21,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Hamster {
-
-  [System.Serializable]
-  public class TimeData {
-    // The name associated with the time.
-    public string name;
-    // The time taken to complete a level, in seconds.
-    public long time;
-
-    public TimeData() {}
-
-    public TimeData(string name, long time) {
-      this.name = name;
-      this.time = time;
-    }
-  }
-
   public class TimeDataUtil {
     // Maximum rank records to download
     const int Max_Rank_Records = 5;
@@ -72,8 +57,11 @@ namespace Hamster {
     }
 
     // Uploads the time data to the database, and returns the current top time list.
-    public static Task<List<TimeData>> UploadTimeAndReplay(
-        TimeData timedata, LevelMap map, ReplayData replay) {
+    public static Task<StorageMetadata> UploadReplay(UserScore userScore, LevelMap map, ReplayData replay) {
+      if (replay == null) {
+        // Nothing to upload.
+        return Task.FromResult<StorageMetadata>(null);
+      }
       // Get a client-generated unique id based on timestamp and random number.
       string key = FirebaseDatabase.DefaultInstance.RootReference.Push().Key;
 
@@ -85,19 +73,14 @@ namespace Hamster {
         shareReplay = replay != null //TODO(chkuang): && GameOption.shareReplay
       };
 
-      if (replay == null) {
-        // Nothing to upload.  Simply update the database, then retrieve top ranks
-        // This may happen if replay feature is disabled through remote config
-        return SubmitScore(timedata, config)
-          .ContinueWith(task => RetrieveTopRanks(map)).Unwrap()
-          .ContinueWith(task => GetTimeList(task.Result));
-      } else {
-        // Upload replay data first, update database, then retrieve top ranks
-        return UploadReplayData(timedata, replay, config)
-          .ContinueWith(uploadTask => SubmitScore(timedata, config)).Unwrap()
-          .ContinueWith(task => RetrieveTopRanks(map)).Unwrap()
-          .ContinueWith(task => GetTimeList(task.Result));
-      }
+      // Upload replay data first, update database, then retrieve top ranks
+      return UploadReplayData(userScore, replay, config);
+    }
+
+    // Gets the path for the top ranks on the database, given the level's database path
+    // and map id.
+    public static string GetDBRankPath(LevelMap map) {
+      return "Leaderboard/Map/" + GetPath(map) + Database_Ranks_Postfix;
     }
 
     // Gets the path, given the level's database path and map id.
@@ -110,12 +93,6 @@ namespace Hamster {
       }
     }
 
-    // Gets the path for the top ranks on the database, given the level's database path
-    // and map id.
-    private static string GetDBRankPath(LevelMap map) {
-      return "Leaderboard/Map/" + GetPath(map) + Database_Ranks_Postfix;
-    }
-
     // Gets the path for the top shared replays on the database, given the level's database path
     // and map id.  Note that not everyone wants to share replay record
     private static string GetDBSharedReplayPath(LevelMap map) {
@@ -123,15 +100,9 @@ namespace Hamster {
     }
 
     // Returns the top times, given the level's database path and map id.
-    public static Task<List<TimeData>> GetTopTimes(LevelMap map) {
-      return RetrieveTopRanks(map).ContinueWith(task => {
-        return GetTimeList(task.Result);
-      });
-    }
-
     // Upload the replay data to Firebase Storage
     private static Task<StorageMetadata> UploadReplayData(
-        TimeData timedata, ReplayData replay, UploadConfig config) {
+        UserScore userScore, ReplayData replay, UploadConfig config) {
       StorageReference storageRef =
         FirebaseStorage.DefaultInstance.GetReferenceFromUrl(
           CommonData.storageBucketUrl + "/" + config.storagePath);
@@ -147,61 +118,12 @@ namespace Hamster {
         CustomMetadata = new Dictionary<string, string> {
             {"DatabaseReplayPath", config.dbSharedReplayPath},
             {"DatabaseRankPath", config.dbRankPath},
-            {"Time", timedata.time.ToString()},
+            {"Time", userScore.Score.ToString()},
             {"Shared", config.shareReplay.ToString()},
           }
       };
 
       return storageRef.PutBytesAsync(serializedData, newMetadata);
-    }
-
-    // Submit scores to Firebase Realtime Database using client-generated unique key
-    // This always adds a record to Leaderboard/Map/{MapType}/{MapID}/Top/{Database_Ranks_Postfix}/
-    // If the replay data exists and the player choose to share it, an additional record is added
-    // to Leaderboard/Map/{MapType}/{MapID}/Top/{Database_Replays_Postfix}/
-    private static Task SubmitScore(TimeData timedata, UploadConfig config) {
-      Dictionary<string, object> entryValues = new Dictionary<string, object>();
-      entryValues[Database_Property_Name] = timedata.name;
-      entryValues[Database_Property_Time] = timedata.time;
-      entryValues[Database_Property_ReplayPath] = config.storagePath;
-      entryValues[Database_Property_IsShared] = config.shareReplay;
-
-      Dictionary<string, object> childUpdates = new Dictionary<string, object>();
-      childUpdates[config.dbRankPath] = entryValues;
-      if (config.shareReplay) {
-        childUpdates[config.dbSharedReplayPath] = entryValues;
-      }
-
-      return FirebaseDatabase.DefaultInstance.RootReference.UpdateChildrenAsync(childUpdates);
-    }
-
-    // Retrieve top ranked records from the database
-    private static Task<DataSnapshot> RetrieveTopRanks(LevelMap map) {
-      return FirebaseDatabase.DefaultInstance.GetReference(GetDBRankPath(map))
-        .OrderByChild(Database_Property_Time)
-        .LimitToFirst(Max_Rank_Records)
-        .GetValueAsync();
-    }
-
-    // Gets the current unsorted list of top times from a Database snapshot.
-    private static List<TimeData> GetTimeList(DataSnapshot snapshot) {
-      List<TimeData> timeList = new List<TimeData>();
-      Dictionary<string, object> databaseList = snapshot.Value as Dictionary<string, object>;
-      if (databaseList == null) {
-        return timeList;
-      }
-
-      foreach (KeyValuePair<string, object> child in databaseList) {
-        var childDict = child.Value as Dictionary<string, object>;
-        if (childDict == null)
-          continue;
-        string childName = (string)childDict[Database_Property_Name];
-        long childTime = (long)childDict[Database_Property_Time];
-
-        timeList.Add(new TimeData(childName, childTime));
-      }
-
-      return timeList;
     }
 
     // Utility function to get the top shared replay record storage path from the database

@@ -14,6 +14,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using Firebase.Leaderboard;
 
 namespace Hamster.Menus {
 
@@ -29,6 +30,6 @@ namespace Hamster.Menus {
     public GUIButton RetryButton;
     public GUIButton MainButton;
     public GUIButton LevelsButton;
+    public LeaderboardController LeaderboardControllerPrefab;
   }
-
 }

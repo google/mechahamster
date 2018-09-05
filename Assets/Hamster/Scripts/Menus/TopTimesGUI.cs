@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using UnityEngine;
+using UnityEngine.UI;
+using Firebase.Leaderboard;
+
 namespace Hamster.Menus {
 
   // Interface class for providing code access to the GUI
@@ -22,7 +26,11 @@ namespace Hamster.Menus {
     public UnityEngine.UI.Text LevelName;
     public UnityEngine.UI.Text RecordNames;
     public UnityEngine.UI.Text RecordTimes;
+    public GUIButton TimeFrameButton30Days;
+    public Text TimeFrame30DaysText;
+    public GUIButton TimeFrameButtonAllTime;
+    public Text TimeFrameAllTimeText;
     public GUIButton BackButton;
+    public LeaderboardController LeaderboardControllerPrefab;
   }
-
 }

@@ -15,6 +15,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Firebase.Leaderboard;
 
 namespace Hamster.States {
   class LevelFinished : BaseState {
@@ -39,6 +40,7 @@ namespace Hamster.States {
     // Unity component for the GUI Menu.
     Menus.LevelFinishedGUI dialogComponent;
 
+    private LeaderboardController LeaderboardController;
 
     Gameplay.GameplayMode mode;
     public LevelFinished(Gameplay.GameplayMode mode) {
@@ -127,10 +129,18 @@ namespace Hamster.States {
       } else if (source == dialogComponent.RetryButton.gameObject) {
         manager.SwapState(new Gameplay(mode));
       } else if (source == dialogComponent.SubmitButton.gameObject) {
-        manager.PushState(new UploadTime(ElapsedGameTime));
+        LeaderboardController = LeaderboardController ??
+            GameObject.FindObjectOfType<LeaderboardController>() ??
+            InstantiateLeaderboardController();
+        manager.PushState(new UploadTime(ElapsedGameTime, LeaderboardController));
       } else if (source == dialogComponent.MainButton.gameObject) {
         manager.ClearStack(new MainMenu());
       }
+    }
+
+    private LeaderboardController InstantiateLeaderboardController() {
+      Debug.Log("Creating LeaderboardController from LevelFinished.");
+      return GameObject.Instantiate(dialogComponent.LeaderboardControllerPrefab);
     }
   }
 }

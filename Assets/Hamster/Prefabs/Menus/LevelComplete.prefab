@@ -479,6 +479,8 @@ MonoBehaviour:
   RetryButton: {fileID: 114335478503033034}
   MainButton: {fileID: 114793157812610250}
   LevelsButton: {fileID: 114975111073732804}
+  LeaderboardControllerPrefab: {fileID: 114485459229942576, guid: d9a36621aae7443e3914b6abe3cb155b,
+    type: 2}
 --- !u!114 &114574798085419678
 MonoBehaviour:
   m_ObjectHideFlags: 1

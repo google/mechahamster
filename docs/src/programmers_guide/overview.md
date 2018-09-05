@@ -7,6 +7,9 @@ is intended to make it easier to find the pieces you're looking for!
 # Downloading Source Code
 Source code for MechaHamster is available for download from [Github.][]
 
+> If cloning locally using `git clone`, be sure to use the `--recurse-submodules` flag
+> to ensure required scripts from submodules are present.
+
 # Directory Layout
 The bulk of the project exists in the `/Assets/Hamster` directory.
 Some other useful paths to know about for the project include:

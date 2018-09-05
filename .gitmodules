@@ -1,0 +1,3 @@
+[submodule "Assets/firebase-unity-solutions"]
+	path = Assets/firebase-unity-solutions
+	url = https://github.com/FirebaseExtended/unity-solutions.git

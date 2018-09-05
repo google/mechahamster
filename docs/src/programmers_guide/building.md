@@ -4,6 +4,9 @@ Building MechaHamster {#mechahamster_guide_building}
 ### Downloading Source Code
 Source code for MechaHamster is available for download from [Github.][]
 
+> If cloning locally using `git clone`, be sure to use the `--recurse-submodules` flag
+> to ensure required scripts from submodules are present.
+
 ### Overview
 
 The MechaHamster project was built using version 5.6.06b of the Unity
@@ -170,7 +173,7 @@ Currently this affects non-editor build as well.
   [Daydream]: https://developers.google.com/vr/daydream/overview
   [Google Daydream]: https://developers.google.com/vr/daydream/overview
   [Google VR SDK for Unity]: https://developers.google.com/vr/unity/
-  [MechaHamster]: @ref #mechahamster_index
+  [MechaHamster]: #mechahamster_index
   [Firebase Unity SDK]: https://firebase.google.com/docs/unity/setup
   [Firebase Console]: https://console.firebase.google.com/
   [GitHub.]: https://github.com/google/mechahamster

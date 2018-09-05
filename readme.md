@@ -31,6 +31,9 @@ MechaHamster demonstrates the following concepts:
 
 [MechaHamster][] source code can be downloaded from [Github][].
 
+> If cloning locally using `git clone`, be sure to use the `--recurse-submodules` flag
+> to ensure required scripts from submodules are present.
+
 And download the game to your mobile device from the AppStore and Google Play Store
 
 <a href="https://itunes.apple.com/us/app/mechahamster/id1286046770?mt=8&ign-mpt=uo%3D4">

@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using System;
+using Firebase.Leaderboard;
 
 namespace Hamster.States {
 
@@ -26,10 +28,16 @@ namespace Hamster.States {
     private bool TimeUploaded { get; set; }
 
     // The time data that is being uploaded.
-    public TimeData UploadedTimeData { get; private set; }
+    public UserScore UploadedTimeData { get; private set; }
 
-    public UploadTime(long time) {
+    private static LeaderboardController LeaderboardController;
+
+    public UploadTime(long time, LeaderboardController leaderboardController) {
       Time = time;
+      LeaderboardController = leaderboardController;
+      LeaderboardController.enabled = true;
+      LeaderboardController.AllScoreDataPath =
+          TimeDataUtil.GetDBRankPath(CommonData.gameWorld.worldMap);
     }
 
     public override void Initialize() {
@@ -43,11 +51,15 @@ namespace Hamster.States {
       string name = (auth.CurrentUser != null && !string.IsNullOrEmpty(auth.CurrentUser.DisplayName))
         ? auth.CurrentUser.DisplayName
         : StringConstants.UploadScoreDefaultName;
+      string userId = (auth.CurrentUser != null && !string.IsNullOrEmpty(auth.CurrentUser.UserId))
+        ? auth.CurrentUser.UserId
+        : StringConstants.UploadScoreDefaultName;
 
-      UploadedTimeData = new TimeData(name, Time);
+      UploadedTimeData = new Firebase.Leaderboard.UserScore(userId, name, (int)Time, DateTime.Now.Ticks / TimeSpan.TicksPerSecond);
       manager.PushState(new WaitForTask(
-        TimeDataUtil.UploadTimeAndReplay(UploadedTimeData,
-          CommonData.gameWorld.worldMap, CommonData.gameWorld.PreviousReplayData),
+        TimeDataUtil.UploadReplay(UploadedTimeData,
+          CommonData.gameWorld.worldMap, CommonData.gameWorld.PreviousReplayData)
+              .ContinueWith(task => LeaderboardController.AddScore(UploadedTimeData)),
           StringConstants.UploadTimeTitle, true));
     }
 
@@ -70,8 +82,8 @@ namespace Hamster.States {
 
           // Show the top times for the level, highlighting which one was just uploaded.
           var task =
-            resultData.task as System.Threading.Tasks.Task<List<TimeData>>;
-          List<TimeData> times = null;
+            resultData.task as System.Threading.Tasks.Task<List<UserScore>>;
+          List<UserScore> times = null;
           if (task != null) {
             times = task.Result;
           }
