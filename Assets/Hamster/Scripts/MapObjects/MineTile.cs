@@ -31,6 +31,9 @@ namespace Hamster.MapObjects {
     // The amount of time after the tile is used that it can't be used again, in seconds.
     public static float TotalCooldownTime = 1.0f;
 
+    // The amount of damage caused to the hamster/ball when this mine explodes.
+    public int DamageAmount = 0;
+
     // The cooldown timer for the tile, in seconds.
     public float Cooldown { get; private set; }
 
@@ -111,6 +114,13 @@ namespace Hamster.MapObjects {
         mineLocation = Mine.transform;
         // Hide the mine child.
         Mine.SetActive(false);
+      }
+
+      PlayerController pc = CommonData.mainGame.PlayerController;
+      if (pc != null && DamageAmount != 0) {
+        float distance = Vector3.Distance(pc.transform.position, mineLocation.position);
+        if (distance < ExplosionRadius)
+          pc.Hit(DamageAmount);
       }
 
       // Spawn the explosion where the mine was. Note the objects are in charge of

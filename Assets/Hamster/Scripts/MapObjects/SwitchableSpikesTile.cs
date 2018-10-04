@@ -22,6 +22,9 @@ namespace Hamster.MapObjects {
     // Whether the spikes start in the up position when the level begins.
     public bool EnabledAtStart = false;
 
+    // The amount of damage caused to the hamster/ball when it hits this spike.
+    public int DamageAmount = 0;
+
     public float ExplosionForce { get; private set; }
     public float ExplosionRadius { get; private set; }
     public float ExplosionUpwardsModifier { get; private set; }
@@ -83,7 +86,9 @@ namespace Hamster.MapObjects {
 
     // When the ball rolls into the spikes, send it flying with a force.
     void OnTriggerEnter(Collider collider) {
-      if (collider.GetComponent<PlayerController>() != null) {
+      PlayerController pc = collider.GetComponent<PlayerController>();
+      if (pc != null) {
+        pc.Hit(DamageAmount);
         Rigidbody rigidbody = collider.GetComponent<Rigidbody>();
         rigidbody.AddExplosionForce(ExplosionForce, transform.position,
           ExplosionRadius, ExplosionUpwardsModifier, ForceMode.Impulse);
