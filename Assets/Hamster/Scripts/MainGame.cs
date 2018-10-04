@@ -17,6 +17,7 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 using Firebase.Unity.Editor;
+using UnityEngine.SocialPlatforms;
 
 namespace Hamster {
 
@@ -76,6 +77,7 @@ namespace Hamster {
 
     void Start() {
       Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
+      GooglePlayServicesSignIn.InitializeGooglePlayGames();
       InitializeFirebaseAndStart();
     }
 
@@ -228,9 +230,11 @@ namespace Hamster {
       CommonData.app = Firebase.FirebaseApp.Create(ops);
 
       // Setup database url when running in the editor
+#if UNITY_EDITOR
       if (CommonData.app.Options.DatabaseUrl == null) {
         CommonData.app.SetEditorDatabaseUrl("https://YOUR-PROJECT-ID.firebaseio.com");
       }
+#endif
 
       // Setup storage bucket
       // When running in the editor, the bucket url is blank in FirebaseStorage.DefaultInstance.

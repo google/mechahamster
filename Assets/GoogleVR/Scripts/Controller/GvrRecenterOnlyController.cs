@@ -42,7 +42,7 @@ public class GvrRecenterOnlyController : MonoBehaviour {
 
   void Update() {
     if (cam == null || pointer == null
-        || VRSettings.loadedDeviceName != "daydream"
+        || UnityEngine.XR.XRSettings.loadedDeviceName != "daydream"
         || GvrController.State != GvrConnectionState.Connected) {
       return;
     }

@@ -66,6 +66,8 @@ namespace Hamster.States {
     public override void Initialize() {
       auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
       dialogComponent = SpawnUI<Menus.ChooseSignInGUI>(StringConstants.PrefabsChooseSigninMenu);
+      dialogComponent.GooglePlaySignIn.gameObject.SetActive(
+          GooglePlayServicesSignIn.GooglePlayServicesEnabled());
     }
 
     public override void HandleUIEvent(GameObject source, object eventData) {
@@ -75,11 +77,16 @@ namespace Hamster.States {
         manager.PushState(new SignInWithEmail());
       } else if (source == dialogComponent.AnonymousSignIn.gameObject) {
         manager.PushState(
-            new WaitForTask(auth.SignInAnonymouslyAsync(),
+            new WaitForTask(auth.SignInAnonymouslyAsync().ContinueWith(t => {
+                  SignInState.SetState(SignInState.State.Anonymous);}),
               StringConstants.LabelSigningIn, true));
       } else if (source == dialogComponent.DontSignIn.gameObject) {
         CommonData.isNotSignedIn = true;
         manager.PopState();
+      } else if (source == dialogComponent.GooglePlaySignIn.gameObject) {
+        manager.PushState(
+            new WaitForTask(GooglePlayServicesSignIn.SignIn(),
+              StringConstants.LabelSigningIn, true));
       }
     }
   }

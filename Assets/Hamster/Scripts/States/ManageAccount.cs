@@ -58,6 +58,7 @@ namespace Hamster.States {
       menuComponent.EmailText.gameObject.SetActive(!isAnon);
       menuComponent.SignedIntoAnonText.gameObject.SetActive(isAnon);
       menuComponent.AddEmailButton.gameObject.SetActive(isAnon);
+      menuComponent.AddGooglePlayButton.gameObject.SetActive(SignInState.GetState() != SignInState.State.GooglePlayServices);
       menuComponent.SignOutButton.gameObject.SetActive(!isAnon);
 
       if (!isAnon) {
@@ -86,10 +87,16 @@ namespace Hamster.States {
         manager.PushState(new AddEmail());
       } else if (source == menuComponent.SignOutButton.gameObject) {
         auth.SignOut();
+        GooglePlayServicesSignIn.SignOut();
+        SignInState.SetState(SignInState.State.SignedOut);
         manager.ClearStack(new Startup());
       } else if (source == menuComponent.DeleteAccountButton.gameObject) {
         manager.SwapState(new ConfirmationDialog(StringConstants.DeleteAccountDialogTitle,
           StringConstants.DeleteAccountDialogMessage, new DeleteAccount(), null));
+      } else if (source == menuComponent.AddGooglePlayButton.gameObject) {
+        manager.PushState(
+          new WaitForTask(GooglePlayServicesSignIn.LinkAccount(),
+            StringConstants.LabelSigningIn, true));
       } else if (source == menuComponent.MainButton.gameObject) {
         manager.PopState();
       }

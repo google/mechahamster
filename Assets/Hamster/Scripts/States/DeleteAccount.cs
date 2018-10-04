@@ -19,7 +19,6 @@ using Firebase.Unity.Editor;
 using Firebase.Auth;
 using Firebase.Database;
 
-
 namespace Hamster.States {
   // Utility state for deleting a user account.  Displays a
   // message confirming success/failure, and then either
@@ -60,6 +59,9 @@ namespace Hamster.States {
               path = CommonData.DBMapTablePath + map.mapId;
               database.GetReference(path).SetValueAsync(null);
             }
+            GooglePlayServicesSignIn.SignOut();
+            SignInState.SetState(SignInState.State.SignedOut);
+
             manager.SwapState(new ChooseSignInMenu());
             manager.PushState(new BasicDialog(StringConstants.DeleteAccountSuccess));
           }

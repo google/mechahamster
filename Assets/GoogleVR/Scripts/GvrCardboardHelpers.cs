@@ -26,7 +26,7 @@ public class GvrCardboardHelpers {
   /// Apply the recenteringOffset to the Camera or its parent at runtime.
   public static void Recenter() {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-    gvr_reset_tracking(VRDevice.GetNativePtr());
+    gvr_reset_tracking(UnityEngine.XR.XRDevice.GetNativePtr());
 #endif  // (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
     Debug.Log("Use GvrEditorEmulator for in-editor recentering");
   }

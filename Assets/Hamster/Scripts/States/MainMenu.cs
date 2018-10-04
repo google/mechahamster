@@ -56,8 +56,15 @@ namespace Hamster.States {
       // Whenever we come back to the main menu, check:
       // If we have authentication data, but haven't fetched user data
       // yet, go try to get user data.
-      if (results == null ||
-          (results != null && results.sourceState != typeof(FetchUserData))) {
+      bool shouldFetchUserData ;
+      if (results == null) {
+        shouldFetchUserData = true;
+      } else if (results.sourceState != typeof(FetchUserData) && results.sourceState != typeof(WaitForTask)) {
+        shouldFetchUserData = true;
+      } else {
+        shouldFetchUserData = false;
+      }
+      if (shouldFetchUserData) {
 #if UNITY_EDITOR
         if (CommonData.currentUser == null) {
           manager.PushState(new FetchUserData(Startup.DefaultDesktopID));

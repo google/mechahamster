@@ -27,6 +27,7 @@ namespace Hamster.Menus {
     public UnityEngine.UI.Text EmailText;
     public UnityEngine.UI.Text SignedIntoAnonText;
     public GUIButton AddEmailButton;
+    public GUIButton AddGooglePlayButton;
     public GUIButton DeleteAccountButton;
     public GUIButton SignOutButton;
     public GUIButton MainButton;

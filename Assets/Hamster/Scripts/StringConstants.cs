@@ -107,6 +107,9 @@ namespace Hamster {
     public const string MusicVolume = "music_volume";
     public const string SoundFxVolume = "sound_fx_volume";
 
+    // Key used for sign in state
+    public const string SignInState = "sign_in_state";
+
     // Auth:
     //--------------------------
 

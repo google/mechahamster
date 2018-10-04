@@ -31,7 +31,7 @@ namespace Hamster.States {
 
     const int MaxDatabaseRetries = 5;
 
-    Firebase.Database.FirebaseDatabase database;
+    protected Firebase.Database.FirebaseDatabase database;
 
     Menus.SingleLabelGUI menuComponent;
 
@@ -42,21 +42,26 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
+      Network.TestConnection(true);
       database = Firebase.Database.FirebaseDatabase.GetInstance(CommonData.app);
-      database.GetReference(path).GetValueAsync().ContinueWith(HandleResult);
+      database.GetReference(path).ValueChanged += HandleResult;
+
       menuComponent = SpawnUI<Menus.SingleLabelGUI>(StringConstants.PrefabsSingleLabelMenu);
       UpdateLabelText();
     }
 
-    protected virtual void HandleResult(
-        System.Threading.Tasks.Task<Firebase.Database.DataSnapshot> task) {
-      if (task.IsFaulted) {
-        HandleFaultedFetch(task);
-        return;
-      } else if (task.IsCompleted) {
+    protected virtual void HandleResult(object sender,
+      Firebase.Database.ValueChangedEventArgs args) {
+      // Remove the listener as soon as we get a response.
+      database.GetReference(path).ValueChanged -= HandleResult;
+
+      if (args.DatabaseError != null) {
+        Debug.LogError("Database error :" + args.DatabaseError.Code + ":\n" +
+          args.DatabaseError.Message + "\n" + args.DatabaseError.Details);
+      } else {
         wasSuccessful = true;
-        if (task.Result != null) {
-          string json = task.Result.GetRawJsonValue();
+        if (args.Snapshot != null) {
+          string json = args.Snapshot.GetRawJsonValue();
           if (!string.IsNullOrEmpty(json)) {
             result = JsonUtility.FromJson<T>(json);
           }
@@ -67,6 +72,14 @@ namespace Hamster.States {
 
     // Called once per frame when the state is active.
     public override void Update() {
+      ConnectionTesterStatus connectionTestResult = Network.TestConnection();
+
+      if (connectionTestResult == ConnectionTesterStatus.Error) {
+        Debug.LogError("Network connection unavailable");
+        database.GetReference(path).ValueChanged -= HandleResult;
+        isComplete = true;
+      }
+
       if (isComplete) {
         manager.PopState();
       } else {
@@ -78,21 +91,6 @@ namespace Hamster.States {
       if (menuComponent != null) {
         menuComponent.LabelText.text =
           StringConstants.LabelLoading + Utilities.StringHelper.CycleDots();
-      }
-    }
-
-    // If a fetch from the database comes back failed, try again, until the
-    // maximum number of retries have been reached.  Failures are most often
-    // caused by connectivity issues or database access rules.
-    protected void HandleFaultedFetch(
-        System.Threading.Tasks.Task<Firebase.Database.DataSnapshot> task) {
-      Debug.LogError("Database exception!  Path = [" + path + "]\n" + task.Exception);
-      // Retry after failure.
-      if (failedFetches++ < MaxDatabaseRetries) {
-        database.GetReference(path).GetValueAsync().ContinueWith(HandleResult);
-      } else {
-        // Too many failures.  Exit the state, with wasSuccessful set to false.
-        isComplete = true;
       }
     }
 

@@ -362,6 +362,9 @@ namespace Hamster.States {
             CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
             manager.PopState();
           } else {
+            Social.ReportProgress(GPGSIds.achievement_game_starter, 100.0f, (bool success) => {
+              Debug.Log("Game starter achievement unlocked. Sucess: " + success);
+            });
             CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.winMusic, false);
             manager.SwapState(new LevelFinished(mode));
           }

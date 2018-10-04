@@ -61,6 +61,9 @@ namespace Hamster.States {
         } else {
           Firebase.Analytics.FirebaseAnalytics.LogEvent(StringConstants.AnalyticsEventMapShared,
             StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
+          Social.ReportProgress(GPGSIds.achievement_friendly_hamster, 100.0f, (bool success) => {
+            Debug.Log("Map sharing achievement unlocked. Sucess: " + success);
+          });
           SetMapToShared();
         }
       });

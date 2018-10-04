@@ -27,6 +27,7 @@ namespace Hamster.Menus {
     public GUIButton CreateAccountButton;
     public GUIButton AnonymousSignIn;
     public GUIButton DontSignIn;
+    public GUIButton GooglePlaySignIn;
   }
 
 }
