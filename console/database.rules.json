@@ -56,13 +56,13 @@
         "$mapType": {
           "$mapid": {
             "Top" :{
-              // Top rank records using push ID as key and indexed by "time" property.
+              // Top rank records using push ID as key and indexed by "score" property.
               // This structure is better for cloud function to register add/delete event of each
               // individual record.
               "Ranks": {
                 ".read": true,
                 ".write": true,
-                ".indexOn": ["time"],
+                ".indexOn": ["score", "timestamp"],
                 "$rank": {
                   ".validate": "newData.child('username').isString() && newData.child('username').val().length < 100 && newData.child('score').isNumber()"
                 }
