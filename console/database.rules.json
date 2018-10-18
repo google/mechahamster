@@ -64,7 +64,7 @@
                 ".write": true,
                 ".indexOn": ["time"],
                 "$rank": {
-                  ".validate": "newData.child('name').isString() && newData.child('name').val().length < 100 && newData.child('time').isNumber()"
+                  ".validate": "newData.child('username').isString() && newData.child('username').val().length < 100 && newData.child('score').isNumber()"
                 }
               },
               // Entries in SharedReplays only store tops replays which was volunteerly shared by the player.
