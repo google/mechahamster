@@ -71,9 +71,9 @@
               "SharedReplays": {
                 ".read": true,
                 ".write": true,
-                ".indexOn": ["time"],
+                ".indexOn": ["score", "timestamp"],
                 "$rank": {
-                  ".validate": "newData.child('name').isString() && newData.child('time').isNumber() && newData.child('name').val().length < 100"
+                  ".validate": "newData.child('username').isString() && newData.child('username').val().length < 100 && newData.child('score').isNumber()"
                 }
               }
             }

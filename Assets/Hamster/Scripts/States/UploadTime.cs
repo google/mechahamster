@@ -27,9 +27,6 @@ namespace Hamster.States {
     // Whether the time was uploaded, used during cleanup.
     private bool TimeUploaded { get; set; }
 
-    // The time data that is being uploaded.
-    public UserScore UploadedTimeData { get; private set; }
-
     private static LeaderboardController LeaderboardController;
 
     public UploadTime(long time, LeaderboardController leaderboardController) {
@@ -47,19 +44,10 @@ namespace Hamster.States {
       Firebase.Analytics.FirebaseAnalytics.LogEvent(StringConstants.AnalyticsEventTimeUploadStarted,
         StringConstants.AnalyticsParamMapId, CommonData.gameWorld.worldMap.mapId);
 
-      Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-      string name = (auth.CurrentUser != null && !string.IsNullOrEmpty(auth.CurrentUser.DisplayName))
-        ? auth.CurrentUser.DisplayName
-        : StringConstants.UploadScoreDefaultName;
-      string userId = (auth.CurrentUser != null && !string.IsNullOrEmpty(auth.CurrentUser.UserId))
-        ? auth.CurrentUser.UserId
-        : StringConstants.UploadScoreDefaultName;
-
-      UploadedTimeData = new Firebase.Leaderboard.UserScore(userId, name, (int)Time, DateTime.Now.Ticks / TimeSpan.TicksPerSecond);
       manager.PushState(new WaitForTask(
-        TimeDataUtil.UploadReplay(UploadedTimeData,
+        TimeDataUtil.UploadReplay(Time,
           CommonData.gameWorld.worldMap, CommonData.gameWorld.PreviousReplayData)
-              .ContinueWith(task => LeaderboardController.AddScore(UploadedTimeData)),
+              .ContinueWith(task => LeaderboardController.AddScore(task.Result)),
           StringConstants.UploadTimeTitle, true));
     }
 
