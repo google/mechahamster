@@ -30,10 +30,12 @@ namespace Hamster.States {
     protected int failedFetches = 0;
 
     const int MaxDatabaseRetries = 5;
+    const float TimeoutSeconds = 10.0f;
 
     protected Firebase.Database.FirebaseDatabase database;
 
     Menus.SingleLabelGUI menuComponent;
+    float timeoutTime;
 
     public WaitingForDBLoad(string path) {
       this.path = path;
@@ -42,18 +44,16 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      Network.TestConnection(true);
       database = Firebase.Database.FirebaseDatabase.GetInstance(CommonData.app);
       database.GetReference(path).ValueChanged += HandleResult;
 
       menuComponent = SpawnUI<Menus.SingleLabelGUI>(StringConstants.PrefabsSingleLabelMenu);
       UpdateLabelText();
+      timeoutTime = Time.realtimeSinceStartup + TimeoutSeconds;
     }
 
     protected virtual void HandleResult(object sender,
       Firebase.Database.ValueChangedEventArgs args) {
-      // Remove the listener as soon as we get a response.
-      database.GetReference(path).ValueChanged -= HandleResult;
 
       if (args.DatabaseError != null) {
         Debug.LogError("Database error :" + args.DatabaseError.Code + ":\n" +
@@ -72,15 +72,7 @@ namespace Hamster.States {
 
     // Called once per frame when the state is active.
     public override void Update() {
-      ConnectionTesterStatus connectionTestResult = Network.TestConnection();
-
-      if (connectionTestResult == ConnectionTesterStatus.Error) {
-        Debug.LogError("Network connection unavailable");
-        database.GetReference(path).ValueChanged -= HandleResult;
-        isComplete = true;
-      }
-
-      if (isComplete) {
+      if (isComplete || Time.realtimeSinceStartup > timeoutTime) {
         manager.PopState();
       } else {
         UpdateLabelText();
@@ -95,6 +87,7 @@ namespace Hamster.States {
     }
 
     public override StateExitValue Cleanup() {
+      database.GetReference(path).ValueChanged -= HandleResult;
       DestroyUI();
       return new StateExitValue(
         typeof(WaitingForDBLoad<T>), new Results(path, result, wasSuccessful));
