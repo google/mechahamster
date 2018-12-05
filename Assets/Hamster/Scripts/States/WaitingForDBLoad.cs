@@ -12,28 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Firebase.Database;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using Firebase.Unity.Editor;
-
 
 namespace Hamster.States {
   // Utility state, for fetching structures from the database.
   // Returns the result in the result struct.
-  class WaitingForDBLoad<T> : BaseState {
+  class WaitingForDBLoad<T> : BaseState where T : class {
 
-    protected bool isComplete = false;
-    protected bool wasSuccessful = false;
-    protected T result = default(T);
-    protected string path;
-    protected int failedFetches = 0;
-
-    const int MaxDatabaseRetries = 5;
     const float TimeoutSeconds = 10.0f;
 
-    protected Firebase.Database.FirebaseDatabase database;
-
+    T result;
+    string path;
+    bool isComplete;
+    FirebaseDatabase database;
     Menus.SingleLabelGUI menuComponent;
     float timeoutTime;
 
@@ -44,26 +37,21 @@ namespace Hamster.States {
     // Initialization method.  Called after the state
     // is added to the stack.
     public override void Initialize() {
-      database = Firebase.Database.FirebaseDatabase.GetInstance(CommonData.app);
+      database = FirebaseDatabase.GetInstance(CommonData.app);
       database.GetReference(path).ValueChanged += HandleResult;
-
       menuComponent = SpawnUI<Menus.SingleLabelGUI>(StringConstants.PrefabsSingleLabelMenu);
-      UpdateLabelText();
       timeoutTime = Time.realtimeSinceStartup + TimeoutSeconds;
     }
 
-    protected virtual void HandleResult(object sender,
-      Firebase.Database.ValueChangedEventArgs args) {
-
+    void HandleResult(object sender, ValueChangedEventArgs args) {
       if (args.DatabaseError != null) {
         Debug.LogError("Database error :" + args.DatabaseError.Code + ":\n" +
           args.DatabaseError.Message + "\n" + args.DatabaseError.Details);
       } else {
-        wasSuccessful = true;
         if (args.Snapshot != null) {
-          string json = args.Snapshot.GetRawJsonValue();
+          var json = args.Snapshot.GetRawJsonValue();
           if (!string.IsNullOrEmpty(json)) {
-            result = JsonUtility.FromJson<T>(json);
+            result = ParseResult(json);
           }
         }
       }
@@ -79,7 +67,11 @@ namespace Hamster.States {
       }
     }
 
-    private void UpdateLabelText() {
+    protected virtual T ParseResult(string json) {
+      return JsonUtility.FromJson<T>(json);
+    }
+    
+    void UpdateLabelText() {
       if (menuComponent != null) {
         menuComponent.LabelText.text =
           StringConstants.LabelLoading + Utilities.StringHelper.CycleDots();
@@ -90,7 +82,7 @@ namespace Hamster.States {
       database.GetReference(path).ValueChanged -= HandleResult;
       DestroyUI();
       return new StateExitValue(
-        typeof(WaitingForDBLoad<T>), new Results(path, result, wasSuccessful));
+        typeof(WaitingForDBLoad<T>), new Results(path, result, result != null));
     }
 
     // Class for encapsulating the results of the database load, as
