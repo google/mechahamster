@@ -26,8 +26,12 @@ MechaHamster demonstrates the following concepts:
      redeploying a new build of the game.
    * [Firebase Cloud Storage][] to upload and download replay data of the best playthrough shared by
      the players in each level. (Disabled by default)
+   * [Firebase Cloud Function][] to limit number of scores in Database and remove unreferenced
+     replay data from Storage.
    * [Firebase Test Lab][] to allow developers to test their game across a wide variety of hardware
      and device configurations at once.
+   * [Firebase CLI][] to allow developers to deploy configurations and Cloud Function to Firebase
+     project through console commands.
 
 ## Downloading
 
@@ -67,6 +71,11 @@ And download the game to your mobile device from the AppStore and Google Play St
      bar.
    * Finally, select the `File > Build Settings` menu option then click `Build and Run`.
 
+> [MechaHamster][] currently only works with .NET 3.x. If [Firebase Unity SDK][] version is 5.4.0 or
+> above, please import plugins from `dotnet3` folder. And make sure `Scripting Runtime Version` in
+> `Edit > Project Settings > Player` is set to .NET 3.x, ex. `Stable (.NET 3.5 Equivalent)` in Unity
+> 2017
+
 ## Documentation
 For more information about MechaHamster see [MechaHamster Document][]
 To contribute the this project see [CONTRIBUTING][].
@@ -90,6 +99,8 @@ To contribute the this project see [CONTRIBUTING][].
   [Firebase Remote Config]: https://firebase.google.com/docs/remote-config/
   [Firebase App Invites]: https://firebase.google.com/docs/invites/
   [Firebase Cloud Storage]: https://firebase.google.com/docs/storage/
+  [Firebase Cloud Function]: https://firebase.google.com/docs/functions/
   [Firebase Test Lab]: https://firebase.google.com/docs/test-lab/
+  [Firebase CLI]: https://firebase.google.com/docs/cli/
   [MechaHamster Documentation]: https://google.github.io/mechahamster/
   [Building MechaHamster]: https://google.github.io/mechahamster/mechahamster_guide_building.html
