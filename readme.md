@@ -24,6 +24,8 @@ MechaHamster demonstrates the following concepts:
    * [Firebase App Invites][] to share user generated content with other players.
    * [Firebase Remote Config][] to allow game admins to run experiments on game data without
      redeploying a new build of the game.
+   * [Firebase Cloud Storage][] to upload and download replay data of the best playthrough shared by
+     the players in each level. (Disabled by default)
    * [Firebase Test Lab][] to allow developers to test their game across a wide variety of hardware
      and device configurations at once.
 
@@ -57,6 +59,7 @@ And download the game to your mobile device from the AppStore and Google Play St
       * FirebaseInvites.unitypackage
       * FirebaseMessaging.unitypackage
       * FirebaseRemoteConfig.unitypackage
+      * FirebaseStorage.unitypackage
    * Select a target platform (iOS or Android) using the `File > Build Settings` menu option.
    * Add Firebase to your app using either the [Firebase Unity SDK iOS Setup][] or
      [Firebase Unity SDK Android Setup][].  For more information see [Building MechaHamster][].
@@ -86,6 +89,7 @@ To contribute the this project see [CONTRIBUTING][].
   [Firebase Cloud Messaging]: https://firebase.google.com/docs/cloud-messaging/
   [Firebase Remote Config]: https://firebase.google.com/docs/remote-config/
   [Firebase App Invites]: https://firebase.google.com/docs/invites/
+  [Firebase Cloud Storage]: https://firebase.google.com/docs/storage/
   [Firebase Test Lab]: https://firebase.google.com/docs/test-lab/
   [MechaHamster Documentation]: https://google.github.io/mechahamster/
   [Building MechaHamster]: https://google.github.io/mechahamster/mechahamster_guide_building.html
