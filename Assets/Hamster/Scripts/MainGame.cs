@@ -75,10 +75,16 @@ namespace Hamster {
       }
     }
 
-    void Start() {
+    private bool firebaseInitialized;
+
+    IEnumerator Start() {
       Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
       GooglePlayServicesSignIn.InitializeGooglePlayGames();
       InitializeFirebaseAndStart();
+      while (!firebaseInitialized) {
+        yield return null;
+      }
+      StartGame();
     }
 
     void Update() {
@@ -214,7 +220,7 @@ namespace Hamster {
     void InitializeFirebaseComponents() {
       System.Threading.Tasks.Task.WhenAll(
           InitializeRemoteConfig()
-        ).ContinueWith(task => { StartGame(); });
+        ).ContinueWith(task => { firebaseInitialized = true; });
     }
 
     // Actually start the game, once we've verified that everything
