@@ -174,8 +174,7 @@ namespace Hamster {
       TaskCompletionSource<ReplayData> tComplete = new TaskCompletionSource<ReplayData>();
 
       Firebase.Storage.StorageReference storageRef =
-        Firebase.Storage.FirebaseStorage.DefaultInstance.GetReferenceFromUrl(
-          CommonData.storageBucketUrl + "/" + replayPath);
+        Firebase.Storage.FirebaseStorage.DefaultInstance.GetReference(replayPath);
 
       storageRef.GetStreamAsync(stream => {
         tComplete.SetResult(ReplayData.CreateFromStream(stream));

@@ -242,21 +242,6 @@ namespace Hamster {
       }
 #endif
 
-      // Setup storage bucket
-      // When running in the editor, the bucket url is blank in FirebaseStorage.DefaultInstance.
-      // In order to make it work in both the editor and Android/iOS build,
-      // one work-around is to store the bucket url and always use
-      // FirebaseStorage.DefaultInstance.GetReferenceFromUrl() with full path (start with "gs://")
-      // Another option is to create a new instance with FirebaseStorage.GetInstance(bucketUrl).
-      if (string.IsNullOrEmpty(CommonData.app.Options.StorageBucket)) {
-        // Specify storage bucket url when running in the editor
-        CommonData.storageBucketUrl = "gs://YOUR-STORAGE-BUCKET/";
-      } else {
-        // Store the storage bucket url from google-services.json or GoogleService-Info.plist
-        CommonData.storageBucketUrl = string.Format("gs://{0}/",
-          CommonData.app.Options.StorageBucket);
-      }
-
       Screen.orientation = ScreenOrientation.Landscape;
 
       musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();

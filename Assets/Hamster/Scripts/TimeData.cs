@@ -134,8 +134,7 @@ namespace Hamster {
     private static Task<StorageMetadata> UploadReplayData(
         UserScore userScore, ReplayData replay, UploadConfig config) {
       StorageReference storageRef =
-        FirebaseStorage.DefaultInstance.GetReferenceFromUrl(
-          CommonData.storageBucketUrl + "/" + config.storagePath);
+        FirebaseStorage.DefaultInstance.GetReference(config.storagePath);
 
       // Serializing replay data to byte array
       System.IO.MemoryStream stream = new System.IO.MemoryStream();
