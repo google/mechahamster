@@ -191,8 +191,12 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <div class="contents">
 <div class="textblock"><h3>Downloading Source Code</h3>
 <p>Source code for MechaHamster is available for download from <a href="https://github.com/google/mechahamster">Github.</a></p>
+<blockquote class="doxtable">
+<p>If cloning locally using <code>git clone</code>, be sure to use the <code>--recurse-submodules</code> flag to ensure required scripts from submodules are present.</p>
+<p></p>
+</blockquote>
 <h3>Overview</h3>
-<p>The MechaHamster project was built using version 5.6.06b of the Unity Editor. Opening it with an older version of the editor may encounter errors.</p>
+<p>The MechaHamster project was built using version 2017.2.1p3 of the Unity Editor. Opening it with an older version of the editor may encounter errors.</p>
 <p>When you first open MechaHamster in Unity, you will see a large number of errors. MechaHamster depends on several external packages that need to be imported before it can be run.</p>
 <h3>Firebase Build Setup</h3>
 <p>You will need to download the <a href="https://firebase.google.com/docs/unity/setup">Firebase Unity SDK</a>, and import the following packages into the Unity project:</p>
@@ -211,14 +215,112 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <td>Firebase Messaging </td><td>FirebaseMessaging.unitypackage </td></tr>
 <tr>
 <td>Firebase Remote Config </td><td>FirebaseRemoteConfig.unitypackage </td></tr>
+<tr>
+<td>Firebase Cloud Storage </td><td>FirebaseStorage.unitypackage </td></tr>
 </table>
+<blockquote class="doxtable">
+<p><a href="#mechahamster_index">MechaHamster</a> currently only works with .NET 3.x. If <a href="https://firebase.google.com/docs/unity/setup">Firebase Unity SDK</a> version is 5.4.0 or above, please import plugins from <code>dotnet3</code> folder. And make sure <code>Scripting Runtime Version</code> in <code>Edit &gt; Project Settings &gt; Player</code> is set to .NET 3.x, ex. <code>Stable (.NET 3.5 Equivalent)</code> in Unity 2017</p>
+<p></p>
+</blockquote>
+<h3>Downloading Firebase Files</h3>
 <p>In addition to importing the Firebase Unity SDK packages you'll also need to create a a project in the <a href="https://console.firebase.google.com/">Firebase Console</a>, and download the files necessary to link it to MechaHamster:</p>
 <ol type="1">
 <li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>.</li>
 <li>If you already have an existing Google project associated with your mobile app, click <b>Import Google Project.</b> Otherwise, click <b>Create New Project.</b></li>
 <li>Select the target platform (Android or iOS) and follow the setup steps. If you're importing an existing Google project, this may happen automatically and you can just download the config file.</li>
-<li>When prompted, enter the app's package name. (<code>com.google.fpl.mechahamster</code>)</li>
+<li>When prompted, enter the app's package name. (<code>com.google.fpl.mechahamster</code> for Android and <code>com.google.fpl.mechahamster.dev</code> for iOS since the former iOS bundle ID was taken)</li>
 <li>At the end, depending on your platform, you'll download a file named <code>google-services.json</code> (android) or <code>GoogleService-Info.plist</code> (iOS). Put this file somewhere in your <code>/Assets</code> directory. (You can re-download this file again at any time from the <a href="https://console.firebase.google.com/">Firebase Console</a>.)</li>
+</ol>
+<h3>Setting Project Properties and Permissions</h3>
+<h4>(Android Only) Add your signing key's SHA-1 to the project</h4>
+<p>In order to make use of several Firebase features, (Authentication and App Invites) you will need to calculate a SHA-1 hash from your signing key, and enter it into the Firebase console.</p>
+<p>Note: This is only necessary when building for Android devices. You do not need to enter the SHA-1 for iOS builds.</p>
+<ol type="1">
+<li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>.</li>
+<li>In the upper left, click on the gear, and select 'Project Settings'</li>
+<li>Enter your signing certificate's SHA-1 in the indicated field. (Instructions for calculating your certificate's fingerprint can be found <a href="https://developers.google.com/android/guides/client-auth">here</a>)</li>
+<li>After the change, you need to re-download <code>google-services.json</code> again. You can find the download button in the same page. Then replace the one you stored in your <code>/Assets</code> directory.</li>
+</ol>
+<h4>(iOS Only) Set App Capabilities</h4>
+<p>MechaHamster requires several capabilities to be enabled in XCode in order to function on iOS devices.</p>
+<ol type="1">
+<li>After doing an iOS build in Unity, open the resulting project in XCode.</li>
+<li>Go to the project's settings, click the 'Capabilities' tab.</li>
+<li>Enable 'Keychain Sharing'.</li>
+<li>Enable 'Push Notifications'.</li>
+<li>Enable 'Associated Domains'.</li>
+<li>Expand 'Associated Domains' and add "applinks:YOUR_DYNAMIC_LINKS_DOMAIN" to the list. You can find your project's Dynamic Links domain under the Dynamic Links tab of the <a href="https://console.firebase.google.com/">Firebase console</a>.</li>
+</ol>
+<blockquote class="doxtable">
+<p>'Push Notifications' requires a paid Apple developer account. More information can be found in <a href="https://firebase.google.com/docs/cloud-messaging/ios/certs">Configuring APNs with FCM</a> page. However, the game can still run without it.</p>
+<p></p>
+</blockquote>
+<h4>Enable Login Methods</h4>
+<p>Firebase Auth provides several methods by which a user can sign in and access their data. MechaHamster supports several of these, but they must be enabled in the Firebase console before they can be used. (They are all disabled by default.)</p>
+<ol type="1">
+<li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>, and select 'Authentication' from the side panel.</li>
+<li>Click on the 'Sign-In Method' tab.</li>
+<li>Select "Anonymous" from the list, enable it, and click 'Save'.</li>
+<li>Select "Email/Password" from the list, enable it, and click 'Save'.</li>
+</ol>
+<h4>Set up the database access rules</h4>
+<p>MechaHamster depends heavily on the Firebase Realtime Database for storage. In order to run Mechahamster, you'll need set up the database access rules.</p>
+<ol type="1">
+<li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>, and select 'Database' from the side panel.</li>
+<li>Click on the 'Rules' tab.</li>
+<li>Replace the rules text with the code in <a href="https://github.com/google/mechahamster/tree/master/console/database.rules.json">database.rules.json</a> under <code>/console</code> directory.</li>
+<li>Alternatively, use <a href="https://firebase.google.com/docs/cli/">Firebase CLI</a> to upload <code>database.rules.json</code> file under <code>/console</code> directory to your Firebase project, which will be detailed below.</li>
+</ol>
+<blockquote class="doxtable">
+<p>MechaHamster uses the name 'XYZZY' to represent desktop users.</p>
+<p></p>
+</blockquote>
+<h4>Update Firebase Database url in the script</h4>
+<p>MechaHamster can access Firebase Realtime Database in the Unity Editor. Set Database url to your project's database url using the SetEditorDatabaseUrl() function.</p>
+<ol type="1">
+<li>Open <code>/Assets/Hamster/Scripts/MainGame.cs</code> in the text editor.</li>
+<li>Find the line with <code>SetEditorDatabaseUrl</code>. For instance, <div class="fragment"><div class="line"><span class="keywordtype">void</span> StartGame() {</div>
+<div class="line">  ...</div>
+<div class="line">  CommonData.app.SetEditorDatabaseUrl(<span class="stringliteral">&quot;https://YOUR-PROJECT-ID.firebaseio.com/&quot;</span>);</div>
+<div class="line">  ...</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li>Change the url to "https://YOUR-PROJECT-ID.firebaseio.com/". "YOUR-PROJECT-ID" is your project ID which you can find from the <a href="https://console.firebase.google.com/">Firebase Console</a> . You can also find the url in <code>google-services.json</code> (android) or <code>GoogleService-Info.plist</code> (iOS).</li>
+<li>Save the script and rebuild with the Unity Editor.</li>
+</ol>
+<h4>(Optional) Deploy Firebase Project using Firebase CLI Tool</h4>
+<p>MechaHamster requires the Firebase project to be configured in a specific way to run properly. <a href="https://firebase.google.com/docs/cli/">Firebase CLI</a> allows the developers to deploy or update configurations, such as rules and Cloud Functions, to your Firebase project with few console commands.</p>
+<ol type="1">
+<li>Follow the instructions in <a href="https://firebase.google.com/docs/cli/">Firebase CLI</a> page for installation.</li>
+<li>Open the console terminal and navigate to <code>/console</code> directory in the project.</li>
+<li>If you have multiple Firebase projects under the same account, make sure to select the correct active project by running: <div class="fragment"><div class="line">$ firebase use --add</div>
+</div><!-- fragment --></li>
+<li>Initialize the project by running: <div class="fragment"><div class="line">$ firebase init</div>
+</div><!-- fragment --><ul>
+<li>Select only <code>Functions</code> when it prompts for <code>Which Firebase CLI features do you want to setup for this folder?</code>.</li>
+<li>Press <code>Enter</code> until the initialization completes.</li>
+</ul>
+</li>
+<li>Deploy configurations by running: <div class="fragment"><div class="line">$ firebase deploy</div>
+</div><!-- fragment --> This would deploy the following to your active project.<ul>
+<li>Firebase Realtime Database Rules</li>
+<li>Firebase Storage Rules</li>
+<li>Cloud Function to limit number of scores in Database and remove unreferenced replay data from Storage.</li>
+</ul>
+</li>
+</ol>
+<h4>(Optional) Enable Replay feature</h4>
+<p>Replay in MechaHamster is an experimental feature to capture and upload the play-through of the best score in each level so that other player can download and view the animation later. This is still a work in progress and thus disabled by default. To enable it, please follow the instructions below.</p>
+<ol type="1">
+<li>Open <code>/Assets/Hamster/Scripts/MainGame.cs</code> in the text editor.</li>
+<li>Find the line with <code>RemoteConfigGameplayRecordingEnabled</code>. For instance, <div class="fragment"><div class="line">System.Threading.Tasks.Task InitializeRemoteConfig() {</div>
+<div class="line">  ...</div>
+<div class="line">  defaults.Add(StringConstants.RemoteConfigGameplayRecordingEnabled, <span class="keyword">false</span>);</div>
+<div class="line">  ...</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li>Change the default value to <code>true</code>.</li>
+<li>Save the script and rebuild with the Unity Editor.</li>
 </ol>
 <p><br/>
  </p>

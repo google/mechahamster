@@ -202,9 +202,20 @@ $(document).ready(function(){initNavTree('mechahamster_readme.html','');});
 <li><a href="https://firebase.google.com/docs/cloud-messaging/">Firebase Cloud Messaging</a> to allow game admins to send push notifications which inform users of new map content.</li>
 <li><a href="https://firebase.google.com/docs/invites/">Firebase App Invites</a> to share user generated content with other players.</li>
 <li><a href="https://firebase.google.com/docs/remote-config/">Firebase Remote Config</a> to allow game admins to run experiments on game data without redeploying a new build of the game.</li>
+<li><a href="https://firebase.google.com/docs/storage/">Firebase Cloud Storage</a> to upload and download replay data of the best playthrough shared by the players in each level. (Disabled by default)</li>
+<li><a href="https://firebase.google.com/docs/functions/">Firebase Cloud Function</a> to limit number of scores in Database and remove unreferenced replay data from Storage.</li>
+<li><a href="https://firebase.google.com/docs/test-lab/">Firebase Test Lab</a> to allow developers to test their game across a wide variety of hardware and device configurations at once.</li>
+<li><a href="https://firebase.google.com/docs/cli/">Firebase CLI</a> to allow developers to deploy configurations and Cloud Function to Firebase project through console commands.</li>
 </ul>
 <h2>Downloading</h2>
 <p><a href="https://github.com/google/mechahamster/">MechaHamster</a> source code can be downloaded from <a href="https://github.com/google/mechahamster/">Github</a>.</p>
+<blockquote class="doxtable">
+<p>If cloning locally using <code>git clone</code>, be sure to use the <code>--recurse-submodules</code> flag to ensure required scripts from submodules are present.</p>
+<p></p>
+</blockquote>
+<p>And download the game to your mobile device from the AppStore and Google Play Store</p>
+<p><a href="https://itunes.apple.com/us/app/mechahamster/id1286046770?mt=8&amp;ign-mpt=uo%3D4"></a> <br/>
+ <a href="https://play.google.com/store/apps/details?id=com.google.fpl.mechahamster&amp;hl=en"></a></p>
 <h2>Building</h2>
 <ul>
 <li>Open the project in at least <a href="https://unity3d.com/unity/beta]">Unity 5.6 beta</a>, this is required for the <a href="https://developers.google.com/vr/unity/">Google VR SDK for Unity</a>.</li>
@@ -216,15 +227,20 @@ $(document).ready(function(){initNavTree('mechahamster_readme.html','');});
 <li>FirebaseInvites.unitypackage</li>
 <li>FirebaseMessaging.unitypackage</li>
 <li>FirebaseRemoteConfig.unitypackage</li>
+<li>FirebaseStorage.unitypackage</li>
 </ul>
 </li>
 <li>Select a target platform (iOS or Android) using the <code>File &gt; Build Settings</code> menu option.</li>
-<li>Add Firebase to your app using either the <a href="https://firebase.google.com/docs/unity/setup#add_firebase_to_your_app">Firebase Unity SDK iOS Setup</a> or <a href="https://firebase.google.com/docs/unity/setup#add_firebase_to_your_app_1">Firebase Unity SDK Android Setup</a>.</li>
+<li>Add Firebase to your app using either the <a href="https://firebase.google.com/docs/unity/setup#add_firebase_to_your_app">Firebase Unity SDK iOS Setup</a> or <a href="https://firebase.google.com/docs/unity/setup#add_firebase_to_your_app_1">Firebase Unity SDK Android Setup</a>. For more information see <a href="https://google.github.io/mechahamster/mechahamster_guide_building.html">Building MechaHamster</a>.</li>
 <li>Wait for the spinner (compiling) icon to stop in the bottom right corner of the Unity status bar.</li>
 <li>Finally, select the <code>File &gt; Build Settings</code> menu option then click <code>Build and Run</code>.</li>
 </ul>
+<blockquote class="doxtable">
+<p><a href="https://github.com/google/mechahamster/">MechaHamster</a> currently only works with .NET 3.x. If <a href="https://firebase.google.com/docs/unity/setup">Firebase Unity SDK</a> version is 5.4.0 or above, please import plugins from <code>dotnet3</code> folder. And make sure <code>Scripting Runtime Version</code> in <code>Edit &gt; Project Settings &gt; Player</code> is set to .NET 3.x, ex. <code>Stable (.NET 3.5 Equivalent)</code> in Unity 2017</p>
+<p></p>
+</blockquote>
 <h2>Documentation</h2>
-<p>To contribute the this project see <a href="https://github.com/google/mechahamster/blob/master/CONTRIBUTING.txt">CONTRIBUTING</a>. </p>
+<p>For more information about MechaHamster see [MechaHamster Document][] To contribute the this project see <a href="https://github.com/google/mechahamster/blob/master/CONTRIBUTING.txt">CONTRIBUTING</a>. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- Google Analytics -->

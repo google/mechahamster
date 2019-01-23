@@ -5,13 +5,14 @@ var NAVTREE =
     [ "Programmer's Guide", "mechahamster_guide_overview.html", [
       [ "Overview", "mechahamster_guide_overview.html", null ],
       [ "Building", "mechahamster_guide_building.html", null ],
-      [ "Firebase Features", "mechahamster_guide_building.html#mechahamster_guide_firebase_setup", [
+      [ "Firebase Features", "mechahamster_guide_building.html", [
         [ "Analytics", "mechahamster_guide_analytics.html", null ],
         [ "Auth", "mechahamster_guide_auth.html", null ],
         [ "Realtime Database", "mechahamster_guide_database.html", null ],
         [ "Remote Config", "mechahamster_guide_remoteconfig.html", null ],
         [ "Messaging", "mechahamster_guide_messaging.html", null ],
-        [ "Invites", "mechahamster_guide_invites.html", null ]
+        [ "Invites", "mechahamster_guide_invites.html", null ],
+        [ "Test Lab", "mechahamster_guide_testlab.html", null ]
       ] ],
       [ "Daydream", "mechahamster_guide_daydream.html", null ]
     ] ],
