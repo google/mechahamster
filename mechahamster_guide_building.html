@@ -218,10 +218,13 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <tr>
 <td>Firebase Cloud Storage </td><td>FirebaseStorage.unitypackage </td></tr>
 </table>
+<<<<<<< HEAD
 <blockquote class="doxtable">
 <p><a href="#mechahamster_index">MechaHamster</a> currently only works with .NET 3.x. If <a href="https://firebase.google.com/docs/unity/setup">Firebase Unity SDK</a> version is 5.4.0 or above, please import plugins from <code>dotnet3</code> folder. And make sure <code>Scripting Runtime Version</code> in <code>Edit &gt; Project Settings &gt; Player</code> is set to .NET 3.x, ex. <code>Stable (.NET 3.5 Equivalent)</code> in Unity 2017</p>
 <p></p>
 </blockquote>
+=======
+>>>>>>> dc47087870de98d4a5698f7f92cbdc4e126c5817
 <h3>Downloading Firebase Files</h3>
 <p>In addition to importing the Firebase Unity SDK packages you'll also need to create a a project in the <a href="https://console.firebase.google.com/">Firebase Console</a>, and download the files necessary to link it to MechaHamster:</p>
 <ol type="1">
@@ -251,10 +254,13 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <li>Enable 'Associated Domains'.</li>
 <li>Expand 'Associated Domains' and add "applinks:YOUR_DYNAMIC_LINKS_DOMAIN" to the list. You can find your project's Dynamic Links domain under the Dynamic Links tab of the <a href="https://console.firebase.google.com/">Firebase console</a>.</li>
 </ol>
+<<<<<<< HEAD
 <blockquote class="doxtable">
 <p>'Push Notifications' requires a paid Apple developer account. More information can be found in <a href="https://firebase.google.com/docs/cloud-messaging/ios/certs">Configuring APNs with FCM</a> page. However, the game can still run without it.</p>
 <p></p>
 </blockquote>
+=======
+>>>>>>> dc47087870de98d4a5698f7f92cbdc4e126c5817
 <h4>Enable Login Methods</h4>
 <p>Firebase Auth provides several methods by which a user can sign in and access their data. MechaHamster supports several of these, but they must be enabled in the Firebase console before they can be used. (They are all disabled by default.)</p>
 <ol type="1">
@@ -268,6 +274,7 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <ol type="1">
 <li>Navigate to the <a href="https://console.firebase.google.com/">Firebase Console</a>, and select 'Database' from the side panel.</li>
 <li>Click on the 'Rules' tab.</li>
+<<<<<<< HEAD
 <li>Replace the rules text with the code in <a href="https://github.com/google/mechahamster/tree/master/console/database.rules.json">database.rules.json</a> under <code>/console</code> directory.</li>
 <li>Alternatively, use <a href="https://firebase.google.com/docs/cli/">Firebase CLI</a> to upload <code>database.rules.json</code> file under <code>/console</code> directory to your Firebase project, which will be detailed below.</li>
 </ol>
@@ -322,6 +329,62 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <li>Change the default value to <code>true</code>.</li>
 <li>Save the script and rebuild with the Unity Editor.</li>
 </ol>
+=======
+<li>Replace the rules text with the following code:</li>
+</ol>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;rules&quot;</span>: {</div>
+<div class="line">    <span class="comment">// Bonus maps cannot be written to under normal circumstances.</span></div>
+<div class="line">    <span class="stringliteral">&quot;BonusMaps&quot;</span>:  {</div>
+<div class="line">      <span class="stringliteral">&quot;.read&quot;</span>: <span class="keyword">true</span>,</div>
+<div class="line">      <span class="stringliteral">&quot;.write&quot;</span>: <span class="keyword">false</span></div>
+<div class="line">    },</div>
+<div class="line">    <span class="comment">// The DB_Users table contains all of the data for users.  It can only be read</span></div>
+<div class="line">    <span class="comment">// or written to if your auth ID matches the key you are trying to access.</span></div>
+<div class="line">    <span class="stringliteral">&quot;DB_Users&quot;</span>:  {</div>
+<div class="line">      <span class="stringliteral">&quot;$uid&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;.read&quot;</span>: <span class="stringliteral">&quot;(auth != null &amp;&amp; $uid == auth.uid) || $uid == &#39;XYZZY&#39;&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;.write&quot;</span>: <span class="stringliteral">&quot;(auth != null &amp;&amp; $uid == auth.uid) || $uid == &#39;XYZZY&#39;&quot;</span></div>
+<div class="line">      }</div>
+<div class="line">    },</div>
+<div class="line">    <span class="comment">// Entries in the maplist can only be read if they are shared, or</span></div>
+<div class="line">    <span class="comment">// they are being modified by their owner.</span></div>
+<div class="line">    <span class="stringliteral">&quot;MapList&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;$mapid&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;.read&quot;</span>: <span class="stringliteral">&quot;data.child(&#39;isShared&#39;).val() == true || ((auth != null &amp;&amp; data.child(&#39;ownerId&#39;).val() == auth.uid) || data.child(&#39;ownerId&#39;).val() == &#39;XYZZY&#39;)&quot;</span>,</div>
+<div class="line">        <span class="stringliteral">&quot;.write&quot;</span>: <span class="stringliteral">&quot;!data.exists() || (auth != null &amp;&amp; data.child(&#39;ownerId&#39;).val() == auth.uid) || data.child(&#39;ownerId&#39;).val() == &#39;XYZZY&#39;&quot;</span></div>
+<div class="line">      }</div>
+<div class="line">    },</div>
+<div class="line">    <span class="comment">// High score tables for the offline maps.</span></div>
+<div class="line">    <span class="stringliteral">&quot;OfflineMaps&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;$mapid&quot;</span>: {</div>
+<div class="line">        <span class="stringliteral">&quot;Times&quot;</span>: {</div>
+<div class="line">          <span class="stringliteral">&quot;.read&quot;</span>: <span class="keyword">true</span>,</div>
+<div class="line">          <span class="stringliteral">&quot;.write&quot;</span>: <span class="keyword">true</span>,</div>
+<div class="line">          <span class="stringliteral">&quot;$rank&quot;</span>: {</div>
+<div class="line">            <span class="stringliteral">&quot;.validate&quot;</span>: <span class="stringliteral">&quot;newData.child(&#39;name&#39;).isString() &amp;&amp; newData.child(&#39;time&#39;).isNumber() &amp;&amp; newData.child(&#39;name&#39;).val().length &lt; 100&quot;</span></div>
+<div class="line">          }</div>
+<div class="line">        }</div>
+<div class="line">      }</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>(MechaHamster uses the name 'XYZZY' to represent desktop users, since Firebase Authentication only functions on mobile devices.)</p>
+<h4>Update Firebase url in the script</h4>
+<p>MechaHamster can access Firebase Realtime Database in the Unity Editor. Set Database url to your project's database url using the SetEditorDatabaseUrl() function.</p>
+<ol type="1">
+<li>Open <code>\Assets\Hamster\Scripts\MainGame.cs</code> in the text editor.</li>
+<li>Find the line with <code>SetEditorDatabaseUrl</code>. For instance, <div class="fragment"><div class="line"><span class="keywordtype">void</span> StartGame() {</div>
+<div class="line">  ...</div>
+<div class="line">  CommonData.app.SetEditorDatabaseUrl(<span class="stringliteral">&quot;https://hamster-demo.firebaseio.com/&quot;</span>);</div>
+<div class="line">  ...</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li>Change the url to "https://YOUR-FIREBASE-APP.firebaseio.com/". "YOUR-FIREBASE-APP" is your project ID which you can find from the <a href="https://console.firebase.google.com/">Firebase Console</a> . You can also find the url in <code>google-services.json</code> (android) or <code>GoogleService-Info.plist</code> (iOS).</li>
+<li>Save the script and rebuild with the Unity Editor.</li>
+</ol>
+<p>Currently this affects non-editor build as well.</p>
+>>>>>>> dc47087870de98d4a5698f7f92cbdc4e126c5817
 <p><br/>
  </p>
 </div></div><!-- contents -->
