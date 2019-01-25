@@ -1,6 +1,8 @@
 MechaHamster    {#mechahamster_readme}
 ======
 
+test
+
 [MechaHamster][] is a game about guiding a futuristic hamster ball through dangerous space mazes,
 create mazes of their own, and share them with friends.  Can you guide Major Hammy D. Hamster to
 safety?
