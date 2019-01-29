@@ -21,6 +21,7 @@ namespace Hamster {
   // that needs to be cached or shared between different components
   // or states.
   class CommonData {
+    public static customNetwork.CustomNetworkManager networkmanager;
     public static PrefabList prefabs;
     public static GameWorld gameWorld;
     public static CameraController mainCamera;

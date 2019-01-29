@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using Firebase.Unity.Editor;
 using UnityEngine.SocialPlatforms;
 
@@ -133,8 +134,27 @@ namespace Hamster {
     // Utility function for spawning the player.
     public GameObject SpawnPlayer() {
       if (player == null) {
-        player = (GameObject)Instantiate(CommonData.prefabs.lookup[PlayerPrefabID].prefab);
-        PlayerSpawnedEvent.Invoke();
+
+                if (NetworkClient.active)
+                {
+                    if (NetworkClient.allClients.Count == 0)    //  wait fo ra connection.
+                    {    //  only do this if we don't already have a player.)
+                        //customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)customNetwork.CustomNetworkPlayer.conn.playerControllers.Count);
+                    }
+                    else if ((customNetwork.CustomNetworkPlayer.conn != null) && (customNetwork.CustomNetworkPlayer.conn.playerControllers.Count == 0))   //  we're already connected, but we don't yet have a controller connection, spawn a player for ourselves.
+                    {
+                        customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)customNetwork.CustomNetworkPlayer.conn.playerControllers.Count);    //  ask the server to create a player for us.
+                    }
+                }
+                else
+                {
+                    if (!NetworkServer.active)  //  don't spawn the player on the server. The player will request a spawn. Wait for that request.
+                    {   
+                        //  this is for single player only.
+                        player = (GameObject)Instantiate(CommonData.prefabs.lookup[PlayerPrefabID].prefab);
+                        PlayerSpawnedEvent.Invoke();
+                    }
+                }
       }
       return player;
     }
@@ -235,14 +255,14 @@ namespace Hamster {
       Firebase.AppOptions ops = new Firebase.AppOptions();
       CommonData.app = Firebase.FirebaseApp.Create(ops);
 
-      // Setup database url when running in the editor
+            // Setup database url when running in the editor
 #if UNITY_EDITOR
       if (CommonData.app.Options.DatabaseUrl == null) {
-        CommonData.app.SetEditorDatabaseUrl("https://YOUR-PROJECT-ID.firebaseio.com");
+        CommonData.app.SetEditorDatabaseUrl("https://fir-testproject-8bdd2.firebaseio.com");
       }
 #endif
 
-      Screen.orientation = ScreenOrientation.Landscape;
+            Screen.orientation = ScreenOrientation.Landscape;
 
       musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();
 

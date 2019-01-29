@@ -14,36 +14,65 @@
 
 using UnityEngine;
 using System.Collections;
+namespace Hamster.MapObjects
+{
 
-namespace Hamster.MapObjects {
+    // General base-class for objects on the map.
+    public class StartPosition : MapObject
+    {
 
-  // General base-class for objects on the map.
-  public class StartPosition : MapObject {
+        static Vector3 kPlayerStartOffset = new Vector3(0, 2, 0);
 
-    static Vector3 kPlayerStartOffset = new Vector3(0, 2, 0);
+        // Populated by the inspector:
+        // Prefab to use when spawning a new player avatar at level start.
+        public GameObject playerPrefab;
 
-    // Populated by the inspector:
-    // Prefab to use when spawning a new player avatar at level start.
-    public GameObject playerPrefab;
-
-    public void FixedUpdate() {
-      if (CommonData.mainGame.isGameRunning()) {
-        if (CommonData.mainGame.player == null) {
-          GameObject player = CommonData.mainGame.SpawnPlayer();
-          player.transform.position = transform.position + kPlayerStartOffset;
-          player.transform.rotation = Quaternion.identity;
+        public void UpdatePosOri(Transform xform)
+        {
+            xform.position = transform.position + kPlayerStartOffset;
+            xform.rotation = Quaternion.identity;
         }
-      } else {
-        if (CommonData.mainGame.player != null) {
-          CommonData.mainGame.DestroyPlayer();
+        public GameObject SpawnPlayer()
+        {
+            CommonData.mainGame.player = CommonData.mainGame.SpawnPlayer(); ;
+            if (CommonData.mainGame.player != null)
+            {
+                UpdatePosOri(CommonData.mainGame.player.transform);
+            }
+            return CommonData.mainGame.player;
         }
-      }
-    }
+        public void FixedUpdate()
+        {
+            if (CommonData.mainGame.isGameRunning())
+            {
+                if (CommonData.mainGame.player == null)
+                {
+                    GameObject player = null;
+                    //if (CommonData.networkManager != null)
+                    //{
+                    //    player = MainGame.NetworkSpawnPlayer(CommonData.customNetwork.networkManager.toServerConnection);
+                    //}
+                    //else
+                    {
+                        player = SpawnPlayer();
+                    }
+                }
+            }
+            else
+            {
+                if (CommonData.mainGame.player != null)
+                {
+                    Reset();
+                }
+            }
+        }
 
-    public override void Reset() {
-      if (CommonData.mainGame.player != null) {
-        CommonData.mainGame.DestroyPlayer();
-      }
+        public override void Reset()
+        {
+            if (CommonData.mainGame.player != null)
+            {
+                CommonData.mainGame.DestroyPlayer();
+            }
+        }
     }
-  }
 }

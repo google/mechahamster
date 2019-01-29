@@ -216,11 +216,17 @@ namespace Hamster {
           mapObject.Reset();
         }
       }
-      foreach (Utilities.DestroyOnReset toDestroy in destroyOnReset) {
-        toDestroy.RegisteredInWorld = false;
-        Destroy(toDestroy.gameObject);
-      }
-      destroyOnReset.Clear();
+            foreach (Utilities.DestroyOnReset toDestroy in destroyOnReset)
+            {
+                //hack: skip destroying playerobjects. This allows any players who have entered the game to remain in the game... somewhere without being destroyed. it's not easy to re-establish connection with the server after being destroyed.
+                PlayerController pc = toDestroy.GetComponent<PlayerController>();
+                if (pc == null)
+                {
+                    toDestroy.RegisteredInWorld = false;
+                    Destroy(toDestroy.gameObject);
+                }
+            }
+            destroyOnReset.Clear();
     }
 
     // Called when a Switch is triggered, forwards that along to switchable map objects.
