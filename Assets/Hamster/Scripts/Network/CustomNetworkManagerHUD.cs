@@ -89,22 +89,22 @@ namespace UnityEngine.Networking
         {
             customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)ClientScene.localPlayers.Count);
         }
-        const int kSpaceBetweenBoxes = 5;
+        const int kSpaceBetweenBoxes = 2;
 
         string scaledTextField(out float newYpos, float xpos, float ypos, float w, float h, string tField)
         {
             const float kButtonSpace = 1.5f;
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
             int kFontSize = kTextBoxHeight / 2;
-            GUI.skin.label.fontSize = kFontSize;
-            //GUI.skin.label.alignment = TextAlignment.Center;
-            GUIContent content = GUIContent.none;
+            GUIStyle textFieldStyle = new GUIStyle(GUI.skin.textField);
+            textFieldStyle.fontSize = kFontSize;
+            GUIContent content = new GUIContent(GUIContent.none);
             content.text = tField;
 
-            Vector2 rectSize = GUI.skin.button.CalcSize(content);
+            Vector2 rectSize = textFieldStyle.CalcSize(content);
             Rect tempRect = new Rect(xpos, ypos, rectSize.x + kButtonSpace, rectSize.y + kButtonSpace);
             float space = tempRect.height;
-            tField = GUI.TextField(tempRect, tField);
+            tField = GUI.TextField(tempRect, tField, textFieldStyle);
             newYpos = ypos + space + kSpaceBetweenBoxes;
             return tField;
         }
@@ -113,32 +113,32 @@ namespace UnityEngine.Networking
             const float kButtonSpace = 1.5f;
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
             int kFontSize = kTextBoxHeight / 2;
-            GUI.skin.label.fontSize = kFontSize;
-            //GUI.skin.label.alignment = TextAlignment.Center;
-            GUIContent content = GUIContent.none;
+            GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+            buttonStyle.fontSize = kFontSize;
+            GUIContent content = new GUIContent(GUIContent.none);
             content.text = buttonText;
 
             Vector2 rectSize = GUI.skin.button.CalcSize(content);
             Rect tempRect = new Rect(xpos, ypos, rectSize.x+ kButtonSpace, rectSize.y+ kButtonSpace);
-            bool bButton = GUI.Button(tempRect, buttonText);
+            bool bButton = GUI.Button(tempRect, buttonText, buttonStyle);
             float space = tempRect.height;
             newYpos = ypos + space + kSpaceBetweenBoxes;
-
             return bButton;
         }
         float scaledTextBox(float xpos, float ypos, float w, float h, string txt)
         {
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
             int kFontSize = kTextBoxHeight/2;
-            GUI.skin.label.fontSize = kFontSize;
-            //GUI.skin.label.alignment = TextAlignment.Center;
-            GUIContent content = GUIContent.none;
+            GUIStyle textAreaStyle = new GUIStyle(GUI.skin.label);
+            textAreaStyle.fontSize = kFontSize;
+            GUIContent content = new GUIContent(GUIContent.none);
             content.text = txt;
 
-            Vector2 rectSize = GUI.skin.label.CalcSize(content);
+
+            Vector2 rectSize = textAreaStyle.CalcSize(content);
             Rect tempRect = new Rect(xpos, ypos, rectSize.x, rectSize.y);
-            //GUI.skin.label.alignment = 
-            GUI.Label(tempRect, txt);
+            GUI.Label(tempRect, txt, textAreaStyle);
+
             float space = tempRect.height;
             ypos += space + kSpaceBetweenBoxes;
             return ypos;
@@ -193,9 +193,9 @@ namespace UnityEngine.Networking
                     {
                         manager.StartClient();
                     }
-                    ypos = newYpos;
+                    //  ypos = newYpos;
 
-                    manager.networkAddress = scaledTextField(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, manager.networkAddress);
+                    manager.networkAddress = scaledTextField(out newYpos, xpos+150, ypos, kTextBoxWidth, kTextBoxHeight, manager.networkAddress);
                     ypos = newYpos;
 
                     if (UnityEngine.Application.platform == RuntimePlatform.WebGLPlayer)
@@ -215,7 +215,7 @@ namespace UnityEngine.Networking
                 }
                 else
                 {
-                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight/2, "Connecting to " + manager.networkAddress + ":" + manager.networkPort + "..");
+                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight/2, "Connecting to\n  " + manager.networkAddress + ":" + manager.networkPort + "..");
 
 
                     if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Cancel Conn.Req."))
@@ -289,6 +289,7 @@ namespace UnityEngine.Networking
                     GUI.Box(new Rect(xpos - 5, ypos, 220, kTextBoxHeight), "(WebGL cannot use Match Maker)");
                     return;
                 }
+
 
                 if (manager.matchMaker == null)
                 {
