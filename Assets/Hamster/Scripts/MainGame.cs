@@ -79,7 +79,7 @@ namespace Hamster {
     private bool firebaseInitialized;
 
     IEnumerator Start() {
-      Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
+      //    Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);    //  no longer using VR, so no more automatic full screen and resolution change!
       GooglePlayServicesSignIn.InitializeGooglePlayGames();
       InitializeFirebaseAndStart();
       while (!firebaseInitialized) {

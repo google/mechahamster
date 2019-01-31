@@ -9,6 +9,9 @@ namespace UnityEngine.Networking
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class CustomNetworkManagerHUD : MonoBehaviour
     {
+        public int kTextBoxHeight = 40;
+        public int kTextBoxWidth = 1024;
+
         public NetworkManager manager;
         [SerializeField] public bool showGUI = true;
         [SerializeField] public int offsetX;
@@ -63,6 +66,13 @@ namespace UnityEngine.Networking
                     }
                 }
             }
+            else
+            {   //  back button on android quits the app if we're not connected.
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    Application.Quit();
+                }
+            }
         }
         void DestroyNetworkPlayer()
         {
@@ -79,24 +89,91 @@ namespace UnityEngine.Networking
         {
             customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)ClientScene.localPlayers.Count);
         }
+        const int kSpaceBetweenBoxes = 5;
+
+        string scaledTextField(out float newYpos, float xpos, float ypos, float w, float h, string tField)
+        {
+            const float kButtonSpace = 1.5f;
+            int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
+            int kFontSize = kTextBoxHeight / 2;
+            GUI.skin.label.fontSize = kFontSize;
+            //GUI.skin.label.alignment = TextAlignment.Center;
+            GUIContent content = GUIContent.none;
+            content.text = tField;
+
+            Vector2 rectSize = GUI.skin.button.CalcSize(content);
+            Rect tempRect = new Rect(xpos, ypos, rectSize.x + kButtonSpace, rectSize.y + kButtonSpace);
+            float space = tempRect.height;
+            tField = GUI.TextField(tempRect, tField);
+            newYpos = ypos + space + kSpaceBetweenBoxes;
+            return tField;
+        }
+        bool scaledButton(out float newYpos, float xpos, float ypos, float w, float h, string buttonText)
+        {
+            const float kButtonSpace = 1.5f;
+            int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
+            int kFontSize = kTextBoxHeight / 2;
+            GUI.skin.label.fontSize = kFontSize;
+            //GUI.skin.label.alignment = TextAlignment.Center;
+            GUIContent content = GUIContent.none;
+            content.text = buttonText;
+
+            Vector2 rectSize = GUI.skin.button.CalcSize(content);
+            Rect tempRect = new Rect(xpos, ypos, rectSize.x+ kButtonSpace, rectSize.y+ kButtonSpace);
+            bool bButton = GUI.Button(tempRect, buttonText);
+            float space = tempRect.height;
+            newYpos = ypos + space + kSpaceBetweenBoxes;
+
+            return bButton;
+        }
+        float scaledTextBox(float xpos, float ypos, float w, float h, string txt)
+        {
+            int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
+            int kFontSize = kTextBoxHeight/2;
+            GUI.skin.label.fontSize = kFontSize;
+            //GUI.skin.label.alignment = TextAlignment.Center;
+            GUIContent content = GUIContent.none;
+            content.text = txt;
+
+            Vector2 rectSize = GUI.skin.label.CalcSize(content);
+            Rect tempRect = new Rect(xpos, ypos, rectSize.x, rectSize.y);
+            //GUI.skin.label.alignment = 
+            GUI.Label(tempRect, txt);
+            float space = tempRect.height;
+            ypos += space + kSpaceBetweenBoxes;
+            return ypos;
+        }
+
+        private void Start()
+        {
+            Screen.SetResolution(1280, 1024, false);
+        }
         void OnGUI()
         {
-            const int kSpaceBetweenBoxes = 5;
-            const int kTextBoxHeight = 35;
-            const int kTextBoxWidth = 130;
 
             if (!showGUI)
                 return;
 
+            int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
+            int kFontSize = kTextBoxHeight/2;
+
             string ipv4 = manager.networkAddress;   //  this usually just says "localhost" which doesn't really help us type in an ip address later.
             ipv4 = customNetwork.CustomNetworkManager.LocalIPAddress();    //  none of these work.
 
-            int xpos = 10 + offsetX;
-            int ypos = 40 + offsetY;
+            float xpos = 10 + offsetX;
+            float ypos = 40 + offsetY;
+            float newYpos = 0;
 
-            int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
             bool noConnection = (manager.client == null || manager.client.connection == null ||
                                  manager.client.connection.connectionId == -1);
+
+            //  you can find the version number in Build Settings->PlayerSettings->Version
+            ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Version=" + Application.version);
+
+            //  for debugging. Don't waste space showing screen res.
+            //  ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Res=" + Screen.width.ToString() + "x" + Screen.height.ToString());
+
+            GUI.skin.button.fontSize = kFontSize;
 
             if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
             {
@@ -104,20 +181,22 @@ namespace UnityEngine.Networking
                 {
                     if (UnityEngine.Application.platform != RuntimePlatform.WebGLPlayer)
                     {
-                        if (GUI.Button(new Rect(xpos, ypos, 200, kTextBoxHeight), "LAN Host(H)"))
+                        //if (scaledButton(out newYpos, xpos, ypos, 200, kTextBoxHeight), "LAN Host(H)"))
+                        if (scaledButton(out newYpos, xpos, ypos, 200, kTextBoxHeight, "LAN (H)ost"))
                         {
                             manager.StartHost();
                         }
-                        ypos += spacing;
+                        ypos = newYpos;
                     }
 
-                    if (GUI.Button(new Rect(xpos, ypos, 105, kTextBoxHeight), "LAN Client(C)"))
+                    if (scaledButton(out newYpos, xpos, ypos, 105, kTextBoxHeight, "LAN (C)lient"))
                     {
                         manager.StartClient();
                     }
+                    ypos = newYpos;
 
-                    manager.networkAddress = GUI.TextField(new Rect(xpos + 100, ypos, kTextBoxWidth, kTextBoxHeight), manager.networkAddress);
-                    ypos += spacing;
+                    manager.networkAddress = scaledTextField(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, manager.networkAddress);
+                    ypos = newYpos;
 
                     if (UnityEngine.Application.platform == RuntimePlatform.WebGLPlayer)
                     {
@@ -127,66 +206,64 @@ namespace UnityEngine.Networking
                     }
                     else
                     {
-                        if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "LAN Server Only(S)"))
+                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "LAN (S)erver Only"))
                         {
                             manager.StartServer();
                         }
-                        ypos += spacing;
+                        ypos = newYpos;
                     }
                 }
                 else
                 {
-                    GUI.Label(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight/2), "Connecting to " + manager.networkAddress + ":" + manager.networkPort + "..");
-                    ypos += spacing;
+                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight/2, "Connecting to " + manager.networkAddress + ":" + manager.networkPort + "..");
 
 
-                    if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Cancel Conn.Req."))
+                    if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Cancel Conn.Req."))
                     {
                         manager.StopClient();
                     }
+                    ypos = newYpos;
                 }
             }
             else
             {
                 if (NetworkServer.active)
                 {
-                    string serverMsg = "Server ("+ customNetwork.CustomNetworkManager.LocalHostname() + "): "+ ipv4 + "\nport = " + manager.networkPort;
+                    string serverMsg = "Server("+ customNetwork.CustomNetworkManager.LocalHostname() + "): "+ ipv4 + "\n  port=" + manager.networkPort;
                     if (manager.useWebSockets)
                     {
                         serverMsg += " (Using WebSockets)";
                     }
-                    GUI.Label(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), serverMsg);
-                    ypos += spacing;
+                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, serverMsg);
                 }
                 if (manager.IsClientConnected())
                 {
-                    GUI.Label(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Client: address=" + manager.networkAddress + " port=" + manager.networkPort);
-                    ypos += spacing;
+                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + ipv4 + "\n  port=" + manager.networkPort);
                 }
             }
 
             if (manager.IsClientConnected() && !ClientScene.ready)
             {
-                if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Client Ready"))
+                if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client Ready"))
                 {
                     ClientScene.Ready(manager.client.connection);
                 }
-                ypos += spacing;
+                ypos = newYpos;
             }
 
 
             if (manager.IsClientConnected() && ClientScene.ready)
             {
-                if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Add player: (Ins)" + ClientScene.localPlayers.Count.ToString()))
+                if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Add player: (Ins)" + ClientScene.localPlayers.Count.ToString()))
                 {
                     CreateNetworkPlayer();
                 }
-                ypos += spacing;
-                if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Del player: (Del)" + ClientScene.localPlayers.Count.ToString()))
+                ypos = newYpos;
+                if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Del player: (Del)" + ClientScene.localPlayers.Count.ToString()))
                 {
                     DestroyNetworkPlayer();
                 }
-                ypos += spacing;
+                ypos = newYpos;
             }
 
             if (NetworkServer.active || manager.IsClientConnected())
@@ -196,11 +273,11 @@ namespace UnityEngine.Networking
                 {
                     stopButtonText = "Stop server(Esc)"; 
                 }
-                if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), stopButtonText))
+                if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, stopButtonText))
                 {
                     manager.StopHost();
                 }
-                ypos += spacing;
+                ypos = newYpos;
             }
 
             if (!NetworkServer.active && !manager.IsClientConnected() && noConnection)
@@ -215,11 +292,11 @@ namespace UnityEngine.Networking
 
                 if (manager.matchMaker == null)
                 {
-                    if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Enable Match Maker (M)"))
+                    if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
                     {
                         manager.StartMatchMaker();
                     }
-                    ypos += spacing;
+                    ypos = newYpos;
                 }
                 else
                 {
@@ -227,63 +304,64 @@ namespace UnityEngine.Networking
                     {
                         if (manager.matches == null)
                         {
-                            if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Create Internet Match"))
+                            if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Create Internet Match"))
                             {
                                 //manager.matchMaker.CreateMatch(manager.matchName, manager.matchSize, true, "", manager.OnMatchCreate);
                             }
-                            ypos += spacing;
+                            ypos = newYpos;
 
                             GUI.Label(new Rect(xpos, ypos, kTextBoxWidth, 20), "Room Name:");
                             manager.matchName = GUI.TextField(new Rect(xpos + 100, ypos, 100, kTextBoxHeight), manager.matchName);
                             ypos += spacing;
 
-                            ypos += 10;
+                            ypos += spacing;
 
-                            if (GUI.Button(new Rect(xpos, ypos, 200, kTextBoxHeight), "Find Internet Match"))
+                            if (scaledButton(out newYpos, xpos, ypos, 200, kTextBoxHeight, "Find Internet Match"))
                             {
                                 //manager.matchMaker.ListMatches(0, 20, "", manager.OnMatchList);
                             }
-                            ypos += spacing;
+                            ypos = newYpos;
                         }
                         else
                         {
                             foreach (var match in manager.matches)
                             {
-                                if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Join Match:" + match.name))
+                                if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Join Match:" + match.name))
                                 {
                                     manager.matchName = match.name;
                                     manager.matchSize = (uint)match.currentSize;
                                     //manager.matchMaker.JoinMatch(match.networkId, "", manager.OnMatchJoined);
                                 }
-                                ypos += spacing;
+                                ypos = newYpos;
                             }
                         }
                     }
 
-                    if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Change MM server"))
+                    if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Change MM server"))
                     {
                         m_ShowServer = !m_ShowServer;
                     }
+                    ypos = newYpos;
                     if (m_ShowServer)
                     {
-                        ypos += spacing;
-                        if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Local"))
+                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Local"))
                         {
                             manager.SetMatchHost("localhost", 1337, false);
                             m_ShowServer = false;
                         }
-                        ypos += spacing;
-                        if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Internet"))
+                        ypos = newYpos;
+                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Internet"))
                         {
                             manager.SetMatchHost("mm.unet.unity3d.com", 443, true);
                             m_ShowServer = false;
                         }
-                        ypos += spacing;
-                        if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Staging"))
+                        ypos = newYpos;
+                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Staging"))
                         {
                             manager.SetMatchHost("staging-mm.unet.unity3d.com", 443, true);
                             m_ShowServer = false;
                         }
+                        ypos = newYpos;
                     }
 
                     ypos += spacing;
@@ -291,7 +369,7 @@ namespace UnityEngine.Networking
                     GUI.Label(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "MM Uri: " + manager.matchMaker.baseUri);
                     ypos += spacing;
 
-                    if (GUI.Button(new Rect(xpos, ypos, kTextBoxWidth, kTextBoxHeight), "Disable Match Maker"))
+                    if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Disable Match Maker"))
                     {
                         manager.StopMatchMaker();
                     }
