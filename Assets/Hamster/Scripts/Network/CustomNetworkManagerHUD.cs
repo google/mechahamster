@@ -2,6 +2,9 @@
 using System.ComponentModel;
 
 #if ENABLE_UNET
+
+using UnityEngine.Rendering;
+
 namespace UnityEngine.Networking
 {
     [AddComponentMenu("Network/CustomNetworkManagerHUD")]
@@ -23,6 +26,12 @@ namespace UnityEngine.Networking
         void Awake()
         {
             manager = GetComponent<NetworkManager>();
+            
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
+            {
+                Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());
+                manager.StartServer();
+            }
         }
 
         void Update()
