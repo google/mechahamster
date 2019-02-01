@@ -275,6 +275,15 @@ namespace Hamster {
       SoundFxVolume = PlayerPrefs.GetInt(StringConstants.SoundFxVolume, MaxVolumeValue);
 
       stateManager.PushState(new States.Startup());
+    }   //  StartGame()
+
+        static public void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+        }
     }
-  }
 }

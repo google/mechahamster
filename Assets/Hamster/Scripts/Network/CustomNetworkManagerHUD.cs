@@ -1,5 +1,8 @@
-﻿using System;
+﻿//  uncomment this if we want to experiment with Unity's matchmaking. But it's too broken for the later Unity versions.
+//  #define OBSOLETE_2017_4
+using System;
 using System.ComponentModel;
+
 
 #if ENABLE_UNET
 namespace UnityEngine.Networking
@@ -11,6 +14,7 @@ namespace UnityEngine.Networking
     {
         public int kTextBoxHeight = 40;
         public int kTextBoxWidth = 1024;
+        public int kSpaceBetweenBoxes = 5;
 
         public NetworkManager manager;
         [SerializeField] public bool showGUI = true;
@@ -27,8 +31,16 @@ namespace UnityEngine.Networking
 
         void Update()
         {
+
+            if (Input.GetKeyDown(KeyCode.Tilde) || Input.GetKeyDown(KeyCode.BackQuote))
+            {
+                showGUI = !showGUI; //  toggle GUI.
+            }
+
             if (!showGUI)
+            {
                 return;
+            }
 
             if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
             {
@@ -70,7 +82,7 @@ namespace UnityEngine.Networking
             {   //  back button on android quits the app if we're not connected.
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    Application.Quit();
+                    Hamster.MainGame.QuitGame();
                 }
             }
         }
@@ -89,22 +101,35 @@ namespace UnityEngine.Networking
         {
             customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)ClientScene.localPlayers.Count);
         }
-        const int kSpaceBetweenBoxes = 2;
 
         string scaledTextField(out float newYpos, float xpos, float ypos, float w, float h, string tField)
         {
-            const float kButtonSpace = 1.5f;
+            string result = scaledTextField(out newYpos, xpos, ypos, tField);   //  call the other one.
+            return result;
+        }
+
+        string scaledTextField(out float newYpos, float xpos, float ypos, string tField)
+        {
+            const float kButtonSpace = 6.0f;
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
-            int kFontSize = kTextBoxHeight / 2;
+            float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
+            int kFontSize = (int)((kTextBoxHeight) * screenHeightScaling);
             GUIStyle textFieldStyle = new GUIStyle(GUI.skin.textField);
             textFieldStyle.fontSize = kFontSize;
+            textFieldStyle.alignment = TextAnchor.MiddleCenter;// TextAlignment.Center;
+
             GUIContent content = new GUIContent(GUIContent.none);
             content.text = tField;
 
             Vector2 rectSize = textFieldStyle.CalcSize(content);
-            Rect tempRect = new Rect(xpos, ypos, rectSize.x + kButtonSpace, rectSize.y + kButtonSpace);
+            Rect tempRect = new Rect(xpos, ypos- kButtonSpace / 2, rectSize.x + kButtonSpace, rectSize.y + kButtonSpace);
             float space = tempRect.height;
+
+            // Set the internal name of the textfield
+            GUI.SetNextControlName("MyTextField");
+
             tField = GUI.TextField(tempRect, tField, textFieldStyle);
+
             newYpos = ypos + space + kSpaceBetweenBoxes;
             return tField;
         }
@@ -112,7 +137,8 @@ namespace UnityEngine.Networking
         {
             const float kButtonSpace = 1.5f;
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
-            int kFontSize = kTextBoxHeight / 2;
+            float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
+            int kFontSize = (int)((kTextBoxHeight) * screenHeightScaling);
             GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
             buttonStyle.fontSize = kFontSize;
             GUIContent content = new GUIContent(GUIContent.none);
@@ -125,10 +151,15 @@ namespace UnityEngine.Networking
             newYpos = ypos + space + kSpaceBetweenBoxes;
             return bButton;
         }
+
         float scaledTextBox(float xpos, float ypos, float w, float h, string txt)
         {
-            int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
-            int kFontSize = kTextBoxHeight/2;
+            return scaledTextBox(xpos, ypos, txt);
+        }
+        float scaledTextBox(float xpos, float ypos, string txt)
+        {
+            float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
+            int kFontSize = (int)((kTextBoxHeight) * screenHeightScaling);
             GUIStyle textAreaStyle = new GUIStyle(GUI.skin.label);
             textAreaStyle.fontSize = kFontSize;
             GUIContent content = new GUIContent(GUIContent.none);
@@ -140,7 +171,7 @@ namespace UnityEngine.Networking
             GUI.Label(tempRect, txt, textAreaStyle);
 
             float space = tempRect.height;
-            ypos += space + kSpaceBetweenBoxes;
+            ypos += space;
             return ypos;
         }
 
@@ -150,30 +181,39 @@ namespace UnityEngine.Networking
         }
         void OnGUI()
         {
-
             if (!showGUI)
+            {
+                OperatingSystemFamily fam = SystemInfo.operatingSystemFamily;
+                if (fam == OperatingSystemFamily.Windows || fam == OperatingSystemFamily.Linux || fam == OperatingSystemFamily.MacOSX)
+                {
+                    scaledTextBox(0, 0, "Show GUI: Press tilde ~ or `");
+                }
                 return;
+            }
+
 
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
-            int kFontSize = kTextBoxHeight/2;
+            float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
+            int kFontSize = (int)((kTextBoxHeight) * screenHeightScaling);
 
             string ipv4 = manager.networkAddress;   //  this usually just says "localhost" which doesn't really help us type in an ip address later.
             ipv4 = customNetwork.CustomNetworkManager.LocalIPAddress();    //  none of these work.
 
-            float xpos = 10 + offsetX;
-            float ypos = 40 + offsetY;
+            float xpos = offsetX;
+            float ypos = offsetY;
             float newYpos = 0;
 
             bool noConnection = (manager.client == null || manager.client.connection == null ||
                                  manager.client.connection.connectionId == -1);
 
             //  you can find the version number in Build Settings->PlayerSettings->Version
-            ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Version=" + Application.version);
+            ypos = scaledTextBox(xpos, ypos, "Version=" + Application.version);
+
 
             //  for debugging. Don't waste space showing screen res.
             //  ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Res=" + Screen.width.ToString() + "x" + Screen.height.ToString());
 
-            GUI.skin.button.fontSize = kFontSize;
+            GUI.skin.button.fontSize = (int)kFontSize;
 
             if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
             {
@@ -195,7 +235,7 @@ namespace UnityEngine.Networking
                     }
                     //  ypos = newYpos;
 
-                    manager.networkAddress = scaledTextField(out newYpos, xpos+150, ypos, kTextBoxWidth, kTextBoxHeight, manager.networkAddress);
+                    manager.networkAddress = scaledTextField(out newYpos, xpos+300, ypos, manager.networkAddress);
                     ypos = newYpos;
 
                     if (UnityEngine.Application.platform == RuntimePlatform.WebGLPlayer)
@@ -307,19 +347,24 @@ namespace UnityEngine.Networking
                         {
                             if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Create Internet Match"))
                             {
-                                //manager.matchMaker.CreateMatch(manager.matchName, manager.matchSize, true, "", manager.OnMatchCreate);
+#if OBSOLETE_2017_4
+                                manager.matchMaker.CreateMatch(manager.matchName, manager.matchSize, true, "", manager.OnMatchCreate);
+#endif
                             }
                             ypos = newYpos;
 
-                            GUI.Label(new Rect(xpos, ypos, kTextBoxWidth, 20), "Room Name:");
-                            manager.matchName = GUI.TextField(new Rect(xpos + 100, ypos, 100, kTextBoxHeight), manager.matchName);
-                            ypos += spacing;
+                            //  don't accept the new ypos because we want the name to be on the same line.
+                            //  ypos = 
+                            scaledTextBox(xpos, ypos, kTextBoxWidth, 20, "Room Name:");
 
-                            ypos += spacing;
+                            manager.matchName = scaledTextField(out newYpos, xpos + 300, ypos, 100, kTextBoxHeight, manager.matchName);
+                            ypos = newYpos;
 
                             if (scaledButton(out newYpos, xpos, ypos, 200, kTextBoxHeight, "Find Internet Match"))
                             {
-                                //manager.matchMaker.ListMatches(0, 20, "", manager.OnMatchList);
+#if OBSOLETE_2017_4
+                                manager.matchMaker.ListMatches(0, 20, "", manager.OnMatchList);
+#endif
                             }
                             ypos = newYpos;
                         }
@@ -329,9 +374,11 @@ namespace UnityEngine.Networking
                             {
                                 if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Join Match:" + match.name))
                                 {
+#if OBSOLETE_2017_4
                                     manager.matchName = match.name;
                                     manager.matchSize = (uint)match.currentSize;
-                                    //manager.matchMaker.JoinMatch(match.networkId, "", manager.OnMatchJoined);
+                                    manager.matchMaker.JoinMatch(match.networkId, "", manager.OnMatchJoined);
+#endif
                                 }
                                 ypos = newYpos;
                             }
