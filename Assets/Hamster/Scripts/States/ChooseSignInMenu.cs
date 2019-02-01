@@ -42,10 +42,6 @@ namespace Hamster.States {
 
       if ((result != null && !result.Canceled) ||
           (taskResult != null && !taskResult.task.IsCanceled)) {
-#if UNITY_EDITOR
-        CommonData.isNotSignedIn = false;
-        manager.PopState();
-#else
         if (auth.CurrentUser != null) {
           CommonData.isNotSignedIn = false;
           manager.PopState();
@@ -53,7 +49,6 @@ namespace Hamster.States {
           manager.PushState(new BasicDialog(
               Utilities.StringHelper.SigninInFailureString(taskResult.task)));
         }
-#endif
       }
     }
 

@@ -18,16 +18,16 @@
     // or written to if your auth ID matches the key you are trying to access.
     "DB_Users":  {
       "$uid": {
-        ".read": "(auth != null && $uid == auth.uid) || $uid == 'XYZZY'",
-        ".write": "(auth != null && $uid == auth.uid) || $uid == 'XYZZY'"
+        ".read": "auth != null && $uid == auth.uid",
+        ".write": "auth != null && $uid == auth.uid"
       }
     },
     // Entries in the maplist can only be read if they are shared, or
     // they are being modified by their owner.
     "MapList": {
       "$mapid": {
-        ".read": "data.child('isShared').val() == true || ((auth != null && data.child('ownerId').val() == auth.uid) || data.child('ownerId').val() == 'XYZZY')",
-        ".write": "!data.exists() || (auth != null && data.child('ownerId').val() == auth.uid) || data.child('ownerId').val() == 'XYZZY'",
+        ".read": "data.child('isShared').val() == true || (auth != null && data.child('ownerId').val() == auth.uid)",
+        ".write": "!data.exists() || (auth != null && data.child('ownerId').val() == auth.uid)",
         // Legacy place to store best scores as an array.
         "Times": {
           ".read": true,

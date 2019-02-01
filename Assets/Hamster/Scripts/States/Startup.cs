@@ -24,7 +24,6 @@ namespace Hamster.States {
   class Startup : BaseState {
 
     Firebase.Auth.FirebaseAuth auth;
-    public const string DefaultDesktopID = "XYZZY";
 
     // Initialization method.  Called after the state
     // is added to the stack.
@@ -34,11 +33,7 @@ namespace Hamster.States {
       // or create a new profile.
       auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
 
-# if (UNITY_EDITOR)
-      // On desktop, we just use the default user id.
-      manager.PushState(new States.FetchUserData(DefaultDesktopID));
-#else
-      // On mobile, we go through the full auth system, to request a user id.
+      // We go through the full auth system, to request a user id.
       // If we need to sign in, do that.  Otherwise, if we know who we are,
       // so fetch the user data.
       if (auth.CurrentUser == null) {
@@ -57,7 +52,6 @@ namespace Hamster.States {
       } else {
         manager.PushState(new States.FetchUserData(auth.CurrentUser.UserId));
       }
-#endif
     }
 
     // Start gathering analytic data.

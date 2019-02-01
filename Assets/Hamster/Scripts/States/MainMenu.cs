@@ -65,14 +65,9 @@ namespace Hamster.States {
         shouldFetchUserData = false;
       }
       if (shouldFetchUserData) {
-#if UNITY_EDITOR
-        if (CommonData.currentUser == null) {
-          manager.PushState(new FetchUserData(Startup.DefaultDesktopID));
-#else
         Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         if (auth.CurrentUser != null && CommonData.currentUser == null) {
           manager.PushState(new FetchUserData(auth.CurrentUser.UserId));
-#endif
           return;
         }
       }
