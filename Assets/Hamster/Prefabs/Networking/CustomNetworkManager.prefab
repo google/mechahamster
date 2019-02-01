@@ -44,13 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f665c356a4bcf404f93018082e0ab163, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kTextBoxHeight: 40
-  kTextBoxWidth: 1024
-  kSpaceBetweenBoxes: 36
   manager: {fileID: 0}
   showGUI: 1
-  offsetX: 16
-  offsetY: 4
+  offsetX: 5
+  offsetY: 5
 --- !u!114 &2182268794226473722
 MonoBehaviour:
   m_ObjectHideFlags: 0
