@@ -113,11 +113,12 @@ namespace UnityEngine.Networking
 
         string scaledTextField(out float newYpos, float xpos, float ypos, float w, float h, string tField)
         {
-            string result = scaledTextField(out newYpos, xpos, ypos, tField);   //  call the other one.
+            float unusedXPos;
+            string result = scaledTextField(out newYpos, out unusedXPos, xpos, ypos, tField);   //  call the other one.
             return result;
         }
 
-        string scaledTextField(out float newYpos, float xpos, float ypos, string tField)
+        string scaledTextField(out float newYpos, out float newXPos, float xpos, float ypos, string tField)
         {
             const float kButtonSpace = 6.0f;
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
@@ -140,6 +141,7 @@ namespace UnityEngine.Networking
             tField = GUI.TextField(tempRect, tField, textFieldStyle);
 
             newYpos = ypos + space + kSpaceBetweenBoxes;
+            newXPos = xpos + tempRect.width + kSpaceBetweenBoxes;
             return tField;
         }
         bool scaledButton(out float newYpos, float xpos, float ypos, float w, float h, string buttonText)
@@ -208,6 +210,8 @@ namespace UnityEngine.Networking
             string ipv4 = manager.networkAddress;   //  this usually just says "localhost" which doesn't really help us type in an ip address later.
             ipv4 = customNetwork.CustomNetworkManager.LocalIPAddress();    //  none of these work.
 
+            int port = manager.networkPort;
+
             float xpos = offsetX;
             float ypos = offsetY;
             float newYpos = 0;
@@ -243,8 +247,10 @@ namespace UnityEngine.Networking
                         manager.StartClient();
                     }
                     //  ypos = newYpos;
+                    float offsetXPos = xpos;
 
-                    manager.networkAddress = scaledTextField(out newYpos, xpos+300, ypos, manager.networkAddress);
+                    manager.networkAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, manager.networkAddress);
+                    manager.networkPort = Convert.ToInt32(scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, manager.networkPort.ToString()));
                     ypos = newYpos;
 
                     if (UnityEngine.Application.platform == RuntimePlatform.WebGLPlayer)
@@ -278,7 +284,7 @@ namespace UnityEngine.Networking
             {
                 if (NetworkServer.active)
                 {
-                    string serverMsg = "Server("+ customNetwork.CustomNetworkManager.LocalHostname() + "): "+ ipv4 + "\n  port=" + manager.networkPort;
+                    string serverMsg = "Server("+ customNetwork.CustomNetworkManager.LocalHostname() + "): "+ ipv4 + "\n  port=" + port;
                     if (manager.useWebSockets)
                     {
                         serverMsg += " (Using WebSockets)";
@@ -287,7 +293,7 @@ namespace UnityEngine.Networking
                 }
                 if (manager.IsClientConnected())
                 {
-                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + ipv4 + "\n  port=" + manager.networkPort);
+                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + ipv4 + "\n  port=" + port);
                 }
             }
 
