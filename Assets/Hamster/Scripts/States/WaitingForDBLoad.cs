@@ -23,9 +23,10 @@ namespace Hamster.States {
 
     const float TimeoutSeconds = 10.0f;
 
-    T result;
+    T result = default(T);
     string path;
-    bool isComplete;
+    bool isComplete = false;
+    bool wasSuccessful = false;
     FirebaseDatabase database;
     Menus.SingleLabelGUI menuComponent;
     float timeoutTime;
@@ -48,6 +49,9 @@ namespace Hamster.States {
         Debug.LogError("Database error :" + args.DatabaseError.Code + ":\n" +
           args.DatabaseError.Message + "\n" + args.DatabaseError.Details);
       } else {
+        // It is considered as successful as long as there is no error, even the data at the
+        // given path is empty (null).
+        wasSuccessful = true;
         if (args.Snapshot != null) {
           var json = args.Snapshot.GetRawJsonValue();
           if (!string.IsNullOrEmpty(json)) {
@@ -70,7 +74,7 @@ namespace Hamster.States {
     protected virtual T ParseResult(string json) {
       return JsonUtility.FromJson<T>(json);
     }
-    
+
     void UpdateLabelText() {
       if (menuComponent != null) {
         menuComponent.LabelText.text =
@@ -82,7 +86,7 @@ namespace Hamster.States {
       database.GetReference(path).ValueChanged -= HandleResult;
       DestroyUI();
       return new StateExitValue(
-        typeof(WaitingForDBLoad<T>), new Results(path, result, result != null));
+        typeof(WaitingForDBLoad<T>), new Results(path, result, wasSuccessful));
     }
 
     // Class for encapsulating the results of the database load, as
