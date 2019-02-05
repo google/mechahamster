@@ -9,7 +9,10 @@ namespace customNetwork
 {
     public class CustomNetworkManager : NetworkManager
     {
+        const int kMaxConnections = 32;
+        const int kMaxPlayersPerConnection = 32;
         public static CustomNetworkManager s_instance;
+        public GameObject[,] plrObject = new GameObject[kMaxConnections, kMaxPlayersPerConnection];
         public bool m_AutoCreatePlayerFromSpawnPrefabList;
         static short curColorIndex = 0;
         static short curLocalPlayerID = 0;  //  we may have multiple controllers/players on this single client. We don't, but we could.
@@ -283,10 +286,14 @@ namespace customNetwork
             if (startPos != null)
             {
                 player = (GameObject)Instantiate(prefabToInstantiate, startPos.position, startPos.rotation);
+                if (player != null)
+                    plrObject[conn.connectionId, playerControllerId] = player;
             }
             else
             {
                 player = (GameObject)Instantiate(prefabToInstantiate, Vector3.zero, Quaternion.identity);
+                if (player != null)
+                    plrObject[conn.connectionId, playerControllerId] = player;
             }
 
             NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);

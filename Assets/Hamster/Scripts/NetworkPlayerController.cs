@@ -77,32 +77,42 @@ namespace Hamster
             if (rigidBody == null)
                 rigidBody = myRigidBody = GetComponent<Rigidbody>();
             rigidBody.AddForce(new Vector3(force.x, 0, force.y));
+        }
+
+        private bool CheckDeath()
+        {
+            bool isDead = false;
+
             if (transform.position.y < kFellOffLevelHeight)
             {
+                Rigidbody rigidBody = myRigidBody;
                 if (OnFallSpawn != null)    //  this needs to be rewritten for network.
                 {
                     // Spawn in the death particles. Note that the particles should clean themselves up.
                     Instantiate(OnFallSpawn, transform.position, Quaternion.identity);
 
-                    // We don't want the ball to keep the ball where it died, so that the camera can
-                    // see the on death particles before respawning.
-                    IsProcessingDeath = true;
-                    rigidBody.isKinematic = true;
-                    // Disable the children, which have the visible components of the ball.
-                    foreach (Transform child in transform)
-                    {
-                        child.gameObject.SetActive(false);
-                    }
-                    StartCoroutine(DelayedResetLevel());
                 }
+                // We don't want the ball to keep the ball where it died, so that the camera can
+                // see the on death particles before respawning.
+                IsProcessingDeath = true;
+                rigidBody.isKinematic = true;
+                // Disable the children, which have the visible components of the ball.
+                foreach (Transform child in transform)
+                {
+                    child.gameObject.SetActive(false);
+                }
+                StartCoroutine(DelayedResetLevel());
             }
-
+            return isDead;
         }
         //  input routines handled here.
         private void Update()
         {
             if (IsProcessingDeath)
                 return;
+            if (CheckDeath())
+                return;
+
             Rigidbody rigidBody = GetComponent<Rigidbody>();
 
             float elapsedTime = Time.deltaTime; //  time since last frame.

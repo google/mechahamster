@@ -225,6 +225,14 @@ namespace Hamster {
                     toDestroy.RegisteredInWorld = false;
                     Destroy(toDestroy.gameObject);
                 }
+                else//however if we are a player, we need to reset the players position whereever our starting position is.
+                {
+                    Hamster.MapObjects.StartPosition startpos = FindObjectOfType<Hamster.MapObjects.StartPosition>();
+                    if (startpos!=null)
+                    {
+                        startpos.SpawnPlayer();
+                    }
+                }
             }
             destroyOnReset.Clear();
     }

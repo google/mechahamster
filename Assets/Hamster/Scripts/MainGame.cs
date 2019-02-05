@@ -135,7 +135,7 @@ namespace Hamster {
     public GameObject SpawnPlayer() {
       if (player == null) {
 
-                if (NetworkClient.active)
+                if (NetworkClient.active)   //  this is how we spawn a client for multiplayer game
                 {
                     if (NetworkClient.allClients.Count == 0)    //  wait fo ra connection.
                     {    //  only do this if we don't already have a player.)
@@ -145,8 +145,12 @@ namespace Hamster {
                     {
                         customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)customNetwork.CustomNetworkPlayer.conn.playerControllers.Count);    //  ask the server to create a player for us.
                     }
+                    else//we already have a connection and a player!
+                    {
+                        //Debug.Log("We have a connection and player already. Don't spawn. Just move our existing player.");
+                    }
                 }
-                else
+                else//  this is legacy for spawning a single player
                 {
                     if (!NetworkServer.active)  //  don't spawn the player on the server. The player will request a spawn. Wait for that request.
                     {   

@@ -70,6 +70,19 @@ namespace Hamster
             }
         }
 
+        //  networking start.
+        override public void OnStartLocalPlayer()   //  this is not enough. The server needs to know about the player's object so that it can reset its position upon death.
+        {
+            Debug.Log("OnStartLocalPlayer: " + this.name);
+            if (CommonData.mainGame.player == null)
+                CommonData.mainGame.player = this.gameObject;   //  this is obsolete legacy code that mirrors a codepath for single player. Should probably be removed.
+        }
+
+        void ResetPlayerPosition(GameObject plrGO)
+        {
+            Transform xformStart = customNetwork.CustomNetworkManager.singleton.GetStartPosition();
+            plrGO.transform.position = xformStart.position;
+        }
         // Height of the kill-plane.
         // If the player's y-coordinate ever falls below this, it is treated as
         // a loss/failure.
@@ -78,6 +91,16 @@ namespace Hamster
         {
             if (IsProcessingDeath)
                 return;
+            //  common code to both localPlayer and server
+            if (transform.position.y < kFellOffLevelHeight)
+            {
+                //  EndGame();  //  we don't end the game anymore because in a multiplayer game, other people are still playing. So let's not destroy the world.
+                //  instead, let's just reset our position
+                if (isServer)
+                {
+                    ResetPlayerPosition(this.gameObject);
+                }
+            }
 
             if (isLocalPlayer)
             {
@@ -107,15 +130,12 @@ namespace Hamster
                 {
                     //  this tells the server to include your force into its next force calculation, whenever that might be.
                     Cmd_ServerAddForce(forceThisFrame);
+                    AddForce(forceThisFrame);   //  do this on the client. The server will send us back the correct positions. But this can get us on a headstart of where we think we should be.
                 }
-
-
-                Rigidbody rigidBody = GetComponent<Rigidbody>();
-                rigidBody.AddForce(new Vector3(input.x, 0, input.y));
-
-                if (transform.position.y < kFellOffLevelHeight)
-                    EndGame();
-            }
+            }   //  if(isLocalPlayer)
+                // ==================================================================================================================
+                //  note: due to the return calls in the middle of isLocalPlayer, do not put common code after this line.
+                // ==================================================================================================================
         }
 
         // Triggers a delayed reset of the level, using coroutines.
@@ -136,6 +156,7 @@ namespace Hamster
         const float kTimeScale = 1.0f / 60.0f;
         Vector2 forceThisFrame;
 
+
         //  These are methods that the server should handle.
         void EndGame()
         {
@@ -145,19 +166,19 @@ namespace Hamster
             {
                 // Spawn in the death particles. Note that the particles should clean themselves up.
                 Instantiate(OnFallSpawn, transform.position, Quaternion.identity);
-
-                // We don't want the ball to keep the ball where it died, so that the camera can
-                // see the on death particles before respawning.
-                IsProcessingDeath = true;
-                Rigidbody rigidBody = GetComponent<Rigidbody>();
-                rigidBody.isKinematic = true;
-                // Disable the children, which have the visible components of the ball.
-                foreach (Transform child in transform)
-                {
-                    child.gameObject.SetActive(false);
-                }
-                StartCoroutine(DelayedResetLevel());
             }
+
+            // We don't want the ball to keep the ball where it died, so that the camera can
+            // see the on death particles before respawning.
+            IsProcessingDeath = true;
+            Rigidbody rigidBody = GetComponent<Rigidbody>();
+            rigidBody.isKinematic = true;
+            //// Disable the children, which have the visible components of the ball.
+            //foreach (Transform child in transform)
+            //{
+            //    child.gameObject.SetActive(false);
+            //}
+            StartCoroutine(DelayedResetLevel());
         }
 
 
@@ -174,9 +195,7 @@ namespace Hamster
                 EndGame();
         }
 
-        //  Server commands start here.
-        [Command]
-        void Cmd_ServerAddForce(Vector3 force)
+        void AddForce(Vector3 force)
         {
             //  bail on garbage numbers
             if (float.IsNaN(force.x) || float.IsNaN(force.y) || float.IsInfinity(force.z)) return;
@@ -184,11 +203,20 @@ namespace Hamster
             Rigidbody rigidBody = myRigidBody;
             if (rigidBody == null)
                 rigidBody = myRigidBody = GetComponent<Rigidbody>();
-            rigidBody.AddForce(new Vector3(force.x, 0, force.y));
+            if (rigidBody != null)
+                rigidBody.AddForce(new Vector3(force.x, 0, force.y));
+        }
+
+        bool CheckHeightDeath()
+        {
+            bool isDead = false;
             if (transform.position.y < kFellOffLevelHeight)
             {
+                isDead = true;
                 if (OnFallSpawn != null)    //  this needs to be rewritten for network.
                 {
+                    Rigidbody rigidBody = myRigidBody;
+
                     // Spawn in the death particles. Note that the particles should clean themselves up.
                     Instantiate(OnFallSpawn, transform.position, Quaternion.identity);
 
@@ -204,6 +232,13 @@ namespace Hamster
                     StartCoroutine(DelayedResetLevel());
                 }
             }
+            return isDead;
+        }
+        //  Server commands start here.
+        [Command]
+        void Cmd_ServerAddForce(Vector3 force)
+        {
+            AddForce(force);
 
         }
 

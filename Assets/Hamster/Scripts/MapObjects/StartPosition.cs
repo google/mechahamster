@@ -17,6 +17,8 @@ using System.Collections;
 namespace Hamster.MapObjects
 {
 
+    //  this NetworkStartPosition component is the only thing that we really need. The other stuff is legacy single-player Mecha Hamster code.
+    [RequireComponent(typeof(UnityEngine.Networking.NetworkStartPosition))]
     // General base-class for objects on the map.
     public class StartPosition : MapObject
     {
@@ -41,7 +43,8 @@ namespace Hamster.MapObjects
             }
             return CommonData.mainGame.player;
         }
-        public void FixedUpdate()
+        //  this should not be on FixedUpdate
+        public void Update()
         {
             if (CommonData.mainGame.isGameRunning())
             {
@@ -71,7 +74,12 @@ namespace Hamster.MapObjects
         {
             if (CommonData.mainGame.player != null)
             {
-                CommonData.mainGame.DestroyPlayer();
+                //  StartPosition is not the boss of the player, so it shouldn't have authority to destroy the player. It should serve only to tell the player where to spawn.
+                //  so this hack is removed.
+                //  CommonData.mainGame.DestroyPlayer();
+
+                //  if this is a networked game, we cannot destroy the player or else we lose the connection to the client. Therefore, we need to move the player to the start position by
+                //  respawning the player.
             }
         }
     }
