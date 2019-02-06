@@ -148,6 +148,11 @@ namespace Hamster
         public void HandleGoalCollision()
         {
             ReachedGoal = true;
+            ResetPlayerPosition(this.gameObject);
+            Debug.LogWarning("Player has reached goal: " + this.name);
+
+            //  on the client, need to tell the player that they won.
+            //  on the server, need to update the game state so that we know a player has "won" the level.
         }
 
         //==========================================================================================================

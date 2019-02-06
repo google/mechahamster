@@ -12,6 +12,8 @@ namespace customNetwork
 {
     public class CustomNetworkPlayer : NetworkBehaviour
     {
+        const int kMaxPlayerControllers = 32;   //  this is really from Unity, not me. ClientScene.AddPlayer will throw an error at 33 players.
+
         public bool bServerAuthoritative;
         NetworkIdentity netIdentity;
         static float lastSpawnTime;
@@ -56,8 +58,15 @@ namespace customNetwork
                 Debug.LogWarning("NetworkPlayer.CreatePlayerClient: " + plrControlID.ToString() + "\n");
             if ((conn != null) && conn.isReady)
             {
-                Debug.LogWarning("  conn.isReady: NetworkPlayer.CreatePlayerClient -> ClientScene.AddPlayer: " + plrControlID.ToString() + "\n");
-                ClientScene.AddPlayer(plrControlID);
+                if (plrControlID < kMaxPlayerControllers)
+                {
+                    Debug.LogWarning("  conn.isReady: NetworkPlayer.CreatePlayerClient -> ClientScene.AddPlayer: " + plrControlID.ToString() + "\n");
+                    ClientScene.AddPlayer(plrControlID);
+                }
+                else
+                {
+                    Debug.LogError("No player added. Too many players>32. NetworkPlayer.CreatePlayerClient -> ClientScene.AddPlayer: " + plrControlID.ToString() + "\n");
+                }
             }
         }
         public static void DestroyPlayer(short plrControlID)
