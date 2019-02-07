@@ -42,13 +42,14 @@ namespace UnityEngine.Networking
             m_loadServerRequested = true;
         }
 
-        public bool AutoStartLevel()
+        //  this starts the level.
+        public bool AutoStartLevel(int levelIdx)
         {
             bool bSucceeded = false;
             if (m_autoStartLevel)
             {
                 Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();   //  create new state for FSM that will let us force the starting level.
-                bSucceeded = lvlSel.ForceLoadLevel(startLevel); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
+                bSucceeded = lvlSel.ForceLoadLevel(levelIdx); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
                 Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
                 m_autoStartLevel = false;   //  we gotta stop calling this over and over.
             }
@@ -62,7 +63,7 @@ namespace UnityEngine.Networking
             if (manager == null)
                 manager = GetComponent<NetworkManager>();
             if (m_autoStartLevel)
-                m_loadServerRequested = !AutoStartLevel();
+                m_loadServerRequested = !AutoStartLevel(startLevel);
         }
         bool ReadCommandLineArg()
         {
@@ -73,7 +74,7 @@ namespace UnityEngine.Networking
 
             string[] args = System.Environment.GetCommandLineArgs();
             string input = "";
-            int intArg;
+            int intArg = -1;
             Debug.Log("ReadCommandLineArg");
 
             for (int i = 0; i < args.Length; i++)
@@ -92,9 +93,8 @@ namespace UnityEngine.Networking
                         break;
                     case "-s":
                         Debug.Log("Start Server");
-                        manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
+                        bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
                         StartServerReq();
-                        bServerStarted = true;
                         m_autoStartLevel = true;
                         break;
                     case "-level":
@@ -106,6 +106,14 @@ namespace UnityEngine.Networking
 
                 }
             }
+            //bool bTestArgs = false;
+            //if (bTestArgs)
+            //{
+            //    bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
+            //    StartServerReq();
+            //    m_autoStartLevel = true;
+            //    startLevel = 9;
+            //}
             return bServerStarted;
         }
         void Awake()
@@ -128,8 +136,8 @@ namespace UnityEngine.Networking
                 Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());
                 if (!bServerStarted)
                 {
-                    manager.StartServer();
-                    StartServerReq();
+                    if (manager.StartServer())
+                        StartServerReq();
                 }
             }
         }
@@ -156,8 +164,8 @@ namespace UnityEngine.Networking
                 {
                     if (Input.GetKeyDown(KeyCode.S))
                     {
-                        manager.StartServer();
-                        StartServerReq();
+                        if (manager.StartServer())
+                            StartServerReq();
                     }
                     if (Input.GetKeyDown(KeyCode.H))
                     {
@@ -337,12 +345,16 @@ namespace UnityEngine.Networking
             if (bShowDebugCmdlineArgs)
                 ypos = ShowCommandLineArgs(xpos, ypos);
             string curState;
-            if (bShowDebugCurrentStateInfo && Hamster.CommonData.mainGame!=null && Hamster.CommonData.mainGame.stateManager!=null)
+            if (bShowDebugCurrentStateInfo )
             {
-                curState = Hamster.CommonData.mainGame.stateManager.CurrentState().GetType().ToString();
-                ypos = scaledTextBox(xpos, ypos, "curState=" + curState);
+                if (Hamster.CommonData.mainGame != null && Hamster.CommonData.mainGame.stateManager != null)
+                {
+                    curState = Hamster.CommonData.mainGame.stateManager.CurrentState().GetType().ToString();
+                    ypos = scaledTextBox(xpos, ypos, "curState=" + curState);
+                }
+                if (Hamster.CommonData.gameWorld != null)
+                    ypos = scaledTextBox(xpos, ypos, "curLevelIdx=" + Hamster.CommonData.gameWorld.curLevelIdx.ToString());
             }
-
             //  for debugging. Don't waste space showing screen res.
             //  ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Res=" + Screen.width.ToString() + "x" + Screen.height.ToString());
 
@@ -383,8 +395,8 @@ namespace UnityEngine.Networking
                     {
                         if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "LAN (S)erver Only"))
                         {
-                            manager.StartServer();
-                            StartServerReq();
+                            if (manager.StartServer())
+                                StartServerReq();
                         }
                         ypos = newYpos;
                     }
