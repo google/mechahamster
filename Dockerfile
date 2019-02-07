@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-RUN useradd -s /bin/bash mecha
+RUN useradd -m -s /bin/bash mecha
 USER mecha
 
 COPY ./Client/mechahamster_client_Data /opt/mechahamster/mechahamster_client_Data
