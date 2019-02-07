@@ -53,6 +53,7 @@ namespace Hamster.States {
                 if (Hamster.CommonData.gameWorld.startPos.hasFinishedLoading)
                 {
                     levelLoaded = true;
+                    Hamster.CommonData.gameWorld.curLevelIdx = mapSelection;
                 }
             }
         }

@@ -27,6 +27,8 @@ namespace Hamster {
     Dictionary<string, GameObject> sceneObjects = new Dictionary<string, GameObject>();
 
     public MapObjects.StartPosition startPos = null;
+    public int curLevelIdx;
+
     public LevelMap worldMap = new LevelMap();
     // Tracks the map objects that there is a max count limit of.
     Dictionary<string, List<string>> limitedMapObjects =
