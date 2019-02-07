@@ -70,12 +70,27 @@ namespace Hamster
             }
         }
 
+        //  tell the server to start the gameplay
+        [Command]
+        public void Cmd_StartGamePlay()
+        {
+            Hamster.States.BaseState gameplayState = new Hamster.States.Gameplay(Hamster.States.Gameplay.GameplayMode.Gameplay);
+            Hamster.CommonData.mainGame.stateManager.PushState(gameplayState);    //  mainGame isn't ready yet due to Unity having to start itself up.
+
+        }
+        static public void StartGamePlay()
+        {
+            Hamster.States.BaseState gameplayState = new Hamster.States.Gameplay(Hamster.States.Gameplay.GameplayMode.Gameplay);
+            Hamster.CommonData.mainGame.stateManager.PushState(gameplayState);    //  mainGame isn't ready yet due to Unity having to start itself up.
+        }
         //  networking start.
         override public void OnStartLocalPlayer()   //  this is not enough. The server needs to know about the player's object so that it can reset its position upon death.
         {
             Debug.Log("OnStartLocalPlayer: " + this.name);
             if (CommonData.mainGame.player == null)
                 CommonData.mainGame.player = this.gameObject;   //  this is obsolete legacy code that mirrors a codepath for single player. Should probably be removed.
+            //  let the games begin!
+            StartGamePlay();
         }
 
         void ResetPlayerPosition(GameObject plrGO)

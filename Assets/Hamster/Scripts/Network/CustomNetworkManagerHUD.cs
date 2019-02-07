@@ -15,10 +15,13 @@ namespace UnityEngine.Networking
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class CustomNetworkManagerHUD : MonoBehaviour
     {
+        public bool bShowDebugCurrentStateInfo = false; //  how the current finite state machine state
+        public bool bShowDebugCmdlineArgs = false;  //  show the command line arguments.
+
         public int kTextBoxHeight = 40;
         public int kTextBoxWidth = 1024;
         public int kSpaceBetweenBoxes = 5;
-
+        int startLevel = 0;
         public NetworkManager manager;
         [SerializeField] public bool showGUI = true;
         [SerializeField] public int offsetX;
@@ -26,21 +29,118 @@ namespace UnityEngine.Networking
 
         // Runtime variable
         bool m_ShowServer;
+        bool m_loadServerRequested = false;
 
+        /*
+         * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
+         */
+        void StartServerReq()
+        {
+            m_loadServerRequested = true;
+        }
+
+        public bool AutoStartLevel()
+        {
+            bool bSucceeded = false;
+            Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();
+            bSucceeded = lvlSel.ForceLoadLevel(startLevel);
+            //{   //  load the level. afterwards, go into gamePlay state.
+            //    Hamster.PlayerController.StartGamePlay();
+                Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);
+            //    //  when it's done loading, pop the state to go to gameplay.
+            //}
+            return bSucceeded;
+
+        }
+        void StartServerCommon()
+        {
+            m_loadServerRequested = false;  //   we won't really know if this worked, but we have to 
+            m_loadServerRequested = !AutoStartLevel();
+            manager = GetComponent<NetworkManager>();
+        }
+        bool ReadCommandLineArg()
+        {
+            bool bServerStarted = false;
+
+            if (manager==null)
+                manager = GetComponent<NetworkManager>();
+
+            bool hack = false;
+            if (hack)
+            {
+                //manager.StartClient();
+                //AutoStartLevel();
+
+                //manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
+                //StartServerReq();
+                //bServerStarted = true;
+                //startLevel = 3;
+            }
+
+
+            string[] args = System.Environment.GetCommandLineArgs();
+            string input = "";
+            int intArg;
+            Debug.Log("ReadCommandLineArg");
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                input = "";
+                Debug.Log("ARG " + i + ": " + args[i]);
+                if (i + 1 < args.Length)
+                    input = args[i + 1];
+
+                string lowCaseInput = args[i].ToLower();
+                switch (lowCaseInput)
+                {
+                    case "-c":
+                        Debug.Log("Start Client");
+                        manager.StartClient();
+                        AutoStartLevel();
+                        break;
+                    case "-s":
+                        Debug.Log("Start Server");
+                        manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
+                        StartServerReq();
+                        bServerStarted = true;
+                        break;
+                    case "-level":
+                        if (Int32.TryParse(input, out intArg))
+                        {
+                            startLevel = intArg;
+                        }
+                        break;
+
+                }
+            }
+            return bServerStarted;
+        }
         void Awake()
         {
-            manager = GetComponent<NetworkManager>();
-            
+        }
+        private void Start()
+        {
+            Screen.SetResolution(1280, 1024, false);
+            bool bServerStarted = ReadCommandLineArg();
+            if (manager == null)
+                manager = GetComponent<NetworkManager>();
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
             {
                 Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());
-                manager.StartServer();
+                if (!bServerStarted)
+                {
+                    manager.StartServer();
+                    StartServerReq();
+                }
             }
         }
 
         void Update()
         {
-
+            if (m_loadServerRequested && Hamster.CommonData.mainGame)
+            {
+                StartServerCommon();
+            }
             if (Input.GetKeyDown(KeyCode.Tilde) || Input.GetKeyDown(KeyCode.BackQuote))
             {
                 showGUI = !showGUI; //  toggle GUI.
@@ -58,10 +158,12 @@ namespace UnityEngine.Networking
                     if (Input.GetKeyDown(KeyCode.S))
                     {
                         manager.StartServer();
+                        StartServerReq();
                     }
                     if (Input.GetKeyDown(KeyCode.H))
                     {
                         manager.StartHost();
+                        StartServerReq();
                     }
                 }
                 if (Input.GetKeyDown(KeyCode.C))
@@ -186,11 +288,22 @@ namespace UnityEngine.Networking
             return ypos;
         }
 
-        private void Start()
+        float ShowCommandLineArgs(float xpos, float ypos)
         {
-            Screen.SetResolution(1280, 1024, false);
+            string[] args = System.Environment.GetCommandLineArgs();
+            string input = "";
+            int intArg;
+            Debug.Log("ReadCommandLineArg");
+            string st;
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                st = " ARG " + i + ": " + args[i];
+                ypos = scaledTextBox(xpos, ypos, st);
+            }
+            return ypos;
         }
-        void OnGUI()
+            void OnGUI()
         {
             if (!showGUI)
             {
@@ -222,6 +335,14 @@ namespace UnityEngine.Networking
             //  you can find the version number in Build Settings->PlayerSettings->Version
             ypos = scaledTextBox(xpos, ypos, "Version=" + Application.version);
 
+            if (bShowDebugCmdlineArgs)
+                ypos = ShowCommandLineArgs(xpos, ypos);
+            string curState;
+            if (bShowDebugCurrentStateInfo && Hamster.CommonData.mainGame!=null && Hamster.CommonData.mainGame.stateManager!=null)
+            {
+                curState = Hamster.CommonData.mainGame.stateManager.CurrentState().GetType().ToString();
+                ypos = scaledTextBox(xpos, ypos, "curState=" + curState);
+            }
 
             //  for debugging. Don't waste space showing screen res.
             //  ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Res=" + Screen.width.ToString() + "x" + Screen.height.ToString());
@@ -264,6 +385,7 @@ namespace UnityEngine.Networking
                         if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "LAN (S)erver Only"))
                         {
                             manager.StartServer();
+                            StartServerReq();
                         }
                         ypos = newYpos;
                     }

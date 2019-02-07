@@ -20,6 +20,7 @@ namespace Hamster.States {
     protected Menus.LevelSelectGUI menuComponent;
 
     protected int mapSelection = 0;
+//        static int s_nextMapSelection;
     protected int currentPage = 0;
     protected LevelMap currentLevel;
     protected string[] levelNames;
@@ -38,10 +39,17 @@ namespace Hamster.States {
 
     Dictionary<int, GameObject> levelButtons = new Dictionary<int, GameObject>();
 
+        /*
+        static public void ForceLoadLevel(int nextMapSelection)
+        {
+            s_nextMapSelection = nextMapSelection;
+        }
+        */
     // Update function, which gets called once per frame.
     public override void Update() {
-      // If they've got a different map selected than the one we have loaded,
-      // load the new one!
+            // If they've got a different map selected than the one we have loaded,
+            // load the new one!
+            //mapSelection = s_nextMapSelection;
       if (currentLoadedMap != mapSelection) {
         currentLoadedMap = mapSelection;
         LoadLevel(mapSelection);

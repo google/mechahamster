@@ -121,6 +121,12 @@ namespace Hamster.States {
       return null;
     }
 
+        public void ForceLoadLevel(int mainLevelNumber)
+        {
+            LevelSelect lvlSel = new LevelSelect();
+            manager.SwapState(lvlSel);
+        }
+
     public override void HandleUIEvent(GameObject source, object eventData) {
       if (source == menuComponent.PlayButton.gameObject) {
         manager.SwapState(new LevelSelect());
