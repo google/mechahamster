@@ -20,12 +20,13 @@ namespace Hamster.States {
     protected Menus.LevelSelectGUI menuComponent;
 
     protected int mapSelection = 0;
-//        static int s_nextMapSelection;
     protected int currentPage = 0;
     protected LevelMap currentLevel;
     protected string[] levelNames;
 
     protected int currentLoadedMap = -1;
+        protected bool levelLoaded = false;
+
 
     // Color: 9, 125, 255 - light blue
     static Color ActiveButtonColor = new Color(0.35f, 0.49f, 1.0f);
@@ -39,25 +40,25 @@ namespace Hamster.States {
 
     Dictionary<int, GameObject> levelButtons = new Dictionary<int, GameObject>();
 
-        /*
-        static public void ForceLoadLevel(int nextMapSelection)
-        {
-            s_nextMapSelection = nextMapSelection;
-        }
-        */
     // Update function, which gets called once per frame.
     public override void Update() {
-            // If they've got a different map selected than the one we have loaded,
-            // load the new one!
-            //mapSelection = s_nextMapSelection;
+      // If they've got a different map selected than the one we have loaded,
+      // load the new one!
       if (currentLoadedMap != mapSelection) {
         currentLoadedMap = mapSelection;
         LoadLevel(mapSelection);
       }
-    }
+      if (Hamster.CommonData.gameWorld != null && Hamster.CommonData.gameWorld.startPos != null)
+            {
+                if (Hamster.CommonData.gameWorld.startPos.hasFinishedLoading)
+                {
+                    levelLoaded = true;
+                }
+            }
+        }
 
-    // This needs to be called with a list of maps to display.
-    protected virtual void MenuStart(string[] levelNames, string title) {
+        // This needs to be called with a list of maps to display.
+        protected virtual void MenuStart(string[] levelNames, string title) {
       this.levelNames = levelNames;
 
       menuComponent = SpawnUI<Menus.LevelSelectGUI>(StringConstants.PrefabsLevelSelectMenu);

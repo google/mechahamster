@@ -70,14 +70,7 @@ namespace Hamster
             }
         }
 
-        //  tell the server to start the gameplay
-        [Command]
-        public void Cmd_StartGamePlay()
-        {
-            Hamster.States.BaseState gameplayState = new Hamster.States.Gameplay(Hamster.States.Gameplay.GameplayMode.Gameplay);
-            Hamster.CommonData.mainGame.stateManager.PushState(gameplayState);    //  mainGame isn't ready yet due to Unity having to start itself up.
-
-        }
+        //  The server should already be in Gameplay.GameplayMode.Gameplay state before the player has entered the game and been notified via OnStartLocalPlayer().
         static public void StartGamePlay()
         {
             Hamster.States.BaseState gameplayState = new Hamster.States.Gameplay(Hamster.States.Gameplay.GameplayMode.Gameplay);

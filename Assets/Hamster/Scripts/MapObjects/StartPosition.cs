@@ -22,12 +22,18 @@ namespace Hamster.MapObjects
     // General base-class for objects on the map.
     public class StartPosition : MapObject
     {
+        public bool hasFinishedLoading; //  this is the cue that tells us the level has finished loading.
 
         static Vector3 kPlayerStartOffset = new Vector3(0, 2, 0);
 
         // Populated by the inspector:
         // Prefab to use when spawning a new player avatar at level start.
         public GameObject playerPrefab;
+
+        public void Start()
+        {
+            hasFinishedLoading = true;  //  this lets us know (very roughly) if the level has finished loading. Since the level has many tiles and they all need to go through their Awake/Start() functions, it may take longer for some levels to load depending on the number of tiles.
+        }
 
         public void UpdatePosOri(Transform xform)
         {

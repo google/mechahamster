@@ -25,6 +25,8 @@ namespace Hamster {
     // The key is the same key as they have in the database table.  (A unique
     // string based on their position and type.)
     Dictionary<string, GameObject> sceneObjects = new Dictionary<string, GameObject>();
+
+    public MapObjects.StartPosition startPos = null;
     public LevelMap worldMap = new LevelMap();
     // Tracks the map objects that there is a max count limit of.
     Dictionary<string, List<string>> limitedMapObjects =
@@ -88,7 +90,7 @@ namespace Hamster {
       HasPendingEdits = false;
 
       // Set the camera to the start position:
-      MapObjects.StartPosition startPos = FindObjectOfType<MapObjects.StartPosition>();
+      startPos = FindObjectOfType<MapObjects.StartPosition>();
       if (startPos) {
         CommonData.mainCamera.MoveCameraTo(startPos.gameObject.transform.position);
       }

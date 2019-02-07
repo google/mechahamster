@@ -15,13 +15,15 @@ namespace UnityEngine.Networking
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class CustomNetworkManagerHUD : MonoBehaviour
     {
-        public bool bShowDebugCurrentStateInfo = false; //  how the current finite state machine state
+        const int kDefaultLevelIdx = 0;//  defaults to load level 0
+
+        public bool bShowDebugCurrentStateInfo = false; //  show the current finite state machine state
         public bool bShowDebugCmdlineArgs = false;  //  show the command line arguments.
 
         public int kTextBoxHeight = 40;
         public int kTextBoxWidth = 1024;
         public int kSpaceBetweenBoxes = 5;
-        int startLevel = 0;
+        int startLevel = kDefaultLevelIdx; 
         public NetworkManager manager;
         [SerializeField] public bool showGUI = true;
         [SerializeField] public int offsetX;
@@ -30,6 +32,7 @@ namespace UnityEngine.Networking
         // Runtime variable
         bool m_ShowServer;
         bool m_loadServerRequested = false;
+        bool m_autoStartLevel = false;
 
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
@@ -42,21 +45,24 @@ namespace UnityEngine.Networking
         public bool AutoStartLevel()
         {
             bool bSucceeded = false;
-            Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();
-            bSucceeded = lvlSel.ForceLoadLevel(startLevel);
-            //{   //  load the level. afterwards, go into gamePlay state.
-            //    Hamster.PlayerController.StartGamePlay();
-                Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);
-            //    //  when it's done loading, pop the state to go to gameplay.
-            //}
+            if (m_autoStartLevel)
+            {
+                Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();   //  create new state for FSM that will let us force the starting level.
+                bSucceeded = lvlSel.ForceLoadLevel(startLevel); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
+                Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
+                m_autoStartLevel = false;   //  we gotta stop calling this over and over.
+            }
             return bSucceeded;
 
         }
+
+        //  all the various StartServer type of functions should do this.
         void StartServerCommon()
         {
-            m_loadServerRequested = false;  //   we won't really know if this worked, but we have to 
-            m_loadServerRequested = !AutoStartLevel();
-            manager = GetComponent<NetworkManager>();
+            if (manager == null)
+                manager = GetComponent<NetworkManager>();
+            if (m_autoStartLevel)
+                m_loadServerRequested = !AutoStartLevel();
         }
         bool ReadCommandLineArg()
         {
@@ -64,19 +70,6 @@ namespace UnityEngine.Networking
 
             if (manager==null)
                 manager = GetComponent<NetworkManager>();
-
-            bool hack = false;
-            if (hack)
-            {
-                //manager.StartClient();
-                //AutoStartLevel();
-
-                //manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
-                //StartServerReq();
-                //bServerStarted = true;
-                //startLevel = 3;
-            }
-
 
             string[] args = System.Environment.GetCommandLineArgs();
             string input = "";
@@ -95,14 +88,14 @@ namespace UnityEngine.Networking
                 {
                     case "-c":
                         Debug.Log("Start Client");
-                        manager.StartClient();
-                        AutoStartLevel();
+                        //  placeholder for when we want to start the client on a particular level from command line. Harder than it looks.
                         break;
                     case "-s":
                         Debug.Log("Start Server");
                         manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
                         StartServerReq();
                         bServerStarted = true;
+                        m_autoStartLevel = true;
                         break;
                     case "-level":
                         if (Int32.TryParse(input, out intArg))
@@ -120,10 +113,16 @@ namespace UnityEngine.Networking
         }
         private void Start()
         {
-            Screen.SetResolution(1280, 1024, false);
+            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Null)   //  if we have graphics, we can set the resolution.
+            {
+                Screen.SetResolution(1280, 1024, false);
+            }
+
             bool bServerStarted = ReadCommandLineArg();
             if (manager == null)
                 manager = GetComponent<NetworkManager>();
+
+            //  Note to Graeme: This stuff was moved to Start() from Awake() because we need some cycles for the server stuff to get online with valid manager fields to call StartServer(). It's a Unity thing.
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
             {
                 Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());

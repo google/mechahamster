@@ -74,11 +74,7 @@ namespace Hamster.States
             if (startLevelImmediately)
             {
                 LoadLevel(forceLoadLevelIdx);
-                if (startGameplayAfterLoad)
-                {
-                    startGameplayAfterLoad = false;
-                    PlayerController.StartGamePlay();
-                }
+
             }
             else
             {// this was the original behavior, to let you choose your level.
@@ -86,6 +82,18 @@ namespace Hamster.States
             }
         }
 
+        public override void Update()
+        {
+            base.Update();
+            if (levelLoaded)
+            {
+                if (startGameplayAfterLoad)
+                {
+                    startGameplayAfterLoad = false;
+                    PlayerController.StartGamePlay();   //  we can't do this here because we need some frames to let the level load.
+                }
+            }
+        }
         [System.Serializable]
         public class LevelDirectory
         {
