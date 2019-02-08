@@ -9,6 +9,19 @@ namespace customNetwork
 {
     public class CustomNetworkManager : NetworkManager
     {
+        const int kLastUnityMsgType = 255;   //  Use a number after Unity's own message types for our own message types. Note: it's not actually 255. But we're leaving room for Unity to grow its own enum list.
+        const int kMaxShort = 32767;
+        public enum hamsterMsgType
+        {
+            hmsg_serverLevel= kLastUnityMsgType,   //  server tells player what level is currently playing
+            //  the following are still incomplete. They are there as placeholders.
+            hmsg_serverPlayerDied,  //  server tells player that they've died
+            hmsg_serverPlayerFinished,  //  server tells player that they've finished this level
+            hmsg_serverGameFinished,    //  server tells player that the game has been completed.
+            hmsg_serverPlayerIsWinner,  //  server tells player that they're the winner!
+            hmsg_newLevel,  //  server tells player that a new level has been loaded
+            hmsg_EndOfMessageList = kMaxShort   //  do not use this. this just means that everything needs to be smaller than this number because the network message uses a short for this key.
+        }
         const int kMaxConnections = 32;
         const int kMaxPlayersPerConnection = 32;
         public static CustomNetworkManager s_instance;
@@ -374,7 +387,21 @@ namespace customNetwork
         // Parameters:
         //   conn:
         //     Connection from client.
-        public virtual void OnServerReady(NetworkConnection conn) { }
+        public override void OnServerReady(NetworkConnection conn)
+        {
+            //  we need to tell the client what level we've loaded.
+            int levelIdx = -1;  //  no level is loaded that we know of (yet).
+            if (Hamster.CommonData.gameWorld != null)   //  if the game knows about a levelIndex, then send it.
+            {
+                levelIdx = Hamster.CommonData.gameWorld.curLevelIdx;
+            }
+            else
+            {
+                Debug.LogWarning("Server didn't notify clients of server level idx");
+            }
+            MessageBase msg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(levelIdx);    //  test: yep, just send a number without any context for now. Later, wrap this in an appropriate MessageBase class.
+            conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg);
+        }
         //
         // Summary:
         //     Called on the server when a client removes a player.
@@ -420,7 +447,29 @@ namespace customNetwork
             bIsClient = true;
             myClient = client;
             toServerConnection = client.connection;
-            //  Hamster.MainGame.NetworkSpawnPlayer(toServerConnection);    //  don't do this yet. Let the weird legacy Hamster code do it in its FixedUpdate, even though it's bad.
+
+            client.RegisterHandler((short)hamsterMsgType.hmsg_serverLevel, OnClientLevelMsg);
+
+            //  Hamster.MainGame.NetworkSpawnPlayer(toServerConnection);  //  don't do this yet. Let the weird legacy Hamster code do it in its FixedUpdate, even though it's bad.
+        }
+
+        void LoadLevel(int levelIdx)
+        {
+            Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();   //  create new state for FSM that will let us force the starting level.
+            lvlSel.ForceLoadLevel(levelIdx); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
+            Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
+        }
+        //  we received a message from the server about what level the server is currently running.
+        //  handles hamsterMsgType.hmsg_serverLevel
+        void OnClientLevelMsg(NetworkMessage netMsg)
+        {
+            UnityEngine.Networking.NetworkSystem.IntegerMessage intMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.IntegerMessage>();
+            DebugOutput("OnClientLevelMsg: " + intMsg.ToString());
+            //  our server has declared a level. Let's try to load that level.
+            if (intMsg.value >= 0)
+            {
+                LoadLevel(intMsg.value);
+            }
         }
         //
         // Summary:

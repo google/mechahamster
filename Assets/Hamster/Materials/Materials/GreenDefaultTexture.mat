@@ -7,10 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: hamster_ball
-  m_Shader: {fileID: 4800000, guid: 6ae1c9503da684e7693c98fe833e2303, type: 3}
-  m_ShaderKeywords: _EMISSION
-  m_LightmapFlags: 1
+  m_Name: GreenDefaultTexture
+  m_Shader: {fileID: 10708, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -19,16 +19,9 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - <noninit>:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 37b4485c543384260928e83eddeeabf4, type: 3}
+        m_Texture: {fileID: 2800000, guid: 50ff2cb66be5c48fbae611ae0b9d9845, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - <noninit>: 0
-    - _Shininess: 0.078125
-    m_Colors:
-    - <noninit>: {r: 0, g: 1, b: 0, a: NaN}
+    m_Floats: []
+    m_Colors: []
