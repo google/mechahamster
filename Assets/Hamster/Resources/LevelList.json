@@ -1,86 +1,92 @@
 {
-    "levels": [
-        {
-            "name": "Easy Peezie",
-            "description": "",
-            "filename": "map01",
-            "replay": "replays/map01"
-        },
-        {
-            "name": "Bouncy",
-            "description": "",
-            "filename": "map02",
-            "replay": "replays/map02"
-        },
-        {
-            "name": "Boom",
-            "description": "",
-            "filename": "map03"
-        },
-        {
-            "name": "Spikes",
-            "description": "",
-            "filename": "map04"
-        },
-        {
-            "name": "Teleporters",
-            "description": "",
-            "filename": "map05"
-        },
-        {
-            "name": "Jumping!",
-            "description": "What do they do?!?",
-            "filename": "jumptutorial"
-        },
-        {
-            "name": "A Puzzle!",
-            "description": "How to get inside?",
-            "filename": "wallwalking"
-        },
-        {
-            "name": "Warping 101",
-            "description": "Everything you ever wondered about teleporting!",
-            "filename": "teleporterintro",
-            "replay": "replays/warping"
-        },
-        {
-            "name": "More Spikes",
-            "description": "Watch out!",
-            "filename": "spikesandpits"
-        },
+  "levels": [
+    {
+      "name": "Multiplayer",
+      "description": "",
+      "filename": "MultiplayerMap",
+      "replay": "replays/multiplayer"
+    },
+    {
+      "name": "Easy Peezie",
+      "description": "",
+      "filename": "map01",
+      "replay": "replays/map01"
+    },
+    {
+      "name": "Bouncy",
+      "description": "",
+      "filename": "map02",
+      "replay": "replays/map02"
+    },
+    {
+      "name": "Boom",
+      "description": "",
+      "filename": "map03"
+    },
+    {
+      "name": "Spikes",
+      "description": "",
+      "filename": "map04"
+    },
+    {
+      "name": "Teleporters",
+      "description": "",
+      "filename": "map05"
+    },
+    {
+      "name": "Jumping!",
+      "description": "What do they do?!?",
+      "filename": "jumptutorial"
+    },
+    {
+      "name": "A Puzzle!",
+      "description": "How to get inside?",
+      "filename": "wallwalking"
+    },
+    {
+      "name": "Warping 101",
+      "description": "Everything you ever wondered about teleporting!",
+      "filename": "teleporterintro",
+      "replay": "replays/warping"
+    },
+    {
+      "name": "More Spikes",
+      "description": "Watch out!",
+      "filename": "spikesandpits"
+    },
 
-        {
-            "name": "The Button",
-            "description": "Dare you to press it.",
-            "filename": "switches"
-        },
-        {
-            "name": "Zoom!",
-            "description": "Gotta go fast!",
-            "filename": "pitjumping"
-        },
-        {
-            "name": "Painful Q",
-            "description": "It hurts!",
-            "filename": "spikyq",
-            "replay": "replays/spikeyq"
-        },
-        {
-            "name": "Warping 201",
-            "description": "Things you never needed to know about teleporting!",
-            "filename": "basicteleport"
-        },
-        {
-            "name": "Dance Party",
-            "description": "The cruelst mosh.",
-            "filename": "danceparty"
-        },
-        {
-            "name": "Blasting Off",
-            "description": "Can you achieve liftoff?",
-            "filename": "blastingoff"
-        }
+    {
+      "name": "The Button",
+      "description": "Dare you to press it.",
+      "filename": "switches"
+    },
+    {
+      "name": "Zoom!",
+      "description": "Gotta go fast!",
+      "filename": "pitjumping"
+    },
+    {
+      "name": "Painful Q",
+      "description": "It hurts!",
+      "filename": "spikyq",
+      "replay": "replays/spikeyq"
+    },
+    {
+      "name": "Warping 201",
+      "description": "Things you never needed to know about teleporting!",
+      "filename": "basicteleport"
+    },
+    {
+      "name": "Dance Party",
+      "description": "The cruelst mosh.",
+      "filename": "danceparty"
+    },
+    {
+      "name": "Blasting Off",
+      "description": "Can you achieve liftoff?",
+      "filename": "blastingoff"
+    }
 
 
-    ]
+  ]
 }
