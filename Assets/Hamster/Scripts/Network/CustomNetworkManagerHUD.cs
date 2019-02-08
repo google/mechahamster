@@ -340,7 +340,22 @@ namespace UnityEngine.Networking
                                  manager.client.connection.connectionId == -1);
 
             //  you can find the version number in Build Settings->PlayerSettings->Version
-            ypos = scaledTextBox(xpos, ypos, "Version=" + Application.version);
+            string serverVersionMsg = "";
+            customNetwork.CustomNetworkManager custmgr = manager as customNetwork.CustomNetworkManager;
+            if (custmgr != null)
+            {
+                string sv;
+                if (!custmgr.isServerAndClientVersionMatch(out sv))
+                {
+                    serverVersionMsg = "MISMATCH ServerV=" + sv;
+                }
+                else
+                {
+                    serverVersionMsg = "serverV=" + sv;
+                }
+
+            }
+            ypos = scaledTextBox(xpos, ypos, "clientV=" + Application.version + ", " + serverVersionMsg);
 
             if (bShowDebugCmdlineArgs)
                 ypos = ShowCommandLineArgs(xpos, ypos);
