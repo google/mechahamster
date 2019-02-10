@@ -14,6 +14,7 @@ namespace customNetwork
         public enum hamsterMsgType
         {
             hmsg_serverLevel= kLastUnityMsgType,   //  server tells player what level is currently playing
+            hmsg_serverVersion, //  server tells client what version it's running.
             //  the following are still incomplete. They are there as placeholders.
             hmsg_serverPlayerDied,  //  server tells player that they've died
             hmsg_serverPlayerFinished,  //  server tells player that they've finished this level
@@ -29,6 +30,9 @@ namespace customNetwork
         public bool m_AutoCreatePlayerFromSpawnPrefabList;
         static short curColorIndex = 0;
         static short curLocalPlayerID = 0;  //  we may have multiple controllers/players on this single client. We don't, but we could.
+        private bool bServerVersionDoesntMatch=false;  //  if the server version is different, we should know about it.
+        private string serverVersion;
+
         public enum debugOutputStyle
         {
             db_none,
@@ -401,6 +405,10 @@ namespace customNetwork
             }
             MessageBase msg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(levelIdx);    //  test: yep, just send a number without any context for now. Later, wrap this in an appropriate MessageBase class.
             conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg);
+
+            serverVersion = Application.version;
+            MessageBase serverVersionMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(serverVersion);
+            conn.Send((short)hamsterMsgType.hmsg_serverVersion, serverVersionMsg); 
         }
         //
         // Summary:
@@ -449,7 +457,7 @@ namespace customNetwork
             toServerConnection = client.connection;
 
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverLevel, OnClientLevelMsg);
-
+            client.RegisterHandler((short)hamsterMsgType.hmsg_serverVersion, OnClientVersion);
             //  Hamster.MainGame.NetworkSpawnPlayer(toServerConnection);  //  don't do this yet. Let the weird legacy Hamster code do it in its FixedUpdate, even though it's bad.
         }
 
@@ -469,6 +477,29 @@ namespace customNetwork
             if (intMsg.value >= 0)
             {
                 LoadLevel(intMsg.value);
+            }
+        }
+
+        public bool isServerAndClientVersionMatch(out string serverV)
+        {
+            bool bIsMatched = !bServerVersionDoesntMatch;
+            serverV = serverVersion;
+
+            return bIsMatched;
+        }
+        void OnClientVersion(NetworkMessage netMsg)
+        {
+            UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
+            serverVersion = strMsg.value;
+            string clientVersion = Application.version;
+            if (serverVersion != clientVersion)
+            {
+                Debug.LogError("Server Version=" + serverVersion + " does not match client=" + clientVersion);
+                bServerVersionDoesntMatch = true;
+            }
+            else
+            {
+                bServerVersionDoesntMatch = false;
             }
         }
         //
