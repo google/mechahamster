@@ -12,7 +12,7 @@ namespace Hamster
         private const string ReadyURL = "http://localhost:59358/ready";
         private const string HealthURL = "http://localhost:59358/health";
         private const string ShutdownURL = "http://localhost:59358/shutdown";
-        public float HealthCheckPeriod = 2.5f;
+        public float HealthCheckPeriod = 2.0f;
 
         private WaitForSecondsRealtime m_healthCheckDelay;
 
@@ -42,15 +42,13 @@ namespace Hamster
             }
         }
 
-        private void Awake()
+        // ----- Public API
+
+        public void BeginHealthCheck()
         {
-            // We start the health check in Awake() so that other scripts can signal Ready()
-            // in their Start() event.
             m_healthCheckDelay = new WaitForSecondsRealtime(HealthCheckPeriod);
             StartCoroutine(HealthCheck());
         }
-
-        // ----- Public API
 
         // Signals to Agones that the server is ready to accept player connections
         public void Ready()

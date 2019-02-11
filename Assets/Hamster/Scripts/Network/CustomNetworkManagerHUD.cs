@@ -3,6 +3,8 @@
 using System;
 using System.ComponentModel;
 
+using Hamster;
+
 
 #if ENABLE_UNET
 
@@ -34,6 +36,8 @@ namespace UnityEngine.Networking
         bool m_loadServerRequested = false;
         bool m_autoStartLevel = false;
 
+        private AgonesClient agones;
+
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
          */
@@ -51,6 +55,11 @@ namespace UnityEngine.Networking
                 Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();   //  create new state for FSM that will let us force the starting level.
                 bSucceeded = lvlSel.ForceLoadLevel(levelIdx); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
                 Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
+                
+                // If we're running through Agones, signal ready after the level has loaded
+                if (agones != null) {
+                    agones.Ready();
+                }
                 m_autoStartLevel = false;   //  we gotta stop calling this over and over.
             }
             return bSucceeded;
@@ -68,9 +77,6 @@ namespace UnityEngine.Networking
         bool ReadCommandLineArg()
         {
             bool bServerStarted = false;
-
-            if (manager==null)
-                manager = GetComponent<NetworkManager>();
 
             string[] args = System.Environment.GetCommandLineArgs();
             string input = "";
@@ -94,8 +100,20 @@ namespace UnityEngine.Networking
                     case "-s":
                         Debug.Log("Start Server");
                         bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
+
                         StartServerReq();
                         m_autoStartLevel = true;
+                        break;
+                    case "-a":
+                        Debug.Log("Communicating with Agones");
+
+                        agones = GetComponent<AgonesClient>();
+
+                        // If we have an AgonesComponent we can communicate via Agones. Don't assume this
+                        // will always exist.
+                        if (agones != null) {
+                            agones.BeginHealthCheck();
+                        }
                         break;
                     case "-level":
                         if (Int32.TryParse(input, out intArg))
@@ -126,9 +144,10 @@ namespace UnityEngine.Networking
                 Screen.SetResolution(1280, 1024, false);
             }
 
-            bool bServerStarted = ReadCommandLineArg();
             if (manager == null)
                 manager = GetComponent<NetworkManager>();
+
+            bool bServerStarted = ReadCommandLineArg();
 
             //  Note to Graeme: This stuff was moved to Start() from Awake() because we need some cycles for the server stuff to get online with valid manager fields to call StartServer(). It's a Unity thing.
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
