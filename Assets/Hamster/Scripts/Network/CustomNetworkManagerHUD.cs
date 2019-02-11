@@ -248,6 +248,7 @@ namespace UnityEngine.Networking
 
         string scaledTextField(out float newYpos, out float newXPos, float xpos, float ypos, string tField)
         {
+            const float kMinWidth = 100.0f; //  if we have no text, our box becomes too small to click.
             const float kButtonSpace = 6.0f;
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
             float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
@@ -260,7 +261,8 @@ namespace UnityEngine.Networking
             content.text = tField;
 
             Vector2 rectSize = textFieldStyle.CalcSize(content);
-            Rect tempRect = new Rect(xpos, ypos- kButtonSpace / 2, rectSize.x + kButtonSpace, rectSize.y + kButtonSpace);
+            float buttonWidth = Math.Max(kMinWidth, rectSize.x + kButtonSpace);
+            Rect tempRect = new Rect(xpos, ypos- kButtonSpace / 2, buttonWidth, rectSize.y + kButtonSpace);
             float space = tempRect.height;
 
             // Set the internal name of the textfield
