@@ -25,11 +25,17 @@ namespace UnityEngine.Networking
         public int kTextBoxHeight = 40;
         public int kTextBoxWidth = 1024;
         public int kSpaceBetweenBoxes = 5;
+        public JsonStartupConfig config;
+
         int startLevel = kDefaultLevelIdx; 
         public NetworkManager manager;
         [SerializeField] public bool showGUI = true;
         [SerializeField] public int offsetX;
         [SerializeField] public int offsetY;
+
+        //  to allow the client to connect to the server
+        string serverAddress;
+        string serverPort;
 
         // Runtime variable
         bool m_ShowServer;
@@ -74,9 +80,28 @@ namespace UnityEngine.Networking
             if (m_autoStartLevel)
                 m_loadServerRequested = !AutoStartLevel(startLevel);
         }
+
+        void ReadConfig()
+        {
+            config = FindObjectOfType<JsonStartupConfig>();
+
+            if (config != null)
+            {
+                if (!config.isConfigLoaded)
+                {  //  strange, this should have already been loaded. But Unity timing for Start is weird, so we'll just load it anyway.
+                    config.ReadJsonStartupConfig();
+                }
+                this.startLevel = config.startupConfig.startingLevel;
+                this.serverAddress = config.startupConfig.serverIP;
+                this.serverPort = config.startupConfig.serverPort;
+            }
+        }
         bool ReadCommandLineArg()
         {
             bool bServerStarted = false;
+
+            if (manager==null)
+                manager = GetComponent<NetworkManager>();
 
             string[] args = System.Environment.GetCommandLineArgs();
             string input = "";
@@ -144,9 +169,15 @@ namespace UnityEngine.Networking
                 Screen.SetResolution(1280, 1024, false);
             }
 
-            if (manager == null)
-                manager = GetComponent<NetworkManager>();
+            if (manager != null)
+            {
+                serverAddress = manager.networkAddress;
+                serverPort = manager.networkPort.ToString();
+            }
 
+            ReadConfig();
+            //  
+            //  command line args take precedence over the .json config file because someone had to type it intentionally.
             bool bServerStarted = ReadCommandLineArg();
 
             //  Note to Graeme: This stuff was moved to Start() from Awake() because we need some cycles for the server stuff to get online with valid manager fields to call StartServer(). It's a Unity thing.
@@ -348,9 +379,8 @@ namespace UnityEngine.Networking
             float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
             int kFontSize = (int)((kTextBoxHeight) * screenHeightScaling);
 
-            string ipv4 = manager.networkAddress;   //  this usually just says "localhost" which doesn't really help us type in an ip address later.
-            ipv4 = customNetwork.CustomNetworkManager.LocalIPAddress();    //  none of these work.
-
+            //  string ipv4 = manager.networkAddress;   //  this usually just says "localhost" which doesn't really help us type in an ip address later.
+            string localipv4 = customNetwork.CustomNetworkManager.LocalIPAddress(); //  this is this machine's address.
             int port = manager.networkPort;
 
             float xpos = offsetX;
@@ -417,8 +447,8 @@ namespace UnityEngine.Networking
                     //  ypos = newYpos;
                     float offsetXPos = xpos;
 
-                    manager.networkAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, manager.networkAddress);
-                    manager.networkPort = Convert.ToInt32(scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, manager.networkPort.ToString()));
+                    manager.networkAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, serverAddress);
+                    manager.networkPort = Convert.ToInt32(scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, serverPort));
                     ypos = newYpos;
 
                     if (UnityEngine.Application.platform == RuntimePlatform.WebGLPlayer)
@@ -453,7 +483,7 @@ namespace UnityEngine.Networking
             {
                 if (NetworkServer.active)
                 {
-                    string serverMsg = "Server("+ customNetwork.CustomNetworkManager.LocalHostname() + "): "+ ipv4 + "\n  port=" + port;
+                    string serverMsg = "Server("+ customNetwork.CustomNetworkManager.LocalHostname() + "): "+ localipv4 + "\n  port=" + port;
                     if (manager.useWebSockets)
                     {
                         serverMsg += " (Using WebSockets)";
@@ -462,7 +492,7 @@ namespace UnityEngine.Networking
                 }
                 if (manager.IsClientConnected())
                 {
-                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + ipv4 + "\n  port=" + port);
+                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + localipv4 + "\n  port=" + port);
                 }
             }
 
