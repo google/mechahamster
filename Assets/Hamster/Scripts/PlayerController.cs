@@ -22,10 +22,13 @@ namespace Hamster
     // Class to controll the player's avatar.  (The ball)
     public class PlayerController : NetworkBehaviour
     {
+        const float kTimeScale = 1.0f / 60.0f;  //  for frame rate independent 
         const float kFellOffLevelHeight = -10.0f;
         const float kMaxVelocity = 20f;
         const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
         const int kInitialHitPoints = 3;
+
+        bool isSpectator;   //  this give client authority to ball movement and uses a different control scheme to move the ball/camera.
 
         NetworkIdentity netIdentity;
         Rigidbody myRigidBody;
@@ -70,6 +73,43 @@ namespace Hamster
             }
         }
 
+        public void MakeIntoSpectator(bool bmakeIntoSpectator)
+        {
+            //  put the camera on the ball.
+            //  give client authority
+            NetworkIdentity id = this.GetComponent<NetworkIdentity>();
+            id.localPlayerAuthority = bmakeIntoSpectator;
+            //  remove physics.
+            this.myRigidBody.isKinematic = !bmakeIntoSpectator;
+            this.myRigidBody.detectCollisions = !bmakeIntoSpectator;
+            this.myRigidBody.useGravity = !bmakeIntoSpectator;
+            this.isSpectator = bmakeIntoSpectator;
+        }
+        [Command]
+        void Cmd_ResetPlayerPosition()
+        {
+            ResetPlayerPosition(this.gameObject);
+        }
+        [Command]
+        void Cmd_ZeroPlayerMomentum()
+        {
+            ZeroPlayerMomentum();
+        }
+
+        [Command]
+        public void Cmd_MakeIntoSpectator(bool bmakeIntoSpectator)
+        {
+            MakeIntoSpectator(bmakeIntoSpectator);
+        }
+
+        public void ClientMakeIntoSpectator(bool bmakeIntoSpectator)
+        {
+            if (isClient)
+                Cmd_MakeIntoSpectator(bmakeIntoSpectator);
+            this.
+            MakeIntoSpectator(bmakeIntoSpectator);
+            //  different control scheme.
+        }
         //  The server should already be in Gameplay.GameplayMode.Gameplay state before the player has entered the game and been notified via OnStartLocalPlayer().
         static public void StartGamePlay()
         {
@@ -86,17 +126,65 @@ namespace Hamster
             StartGamePlay();
         }
 
+
         void ResetPlayerPosition(GameObject plrGO)
         {
             Transform xformStart = customNetwork.CustomNetworkManager.singleton.GetStartPosition();
             plrGO.transform.position = xformStart.position;
         }
+        void ZeroPlayerMomentum()
+        {
+            this.myRigidBody.velocity = Vector3.zero;
+            this.myRigidBody.angularVelocity = Vector3.zero;
+        }
         // Height of the kill-plane.
         // If the player's y-coordinate ever falls below this, it is treated as
         // a loss/failure.
 
+        float SpectatorControls()
+        {
+            if (!isSpectator) return 0.0f;   //  non-spectators do not have access to this special stuff.
+
+            float zforce = 0.0f;
+            float elapsedTime = Time.deltaTime;
+            Vector2 input = inputController.GetInputVector();   //  kKeyVelocity
+            float inputMag = Hamster.InputControllers.KeyboardController.kKeyVelocity * kTimeScale;    //  just a fudge factor to make it feel right.
+
+            if (Input.GetKeyDown(KeyCode.Space))    //  space to reset position to StartPosition square
+            {
+                Cmd_ResetPlayerPosition();
+                this.ResetPlayerPosition(this.gameObject);
+                Cmd_ZeroPlayerMomentum();
+                ZeroPlayerMomentum();
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))    //  Return/Enter to zero momentum
+            {
+                Cmd_ZeroPlayerMomentum();
+                ZeroPlayerMomentum();
+            }
+            else if (Input.GetKeyDown(KeyCode.PageUp))
+            {
+                if (elapsedTime > 0.01f)
+                    zforce = inputMag/ elapsedTime;
+            }
+            else if (Input.GetKeyDown(KeyCode.PageDown))
+            {
+                if (elapsedTime > 0.01f)
+                    zforce = -inputMag / elapsedTime;
+            }
+            return zforce;
+        }
         void Update()
         {
+            float spectatorZforce = 0.0f;
+            if (Input.GetKeyDown(KeyCode.F12))  //  special key to request spectator mode.
+            {
+                ClientMakeIntoSpectator(!isSpectator);
+            }
+            if (this.isSpectator)
+            {
+                spectatorZforce = SpectatorControls();
+            }
             if (IsProcessingDeath)
                 return;
             //  common code to both localPlayer and server
@@ -113,7 +201,7 @@ namespace Hamster
             if (isLocalPlayer)
             {
                 float elapsedTime = Time.deltaTime; //  time since last frame.
-                Vector2 input = inputController.GetInputVector();
+                Vector2 input = inputController.GetInputVector();   //  kKeyVelocity
                 input *= kTimeScale;    //  just a fudge factor to make it feel right.
                 if (elapsedTime <= 0.01f)   //  guard vs. divide by zero or negative nonsense.
                 {
@@ -126,6 +214,10 @@ namespace Hamster
                 //  note: We're using 1 kg/s as a hack here implicitly. Thus, our units seem to be m/s, but really should be Newton = kg*m/(s^2) But since we're not writing a physics engine here, this shortcut should suffice.
                 forceThisFrame = input;
 
+                if (this.isSpectator)
+                {
+                    forceThisFrame.z = spectatorZforce;
+                }
                 if (forceThisFrame.magnitude <= 0.05f)
                     return;  // if we're too weak of a force, the server does not need know about you.
                 if (forceThisFrame.sqrMagnitude > kMaxVelocitySquared)
@@ -166,8 +258,7 @@ namespace Hamster
         //==========================================================================================================
         //  server stuff below
         //==========================================================================================================
-        const float kTimeScale = 1.0f / 60.0f;
-        Vector2 forceThisFrame;
+        Vector3 forceThisFrame;
 
 
         //  These are methods that the server should handle.
@@ -217,7 +308,7 @@ namespace Hamster
             if (rigidBody == null)
                 rigidBody = myRigidBody = GetComponent<Rigidbody>();
             if (rigidBody != null)
-                rigidBody.AddForce(new Vector3(force.x, 0, force.y));
+                rigidBody.AddForce(new Vector3(force.x, force.z, force.y)); //  yeah, flip the units around to be z-up. Not great, but That's the coordinate system that was inherited.
         }
 
         bool CheckHeightDeath()

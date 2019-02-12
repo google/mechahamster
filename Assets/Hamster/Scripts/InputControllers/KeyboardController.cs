@@ -23,7 +23,7 @@ namespace Hamster.InputControllers {
   public class KeyboardController : BasePlayerController {
     // Velocity, in world-units-per-second, from holding down
     // a key.
-    const float kKeyVelocity = 8.0f;
+    public const float kKeyVelocity = 8.0f;
 
     public override Vector2 GetInputVector() {
       Vector2 result = Vector2.zero;
