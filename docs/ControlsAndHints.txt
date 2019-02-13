@@ -1,0 +1,8 @@
+~ or ` -> Toggle network debug menus and info.
+F12 - Toggle Spectator mode.
+
+In Spectator mode:
+------------------------------
+PgUp/PgDn -  move up/down
+[Enter/Return] - stop moving
+[Space] - return to StartPosition

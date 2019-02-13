@@ -39,20 +39,24 @@ namespace Hamster {
     // The height is a lowered in VR mode.
     const float VRHeightScalar = 0.75f;
 
-    // Values representing various modes the camera can be in.
-    public enum CameraMode {
-      Gameplay,
-      Menu,
-      Editor,
-      Dragging
-    }
+        // Values representing various modes the camera can be in.
+        public enum CameraMode
+        {
+            Gameplay,
+            Menu,
+            Editor,
+            Dragging,
+            Spectator
+        }
 
-    // Current behavior mode the camera is in.
-    public CameraMode mode = CameraMode.Menu;
+        // Current behavior mode the camera is in.
+        public CameraMode mode = CameraMode.Menu;
 
     private MainGame mainGame;
     private Vector3 editorCam = new Vector3(0, 0, 0);
-    private static Vector3 kUpVector = new Vector3(0, 1, 1);
+    private static Vector3 kUpVector = new Vector3(0, 1, 0);    //  ummm... yeah, that was just incorrect before.
+    const float kCameraFixedHeight = 8.5f;
+
     PlayerController player;
 
     // The location used for controlling the camera with mouse drag.
@@ -93,20 +97,30 @@ namespace Hamster {
       Vector3 viewAngleVector = Quaternion.Euler(-ViewAngle, 0, 0) * -Vector3.forward;
 
       switch (mode) {
-        case CameraMode.Gameplay:
-          // Gameplay mode:  Camera should follow the player:
-          if (player == null)
-            player = FindObjectOfType<PlayerController>();
-          if (player != null) {
-            Vector3 camTarget = player.transform.position;
-            camTarget.y = CameraFocusHeight;
-            transform.position = camTarget + viewAngleVector * ViewDistance;
-            if (!CommonData.inVrMode) {
-              transform.LookAt(player.transform.position, kUpVector);
-            }
-          }
-          break;
-        case CameraMode.Dragging:
+                case CameraMode.Gameplay:
+                    // Gameplay mode:  Camera should follow the player:
+                    if (player == null)
+                        player = FindObjectOfType<PlayerController>();
+                    if (player != null)
+                    {
+                        Vector3 camTarget = player.transform.position;
+                        camTarget.y = CameraFocusHeight;
+                        if (!player.isSpectator)
+                        {
+                            transform.position = camTarget + viewAngleVector * ViewDistance;
+                        }
+                        if (!CommonData.inVrMode)
+                        {
+                            transform.LookAt(player.transform.position, kUpVector);
+                        }
+                        {// after looking at the player, adjust our distance properly
+                            Vector3 newPos = player.transform.position - transform.forward * ViewDistance;  //  move back from the target by ViewDistance.
+                            newPos.y = kCameraFixedHeight + player.transform.position.y;    //  stay above our target
+                            transform.position = newPos;
+                        }
+                    }
+                    break;
+                case CameraMode.Dragging:
           Ray ray = GetComponentInChildren<Camera>().ScreenPointToRay(Input.mousePosition);
           float dist;
           if (CommonData.kZeroPlane.Raycast(ray, out dist)) {

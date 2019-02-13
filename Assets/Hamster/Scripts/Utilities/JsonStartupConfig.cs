@@ -65,7 +65,8 @@ public class JsonStartupConfig : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ReadJsonStartupConfig();
+        if (this.isActiveAndEnabled)    //  allows this to be disabled so that we can easily test without loading the config file.
+            ReadJsonStartupConfig();
     }
 
     // Update is called once per frame

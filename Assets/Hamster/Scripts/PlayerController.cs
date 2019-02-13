@@ -22,10 +22,18 @@ namespace Hamster
     // Class to controll the player's avatar.  (The ball)
     public class PlayerController : NetworkBehaviour
     {
+        Camera mycam;
+        Transform mycamParentXform;
+        Vector3 kYaxis = new Vector3(0, 1, 0);
+        const float kTimeScale = 1.0f / 60.0f;  //  for frame rate independent 
+        const float kPositionDelta = 0.15f;   //  fudge factor
+        const float kCamRotateSpeed = 0.15f;
         const float kFellOffLevelHeight = -10.0f;
         const float kMaxVelocity = 20f;
         const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
         const int kInitialHitPoints = 3;
+
+        public bool isSpectator;   //  this give client authority to ball movement and uses a different control scheme to move the ball/camera.
 
         NetworkIdentity netIdentity;
         Rigidbody myRigidBody;
@@ -56,6 +64,15 @@ namespace Hamster
 
         void Start()
         {
+            if (mycam==null)
+            {
+                mycam = FindObjectOfType<Camera>();
+                mycamParentXform = mycam.transform.parent;
+                if (mycamParentXform == null)
+                {
+                    mycamParentXform = mycam.transform;
+                }
+            }
             IsProcessingDeath = false;
             HitPoints = kInitialHitPoints;
             if (CommonData.currentReplayData == null)
@@ -70,6 +87,43 @@ namespace Hamster
             }
         }
 
+        public void MakeIntoSpectator(bool bmakeIntoSpectator)
+        {
+            //  put the camera on the ball.
+            //  give client authority
+            NetworkIdentity id = this.GetComponent<NetworkIdentity>();
+            id.localPlayerAuthority = bmakeIntoSpectator;
+            //  remove physics.
+            this.myRigidBody.isKinematic = !bmakeIntoSpectator;
+            this.myRigidBody.detectCollisions = !bmakeIntoSpectator;
+            this.myRigidBody.useGravity = !bmakeIntoSpectator;
+            this.isSpectator = bmakeIntoSpectator;
+        }
+        [Command]
+        void Cmd_ResetPlayerPosition()
+        {
+            ResetPlayerPosition(this.gameObject);
+        }
+        [Command]
+        void Cmd_ZeroPlayerMomentum()
+        {
+            ZeroPlayerMomentum();
+        }
+
+        [Command]
+        public void Cmd_MakeIntoSpectator(bool bmakeIntoSpectator)
+        {
+            MakeIntoSpectator(bmakeIntoSpectator);
+        }
+
+        public void ClientMakeIntoSpectator(bool bmakeIntoSpectator)
+        {
+            if (isClient)
+                Cmd_MakeIntoSpectator(bmakeIntoSpectator);
+            this.
+            MakeIntoSpectator(bmakeIntoSpectator);
+            //  different control scheme.
+        }
         //  The server should already be in Gameplay.GameplayMode.Gameplay state before the player has entered the game and been notified via OnStartLocalPlayer().
         static public void StartGamePlay()
         {
@@ -86,17 +140,134 @@ namespace Hamster
             StartGamePlay();
         }
 
+
         void ResetPlayerPosition(GameObject plrGO)
         {
             Transform xformStart = customNetwork.CustomNetworkManager.singleton.GetStartPosition();
             plrGO.transform.position = xformStart.position;
         }
+        void ZeroPlayerMomentum()
+        {
+            this.myRigidBody.velocity = Vector3.zero;
+            this.myRigidBody.angularVelocity = Vector3.zero;
+        }
         // Height of the kill-plane.
         // If the player's y-coordinate ever falls below this, it is treated as
         // a loss/failure.
 
+        //    /*
+        //     * Because the specatator has some freedom to move, it can mess up the camera. So we need to straighten it out every so often.
+        //     * by that what we mean specifically, geometrically, is that we rotate around the camera's forward axis some number of degrees until its right axis is parallel with the x-z plane.
+        //     * Nevermind. It's because the original code had the camera under another transform rather than controlling it directly.
+        //     */
+        //void StraightenCamera(Camera cam)
+        //{
+        //    float someNumberOfDegrees;
+        //    Vector3 rotationalAxis = cam.transform.forward;
+        //    Vector3 rightAxis = cam.transform.right;
+        //    Vector3 xzPlaneAxis = rightAxis;//  this is the projection of the rightAxis onto the xzPlane
+        //    xzPlaneAxis.y = 0;  //  this is the projection of the rightAxis onto the xzPlane
+        //    //  with the rightAxis and its projection onto the xz-plane, we can the angle between these two vectors with a dot product
+        //    float dotProduct = Vector3.Dot(rightAxis, xzPlaneAxis);
+        //    float angleInRadians = Mathf.Acos(dotProduct);
+        //    float angleInDegrees = Mathf.Rad2Deg*angleInRadians;   //  in degrees because n00bs.
+        //    cam.transform.RotateAround(rotationalAxis, -angleInDegrees);//rotate the opposite way 
+        //}
+        /*
+         * These are custom controls for the spectator that floats around and doesn't move according to physics.
+         */
+        Vector3 SpectatorControls()
+        {
+            //  we have to normalize the camera after all of these moves because the rotate around the yaxis along with various camera-relative movement can cause roll to pollute the camera matrix.
+            //StraightenCamera(mycam);
+
+            Vector3 force = Vector3.zero;
+            if (!isSpectator) return force;   //  non-spectators do not have access to this special stuff.
+
+            float zforce = 0.0f;
+            float elapsedTime = Time.deltaTime;
+            Vector2 input = inputController.GetInputVector();   //  kKeyVelocity
+            //float inputMag = Hamster.InputControllers.KeyboardController.kKeyVelocity * kTimeScale;    //  just a fudge factor to make it feel right.
+            float inputMag = kTimeScale * kPositionDelta;    //  Since we are moving the position rather than adding a force, we don't need to have the velocity multiplied in.
+
+            if (Input.GetKeyDown(KeyCode.Space))    //  space to reset position to StartPosition square
+            {
+                Cmd_ResetPlayerPosition();
+                this.ResetPlayerPosition(this.gameObject);
+                Cmd_ZeroPlayerMomentum();
+                ZeroPlayerMomentum();
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))    //  Return/Enter to zero momentum
+            {
+                Cmd_ZeroPlayerMomentum();
+                ZeroPlayerMomentum();
+            }
+
+            if (Input.GetKey(KeyCode.W))
+            {
+                Vector3 xzForce = mycamParentXform.forward; //  force along the xzplane since the camera will be looking at the target at a downward angle.
+                xzForce.y = 0;
+                xzForce.Normalize();
+                xzForce *= inputMag / elapsedTime;
+                force += xzForce;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                Vector3 xzForce = mycamParentXform.forward * inputMag / elapsedTime;
+                xzForce.y = 0;
+                xzForce.Normalize();
+                xzForce *= inputMag / elapsedTime;
+
+                force -= xzForce;
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                Vector3 xzForce = mycamParentXform.right; //  force along the xzplane since the camera will be looking at the target at a downward angle.
+                xzForce.y = 0;
+                xzForce.Normalize();
+                xzForce *= inputMag / elapsedTime;
+                force -= xzForce;
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                Vector3 xzForce = mycamParentXform.right; //  force along the xzplane since the camera will be looking at the target at a downward angle.
+                xzForce.y = 0;
+                xzForce.Normalize();
+                xzForce *= inputMag / elapsedTime;
+                force += xzForce;
+            }
+
+            if (Input.GetKey(KeyCode.PageUp))
+            {
+                if (elapsedTime > 0.01f)
+                    force.y = inputMag/ elapsedTime;
+            }
+            else if (Input.GetKey(KeyCode.PageDown))
+            {
+                if (elapsedTime > 0.01f)
+                    force.y = -inputMag / elapsedTime;
+            }
+
+            float camRotateVal = kCamRotateSpeed * kTimeScale / elapsedTime;
+            if (Input.GetKey(KeyCode.Q))   //  rotate camera left
+            {
+                //mycamParentXform.RotateAround(this.transform.position, kYaxis, camRotateVal); //  don't do this anymore. We actually just want to move the camera in an orbit.
+                mycamParentXform.position -= mycamParentXform.transform.right* camRotateVal;
+            }
+            else if (Input.GetKey(KeyCode.E))   //  rotate camera right
+            {
+                //mycamParentXform.RotateAround(this.transform.position, kYaxis , -camRotateVal);//  don't do this anymore. We actually just want to move the camera in an orbit.
+                mycamParentXform.position += mycamParentXform.transform.right* camRotateVal;
+            }
+            return force;
+        }
         void Update()
         {
+            float spectatorZforce = 0.0f;
+            if (Input.GetKeyDown(KeyCode.F12))  //  special key to request spectator mode.
+            {
+                ClientMakeIntoSpectator(!isSpectator);
+            }
             if (IsProcessingDeath)
                 return;
             //  common code to both localPlayer and server
@@ -113,7 +284,7 @@ namespace Hamster
             if (isLocalPlayer)
             {
                 float elapsedTime = Time.deltaTime; //  time since last frame.
-                Vector2 input = inputController.GetInputVector();
+                Vector2 input = inputController.GetInputVector();   //  kKeyVelocity
                 input *= kTimeScale;    //  just a fudge factor to make it feel right.
                 if (elapsedTime <= 0.01f)   //  guard vs. divide by zero or negative nonsense.
                 {
@@ -124,7 +295,12 @@ namespace Hamster
                     input /= elapsedTime;   //  scaled via time elapsed so that we are frame-rate independent;
                 }
                 //  note: We're using 1 kg/s as a hack here implicitly. Thus, our units seem to be m/s, but really should be Newton = kg*m/(s^2) But since we're not writing a physics engine here, this shortcut should suffice.
-                forceThisFrame = input;
+                forceThisFrame = new Vector3(input.x, 0, input.y);  //  that's how original MechaHamster code defined its inputs. So, we have to transform it to the way the world is oriented.
+
+                if (this.isSpectator)
+                {
+                    forceThisFrame = SpectatorControls();
+                }
 
                 if (forceThisFrame.magnitude <= 0.05f)
                     return;  // if we're too weak of a force, the server does not need know about you.
@@ -137,7 +313,14 @@ namespace Hamster
                 if (this.isClient)
                 {
                     //  this tells the server to include your force into its next force calculation, whenever that might be.
-                    Cmd_ServerAddForce(forceThisFrame);
+                    if (isSpectator)
+                    {
+                        Cmd_ServerAddPosition(forceThisFrame);
+                    }
+                    else
+                    {
+                        Cmd_ServerAddForce(forceThisFrame);
+                    }
                     AddForce(forceThisFrame);   //  do this on the client. The server will send us back the correct positions. But this can get us on a headstart of where we think we should be.
                 }
             }   //  if(isLocalPlayer)
@@ -166,8 +349,7 @@ namespace Hamster
         //==========================================================================================================
         //  server stuff below
         //==========================================================================================================
-        const float kTimeScale = 1.0f / 60.0f;
-        Vector2 forceThisFrame;
+        Vector3 forceThisFrame;
 
 
         //  These are methods that the server should handle.
@@ -207,7 +389,12 @@ namespace Hamster
             if (HitPoints <= 0)
                 EndGame();
         }
-
+        void AddPosition(Vector3 deltaPos)
+        {
+            //  bail on garbage numbers
+            if (float.IsNaN(deltaPos.x) || float.IsNaN(deltaPos.y) || float.IsInfinity(deltaPos.z)) return;
+            this.transform.position += deltaPos;
+        }
         void AddForce(Vector3 force)
         {
             //  bail on garbage numbers
@@ -217,7 +404,7 @@ namespace Hamster
             if (rigidBody == null)
                 rigidBody = myRigidBody = GetComponent<Rigidbody>();
             if (rigidBody != null)
-                rigidBody.AddForce(new Vector3(force.x, 0, force.y));
+                rigidBody.AddForce(force); //  yeah, flip the units around to be z-up. Not great, but That's the coordinate system that was inherited.
         }
 
         bool CheckHeightDeath()
@@ -252,8 +439,15 @@ namespace Hamster
         void Cmd_ServerAddForce(Vector3 force)
         {
             AddForce(force);
-
         }
+
+        //  lesser used. For spectator movement
+        [Command]
+        void Cmd_ServerAddPosition(Vector3 deltaPos)
+        {
+            AddPosition(deltaPos);
+        }
+
 
     }
 }
