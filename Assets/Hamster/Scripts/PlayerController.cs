@@ -23,16 +23,17 @@ namespace Hamster
     public class PlayerController : NetworkBehaviour
     {
         Camera mycam;
+        Transform mycamParentXform;
         Vector3 kYaxis = new Vector3(0, 1, 0);
         const float kTimeScale = 1.0f / 60.0f;  //  for frame rate independent 
         const float kPositionDelta = 0.15f;   //  fudge factor
-        const float kCamRotateSpeed = 2.0f;
+        const float kCamRotateSpeed = 0.15f;
         const float kFellOffLevelHeight = -10.0f;
         const float kMaxVelocity = 20f;
         const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
         const int kInitialHitPoints = 3;
 
-        bool isSpectator;   //  this give client authority to ball movement and uses a different control scheme to move the ball/camera.
+        public bool isSpectator;   //  this give client authority to ball movement and uses a different control scheme to move the ball/camera.
 
         NetworkIdentity netIdentity;
         Rigidbody myRigidBody;
@@ -66,6 +67,11 @@ namespace Hamster
             if (mycam==null)
             {
                 mycam = FindObjectOfType<Camera>();
+                mycamParentXform = mycam.transform.parent;
+                if (mycamParentXform == null)
+                {
+                    mycamParentXform = mycam.transform;
+                }
             }
             IsProcessingDeath = false;
             HitPoints = kInitialHitPoints;
@@ -149,8 +155,32 @@ namespace Hamster
         // If the player's y-coordinate ever falls below this, it is treated as
         // a loss/failure.
 
+        //    /*
+        //     * Because the specatator has some freedom to move, it can mess up the camera. So we need to straighten it out every so often.
+        //     * by that what we mean specifically, geometrically, is that we rotate around the camera's forward axis some number of degrees until its right axis is parallel with the x-z plane.
+        //     * Nevermind. It's because the original code had the camera under another transform rather than controlling it directly.
+        //     */
+        //void StraightenCamera(Camera cam)
+        //{
+        //    float someNumberOfDegrees;
+        //    Vector3 rotationalAxis = cam.transform.forward;
+        //    Vector3 rightAxis = cam.transform.right;
+        //    Vector3 xzPlaneAxis = rightAxis;//  this is the projection of the rightAxis onto the xzPlane
+        //    xzPlaneAxis.y = 0;  //  this is the projection of the rightAxis onto the xzPlane
+        //    //  with the rightAxis and its projection onto the xz-plane, we can the angle between these two vectors with a dot product
+        //    float dotProduct = Vector3.Dot(rightAxis, xzPlaneAxis);
+        //    float angleInRadians = Mathf.Acos(dotProduct);
+        //    float angleInDegrees = Mathf.Rad2Deg*angleInRadians;   //  in degrees because n00bs.
+        //    cam.transform.RotateAround(rotationalAxis, -angleInDegrees);//rotate the opposite way 
+        //}
+        /*
+         * These are custom controls for the spectator that floats around and doesn't move according to physics.
+         */
         Vector3 SpectatorControls()
         {
+            //  we have to normalize the camera after all of these moves because the rotate around the yaxis along with various camera-relative movement can cause roll to pollute the camera matrix.
+            //StraightenCamera(mycam);
+
             Vector3 force = Vector3.zero;
             if (!isSpectator) return force;   //  non-spectators do not have access to this special stuff.
 
@@ -172,9 +202,10 @@ namespace Hamster
                 Cmd_ZeroPlayerMomentum();
                 ZeroPlayerMomentum();
             }
-            else if (Input.GetKey(KeyCode.W))
+
+            if (Input.GetKey(KeyCode.W))
             {
-                Vector3 xzForce = mycam.transform.forward; //  force along the xzplane since the camera will be looking at the target at a downward angle.
+                Vector3 xzForce = mycamParentXform.forward; //  force along the xzplane since the camera will be looking at the target at a downward angle.
                 xzForce.y = 0;
                 xzForce.Normalize();
                 xzForce *= inputMag / elapsedTime;
@@ -182,7 +213,7 @@ namespace Hamster
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                Vector3 xzForce = mycam.transform.forward * inputMag / elapsedTime;
+                Vector3 xzForce = mycamParentXform.forward * inputMag / elapsedTime;
                 xzForce.y = 0;
                 xzForce.Normalize();
                 xzForce *= inputMag / elapsedTime;
@@ -191,7 +222,7 @@ namespace Hamster
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                Vector3 xzForce = mycam.transform.right; //  force along the xzplane since the camera will be looking at the target at a downward angle.
+                Vector3 xzForce = mycamParentXform.right; //  force along the xzplane since the camera will be looking at the target at a downward angle.
                 xzForce.y = 0;
                 xzForce.Normalize();
                 xzForce *= inputMag / elapsedTime;
@@ -199,7 +230,7 @@ namespace Hamster
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                Vector3 xzForce = mycam.transform.right; //  force along the xzplane since the camera will be looking at the target at a downward angle.
+                Vector3 xzForce = mycamParentXform.right; //  force along the xzplane since the camera will be looking at the target at a downward angle.
                 xzForce.y = 0;
                 xzForce.Normalize();
                 xzForce *= inputMag / elapsedTime;
@@ -220,13 +251,14 @@ namespace Hamster
             float camRotateVal = kCamRotateSpeed * kTimeScale / elapsedTime;
             if (Input.GetKey(KeyCode.Q))   //  rotate camera left
             {
-                mycam.transform.RotateAround(this.transform.position, kYaxis, camRotateVal);
+                //mycamParentXform.RotateAround(this.transform.position, kYaxis, camRotateVal); //  don't do this anymore. We actually just want to move the camera in an orbit.
+                mycamParentXform.position -= mycamParentXform.transform.right* camRotateVal;
             }
             else if (Input.GetKey(KeyCode.E))   //  rotate camera right
             {
-                mycam.transform.RotateAround(this.transform.position, kYaxis , -camRotateVal);
+                //mycamParentXform.RotateAround(this.transform.position, kYaxis , -camRotateVal);//  don't do this anymore. We actually just want to move the camera in an orbit.
+                mycamParentXform.position += mycamParentXform.transform.right* camRotateVal;
             }
-            //  we have to normalize the camera after all of these moves because the rotate around the yaxis along with various camera-relative movement can cause roll to pollute the camera matrix.
             return force;
         }
         void Update()
