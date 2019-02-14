@@ -25,7 +25,8 @@ namespace Hamster
         Camera mycam;
         Transform mycamParentXform;
         Vector3 kYaxis = new Vector3(0, 1, 0);
-        const float kTimeScale = 1.0f / 60.0f;  //  for frame rate independent 
+        const float kExpectedFrameRate = 15.0f;     //  lowest expected frame rate in frames per second.
+        const float kTimeScale = 1.0f / kExpectedFrameRate;  //  for frame rate independent 
         const float kPositionDelta = 0.15f;   //  fudge factor
         const float kCamRotateSpeed = 0.15f;
         const float kFellOffLevelHeight = -10.0f;
@@ -64,6 +65,7 @@ namespace Hamster
 
         void Start()
         {
+            Time.maximumDeltaTime = kTimeScale;
             if (mycam==null)
             {
                 mycam = FindObjectOfType<Camera>();
@@ -296,14 +298,18 @@ namespace Hamster
                 }
 
                 NetworkIdentity netid = GetComponent<NetworkIdentity>();
+                double serverVersion = 0;
+                if (CommonData.networkmanager!= null)
+                    serverVersion = CommonData.networkmanager.getServerVersionDouble(netid);
                 //  note: We're using 1 kg/s as a hack here implicitly. Thus, our units seem to be m/s, but really should be Newton = kg*m/(s^2) But since we're not writing a physics engine here, this shortcut should suffice.
-                if (CommonData.networkmanager && CommonData.networkmanager.getServerVersionDouble(netid) >= 1.20190212)
+                if (serverVersion >= 1.20190212 || serverVersion == 0)  //  serverVersion=0 means that we weren't able to get an answer from the server yet. In that case, assume the server is the latest version. There are not going to be any "older" versions of the server in the wild!
                 {
-                    forceThisFrame = new Vector3(input.x, 0, input.y);  //  original MechaHamster code defined its inputs with a z-up world. So, we have to transform it to the way the world is oriented.
+                    forceThisFrame = new Vector3(input.x, input.y, 0);  //  after 2019/02/12 - This is the new "correct" axes for the world that will allow us to do vector and matrix math somehwat more intuitively. Unity is a left-handed coordinate system with y-up. Original MechaHamster code defined its inputs in an xy-plane with a z-up world. So, we have to transform it to the way the geometric world is oriented. Some people just like to make things even more confusing, I guess.
+
                 }
                 else//  this is the obsolete way of having a mismatch between input axes orientation and world axes orientation from original Mecha-hamster.
                 {
-                    forceThisFrame = new Vector3(input.x, input.y, 0);  //  that's how original MechaHamster code defined its inputs. So, we have to transform it to the way the world is oriented.
+                    forceThisFrame = new Vector3(input.x, 0, input.y);  //  prior 2019/02/12 - that's how original MechaHamster code defined its inputs. So, we have to transform it to the way the world is oriented.
                 }
 
                 if (this.isSpectator)
