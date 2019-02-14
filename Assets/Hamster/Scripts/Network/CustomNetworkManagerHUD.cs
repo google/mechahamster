@@ -377,10 +377,25 @@ namespace UnityEngine.Networking
             customNetwork.CustomNetworkManager custmgr = manager as customNetwork.CustomNetworkManager;
             if (custmgr != null)
             {
+                Hamster.CommonData.networkmanager = custmgr;    //  there's probably a better place to put this.
                 string sv;
                 if (!custmgr.isServerAndClientVersionMatch(out sv))
                 {
                     serverVersionMsg = "MISMATCH ServerV=" + sv;
+                    string serverVerFloat = sv.TrimEnd(sv[sv.Length - 1]);
+                    string cv = Application.version;
+                    string clientVerFloat = cv.TrimEnd(cv[cv.Length - 1]);
+                    double serverVersion = Convert.ToDouble(serverVerFloat);
+                    double clientVersion = Convert.ToDouble(clientVerFloat);
+                    if (clientVersion > serverVersion)
+                    {
+                        ypos = scaledTextBox(xpos, ypos, "client=" + cv + ">server=" + sv);
+                    }
+                    else if (clientVersion > serverVersion)
+                    {
+                        ypos = scaledTextBox(xpos, ypos, "client=" + cv + "<server=" + sv);
+                    }
+
                 }
                 else
                 {

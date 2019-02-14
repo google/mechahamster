@@ -333,7 +333,7 @@ PrefabInstance:
     - target: {fileID: 4457444913016974179, guid: eb20d603e67ce57468093cbefa793e46,
         type: 3}
       propertyPath: bShowDebugCurrentStateInfo
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb20d603e67ce57468093cbefa793e46, type: 3}
@@ -348,11 +348,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: JsonStartupConfig
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242585629550785349, guid: 815574da17091434d82da70aed5bfe7c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2242585629550785466, guid: 815574da17091434d82da70aed5bfe7c,
         type: 3}
@@ -408,16 +403,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242585629550785348, guid: 815574da17091434d82da70aed5bfe7c,
-        type: 3}
-      propertyPath: autoStart
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242585629550785348, guid: 815574da17091434d82da70aed5bfe7c,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 815574da17091434d82da70aed5bfe7c, type: 3}
