@@ -405,14 +405,44 @@ namespace customNetwork
             }
             MessageBase msg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(levelIdx);    //  test: yep, just send a number without any context for now. Later, wrap this in an appropriate MessageBase class.
             conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg);
-
-            serverVersion = Application.version;
-            MessageBase serverVersionMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(serverVersion);
-            conn.Send((short)hamsterMsgType.hmsg_serverVersion, serverVersionMsg); 
+            SendServerVersion(conn);
         }
 
-        public double getServerVersionDouble()
+        void SendServerVersion(NetworkConnection conn)
         {
+            serverVersion = Application.version;
+            MessageBase serverVersionMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(serverVersion);
+            conn.Send((short)hamsterMsgType.hmsg_serverVersion, serverVersionMsg);
+
+        }
+
+        //  client wants the server version.
+        void Cmd_SendServerVersion(int connectionId)
+        {
+            serverVersion = Application.version;
+            MessageBase serverVersionMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(serverVersion);
+            NetworkServer.SendToClient(connectionId, (short)hamsterMsgType.hmsg_serverVersion, serverVersionMsg);
+        }
+
+        float lastServerVersionRequestTime = 0.0f;
+        void RequestServerVersion(NetworkIdentity netid)
+        {
+            const float kWaitBetweenRequests = 30.0f;
+            if (Time.fixedTime > lastServerVersionRequestTime + kWaitBetweenRequests)
+            {
+                Cmd_SendServerVersion(netid.connectionToServer.connectionId);
+                lastServerVersionRequestTime = Time.fixedTime;
+            }
+        }
+        public double getServerVersionDouble(NetworkIdentity netid=null)
+        {
+            if (string.IsNullOrEmpty(serverVersion))
+            {
+                //  maybe we didn't get the server message. So request a resend of the server version.
+                if (netid != null) ;
+                RequestServerVersion(netid);
+                return 0;
+            }
 
             string serverVerStr = serverVersion.TrimEnd(serverVersion[serverVersion.Length - 1]);   //  strip off the single letter at the end.
             double serverVersionDbl = System.Convert.ToDouble(serverVerStr);

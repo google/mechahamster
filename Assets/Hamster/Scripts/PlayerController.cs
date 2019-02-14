@@ -294,8 +294,10 @@ namespace Hamster
                 {
                     input /= elapsedTime;   //  scaled via time elapsed so that we are frame-rate independent;
                 }
+
+                NetworkIdentity netid = GetComponent<NetworkIdentity>();
                 //  note: We're using 1 kg/s as a hack here implicitly. Thus, our units seem to be m/s, but really should be Newton = kg*m/(s^2) But since we're not writing a physics engine here, this shortcut should suffice.
-                if (CommonData.networkmanager && CommonData.networkmanager.getServerVersionDouble() >= 1.20190212)
+                if (CommonData.networkmanager && CommonData.networkmanager.getServerVersionDouble(netid) >= 1.20190212)
                 {
                     forceThisFrame = new Vector3(input.x, 0, input.y);  //  original MechaHamster code defined its inputs with a z-up world. So, we have to transform it to the way the world is oriented.
                 }
