@@ -129,7 +129,7 @@ namespace UnityEngine.Networking
 
                 }
             }
-            //bool bTestArgs = false;
+            //bool bTestArgs = true;
             //if (bTestArgs)
             //{
             //    bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
@@ -429,8 +429,8 @@ namespace UnityEngine.Networking
                     //  ypos = newYpos;
                     float offsetXPos = xpos;
 
-                    manager.networkAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, serverAddress);
-                    manager.networkPort = Convert.ToInt32(scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, serverPort));
+                    serverAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, serverAddress);
+                    serverPort = scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, serverPort);
                     ypos = newYpos;
 
                     if (UnityEngine.Application.platform == RuntimePlatform.WebGLPlayer)
