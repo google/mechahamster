@@ -429,8 +429,9 @@ namespace UnityEngine.Networking
                     //  ypos = newYpos;
                     float offsetXPos = xpos;
 
-                    serverAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, serverAddress);
+                    manager.networkAddress = serverAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, serverAddress);
                     serverPort = scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, serverPort);
+                    manager.networkPort = Convert.ToInt32(serverPort);
                     ypos = newYpos;
 
                     if (UnityEngine.Application.platform == RuntimePlatform.WebGLPlayer)
