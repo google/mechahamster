@@ -149,7 +149,7 @@ namespace UnityEngine.Networking
 
                 }
             }
-            //bool bTestArgs = false;
+            //bool bTestArgs = true;
             //if (bTestArgs)
             //{
             //    bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
@@ -395,10 +395,25 @@ namespace UnityEngine.Networking
             customNetwork.CustomNetworkManager custmgr = manager as customNetwork.CustomNetworkManager;
             if (custmgr != null)
             {
+                Hamster.CommonData.networkmanager = custmgr;    //  there's probably a better place to put this.
                 string sv;
                 if (!custmgr.isServerAndClientVersionMatch(out sv))
                 {
                     serverVersionMsg = "MISMATCH ServerV=" + sv;
+                    string serverVerFloat = sv.TrimEnd(sv[sv.Length - 1]);
+                    string cv = Application.version;
+                    string clientVerFloat = cv.TrimEnd(cv[cv.Length - 1]);
+                    double serverVersion = Convert.ToDouble(serverVerFloat);
+                    double clientVersion = Convert.ToDouble(clientVerFloat);
+                    if (clientVersion > serverVersion)
+                    {
+                        ypos = scaledTextBox(xpos, ypos, "client=" + cv + ">server=" + sv);
+                    }
+                    else if (clientVersion > serverVersion)
+                    {
+                        ypos = scaledTextBox(xpos, ypos, "client=" + cv + "<server=" + sv);
+                    }
+
                 }
                 else
                 {
@@ -447,8 +462,9 @@ namespace UnityEngine.Networking
                     //  ypos = newYpos;
                     float offsetXPos = xpos;
 
-                    manager.networkAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, serverAddress);
-                    manager.networkPort = Convert.ToInt32(scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, serverPort));
+                    manager.networkAddress = serverAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, serverAddress);
+                    serverPort = scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, serverPort);
+                    manager.networkPort = Convert.ToInt32(serverPort);
                     ypos = newYpos;
 
                     if (UnityEngine.Application.platform == RuntimePlatform.WebGLPlayer)
