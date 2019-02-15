@@ -25,12 +25,15 @@ namespace Hamster
         Camera mycam;
         Transform mycamParentXform;
         Vector3 kYaxis = new Vector3(0, 1, 0);
-        const float kTimeScale = 1.0f / 60.0f;  //  for frame rate independent 
+        const float kExpectedFrameRate = 15.0f;     //  lowest expected frame rate in frames per second.
+        const float kTimeScale = 1.0f / kExpectedFrameRate;  //  for frame rate independent 
+        const float kForceFudgeFactor = 0.4f; //
         const float kPositionDelta = 0.15f;   //  fudge factor
         const float kCamRotateSpeed = 0.15f;
         const float kFellOffLevelHeight = -10.0f;
         const float kMaxVelocity = 20f;
         const float kMaxVelocitySquared = kMaxVelocity * kMaxVelocity;
+        const float kServerForceThreshold = 0.02f;   //  below this threshold, we won't even tell the server about our force.
         const int kInitialHitPoints = 3;
 
         public bool isSpectator;   //  this give client authority to ball movement and uses a different control scheme to move the ball/camera.
@@ -64,6 +67,7 @@ namespace Hamster
 
         void Start()
         {
+            Time.maximumDeltaTime = kTimeScale;
             if (mycam==null)
             {
                 mycam = FindObjectOfType<Camera>();
@@ -145,6 +149,7 @@ namespace Hamster
         {
             Transform xformStart = customNetwork.CustomNetworkManager.singleton.GetStartPosition();
             plrGO.transform.position = xformStart.position;
+            ZeroPlayerMomentum();   //  teleporters kill momentum otherwise strange things may happen.
         }
         void ZeroPlayerMomentum()
         {
@@ -294,29 +299,37 @@ namespace Hamster
                 {
                     input /= elapsedTime;   //  scaled via time elapsed so that we are frame-rate independent;
                 }
-
                 NetworkIdentity netid = GetComponent<NetworkIdentity>();
+                const double kAxesFlipServerVersion = 1.20190212;
+                double serverVersion = 0;
+                if (CommonData.networkmanager!= null)
+                    serverVersion = CommonData.networkmanager.getServerVersionDouble(netid);
                 //  note: We're using 1 kg/s as a hack here implicitly. Thus, our units seem to be m/s, but really should be Newton = kg*m/(s^2) But since we're not writing a physics engine here, this shortcut should suffice.
-                if (CommonData.networkmanager && CommonData.networkmanager.getServerVersionDouble(netid) >= 1.20190212)
+                if (serverVersion >= kAxesFlipServerVersion || serverVersion == 0)  //  serverVersion=0 means that we weren't able to get an answer from the server yet. In that case, assume the server is the latest version. There are not going to be any "older" versions of the server in the wild!
                 {
-                    forceThisFrame = new Vector3(input.x, 0, input.y);  //  original MechaHamster code defined its inputs with a z-up world. So, we have to transform it to the way the world is oriented.
+                    forceThisFrame = new Vector3(input.x, 0, input.y);  //  after 2019/02/12 - This is the new "correct" axes for the world that will allow us to do vector and matrix math somehwat more intuitively. Unity is a left-handed coordinate system with y-up. Original MechaHamster code defined its inputs in an xy-plane with a z-up world. So, we have to transform it to the way the geometric world is oriented. Some people just like to make things even more confusing, I guess.
+
                 }
                 else//  this is the obsolete way of having a mismatch between input axes orientation and world axes orientation from original Mecha-hamster.
                 {
-                    forceThisFrame = new Vector3(input.x, input.y, 0);  //  that's how original MechaHamster code defined its inputs. So, we have to transform it to the way the world is oriented.
+                    forceThisFrame = new Vector3(input.x, input.y, 0);  //  prior 2019/02/12 - that's how original MechaHamster code defined its inputs. So, we have to transform it to the way the world is oriented.
                 }
 
+                forceThisFrame *= kForceFudgeFactor;
                 if (this.isSpectator)
                 {
                     forceThisFrame = SpectatorControls();
                 }
 
-                if (forceThisFrame.magnitude <= 0.05f)
+                if (forceThisFrame.magnitude < kServerForceThreshold)
                     return;  // if we're too weak of a force, the server does not need know about you.
                 if (forceThisFrame.sqrMagnitude > kMaxVelocitySquared)
                 {
                     Debug.LogWarning(this.name + " used the force way too much.");
-                    return;  // if we're too strong, something bad happened, like a NaN perhaps. Don't send bad data to the server. We just bail here becaus we don't know what happened exactly. 
+                    //  clamp the force to the max acceleration (for this frame) instead.
+                    forceThisFrame.Normalize();
+                    forceThisFrame *= kMaxVelocity/elapsedTime;
+                    //return;  // if we're too strong, something bad happened, like a NaN perhaps. Don't send bad data to the server. We just bail here becaus we don't know what happened exactly. 
                 }
 
                 if (this.isClient)
@@ -328,7 +341,8 @@ namespace Hamster
                     }
                     else
                     {
-                        Cmd_ServerAddForce(forceThisFrame);
+                        if (forceThisFrame.magnitude >= kServerForceThreshold)// if we're too weak of a force, the server does not need know about you.
+                            Cmd_ServerAddForce(forceThisFrame);
                     }
                     AddForce(forceThisFrame);   //  do this on the client. The server will send us back the correct positions. But this can get us on a headstart of where we think we should be.
                 }

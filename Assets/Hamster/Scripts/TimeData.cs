@@ -162,6 +162,7 @@ namespace Hamster {
 
       return reference.OrderByChild(Database_Property_Time).LimitToFirst(1).GetValueAsync()
         .ContinueWith((task) => {
+            if (task.Result == null) return null;   //  guard null crash
           if (task.Result.ChildrenCount == 0) {
             return null;
           }
