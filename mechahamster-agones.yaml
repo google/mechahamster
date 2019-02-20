@@ -1,0 +1,31 @@
+#!/usr/bin/env kubectl apply -f
+apiVersion: "stable.agones.dev/v1alpha1"
+kind: Fleet
+metadata:
+  name: mecha-hamster
+spec:
+  replicas: 1
+  template:
+    spec:
+      ports:
+      - name: default
+        containerPort: 7777
+      template:
+        spec:
+          containers:
+          - name: mecha-hamster
+            image: gcr.io/mechahamster/mechahamster:agones-latest
+            imagePullPolicy: Always
+---
+apiVersion: "stable.agones.dev/v1alpha1"
+kind: FleetAutoscaler
+metadata:
+  name: mecha-hamster-autoscaler
+spec:
+  fleetName: mecha-hamster
+  policy:
+    type: Buffer
+    buffer:
+      bufferSize: 4
+      minReplicas: 4
+      maxReplicas: 20
