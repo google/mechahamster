@@ -1,11 +1,17 @@
 {
   "levels": [
     {
-      "name": "Multiplayer",
+      "name": "TestMap",
       "description": "",
       "filename": "MultiplayerMap",
       "replay": "replays/multiplayer"
     },
+    {
+      "name": "GDC2019",
+      "description": "",
+      "filename": "GDC0_map",
+      "replay": "replays/gdc2019"
+	},
     {
       "name": "Easy Peezie",
       "description": "",
