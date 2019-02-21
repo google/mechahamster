@@ -89,12 +89,8 @@ namespace Hamster.States {
       menuComponent.BonusLevelsButton.gameObject.SetActive(
           CommonData.ShowInternetMenus() && CommonData.currentUser.data.bonusMaps.Count > 0);
 
-      // Only display the account button if not on desktop
-#if UNITY_EDITOR
-      menuComponent.AccountButton.gameObject.SetActive(false);
-#else
+      // Display the account button on all devices, including in the Unity Editor
       menuComponent.AccountButton.gameObject.SetActive(CommonData.ShowInternetMenus());
-#endif
 
       // Editor is disabled in VR mode.
       menuComponent.EditorButton.gameObject.SetActive(
