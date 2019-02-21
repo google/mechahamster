@@ -78,6 +78,8 @@ namespace Hamster {
 
     private bool firebaseInitialized;
 
+    private Firebase.Auth.FirebaseAuth defaultAuth;  // Hack to attempt to fix GC crash
+
     IEnumerator Start() {
       //    Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);    //  no longer using VR, so no more automatic full screen and resolution change!
       GooglePlayServicesSignIn.InitializeGooglePlayGames();
@@ -244,7 +246,7 @@ namespace Hamster {
     void InitializeFirebaseComponents() {
       System.Threading.Tasks.Task.WhenAll(
           InitializeRemoteConfig()
-        ).ContinueWith(task => { firebaseInitialized = true; });
+        ).ContinueWith(task => { firebaseInitialized = true; defaultAuth = Firebase.Auth.FirebaseAuth.DefaultInstance; });
     }
 
     // Actually start the game, once we've verified that everything
