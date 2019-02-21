@@ -43,6 +43,7 @@ namespace UnityEngine.Networking
         bool m_autoStartLevel = false;
 
         private AgonesClient agones;
+        private OpenMatchClient openMatch;
 
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
@@ -121,6 +122,18 @@ namespace UnityEngine.Networking
                     case "-c":
                         Debug.Log("Start Client");
                         //  placeholder for when we want to start the client on a particular level from command line. Harder than it looks.
+
+                        // GM: Hijacking this for testing purposes This actually needs to be in the state machine when the player wants to
+                        // try to join a match.
+                        openMatch = GetComponent<OpenMatchClient>();
+
+                        if (openMatch != null) {
+                            Debug.Log("Attempting to connect to Open Match!");
+                            
+                            if (openMatch.Connect("35.236.24.200")) {
+                                Debug.Log("Evidently we are connected to Open Match!");
+                            }
+                        }
                         break;
                     case "-s":
                         Debug.Log("Start Server");
