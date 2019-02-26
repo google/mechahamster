@@ -26,6 +26,7 @@ namespace UnityEngine.Networking
         public int kTextBoxWidth = 1024;
         public int kSpaceBetweenBoxes = 5;
         public JsonStartupConfig config;
+        public MutiplayerGame multiPlayerGame;
 
         int startLevel = kDefaultLevelIdx; 
         public NetworkManager manager;
@@ -76,7 +77,9 @@ namespace UnityEngine.Networking
         void StartServerCommon()
         {
             if (manager == null)
+            {
                 manager = GetComponent<NetworkManager>();
+            }
             if (m_autoStartLevel)
                 m_loadServerRequested = !AutoStartLevel(startLevel);
         }
@@ -159,6 +162,13 @@ namespace UnityEngine.Networking
             //}
             return bServerStarted;
         }
+
+        void GetMultiplayerPointer()
+        {
+            if (multiPlayerGame==null)
+                multiPlayerGame = UnityEngine.GameObject.FindObjectOfType<MutiplayerGame>();
+        }
+
         void Awake()
         {
         }
@@ -173,6 +183,11 @@ namespace UnityEngine.Networking
             {
                 serverAddress = manager.networkAddress;
                 serverPort = manager.networkPort.ToString();
+                GetMultiplayerPointer();
+                if (multiPlayerGame != null)
+                {
+                    multiPlayerGame.manager = manager;
+                }
             }
 
             ReadConfig();
@@ -430,6 +445,12 @@ namespace UnityEngine.Networking
             {
                 if (Hamster.CommonData.mainGame != null && Hamster.CommonData.mainGame.stateManager != null)
                 {
+                    if (this.multiPlayerGame != null)
+                    {
+                        string multiplayerState = this.multiPlayerGame.stateManager.CurrentState().GetType().ToString();
+                        ypos = scaledTextBox(xpos, ypos, "mpState=" + multiplayerState);
+                    }
+
                     curState = Hamster.CommonData.mainGame.stateManager.CurrentState().GetType().ToString();
                     ypos = scaledTextBox(xpos, ypos, "curState=" + curState);
                 }
