@@ -1,5 +1,8 @@
 using System.Text;
 using UnityEngine;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine.Networking;
 using Grpc.Core;
@@ -12,34 +15,113 @@ namespace Hamster
         private const int OpenMatchPort = 50504;
         private Channel channel;
         private Frontend.FrontendClient client;
-        private global::Messages.Player player;
+        private Messages.Player player;
+        private AsyncServerStreamingCall<Messages.Player> asyncUpdate;
+        private string address = "";
+        private int port = 0;
+
+        public string Address
+        {
+            get { return address; }
+        }
+        public int Port
+        {
+            get { return port; }
+        }
          
         private string GetPlayerUniqueID()
         {
             return SystemInfo.deviceUniqueIdentifier;
         }
 
+        private async Task<string> WaitForMatchResults(AsyncServerStreamingCall<Messages.Player> stream)
+        {
+            Metadata header = await stream.ResponseHeadersAsync;
+
+            var responseStream = stream.ResponseStream;
+
+            while (await responseStream.MoveNext(CancellationToken.None))
+            {
+                var reply = responseStream.Current;
+
+                if (reply.Assignment.Length > 0)
+                {
+                    stream.Dispose();
+
+                    return reply.Assignment;
+                }
+            }
+
+            return "";
+        }
+
+        private IEnumerator RetrieveMatchResults()
+        {
+            Debug.Log("OpenMatchClient: Waiting for response from server...");
+
+            Task<string> result;
+
+            result = WaitForMatchResults(asyncUpdate);
+
+            while (!result.IsCompleted)
+            {
+                yield return null;
+            }
+
+            string assignment = result.Result;
+
+            // The server returns a string in the form of IP:PORT, and running on GCP
+            // this is always ever an IPv4 string.
+            string[] tokens = assignment.Split(':');
+
+            if (tokens.Length == 2)
+            {
+                address = tokens[0];
+                port = Convert.ToInt32(tokens[1]);
+
+                Debug.LogFormat("OpenMatchClient: Assigned to game server {0}:{1}", address, port);
+            }
+            else
+            {
+                Debug.LogFormat("OpenMatchClient: Error parsing assignment result: {0}", assignment);
+            }
+        }
+
         /// <summary>Attempts to register a Player with the Front End API</summary>
         /// <param name="address">The IP address of the Front End API Server</param>
         /// <param name="matchProperties">A JSON-encoded list of properties that matches will select on</param>
-        public bool Connect(string address, string matchProperties = null)
+        public bool Connect(string address, string matchProperties = "{}")
         {
             channel = new Channel(address, OpenMatchPort, ChannelCredentials.Insecure);
             client = new Frontend.FrontendClient(channel);
 
-            player = new global::Messages.Player();
+            player = new Messages.Player();
             player.Id = GetPlayerUniqueID();
-            player.Properties = matchProperties ?? "{}";
+            player.Properties = matchProperties;
 
             // TODO: Change this to async and return the async object instead. This
             // puts the onus of printing useful log messages on the caller, so provide
             // some interfaces to grab the player ID or whatever.
 
-            global::Messages.Result result = client.CreatePlayer(player);
+            Debug.LogFormat("OpenMatchClient: Attempting to create [{0} : {1}]", player.Id, player.Properties);
+
+            Messages.Result result = client.CreatePlayer(player);
 
             if (result.Success)
             {
                 Debug.LogFormat("OpenMatchClient: Connected to Front End API @ {0} as player {1}", address, player.Id);
+
+                var stop = new CancellationTokenSource();
+
+                var callOptions = new CallOptions()
+                    .WithCancellationToken(stop.Token)
+                    .WithDeadline(DateTime.UtcNow.AddMinutes(1))
+                    .WithHeaders(Metadata.Empty);
+                
+                asyncUpdate = client.GetUpdates(player, callOptions);
+
+                //
+                StartCoroutine(RetrieveMatchResults());
 
                 return true;
             }
@@ -50,17 +132,24 @@ namespace Hamster
         }
 
         /// <summary>Attempts to delete a registered Player from the Front End API</summary>
-        /// <returns>The call object if the player was registered, else null</returns>
-        public AsyncUnaryCall<global::Messages.Result> Disconnect()
+        /// <returns>True if the player is successfully deleted</returns>
+        public bool Disconnect()
         {
             if (player != null)
             {
                 Debug.LogFormat("OpenMatchClient: Deleting player {0}", player.Id);
 
-                return client.DeletePlayerAsync(player);
+                asyncUpdate.Dispose();
+
+                Messages.Result result = client.DeletePlayer(player);
+
+                address = "";
+                port = 0;
+
+                return result.Success; 
             }
 
-            return null;
+            return true;
         }
     }
 }
