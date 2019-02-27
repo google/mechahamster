@@ -26,6 +26,7 @@ namespace UnityEngine.Networking
         public int kTextBoxWidth = 1024;
         public int kSpaceBetweenBoxes = 5;
         public JsonStartupConfig config;
+        public MutiplayerGame multiPlayerGame;
 
         int startLevel = kDefaultLevelIdx; 
         public NetworkManager manager;
@@ -41,10 +42,8 @@ namespace UnityEngine.Networking
         bool m_ShowServer;
         bool m_loadServerRequested = false;
         bool m_autoStartLevel = false;
-        bool bOpenMatchWaiting = false;
 
         private AgonesClient agones;
-        private OpenMatchClient openMatch;
 
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
@@ -78,7 +77,9 @@ namespace UnityEngine.Networking
         void StartServerCommon()
         {
             if (manager == null)
+            {
                 manager = GetComponent<NetworkManager>();
+            }
             if (m_autoStartLevel)
                 m_loadServerRequested = !AutoStartLevel(startLevel);
         }
@@ -123,10 +124,6 @@ namespace UnityEngine.Networking
                     case "-c":
                         Debug.Log("Start Client");
                         //  placeholder for when we want to start the client on a particular level from command line. Harder than it looks.
-
-                        // GM: Hijacking this for testing purposes This actually needs to be in the state machine when the player wants to
-                        // try to join a match.
-                        openMatch = GetComponent<OpenMatchClient>();
                         break;
                     case "-s":
                         Debug.Log("Start Server");
@@ -165,6 +162,13 @@ namespace UnityEngine.Networking
             //}
             return bServerStarted;
         }
+
+        void GetMultiplayerPointer()
+        {
+            if (multiPlayerGame==null)
+                multiPlayerGame = UnityEngine.GameObject.FindObjectOfType<MutiplayerGame>();
+        }
+
         void Awake()
         {
         }
@@ -179,6 +183,11 @@ namespace UnityEngine.Networking
             {
                 serverAddress = manager.networkAddress;
                 serverPort = manager.networkPort.ToString();
+                GetMultiplayerPointer();
+                if (multiPlayerGame != null)
+                {
+                    multiPlayerGame.manager = manager;
+                }
             }
 
             ReadConfig();
@@ -368,7 +377,7 @@ namespace UnityEngine.Networking
             }
             return ypos;
         }
-        void OnGUI()
+            void OnGUI()
         {
             if (!showGUI)
             {
@@ -406,9 +415,9 @@ namespace UnityEngine.Networking
                 if (!custmgr.isServerAndClientVersionMatch(out sv))
                 {
                     serverVersionMsg = "MISMATCH ServerV=" + sv;
-                    string serverVerFloat = sv.TrimEnd(sv[sv.Length - 1]);
-                    string cv = Application.version;
-                    string clientVerFloat = cv.TrimEnd(cv[cv.Length - 1]);
+                    string serverVerFloat = customNetwork.CustomNetworkManager.getStrippedVersionNumber(sv);
+                    string cv = Application.version;    //  client version is THIS machine!
+                    string clientVerFloat = customNetwork.CustomNetworkManager.getStrippedVersionNumber(cv);
                     double serverVersion = Convert.ToDouble(serverVerFloat);
                     double clientVersion = Convert.ToDouble(clientVerFloat);
                     if (clientVersion > serverVersion)
@@ -423,7 +432,12 @@ namespace UnityEngine.Networking
                 }
                 else
                 {
-                    serverVersionMsg = "serverV=" + sv;
+                    customNetwork.CustomNetworkManager custMgr = this.manager as customNetwork.CustomNetworkManager;
+                    if (custMgr && custMgr.bIsServer)
+                    {
+                        string serverVerFloat = customNetwork.CustomNetworkManager.getStrippedVersionNumber(sv);
+                        serverVersionMsg = "serverV=" + sv;
+                    }
                 }
 
             }
@@ -436,6 +450,12 @@ namespace UnityEngine.Networking
             {
                 if (Hamster.CommonData.mainGame != null && Hamster.CommonData.mainGame.stateManager != null)
                 {
+                    if (this.multiPlayerGame != null)
+                    {
+                        string multiplayerState = this.multiPlayerGame.stateManager.CurrentState().GetType().ToString();
+                        ypos = scaledTextBox(xpos, ypos, "mpState=" + multiplayerState);
+                    }
+
                     curState = Hamster.CommonData.mainGame.stateManager.CurrentState().GetType().ToString();
                     ypos = scaledTextBox(xpos, ypos, "curState=" + curState);
                 }
@@ -447,17 +467,7 @@ namespace UnityEngine.Networking
 
             GUI.skin.button.fontSize = (int)kFontSize;
 
-            // %%% GM: Total hack to just start the game if we get an OM match
-            if (bOpenMatchWaiting) {
-                if (openMatch.Port != 0) {
-                    manager.networkAddress = openMatch.Address;
-                    manager.networkPort = openMatch.Port;
-                    manager.StartClient();
-                    bOpenMatchWaiting = false;
-                }
-            }
-
-            if (!bOpenMatchWaiting && !manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
+            if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
             {
                 if (noConnection)
                 {
@@ -562,11 +572,6 @@ namespace UnityEngine.Networking
                 if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, stopButtonText))
                 {
                     manager.StopHost();
-
-                    if (openMatch != null)
-                    {
-                        openMatch.Disconnect();
-                    }
                 }
                 ypos = newYpos;
             }
@@ -581,42 +586,14 @@ namespace UnityEngine.Networking
                     return;
                 }
 
-                if (openMatch != null)
-                {
-                    if (!bOpenMatchWaiting)
-                    {
-                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Open Match Start"))
-                        {
-                            Debug.Log("Attempting to connect to Open Match!");
-                            
-                            // This string is what a match is filtered on. Don't change it unless
-                            // there is a server-side filter which can create a match with a new value.
-                            string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
-
-                            if (openMatch.Connect("35.236.24.200", modeCheckJSON)) {
-                                Debug.Log("Match request sent!");
-                                bOpenMatchWaiting = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ypos = scaledTextBox(xpos, ypos, "Waiting on Open Match...");
-                    }
-
-                    ypos = newYpos;
-                }
 
                 if (manager.matchMaker == null)
                 {
-                    if (!bOpenMatchWaiting)
+                    if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
                     {
-                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
-                        {
-                            manager.StartMatchMaker();
-                        }
-                        ypos = newYpos;
+                        manager.StartMatchMaker();
                     }
+                    ypos = newYpos;
                 }
                 else
                 {
