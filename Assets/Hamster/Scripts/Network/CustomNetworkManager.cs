@@ -32,7 +32,7 @@ namespace customNetwork
         static short curLocalPlayerID = 0;  //  we may have multiple controllers/players on this single client. We don't, but we could.
         private bool bServerVersionDoesntMatch=false;  //  if the server version is different, we should know about it.
         private string serverVersion;
-        public MutiplayerGame multiPlayerGame;
+        public MultiplayerGame multiPlayerGame;
 
         public enum debugOutputStyle
         {
@@ -602,10 +602,10 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnStopServer\n");
         }
 
-        MutiplayerGame GetMultiplayerPointer()
+        MultiplayerGame GetMultiplayerPointer()
         {
             if (multiPlayerGame == null)
-                multiPlayerGame = UnityEngine.GameObject.FindObjectOfType<MutiplayerGame>();
+                multiPlayerGame = UnityEngine.GameObject.FindObjectOfType<MultiplayerGame>();
             return multiPlayerGame;
         }
         /*
