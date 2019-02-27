@@ -11,7 +11,7 @@ using Hamster.States;
  * refer to NetworkManager, that makes that structure a no-go. Thus, it's simply placed as a component onto the same Component as CustomNetworkManager. It's unclear what ramifications this may
  * have later down the road. But for now, it works.
  */
-public class MutiplayerGame : MonoBehaviour
+public class MultiplayerGame : MonoBehaviour
 {
     //  game constants
     const int kMaxPlayers = 4;
@@ -40,7 +40,7 @@ public class MutiplayerGame : MonoBehaviour
     public string curState;
     public void ReadConfig()
     {
-        MutiplayerGame mpgame = this;
+        MultiplayerGame mpgame = this;
         mpgame.config = FindObjectOfType<JsonStartupConfig>();
 
         if (mpgame.config != null)
@@ -93,7 +93,7 @@ public class MutiplayerGame : MonoBehaviour
         curState = stateManager.CurrentState().ToString();
         if (stateManager.CurrentState().ToString() == "Hamster.States.BaseState")  //  we haven't started anything yet.
         {
-            if (manager != null & manager.isNetworkActive)
+            if (manager != null && manager.isNetworkActive)
             {
                 if (NetworkServer.active)
                 {
