@@ -651,6 +651,12 @@
             Note: Access to AuthContext is an experimental API that can change without any prior notice.
             </summary>
         </member>
+        <member name="P:Grpc.Core.ServerCallContext.UserState">
+            <summary>
+            Gets a dictionary that can be used by the various interceptors and handlers of this
+            call to store arbitrary state.
+            </summary>
+        </member>
         <member name="M:Grpc.Core.ServerCallContext.WriteResponseHeadersAsyncCore(Grpc.Core.Metadata)">
             <summary>Provides implementation of a non-virtual public member.</summary>
         </member>
@@ -685,6 +691,9 @@
             <summary>Provides implementation of a non-virtual public member.</summary>
         </member>
         <member name="P:Grpc.Core.ServerCallContext.AuthContextCore">
+            <summary>Provides implementation of a non-virtual public member.</summary>
+        </member>
+        <member name="P:Grpc.Core.ServerCallContext.UserStateCore">
             <summary>Provides implementation of a non-virtual public member.</summary>
         </member>
         <member name="T:Grpc.Core.UnaryServerMethod`2">
