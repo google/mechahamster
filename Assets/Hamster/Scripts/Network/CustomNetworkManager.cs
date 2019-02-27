@@ -440,6 +440,21 @@ namespace customNetwork
                 lastServerVersionRequestTime = Time.fixedTime;
             }
         }
+
+        //  I often put a trailing letter at the end of the version to distinguish between different versions I may make in a single day. This may cause problems if it's not there.
+        //  so this method extracts the version number somewhat better, though it's also not perfect
+        static public string getStrippedVersionNumber(string raw)
+        {
+            string strippedVersion = raw.TrimEnd(raw[raw.Length - 1]);  //  this is how we used to do it. By default, always remember to put a single trailing character.
+            double dResult;
+            bool bSuccess = double.TryParse(raw, out dResult);  //  this should do the majority of the work. The above is the failsafe, but is probably even worse than TryParse.
+            if (bSuccess)
+            {
+                strippedVersion = dResult.ToString();
+            }
+            return strippedVersion;
+        }
+
         public double getServerVersionDouble(NetworkIdentity netid=null)
         {
             if (string.IsNullOrEmpty(serverVersion))
@@ -450,7 +465,7 @@ namespace customNetwork
                 return 0;
             }
 
-            string serverVerStr = serverVersion.TrimEnd(serverVersion[serverVersion.Length - 1]);   //  strip off the single letter at the end.
+            string serverVerStr = getStrippedVersionNumber(serverVersion);   //  strip off the single letter at the end.
             double serverVersionDbl = System.Convert.ToDouble(serverVerStr);
             return serverVersionDbl;
         }

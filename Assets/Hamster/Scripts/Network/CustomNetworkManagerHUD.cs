@@ -415,9 +415,9 @@ namespace UnityEngine.Networking
                 if (!custmgr.isServerAndClientVersionMatch(out sv))
                 {
                     serverVersionMsg = "MISMATCH ServerV=" + sv;
-                    string serverVerFloat = sv.TrimEnd(sv[sv.Length - 1]);
-                    string cv = Application.version;
-                    string clientVerFloat = cv.TrimEnd(cv[cv.Length - 1]);
+                    string serverVerFloat = customNetwork.CustomNetworkManager.getStrippedVersionNumber(sv);
+                    string cv = Application.version;    //  client version is THIS machine!
+                    string clientVerFloat = customNetwork.CustomNetworkManager.getStrippedVersionNumber(cv);
                     double serverVersion = Convert.ToDouble(serverVerFloat);
                     double clientVersion = Convert.ToDouble(clientVerFloat);
                     if (clientVersion > serverVersion)
@@ -432,7 +432,12 @@ namespace UnityEngine.Networking
                 }
                 else
                 {
-                    serverVersionMsg = "serverV=" + sv;
+                    customNetwork.CustomNetworkManager custMgr = this.manager as customNetwork.CustomNetworkManager;
+                    if (custMgr && custMgr.bIsServer)
+                    {
+                        string serverVerFloat = customNetwork.CustomNetworkManager.getStrippedVersionNumber(sv);
+                        serverVersionMsg = "serverV=" + sv;
+                    }
                 }
 
             }
