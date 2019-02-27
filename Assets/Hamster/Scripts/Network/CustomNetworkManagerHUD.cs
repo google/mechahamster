@@ -41,10 +41,8 @@ namespace UnityEngine.Networking
         bool m_ShowServer;
         bool m_loadServerRequested = false;
         bool m_autoStartLevel = false;
-        bool bOpenMatchWaiting = false;
 
         private AgonesClient agones;
-        private OpenMatchClient openMatch;
 
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
@@ -123,10 +121,6 @@ namespace UnityEngine.Networking
                     case "-c":
                         Debug.Log("Start Client");
                         //  placeholder for when we want to start the client on a particular level from command line. Harder than it looks.
-
-                        // GM: Hijacking this for testing purposes This actually needs to be in the state machine when the player wants to
-                        // try to join a match.
-                        openMatch = GetComponent<OpenMatchClient>();
                         break;
                     case "-s":
                         Debug.Log("Start Server");
@@ -368,7 +362,7 @@ namespace UnityEngine.Networking
             }
             return ypos;
         }
-        void OnGUI()
+            void OnGUI()
         {
             if (!showGUI)
             {
@@ -447,17 +441,7 @@ namespace UnityEngine.Networking
 
             GUI.skin.button.fontSize = (int)kFontSize;
 
-            // %%% GM: Total hack to just start the game if we get an OM match
-            if (bOpenMatchWaiting) {
-                if (openMatch.Port != 0) {
-                    manager.networkAddress = openMatch.Address;
-                    manager.networkPort = openMatch.Port;
-                    manager.StartClient();
-                    bOpenMatchWaiting = false;
-                }
-            }
-
-            if (!bOpenMatchWaiting && !manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
+            if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
             {
                 if (noConnection)
                 {
@@ -562,11 +546,6 @@ namespace UnityEngine.Networking
                 if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, stopButtonText))
                 {
                     manager.StopHost();
-
-                    if (openMatch != null)
-                    {
-                        openMatch.Disconnect();
-                    }
                 }
                 ypos = newYpos;
             }
@@ -581,42 +560,14 @@ namespace UnityEngine.Networking
                     return;
                 }
 
-                if (openMatch != null)
-                {
-                    if (!bOpenMatchWaiting)
-                    {
-                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Open Match Start"))
-                        {
-                            Debug.Log("Attempting to connect to Open Match!");
-                            
-                            // This string is what a match is filtered on. Don't change it unless
-                            // there is a server-side filter which can create a match with a new value.
-                            string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
-
-                            if (openMatch.Connect("35.236.24.200", modeCheckJSON)) {
-                                Debug.Log("Match request sent!");
-                                bOpenMatchWaiting = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ypos = scaledTextBox(xpos, ypos, "Waiting on Open Match...");
-                    }
-
-                    ypos = newYpos;
-                }
 
                 if (manager.matchMaker == null)
                 {
-                    if (!bOpenMatchWaiting)
+                    if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
                     {
-                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
-                        {
-                            manager.StartMatchMaker();
-                        }
-                        ypos = newYpos;
+                        manager.StartMatchMaker();
                     }
+                    ypos = newYpos;
                 }
                 else
                 {
