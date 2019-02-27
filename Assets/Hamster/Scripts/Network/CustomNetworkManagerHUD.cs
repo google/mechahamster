@@ -42,8 +42,9 @@ namespace UnityEngine.Networking
         bool m_ShowServer;
         bool m_loadServerRequested = false;
         bool m_autoStartLevel = false;
-
+        bool bOpenMatchWaiting = false;
         private AgonesClient agones;
+        private OpenMatchClient openMatch;
 
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
@@ -124,6 +125,7 @@ namespace UnityEngine.Networking
                     case "-c":
                         Debug.Log("Start Client");
                         //  placeholder for when we want to start the client on a particular level from command line. Harder than it looks.
+                        openMatch = GetComponent<OpenMatchClient>();
                         break;
                     case "-s":
                         Debug.Log("Start Server");
@@ -467,7 +469,16 @@ namespace UnityEngine.Networking
 
             GUI.skin.button.fontSize = (int)kFontSize;
 
-            if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
+            if (bOpenMatchWaiting) {
+                if (openMatch.Port != 0) {
+                    manager.networkAddress = openMatch.Address;
+                    manager.networkPort = openMatch.Port;
+                    manager.StartClient();
+                    bOpenMatchWaiting = false;
+                }
+            }
+
+            if (!bOpenMatchWaiting && !manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
             {
                 if (noConnection)
                 {
@@ -572,6 +583,11 @@ namespace UnityEngine.Networking
                 if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, stopButtonText))
                 {
                     manager.StopHost();
+
+                    if (openMatch != null)
+                    {
+                        openMatch.Disconnect();
+                    }
                 }
                 ypos = newYpos;
             }
@@ -586,14 +602,42 @@ namespace UnityEngine.Networking
                     return;
                 }
 
+                if (openMatch != null)
+                {
+                    if (!bOpenMatchWaiting)
+                    {
+                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Open Match Start"))
+                        {
+                            Debug.Log("Attempting to connect to Open Match!");
+
+                            // This string is what a match is filtered on. Don't change it unless
+                            // there is a server-side filter which can create a match with a new value.
+                            string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
+
+                            if (openMatch.Connect("35.236.24.200", modeCheckJSON)) {
+                                Debug.Log("Match request sent!");
+                                bOpenMatchWaiting = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ypos = scaledTextBox(xpos, ypos, "Waiting on Open Match...");
+                    }
+
+                    ypos = newYpos;
+                }
 
                 if (manager.matchMaker == null)
                 {
-                    if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
+                    if (!bOpenMatchWaiting)
                     {
-                        manager.StartMatchMaker();
+                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
+                        {
+                            manager.StartMatchMaker();
+                        }
+                        ypos = newYpos;
                     }
-                    ypos = newYpos;
                 }
                 else
                 {
