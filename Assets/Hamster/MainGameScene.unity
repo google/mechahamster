@@ -598,6 +598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d187c429c203c8d458259c9fb92f4759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPos: {fileID: 0}
+  curLevelIdx: 0
   worldMap:
     name: unnamed map
     mapId: <<mapId>>

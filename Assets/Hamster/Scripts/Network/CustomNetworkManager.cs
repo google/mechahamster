@@ -32,6 +32,7 @@ namespace customNetwork
         static short curLocalPlayerID = 0;  //  we may have multiple controllers/players on this single client. We don't, but we could.
         private bool bServerVersionDoesntMatch=false;  //  if the server version is different, we should know about it.
         private string serverVersion;
+        public MutiplayerGame multiPlayerGame;
 
         public enum debugOutputStyle
         {
@@ -137,6 +138,11 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnClientConnect\n");
             toServerConnection = conn;
             CustomNetworkPlayer.conn = conn;
+            GetMultiplayerPointer();
+            if (multiPlayerGame != null)
+            {
+                multiPlayerGame.OnClientConnect(conn);
+            }
             if (m_AutoCreatePlayerFromSpawnPrefabList)
                 CreateNetworkPlayer(curLocalPlayerID);
         }
@@ -581,6 +587,12 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnStopServer\n");
         }
 
+        MutiplayerGame GetMultiplayerPointer()
+        {
+            if (multiPlayerGame == null)
+                multiPlayerGame = UnityEngine.GameObject.FindObjectOfType<MutiplayerGame>();
+            return multiPlayerGame;
+        }
         /*
         //  NetworkManager class has these set to private, so we cannot override them anyway. So don't even try or else it will just confuse us.
         //  do not allow this to override the actual Awake in NetworkManager
