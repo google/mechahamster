@@ -125,7 +125,6 @@ namespace UnityEngine.Networking
                     case "-c":
                         Debug.Log("Start Client");
                         //  placeholder for when we want to start the client on a particular level from command line. Harder than it looks.
-                        openMatch = GetComponent<OpenMatchClient>();
                         break;
                     case "-s":
                         Debug.Log("Start Server");
@@ -190,6 +189,13 @@ namespace UnityEngine.Networking
                 {
                     multiPlayerGame.manager = manager;
                 }
+            }
+
+            // Pull in the component if it's been added. If it hasn't the menu for Open Match won't appear
+            // so this should be fine to do.
+            if (openMatch == null)
+            {
+                openMatch = GetComponent<OpenMatchClient>();
             }
 
             ReadConfig();
