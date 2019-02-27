@@ -31,7 +31,7 @@ namespace Hamster
          
         private string GetPlayerUniqueID()
         {
-            return SystemInfo.deviceUniqueIdentifier;
+            return UnityEngine.Application.platform.ToString().ToLower() + "-" + SystemInfo.deviceUniqueIdentifier;
         }
 
         private async Task<string> WaitForMatchResults(AsyncServerStreamingCall<Messages.Player> stream)
@@ -99,9 +99,9 @@ namespace Hamster
             player.Id = GetPlayerUniqueID();
             player.Properties = matchProperties;
 
-            // TODO: Change this to async and return the async object instead. This
-            // puts the onus of printing useful log messages on the caller, so provide
-            // some interfaces to grab the player ID or whatever.
+            // Attempt to delete the player ID first because if the ID exists already in Open Match it will
+            // be ignored until it is removed (by the client or internal clean-up timeouts).
+            client.DeletePlayer(player);
 
             Debug.LogFormat("OpenMatchClient: Attempting to create [{0} : {1}]", player.Id, player.Properties);
 
