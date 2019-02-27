@@ -69,6 +69,7 @@ And download the game to your mobile device from the AppStore and Google Play St
      [Firebase Unity SDK Android Setup][].  For more information see [Building MechaHamster][].
    * Wait for the spinner (compiling) icon to stop in the bottom right corner of the Unity status
      bar.
+   * Download the [gRPC Unity SDK][] by selecting the latest Build ID, and unzip into the Assets folder.
    * Finally, select the `File > Build Settings` menu option then click `Build and Run`.
 
 > [MechaHamster][] currently only works with .NET 3.x. If [Firebase Unity SDK][] version is 5.4.0 or
@@ -104,3 +105,4 @@ To contribute the this project see [CONTRIBUTING][].
   [Firebase CLI]: https://firebase.google.com/docs/cli/
   [MechaHamster Documentation]: https://google.github.io/mechahamster/
   [Building MechaHamster]: https://google.github.io/mechahamster/mechahamster_guide_building.html
+  [gRPC Unity SDK]: https://packages.grpc.io/
