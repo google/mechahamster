@@ -26,7 +26,7 @@ namespace UnityEngine.Networking
         public int kTextBoxWidth = 1024;
         public int kSpaceBetweenBoxes = 5;
         public JsonStartupConfig config;
-        public MutiplayerGame multiPlayerGame;
+        public MultiplayerGame multiPlayerGame;
 
         int startLevel = kDefaultLevelIdx; 
         public NetworkManager manager;
@@ -167,7 +167,7 @@ namespace UnityEngine.Networking
         void GetMultiplayerPointer()
         {
             if (multiPlayerGame==null)
-                multiPlayerGame = UnityEngine.GameObject.FindObjectOfType<MutiplayerGame>();
+                multiPlayerGame = UnityEngine.GameObject.FindObjectOfType<MultiplayerGame>();
         }
 
         void Awake()
@@ -462,6 +462,10 @@ namespace UnityEngine.Networking
                     {
                         string multiplayerState = this.multiPlayerGame.stateManager.CurrentState().GetType().ToString();
                         ypos = scaledTextBox(xpos, ypos, "mpState=" + multiplayerState);
+                    }
+                    else
+                    {
+                        GetMultiplayerPointer();
                     }
 
                     curState = Hamster.CommonData.mainGame.stateManager.CurrentState().GetType().ToString();

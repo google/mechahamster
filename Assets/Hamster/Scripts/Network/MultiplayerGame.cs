@@ -11,10 +11,13 @@ using Hamster.States;
  * refer to NetworkManager, that makes that structure a no-go. Thus, it's simply placed as a component onto the same Component as CustomNetworkManager. It's unclear what ramifications this may
  * have later down the road. But for now, it works.
  */
-public class MutiplayerGame : MonoBehaviour
+public class MultiplayerGame : MonoBehaviour
 {
     //  game constants
     const int kMaxPlayers = 4;
+
+    static public MultiplayerGame s_instance;
+    static public MultiplayerGame instance { get { return s_instance; } }
 
     //  config file for multiplayer game
     public const string kConfigJsonBasename = "MHConfig";
@@ -40,7 +43,7 @@ public class MutiplayerGame : MonoBehaviour
     public string curState;
     public void ReadConfig()
     {
-        MutiplayerGame mpgame = this;
+        MultiplayerGame mpgame = this;
         mpgame.config = FindObjectOfType<JsonStartupConfig>();
 
         if (mpgame.config != null)
@@ -58,6 +61,8 @@ public class MutiplayerGame : MonoBehaviour
     //  typical unity stuff below
     private void Awake()
     {
+        if (s_instance == null)
+            s_instance = this;
         DontDestroyOnLoad(this.gameObject); //  because NetworkManager has been set to DontDestroyOnLoad, it will be in a separate scene hierarchy/memory segment that cannot interact with this. Thus we must be in the same "zone" as the NetworkManager! Ugh, Unity!
         for (int ii = 0; ii < kMaxPlayers; ii++)
         {
@@ -69,13 +74,24 @@ public class MutiplayerGame : MonoBehaviour
     {
         Hamster.States.ServerStartup state = new Hamster.States.ServerStartup();   //  create new state for FSM that will let us force the starting level.
         stateManager.ClearStack(state);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
+        EnterMultiPlayerState< Hamster.States.ServerStartup>(stateManager);
     }
+
+    static public void EnterMultiPlayerState<T>(StateManager stateManager, int mode=0) where T : Hamster.States.BaseState, new()
+    {
+        Hamster.States.BaseState state = new T();
+        stateManager.PushState(state);
+    }
+
 
     public void OnClientConnect(NetworkConnection conn)
     {
         networkConnections[0] = conn;   //  we're on the client, so we have only ONE connection to the server.
-        Hamster.States.ClientConnected state = new Hamster.States.ClientConnected();   //  create new state for FSM that will let us force the starting level.
-        stateManager.PushState(state);
+        //Hamster.States.ClientConnected state = new Hamster.States.ClientConnected();   //  create new state for FSM that will let us force the starting level.
+        //stateManager.PushState(state);
+        //  this replaces the above with a templated version.
+        MultiplayerGame.EnterMultiPlayerState<Hamster.States.ClientConnected>(MultiplayerGame.instance.stateManager);
+
     }
     // Start is called before the first frame update
     void Start()
@@ -93,7 +109,7 @@ public class MutiplayerGame : MonoBehaviour
         curState = stateManager.CurrentState().ToString();
         if (stateManager.CurrentState().ToString() == "Hamster.States.BaseState")  //  we haven't started anything yet.
         {
-            if (manager != null & manager.isNetworkActive)
+            if (manager != null && manager.isNetworkActive)
             {
                 if (NetworkServer.active)
                 {

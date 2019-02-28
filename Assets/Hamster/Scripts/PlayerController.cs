@@ -133,6 +133,8 @@ namespace Hamster
         {
             Hamster.States.BaseState gameplayState = new Hamster.States.Gameplay(Hamster.States.Gameplay.GameplayMode.Gameplay);
             Hamster.CommonData.mainGame.stateManager.PushState(gameplayState);    //  mainGame isn't ready yet due to Unity having to start itself up.
+
+            MultiplayerGame.EnterMultiPlayerState<Hamster.States.ClientInGame>(MultiplayerGame.instance.stateManager);
         }
         //  networking start.
         override public void OnStartLocalPlayer()   //  this is not enough. The server needs to know about the player's object so that it can reset its position upon death.

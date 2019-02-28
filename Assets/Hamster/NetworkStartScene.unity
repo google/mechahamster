@@ -112,6 +112,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &110862952 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2242585629550785348, guid: 815574da17091434d82da70aed5bfe7c,
+    type: 3}
+  m_PrefabInstance: {fileID: 2242585631130547771}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14a1e3842874dec48a348c36506ff71c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &124869208
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +281,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 157028280096146033}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1273189120
+--- !u!114 &1273189117
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -278,12 +290,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1273189116}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f1b839c4a2e74d408b20d316cbf9914, type: 3}
+  m_Script: {fileID: 11500000, guid: c0607e1db13aad54babb905ef51a5dd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   autoStartServer: 0
-  manager: {fileID: 0}
-  config: {fileID: 0}
+  manager: {fileID: 1273189118}
+  config: {fileID: 110862952}
   connConfig:
     m_PacketSize: 1440
     m_FragmentSize: 500
@@ -321,6 +333,18 @@ MonoBehaviour:
   - 0
   - 0
   curState: 
+--- !u!114 &1273189118 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2182268794226473722, guid: eb20d603e67ce57468093cbefa793e46,
+    type: 3}
+  m_PrefabInstance: {fileID: 157028280096146033}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273189116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28063542c3bbf14e830dbf85d03fec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &157028280096146033
 PrefabInstance:
   m_ObjectHideFlags: 0
