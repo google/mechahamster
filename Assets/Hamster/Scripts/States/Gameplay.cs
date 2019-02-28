@@ -19,6 +19,10 @@ using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
+    public class TemplateTest : BaseState
+    {
+
+    }
   public class Gameplay : BaseState {
 
     public enum GameplayMode {

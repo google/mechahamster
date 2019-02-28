@@ -463,6 +463,10 @@ namespace UnityEngine.Networking
                         string multiplayerState = this.multiPlayerGame.stateManager.CurrentState().GetType().ToString();
                         ypos = scaledTextBox(xpos, ypos, "mpState=" + multiplayerState);
                     }
+                    else
+                    {
+                        GetMultiplayerPointer();
+                    }
 
                     curState = Hamster.CommonData.mainGame.stateManager.CurrentState().GetType().ToString();
                     ypos = scaledTextBox(xpos, ypos, "curState=" + curState);
