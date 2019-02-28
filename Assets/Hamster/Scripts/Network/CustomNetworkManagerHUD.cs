@@ -460,7 +460,7 @@ namespace UnityEngine.Networking
                 {
                     if (this.multiPlayerGame != null)
                     {
-                        string multiplayerState = this.multiPlayerGame.stateManager.CurrentState().GetType().ToString();
+                        string multiplayerState = this.multiPlayerGame.clientStateManager.CurrentState().GetType().ToString();
                         ypos = scaledTextBox(xpos, ypos, "mpState=" + multiplayerState);
                     }
                     else

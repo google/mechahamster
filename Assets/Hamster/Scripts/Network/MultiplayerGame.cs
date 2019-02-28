@@ -28,7 +28,9 @@ public class MultiplayerGame : MonoBehaviour
     public JsonStartupConfig config;
     public ConnectionConfig connConfig; //  deprecated
 
-    public StateManager stateManager = new StateManager();    //  our statemachine that is separate from the MainGame state machine for single player.
+    //  warning: These should be private, but are public for convenience for debugging and displaying state info. Use with appropriate caution. Try to only do read operations and not write operations on these states.
+    public StateManager clientStateManager = new StateManager();    //  this is for the client. The server is separated because "Host" can have both on the same machine!
+    public StateManager serverStateManager = new StateManager();    //  our statemachine that is separate from the MainGame state machine for single player.
 
     public int numPlayers = 1;  //  this is the number of players who can join. Autostart after this number is reached on the server
     public int defaultLevelIdx = 0;
@@ -72,12 +74,20 @@ public class MultiplayerGame : MonoBehaviour
 
     void EnterServerStartupState()
     {
-        Hamster.States.ServerStartup state = new Hamster.States.ServerStartup();   //  create new state for FSM that will let us force the starting level.
-        stateManager.ClearStack(state);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
-        EnterMultiPlayerState< Hamster.States.ServerStartup>(stateManager);
+        ServerEnterMultiPlayerState<Hamster.States.ServerStartup>();
     }
 
-    static public void EnterMultiPlayerState<T>(StateManager stateManager, int mode=0) where T : Hamster.States.BaseState, new()
+    public void ClientEnterMultiPlayerState<T>(int mode = 0) where T : Hamster.States.BaseState, new()
+    {
+        ClientEnterMultiPlayerState<Hamster.States.ServerStartup>();
+    }
+    public void ServerEnterMultiPlayerState<T>(int mode=0) where T : Hamster.States.BaseState, new()
+    {
+        MultiplayerGame.EnterMultiPlayerState<T>(serverStateManager, mode);
+    }
+
+    //  this is private. Use MultiplayerGame.instance.ClientEnterMultiPlayerState or MultiplayerGame.instance.ClientEnterMultiPlayerState to make explicit whether server or client FSM is affected.
+    static private void EnterMultiPlayerState<T>(StateManager stateManager, int mode=0) where T : Hamster.States.BaseState, new()
     {
         Hamster.States.BaseState state = new T();
         stateManager.PushState(state);
@@ -90,7 +100,7 @@ public class MultiplayerGame : MonoBehaviour
         //Hamster.States.ClientConnected state = new Hamster.States.ClientConnected();   //  create new state for FSM that will let us force the starting level.
         //stateManager.PushState(state);
         //  this replaces the above with a templated version.
-        MultiplayerGame.EnterMultiPlayerState<Hamster.States.ClientConnected>(MultiplayerGame.instance.stateManager);
+        MultiplayerGame.EnterMultiPlayerState<Hamster.States.ClientConnected>(MultiplayerGame.instance.clientStateManager);
 
     }
     // Start is called before the first frame update
@@ -106,24 +116,24 @@ public class MultiplayerGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        curState = stateManager.CurrentState().ToString();
-        if (stateManager.CurrentState().ToString() == "Hamster.States.BaseState")  //  we haven't started anything yet.
+        curState = clientStateManager.CurrentState().ToString();
+        if (clientStateManager.CurrentState().ToString() == "Hamster.States.BaseState")  //  we haven't started anything yet.
         {
             if (manager != null && manager.isNetworkActive)
             {
                 if (NetworkServer.active)
                 {
                     ServerListenForClients listenState = new ServerListenForClients();
-                    stateManager.PushState(listenState);
+                    clientStateManager.PushState(listenState);
                 }
             }
         }
-        stateManager.Update();
+        clientStateManager.Update();
     }
     // Pass through to allow states to have their own GUI.
     void OnGUI()
     {
-        stateManager.OnGUI();
+        clientStateManager.OnGUI();
     }
 
 }// class MultiPlayerGame
