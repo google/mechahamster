@@ -41,9 +41,11 @@ namespace Hamster.States {
     // more work.)
     public void PushState(BaseState newState) {
       newState.manager = this;
+            BaseState curState = CurrentState();
       CurrentState().Suspend();
       stateStack.Push(newState);
-      newState.Initialize();
+      newState.Initialize(curState);    //  this calls both. It's up to the developer to only use ONE of these.
+      newState.Initialize();    //  this second one is kept for backward compatibility reasons.
     }
 
     // Ends the currently-running state, and resumes whatever is next

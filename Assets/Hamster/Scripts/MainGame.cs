@@ -78,9 +78,17 @@ namespace Hamster {
 
     private bool firebaseInitialized;
 
-    private Firebase.Auth.FirebaseAuth defaultAuth;  // Hack to attempt to fix GC crash
+        MainGame()
+        {
+            CommonData.mainGame = this;
+        }
+        private Firebase.Auth.FirebaseAuth defaultAuth;  // Hack to attempt to fix GC crash
 
-    IEnumerator Start() {
+        private void Awake()
+        {
+            CommonData.mainGame = this;
+        }
+        IEnumerator Start() {
       //    Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);    //  no longer using VR, so no more automatic full screen and resolution change!
       GooglePlayServicesSignIn.InitializeGooglePlayGames();
       InitializeFirebaseAndStart();
@@ -257,7 +265,6 @@ namespace Hamster {
 
       CommonData.prefabs = FindObjectOfType<PrefabList>();
       CommonData.mainCamera = FindObjectOfType<CameraController>();
-      CommonData.mainGame = this;
       Firebase.AppOptions ops = new Firebase.AppOptions();
       CommonData.app = Firebase.FirebaseApp.Create(ops);
 
@@ -270,7 +277,9 @@ namespace Hamster {
 
             Screen.orientation = ScreenOrientation.Landscape;
 
-      musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();
+            //  now that MainGame is used as a stub to hold the pointer in 
+    if (CommonData.mainCamera!=null)
+        musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();
 
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
 

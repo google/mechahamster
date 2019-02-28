@@ -128,7 +128,8 @@ namespace UnityEngine.Networking
                         break;
                     case "-s":
                         Debug.Log("Start Server");
-                        bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
+                        multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
+                        //bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
 
                         StartServerReq();
                         m_autoStartLevel = true;
@@ -209,7 +210,8 @@ namespace UnityEngine.Networking
                 Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());
                 if (!bServerStarted)
                 {
-                    if (manager.StartServer())
+                    multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
+                    //if (manager.StartServer())
                         StartServerReq();
                 }
             }
@@ -237,7 +239,8 @@ namespace UnityEngine.Networking
                 {
                     if (Input.GetKeyDown(KeyCode.S))
                     {
-                        if (manager.StartServer())
+                        multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
+//                        if (manager.StartServer())
                             StartServerReq();
                     }
                     if (Input.GetKeyDown(KeyCode.H))
@@ -461,7 +464,9 @@ namespace UnityEngine.Networking
                     if (this.multiPlayerGame != null)
                     {
                         string multiplayerState = this.multiPlayerGame.clientStateManager.CurrentState().GetType().ToString();
-                        ypos = scaledTextBox(xpos, ypos, "mpState=" + multiplayerState);
+                        ypos = scaledTextBox(xpos, ypos, "client=" + multiplayerState);
+                        multiplayerState = this.multiPlayerGame.serverStateManager.CurrentState().GetType().ToString();
+                        ypos = scaledTextBox(xpos, ypos, "server=" + multiplayerState);
                     }
                     else
                     {
@@ -524,7 +529,8 @@ namespace UnityEngine.Networking
                     {
                         if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "LAN (S)erver Only"))
                         {
-                            if (manager.StartServer())
+                            MultiplayerGame.instance.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
+//                            if (manager.StartServer())
                                 StartServerReq();
                         }
                         ypos = newYpos;

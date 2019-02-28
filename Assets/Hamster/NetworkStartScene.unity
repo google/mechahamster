@@ -332,6 +332,8 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  agones: {fileID: 0}
+  openMatch: {fileID: 0}
   curState: 
 --- !u!114 &1273189118 stripped
 MonoBehaviour:
@@ -356,6 +358,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CustomNetworkManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615453843098976770, guid: eb20d603e67ce57468093cbefa793e46,
+        type: 3}
+      propertyPath: m_TagString
+      value: NetworkManager
       objectReference: {fileID: 0}
     - target: {fileID: 3639271176963771303, guid: eb20d603e67ce57468093cbefa793e46,
         type: 3}
