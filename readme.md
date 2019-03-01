@@ -21,6 +21,8 @@ MechaHamster demonstrates the following concepts:
    * [Firebase Realtime Database][] to store map and user data in addition to sharing content.
    * [Firebase Cloud Messaging][] to allow game admins to send push notifications which inform users
      of new map content.
+   * [Firebase Crashlytics (Beta)][] to capture crashes in game play and help
+     developers diagnose and fix issues.
    * [Firebase App Invites][] to share user generated content with other players.
    * [Firebase Remote Config][] to allow game admins to run experiments on game data without
      redeploying a new build of the game.
@@ -59,6 +61,7 @@ And download the game to your mobile device from the AppStore and Google Play St
      from the [Firebase Unity SDK][]:
       * FirebaseAnalytics.unitypackage
       * FirebaseAuth.unitypackage
+      * FirebaseCrashlytics.unitypackage (Beta)
       * FirebaseDatabase.unitypackage
       * FirebaseInvites.unitypackage
       * FirebaseMessaging.unitypackage
@@ -96,6 +99,7 @@ To contribute the this project see [CONTRIBUTING][].
   [Firebase Analytics]: https://firebase.google.com/docs/analytics/
   [Firebase Authentication]: https://firebase.google.com/docs/auth/
   [Firebase Cloud Messaging]: https://firebase.google.com/docs/cloud-messaging/
+  [Firebase Crashlytics (Beta)]: https://firebase.google.com/docs/crashlytics/
   [Firebase Remote Config]: https://firebase.google.com/docs/remote-config/
   [Firebase App Invites]: https://firebase.google.com/docs/invites/
   [Firebase Cloud Storage]: https://firebase.google.com/docs/storage/

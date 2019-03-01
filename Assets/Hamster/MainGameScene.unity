@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26c486d75f1ac4b9f8a394d12dc89892, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   ViewAngle: -40
   ViewDistance: 13
   EditorScrollSpeed: 8
@@ -186,8 +186,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
@@ -231,8 +231,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a60105ad7f05a4afd8234d458969b5e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   mobileSkin: {fileID: 11400000, guid: 1d6209247a10cf04a84dca9893c6826a, type: 2}
   desktopSkin: {fileID: 11400000, guid: 43b7e6683c89243d8873fde742194c65, type: 2}
   prefabs:
@@ -420,6 +420,10 @@ MonoBehaviour:
     prefab: {fileID: 1302684690844548, guid: ef4db3fbceeb44541a0f887a25925ed9, type: 2}
   - name: SettingsMenu
     prefab: {fileID: 1045455071129728, guid: f5c6776be76e99242ad1f09892d20cc3, type: 2}
+  - name: SelfDestructMenu
+    prefab: {fileID: 1989951064384182, guid: c061040ecaaf94273b3dbf4cff31d028, type: 2}
+  - name: MeltdownMenu
+    prefab: {fileID: 1773402581734080, guid: 5e1c6e6458c1e4176815d463179e5e57, type: 2}
   - name: SignInMenu
     prefab: {fileID: 1652821866044610, guid: 02cfa18234ad9ce4d8640660cba1d479, type: 2}
   - name: ChooseSignInMenu
@@ -513,8 +517,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 027216dc84ae74300bbc4cb4cb00daba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   player: {fileID: 0}
   PlayerSpawnedEvent:
     m_PersistentCalls:
@@ -530,8 +534,8 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d2b37e462cd3e94fb4dddf7a85f6d76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!1001 &1155089847
 Prefab:
   m_ObjectHideFlags: 0
@@ -844,8 +848,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d187c429c203c8d458259c9fb92f4759, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   worldMap:
     name: unnamed map
     mapId: <<mapId>>
@@ -856,7 +860,7 @@ MonoBehaviour:
       Values: []
   destroyOnReset: []
   PreviousReplayData:
-    mapId: 
+    mapId:
     mapHash: 0
     positionData: []
     inputData: []
@@ -899,8 +903,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cd4e98ba52a7bc4cb1705809c72afa5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   SimulateVRInEditor: 0
   VRViewer: {fileID: 177758, guid: 970dd4b9371394fb4890965f608d46fd, type: 2}
   VRController: {fileID: 198490, guid: 5ca80f4596fa44b87912a0592346d260, type: 2}
@@ -938,8 +942,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa210196eec0ab44a9ceeabd6ab6e8df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   rotation: {x: 0, y: -0.8, z: 0}
 --- !u!1 &1848390473
 GameObject:
