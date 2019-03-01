@@ -22,7 +22,7 @@ namespace UnityEngine.Networking
 
         public bool bShowDebugCurrentStateInfo = false; //  show the current finite state machine state
         public bool bShowDebugCmdlineArgs = false;  //  show the command line arguments.
-
+        public bool skipLevelMenu = false;  //  skips the menu and starts server level right away
         public int kTextBoxHeight = 40;
         public int kTextBoxWidth = 1024;
         public int kSpaceBetweenBoxes = 5;
@@ -70,6 +70,7 @@ namespace UnityEngine.Networking
                 }
                 if (multiPlayerGame != null)
                 {
+                    m_autoStartLevel = false;   //  we gotta stop calling this over and over.
                     multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
                     bSucceeded = true;
 
@@ -79,7 +80,6 @@ namespace UnityEngine.Networking
                     //if (agones != null) {
                     //    agones.Ready();
                     //}
-                    m_autoStartLevel = false;   //  we gotta stop calling this over and over.
                 }
             }
             return bSucceeded;
@@ -545,9 +545,9 @@ namespace UnityEngine.Networking
                     {
                         if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "LAN (S)erver Only"))
                         {
-                            MultiplayerGame.instance.EnterServerStartupState(-1);  //  use this now instead of manager.StartServer()
-//                            if (manager.StartServer())
-                                StartServerReq();
+                            if (!skipLevelMenu)
+                                startLevel = -1;    //  allow the player to choose the level
+                            StartServerReq();
                         }
                         ypos = newYpos;
                     }

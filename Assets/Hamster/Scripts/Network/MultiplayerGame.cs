@@ -95,13 +95,14 @@ public class MultiplayerGame : MonoBehaviour
     //  use startLevelidx==-1 to choose a level through the menu.
     public void EnterServerStartupState(int startLevelidx)
     {
+        Debug.Log("EnterServerStartupState(" + startLevelidx.ToString() + ")\n");
         ServerEnterMultiPlayerState<Hamster.States.ServerStartup>(startLevelidx);
     }
 
     //  swap the state
     public void ClientSwapMultiPlayerState<T>(int mode = 0, bool isSwapState = false) where T : Hamster.States.BaseState, new()
     {
-        MultiplayerGame.EnterMultiPlayerState<Hamster.States.ServerStartup>(clientStateManager, mode, true);
+        MultiplayerGame.EnterMultiPlayerState<T>(clientStateManager, mode, true);
     }
     //  swap the state
     public void ServerSwapMultiPlayerState<T>(int mode = 0, bool isSwapState = false) where T : Hamster.States.BaseState, new()
@@ -134,7 +135,7 @@ public class MultiplayerGame : MonoBehaviour
         ServerLoadingLevel serverLoadLevel = state as ServerLoadingLevel;
         if (serverLoadLevel != null)
         {
-            Debug.LogWarning("Loading Level=" + mode.ToString());
+            Debug.Log("Loading Level=" + mode.ToString());
             serverLoadLevel.levelIdx = mode;
         }
         if (isSwapState)

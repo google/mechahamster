@@ -46,7 +46,7 @@ namespace Hamster.States
         //  theoretically preferable to force load level in that it doesn't destroy the stack. However, perhaps the stack needed to be destroyed.
         public bool GentleLoadLevel(int idx)
         {
-            Debug.LogWarning("GentleLoadLevel=" + idx.ToString());
+            Debug.Log("GentleLoadLevel=" + idx.ToString());
             bool bSuccess = false;
             if (Hamster.CommonData.mainGame != null)
             {
@@ -87,7 +87,7 @@ namespace Hamster.States
 
         override public void Initialize()
         {
-            Debug.LogWarning("ServerLoadingLevel.Initialize: level=" + levelIdx.ToString() + "\n");
+            Debug.Log("ServerLoadingLevel.Initialize: level=" + levelIdx.ToString() + "\n");
             bLoadedLevel = false;
             internalState = originalMHStates.StartState;
             if (levelIdx >= 0)
@@ -106,7 +106,7 @@ namespace Hamster.States
         {
             if (immediateLevelLoad) //  otherwise, we'll go through the menu.
             {
-                Debug.LogWarning("ServerLoadingLevel.Update: level=" + levelIdx.ToString() + "\n");
+                Debug.Log("ServerLoadingLevel.Update: level=" + levelIdx.ToString() + "\n");
                 //  we must wait until the original single player MechaHamster state has reached "MainMenu"
                 if (!bLoadedLevel && Hamster.CommonData.mainGame != null)
                 {
@@ -122,6 +122,9 @@ namespace Hamster.States
                     else if ((GetState(curState.ToString()) == originalMHStates.GamePlay))
                     {
                         //  the server has finished loading the map and is ready to let players drop in. So go to the next state.
+                        //  Allow players to drop in to the game now.
+                        MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
+
                     }
                 }
             }
