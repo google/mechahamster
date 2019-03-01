@@ -30,13 +30,16 @@ namespace Hamster.States {
     // The actual object representing any UI used by the state.
     protected GameObject gui;
 
-    // Initialization method.  Called after the state
-    // is added to the stack.
-    public virtual void Initialize() { }
-    // Cleanup function.  Called just before the state
-    // is removed from the stack.  Returns an optional
-    // StateExitValue
-    public virtual StateExitValue Cleanup() {
+        // Initialization method.  Called after the state
+        // is added to the stack.
+        public virtual void Initialize() { }
+        public virtual void Initialize(BaseState prevState) { }
+        //  optional argument to let the new state know about the previous state. This helps us carry over some things from the previous state without having to access a global variable!
+        //public virtual void Initialize(BaseState prevState) { }
+        // Cleanup function.  Called just before the state
+        // is removed from the stack.  Returns an optional
+        // StateExitValue
+        public virtual StateExitValue Cleanup() {
       return null;
     }
 

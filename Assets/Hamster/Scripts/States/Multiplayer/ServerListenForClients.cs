@@ -11,7 +11,8 @@ namespace Hamster.States
 
         override public void Initialize()
         {
-            bServerStarted = manager.StartServer();
+            //MultiplayerGame.instance.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
+            bServerStarted = true;// manager.StartServer();
         }
 
         // Start is called before the first frame update

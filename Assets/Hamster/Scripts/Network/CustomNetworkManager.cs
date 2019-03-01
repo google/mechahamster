@@ -410,7 +410,7 @@ namespace customNetwork
                 Debug.LogWarning("Server didn't notify clients of server level idx");
             }
             MessageBase msg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(levelIdx);    //  test: yep, just send a number without any context for now. Later, wrap this in an appropriate MessageBase class.
-            conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg);
+            conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg); //  tell our client what level we're using.
             SendServerVersion(conn);
         }
 
@@ -445,6 +445,8 @@ namespace customNetwork
         //  so this method extracts the version number somewhat better, though it's also not perfect
         static public string getStrippedVersionNumber(string raw)
         {
+            if (string.IsNullOrEmpty(raw)) return "";
+
             string strippedVersion = raw.TrimEnd(raw[raw.Length - 1]);  //  this is how we used to do it. By default, always remember to put a single trailing character.
             double dResult;
             bool bSuccess = double.TryParse(raw, out dResult);  //  this should do the majority of the work. The above is the failsafe, but is probably even worse than TryParse.
@@ -488,7 +490,18 @@ namespace customNetwork
         // Parameters:
         //   sceneName:
         //     The name of the new Scene.
-        public virtual void OnServerSceneChanged(string sceneName) { }
+        public override void OnServerSceneChanged(string sceneName) {
+            Debug.LogWarning("Server scene changed: " + sceneName);
+            if (sceneName == "NetworkMainGameScene")
+            {
+
+                MultiplayerGame.instance.ServerEnterMultiPlayerState<Hamster.States.ServerNetworkManagerOnlineSceneLoaded>();
+            }
+            else
+            {
+                Debug.LogWarning("MechaHamster code did not anticipate this scene change: " + sceneName);   //  you're probably extending this code. that's fine. The original code was hacked together specifically for MechaHamster, and thus is not as generic as I would like it to be.
+            }
+        }
         //
         // Summary:
         //     Callback that happens when a NetworkMatch.SetMatchAttributes has been processed
