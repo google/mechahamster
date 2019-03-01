@@ -50,12 +50,15 @@ namespace UnityEngine.Networking
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
          */
-        void StartServerReq()
+        void StartServerReq()   //  often times, we cannot load the server immediately. So, we make a request and let some things finish before we actually change states.
         {
             m_loadServerRequested = true;
+            m_autoStartLevel = true;    //  this is some weird legacy logic.
         }
 
-        //  this starts the level.
+        //  this starts the level as soon as all of the other dependent pieces are ready to start the level. This means some pointers and such need to come online.
+        //  This means this sits in Update() and gets called until it works. Ugly, but somewhat necessary as it's the simplest solution.
+        //  this should really be named CheckStartLevel(), but changing the function name would make a mess of the version history.
         public bool AutoStartLevel(int levelIdx)
         {
             bool bSucceeded = false;
@@ -69,10 +72,9 @@ namespace UnityEngine.Networking
                 {
                     multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
                     bSucceeded = true;
-                    //Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();   //  create new state for FSM that will let us force the starting level.
-                    //bSucceeded = lvlSel.ForceLoadLevel(levelIdx); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
-                    //Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
 
+                    //  we no longer do agones.Ready() here because it should be done in the FSM started by ServerStartupState above.
+                    //  see Hamster.States.ServerStartup.Initialize() or ServerLoadingLevel.GentleLoadLevel() for where this should happen now.
                     //// If we're running through Agones, signal ready after the level has loaded
                     //if (agones != null) {
                     //    agones.Ready();
@@ -112,7 +114,6 @@ namespace UnityEngine.Networking
         }
         bool ReadCommandLineArg()
         {
-            bool bServerStarted = false;
 
             if (manager==null)
                 manager = GetComponent<NetworkManager>();
@@ -138,12 +139,7 @@ namespace UnityEngine.Networking
                         break;
                     case "-s":
                         Debug.Log("Start Server");
-                        //multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
-                        //bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
-                        
-                        //  now that the finite state machine is online, we don't go through this bastardization of states through the Update() loop. 
                         StartServerReq();
-                        m_autoStartLevel = true;
                         break;
                     case "-a":
                         Debug.Log("Communicating with Agones");
@@ -178,13 +174,13 @@ namespace UnityEngine.Networking
                 {
                     multiPlayerGame.EnterServerStartupState(kDefaultLevelIdx);  //  use this now instead of manager.StartServer()
                                                                           //bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
-
+                    bServerStarted = true;
                     //StartServerReq();
                     //m_autoStartLevel = true;
                 }
             }
 #endif
-            return bServerStarted;
+            return false;   //  we don't want to start the server here because StartServerReq() will start it later.
         }
 
         void GetMultiplayerPointer()
@@ -232,9 +228,8 @@ namespace UnityEngine.Networking
                 Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());
                 if (!bServerStarted)
                 {
-                    multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
-                    //if (manager.StartServer())
-                        StartServerReq();
+                    //if (manager.StartServer())    //  we no longer call this anymore, but instead let the FSM handle it. However, we still need to let Unity finish all of its Start() calls, so we can't start right away and need to wait until our Update() loop to actually call it so that we are certain that all Start() calls have been executed.
+                    StartServerReq();   //  so we must make a delayed call to start the FSM-state that will start the server.
                 }
             }
         }
@@ -261,7 +256,6 @@ namespace UnityEngine.Networking
                 {
                     if (Input.GetKeyDown(KeyCode.S))
                     {
-                        multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
 //                        if (manager.StartServer())
                             StartServerReq();
                     }
