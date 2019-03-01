@@ -1,0 +1,38 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: k8s-job-cleaner
+  labels:
+    job: k8s-job-cleaner
+    role: job
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Allow
+  suspend: false
+  jobTemplate:
+    metadata:
+      name: k8s-job-cleaner
+      labels:
+        job: k8s-job-cleaner
+        role: job
+    spec:
+      template:
+        metadata:
+          name: k8s-job-cleaner
+          labels:
+            job: k8s-job-cleaner
+            role: job
+        spec:
+          containers:
+          - name: k8s-job-cleaner
+            image: quay.io/dtan4/k8s-job-cleaner:latest
+            imagePullPolicy: Always
+            command:
+              - "/k8s-job-cleaner"
+              - "--in-cluster"
+              - "--label-group"
+              - "app"
+              - "--max-count"
+              - "4"
+          restartPolicy: Never
+
