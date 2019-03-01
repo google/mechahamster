@@ -12,7 +12,7 @@ namespace Hamster.States
 
         override public void Initialize()
         {
-            Debug.LogWarning("ServerPreOpenMatchGamePlay.Initialize");
+            Debug.Log("ServerPreOpenMatchGamePlay.Initialize");
             if (manager == null)
             {
                 manager = MultiplayerGame.instance.manager;

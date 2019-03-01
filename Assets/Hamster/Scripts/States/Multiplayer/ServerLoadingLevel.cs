@@ -17,7 +17,7 @@ namespace Hamster.States
             GentleLoadLevel,
             ForceLoadLevel,
             AgonesReady,
-            GamePlay,   //  finished loading or choosing through the menu.
+            Gameplay,   //  finished loading or choosing through the menu.
         };
 
         public int levelIdx = -1;
@@ -29,18 +29,19 @@ namespace Hamster.States
         {
             switch (statename)
             {
-                default:
-                    return originalMHStates.UnknownState;
+                case "Hamster.States.Gameplay":
+                    return originalMHStates.Gameplay;
                     break;
-                
+
                 case "Hamster.States.MainMenu":
                     return originalMHStates.MainMenu;
                     break;
                 case "Hamster.States.ChooseSignInMenu":
                     return originalMHStates.ChooseSignInMenu;
                     break;
-                case "Hamster.States.GamePlay":
-                    return originalMHStates.GamePlay;
+                default:
+                    return originalMHStates.UnknownState;
+                    break;
             }
         }
         //  theoretically preferable to force load level in that it doesn't destroy the stack. However, perhaps the stack needed to be destroyed.
@@ -51,8 +52,8 @@ namespace Hamster.States
             if (Hamster.CommonData.mainGame != null)
             {
                 Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();   //  create new state for FSM that will let us force the starting level.
-                bSuccess = lvlSel.ForceLoadLevel(idx); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
-                Hamster.CommonData.mainGame.stateManager.SwapState(lvlSel);    //  begin the state normally.
+                bSuccess = lvlSel.RequestLoadLevel(idx); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
+                Hamster.CommonData.mainGame.stateManager.PushState(lvlSel);    //  begin the state normally.
                 internalState = originalMHStates.GentleLoadLevel;
             }
 
@@ -104,28 +105,33 @@ namespace Hamster.States
         // Update is called once per frame
         public override void Update()
         {
+            Debug.LogWarning("ServerLoadingLevel.Update: bLoadedLevel=" + bLoadedLevel.ToString() + "\n");
             if (immediateLevelLoad) //  otherwise, we'll go through the menu.
             {
+                BaseState curState = Hamster.CommonData.mainGame.stateManager.CurrentState();
+                string curStateName = curState.ToString();
                 Debug.Log("ServerLoadingLevel.Update: level=" + levelIdx.ToString() + "\n");
-                //  we must wait until the original single player MechaHamster state has reached "MainMenu"
-                if (!bLoadedLevel && Hamster.CommonData.mainGame != null)
+                Debug.Log("ServerLoadingLevel:curState=" + curState + "(" + GetState(curStateName).ToString() + ")\n");
+                //  we must wait until the original single player MechaHamster state has reached "MainMenu" before we can load the level
+                if (GetState(curStateName) == originalMHStates.MainMenu)
                 {
-                    BaseState curState = Hamster.CommonData.mainGame.stateManager.CurrentState();
-                    if (GetState(curState.ToString()) == originalMHStates.MainMenu)
-                    {
-                        bLoadedLevel = GentleLoadLevel(levelIdx);    //  force the MainGame state to load the level that was requested. 
-                    }
-                    if (GetState(curState.ToString()) == originalMHStates.ChooseSignInMenu)
-                    {
-                        bLoadedLevel = GentleLoadLevel(levelIdx);    //  force the MainGame state to load the level that was requested. 
-                    }
-                    else if ((GetState(curState.ToString()) == originalMHStates.GamePlay))
-                    {
-                        //  the server has finished loading the map and is ready to let players drop in. So go to the next state.
-                        //  Allow players to drop in to the game now.
-                        MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
-
-                    }
+                    bLoadedLevel = GentleLoadLevel(levelIdx);    //  force the MainGame state to load the level that was requested. 
+                }
+                if (GetState(curStateName) == originalMHStates.ChooseSignInMenu)    //  skip the sign in menu since we're the server.
+                {
+                    bLoadedLevel = GentleLoadLevel(levelIdx);    //  force the MainGame state to load the level that was requested. 
+                }
+            }
+            if (bLoadedLevel)   //  if the level is loaded, we can see if we're in a state to start the Pre-Openmatch gameplay.
+            {
+                BaseState curState = Hamster.CommonData.mainGame.stateManager.CurrentState();
+                string curStateName = curState.ToString();
+                string curStateEnum = GetState(curStateName).ToString();
+                if ((GetState(curStateName)) == originalMHStates.Gameplay)
+                {
+                    //  the server has finished loading the map and is ready to let players drop in. So go to the next state.
+                    //  Allow players to drop in to the game now.
+                    MultiplayerGame.instance.ServerEnterMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
                 }
             }
         }
