@@ -20,3 +20,4 @@ spec:
       containers:
       - name: openmatch-director
         image: gcr.io/mechahamster/openmatch-director:dev
+        imagePullPolicy: Always
