@@ -92,6 +92,7 @@ public class MultiplayerGame : MonoBehaviour
         }
     }
 
+    //  use startLevelidx==-1 to choose a level through the menu.
     public void EnterServerStartupState(int startLevelidx)
     {
         ServerEnterMultiPlayerState<Hamster.States.ServerStartup>(startLevelidx);
@@ -133,6 +134,7 @@ public class MultiplayerGame : MonoBehaviour
         ServerLoadingLevel serverLoadLevel = state as ServerLoadingLevel;
         if (serverLoadLevel != null)
         {
+            Debug.LogWarning("Loading Level=" + mode.ToString());
             serverLoadLevel.levelIdx = mode;
         }
         if (isSwapState)

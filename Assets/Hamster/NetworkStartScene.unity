@@ -422,7 +422,7 @@ PrefabInstance:
     - target: {fileID: 4457444913016974179, guid: eb20d603e67ce57468093cbefa793e46,
         type: 3}
       propertyPath: bShowDebugCmdlineArgs
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4457444913016974179, guid: eb20d603e67ce57468093cbefa793e46,
         type: 3}

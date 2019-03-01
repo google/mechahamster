@@ -1,5 +1,6 @@
 ﻿//  uncomment this if we want to experiment with Unity's matchmaking. But it's too broken for the later Unity versions.
 //  #define OBSOLETE_2017_4
+//#define TEST_ARGS
 using System;
 using System.ComponentModel;
 
@@ -60,15 +61,24 @@ namespace UnityEngine.Networking
             bool bSucceeded = false;
             if (m_autoStartLevel)
             {
-                Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();   //  create new state for FSM that will let us force the starting level.
-                bSucceeded = lvlSel.ForceLoadLevel(levelIdx); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
-                Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
-                
-                // If we're running through Agones, signal ready after the level has loaded
-                if (agones != null) {
-                    agones.Ready();
+                if (multiPlayerGame== null)
+                {
+                    GetMultiplayerPointer();
                 }
-                m_autoStartLevel = false;   //  we gotta stop calling this over and over.
+                if (multiPlayerGame != null)
+                {
+                    multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
+                    bSucceeded = true;
+                    //Hamster.States.LevelSelect lvlSel = new Hamster.States.LevelSelect();   //  create new state for FSM that will let us force the starting level.
+                    //bSucceeded = lvlSel.ForceLoadLevel(levelIdx); //  this is just the stub that initiates the state. It needs to run its update at least once before it has actually loaded any levels.
+                    //Hamster.CommonData.mainGame.stateManager.ClearStack(lvlSel);    //  hack: Just slam that state in there disregarding all previous states! OMG!!!
+
+                    //// If we're running through Agones, signal ready after the level has loaded
+                    //if (agones != null) {
+                    //    agones.Ready();
+                    //}
+                    m_autoStartLevel = false;   //  we gotta stop calling this over and over.
+                }
             }
             return bSucceeded;
 
@@ -128,9 +138,10 @@ namespace UnityEngine.Networking
                         break;
                     case "-s":
                         Debug.Log("Start Server");
-                        multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
+                        //multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
                         //bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
-
+                        
+                        //  now that the finite state machine is online, we don't go through this bastardization of states through the Update() loop. 
                         StartServerReq();
                         m_autoStartLevel = true;
                         break;
@@ -154,14 +165,25 @@ namespace UnityEngine.Networking
 
                 }
             }
-            //bool bTestArgs = true;
-            //if (bTestArgs)
-            //{
-            //    bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
-            //    StartServerReq();
-            //    m_autoStartLevel = true;
-            //    startLevel = 9;
-            //}
+#if TEST_ARGS
+            bool bTestArgs = true;
+            if (bTestArgs)
+            {
+                Debug.Log("Start Server");
+                if (multiPlayerGame==null)
+                {
+                    GetMultiplayerPointer();
+                }
+                if (multiPlayerGame != null)
+                {
+                    multiPlayerGame.EnterServerStartupState(kDefaultLevelIdx);  //  use this now instead of manager.StartServer()
+                                                                          //bServerStarted = manager.StartServer();  //  separated because you can start a host which will also need StartServerReq() afterwards.
+
+                    //StartServerReq();
+                    //m_autoStartLevel = true;
+                }
+            }
+#endif
             return bServerStarted;
         }
 
@@ -219,7 +241,7 @@ namespace UnityEngine.Networking
 
         void Update()
         {
-            if (m_loadServerRequested && Hamster.CommonData.mainGame)
+            if (m_loadServerRequested)
             {
                 StartServerCommon();
             }
@@ -529,7 +551,7 @@ namespace UnityEngine.Networking
                     {
                         if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "LAN (S)erver Only"))
                         {
-                            MultiplayerGame.instance.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
+                            MultiplayerGame.instance.EnterServerStartupState(-1);  //  use this now instead of manager.StartServer()
 //                            if (manager.StartServer())
                                 StartServerReq();
                         }
