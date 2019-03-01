@@ -278,8 +278,7 @@ namespace Hamster {
             Screen.orientation = ScreenOrientation.Landscape;
 
             //  now that MainGame is used as a stub to hold the pointer in 
-    if (CommonData.mainCamera!=null)
-        musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();
+      musicPlayer = CommonData.mainCamera.GetComponentInChildren<AudioSource>();
 
       CommonData.gameWorld = FindObjectOfType<GameWorld>();
 

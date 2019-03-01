@@ -175,17 +175,19 @@ public class MultiplayerGame : MonoBehaviour
             {
                 if (NetworkServer.active)
                 {
-                    ServerListenForClients listenState = new ServerListenForClients();
-                    clientStateManager.PushState(listenState);
+                    //ServerListenForClients listenState = new ServerListenForClients();
+                    //clientStateManager.PushState(listenState);
                 }
             }
         }
         clientStateManager.Update();
+        serverStateManager.Update();
     }
     // Pass through to allow states to have their own GUI.
     void OnGUI()
     {
         clientStateManager.OnGUI();
+        serverStateManager.OnGUI();
     }
 
 }// class MultiPlayerGame
