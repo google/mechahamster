@@ -5,17 +5,16 @@ using UnityEngine.Networking;
 namespace Hamster.States
 {
     //  this is where the players can simply join at any time and run around the map doing whatever they want until 4 players are reached and OpenMatch is triggered
-    public class ServerPreOpenMatchGamePlay : BaseState
+    public class ServerOpenMatchStart : BaseState
     {
         public NetworkManager manager;
         public CustomNetworkManagerHUD hud;
 
-        int     curNumPlayers;
-        bool hasPlayers;    //  does this game have any players
+        int curNumPlayers;
 
         override public void Initialize()
         {
-            Debug.Log("ServerPreOpenMatchGamePlay.Initialize");
+            Debug.Log("ServerOpenMatchStart.Initialize");
             if (manager == null)
             {
                 manager = MultiplayerGame.instance.manager;
@@ -42,7 +41,7 @@ namespace Hamster.States
         }
         override public void OnGUI()
         {
-            //Debug.Log("ServerPreOpenMatchGamePlay.OnGUI");
+            Debug.LogWarning("ServerOpenMatchStart.OnGUI");
             if (hud != null)
             {
                 hud.scaledTextBox("curNumPlayers=" + curNumPlayers.ToString());
@@ -52,25 +51,20 @@ namespace Hamster.States
         // Update is called once per frame
         override public void Update()
         {
-            //Debug.Log("ServerPreOpenMatchGamePlay.Update");
+            Debug.LogWarning("ServerOpenMatchStart.Update");
             curNumPlayers = manager.numPlayers;
-
             if (curNumPlayers >= 4)
             {
                 //  fire off the OpenMatchState!
-                MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerOpenMatchStart>();
+                //  do something here to start OpenMatch
+                //MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerOpenMatchStart>(0, true);
             }
             else if (curNumPlayers <= 0)
             {
-                hasPlayers = false;
-                //  No players. End of Match
-                MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
+                //  No players. End of OpenMatch
+                //  do something here to close open match so we can go back to the state where we 
+                MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
             }
-            else if (curNumPlayers > 0)
-            {
-                hasPlayers = true;
-            }
-
         }
     }
 }   //  Hamster.States

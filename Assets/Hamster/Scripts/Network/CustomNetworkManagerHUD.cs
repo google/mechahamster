@@ -25,6 +25,7 @@ namespace UnityEngine.Networking
         public bool skipLevelMenu = false;  //  skips the menu and starts server level right away
         public int kTextBoxHeight = 40;
         public int kTextBoxWidth = 1024;
+        Vector2 lastTextPos;
         public int kSpaceBetweenBoxes = 5;
         public JsonStartupConfig config;
         public MultiplayerGame multiPlayerGame;
@@ -345,6 +346,8 @@ namespace UnityEngine.Networking
 
             newYpos = ypos + space + kSpaceBetweenBoxes;
             newXPos = xpos + tempRect.width + kSpaceBetweenBoxes;
+            lastTextPos.x = newXPos;
+            lastTextPos.y = newYpos;
             return tField;
         }
         bool scaledButton(out float newYpos, float xpos, float ypos, float w, float h, string buttonText)
@@ -363,14 +366,25 @@ namespace UnityEngine.Networking
             bool bButton = GUI.Button(tempRect, buttonText, buttonStyle);
             float space = tempRect.height;
             newYpos = ypos + space + kSpaceBetweenBoxes;
+            lastTextPos.x = xpos;
+            lastTextPos.y = newYpos;
+
             return bButton;
         }
 
-        float scaledTextBox(float xpos, float ypos, float w, float h, string txt)
+        public float scaledTextBox(string txt)
+        {
+            float xpos = lastTextPos.x;
+            float ypos = lastTextPos.y;
+            ypos = scaledTextBox(xpos, ypos, txt);
+            return ypos;
+        }
+
+        public float scaledTextBox(float xpos, float ypos, float w, float h, string txt)
         {
             return scaledTextBox(xpos, ypos, txt);
         }
-        float scaledTextBox(float xpos, float ypos, string txt)
+        public float scaledTextBox(float xpos, float ypos, string txt)
         {
             float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
             int kFontSize = (int)((kTextBoxHeight) * screenHeightScaling);
@@ -386,6 +400,9 @@ namespace UnityEngine.Networking
 
             float space = tempRect.height;
             ypos += space;
+            lastTextPos.x = xpos;
+            lastTextPos.y = ypos;
+
             return ypos;
         }
 

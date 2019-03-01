@@ -121,6 +121,18 @@ public class MultiplayerGame : MonoBehaviour
         MultiplayerGame.EnterMultiPlayerState<T>(serverStateManager, mode, isSwapState);
     }
 
+    public void ClientPopState()
+    {
+        PopState(this.clientStateManager);
+    }
+    public void ServerPopState()
+    {
+        PopState(this.serverStateManager);
+    }
+    static void PopState(StateManager stateManager)
+    {
+        stateManager.PopState();
+    }
     //  this is private. Use MultiplayerGame.instance.ClientEnterMultiPlayerState or MultiplayerGame.instance.ClientEnterMultiPlayerState to make explicit whether server or client FSM is affected.
     static private void EnterMultiPlayerState<T>(StateManager stateManager,  int mode=0, bool isSwapState = false) where T : Hamster.States.BaseState, new()
     {

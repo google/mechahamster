@@ -105,13 +105,13 @@ namespace Hamster.States
         // Update is called once per frame
         public override void Update()
         {
-            Debug.LogWarning("ServerLoadingLevel.Update: bLoadedLevel=" + bLoadedLevel.ToString() + "\n");
+            //Debug.LogWarning("ServerLoadingLevel.Update: bLoadedLevel=" + bLoadedLevel.ToString() + "\n");
             if (immediateLevelLoad) //  otherwise, we'll go through the menu.
             {
                 BaseState curState = Hamster.CommonData.mainGame.stateManager.CurrentState();
                 string curStateName = curState.ToString();
-                Debug.Log("ServerLoadingLevel.Update: level=" + levelIdx.ToString() + "\n");
-                Debug.Log("ServerLoadingLevel:curState=" + curState + "(" + GetState(curStateName).ToString() + ")\n");
+                //Debug.Log("ServerLoadingLevel.Update: level=" + levelIdx.ToString() + "\n");
+                //Debug.Log("ServerLoadingLevel:curState=" + curState + "(" + GetState(curStateName).ToString() + ")\n");
                 //  we must wait until the original single player MechaHamster state has reached "MainMenu" before we can load the level
                 if (GetState(curStateName) == originalMHStates.MainMenu)
                 {
