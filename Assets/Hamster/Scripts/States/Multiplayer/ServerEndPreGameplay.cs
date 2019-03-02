@@ -56,7 +56,7 @@ namespace Hamster.States
             curNumPlayers = manager.numPlayers;
             if (curNumPlayers > 0)
             {
-                MultiplayerGame.instance.ServerPopState();
+                MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>(); //  start the game
             }
         }
     }
