@@ -45,7 +45,6 @@ namespace UnityEngine.Networking
         bool m_loadServerRequested = false;
         bool m_autoStartLevel = false;
         bool bOpenMatchWaiting = false;
-        private AgonesClient agones;
         private OpenMatchClient openMatch;
 
         /*
@@ -145,13 +144,7 @@ namespace UnityEngine.Networking
                     case "-a":
                         Debug.Log("Communicating with Agones");
 
-                        agones = GetComponent<AgonesClient>();
-
-                        // If we have an AgonesComponent we can communicate via Agones. Don't assume this
-                        // will always exist.
-                        if (agones != null) {
-                            agones.BeginHealthCheck();
-                        }
+                        MultiplayerGame.instance.agones = GetComponent<AgonesClient>();
                         break;
                     case "-level":
                         if (Int32.TryParse(input, out intArg))
