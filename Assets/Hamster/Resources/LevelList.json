@@ -7,7 +7,13 @@
       "replay": "replays/multiplayer"
     },
     {
-      "name": "GDC2019",
+      "name": "2019_03_01",
+      "description": "New Multiplayer Map",
+      "filename": "SB_map_02",
+      "replay": "replays/SB_map_02"
+	},	
+    {
+      "name": "Multiplayer Test",
       "description": "",
       "filename": "GDC0_map",
       "replay": "replays/gdc2019"
