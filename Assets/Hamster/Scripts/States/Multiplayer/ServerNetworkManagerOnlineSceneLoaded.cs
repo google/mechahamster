@@ -23,7 +23,7 @@ namespace Hamster.States
         }
         override public void Initialize(BaseState prevState)
         {
-            Debug.LogWarning("ServerNetworkManagerOnlineSceneLoaded.Initialize: prevState=" + prevState.ToString());
+            Debug.Log("ServerNetworkManagerOnlineSceneLoaded.Initialize: prevState=" + prevState.ToString());
             if (prevState != null)
             {
                 Hamster.States.ServerStartup startupState = prevState as Hamster.States.ServerStartup;

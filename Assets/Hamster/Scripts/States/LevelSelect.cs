@@ -21,9 +21,9 @@ namespace Hamster.States
     {
         private LevelDirectory levelDir;
         public const string LevelDirectoryJson = "LevelList";
-        private bool startLevelImmediately = false;
+        private bool skipLevelMenu = false; //  when true: skips the menu that allows player to choose the level.
         private int forceLoadLevelIdx;
-        private bool startGameplayAfterLoad = false;
+        private bool startGameplayAfterLoad = false;    //  true- start the GamePlay state immediately after the level has loaded
         bool doneLoading = false;
         // Called whenever a level is selected in the menu.
         protected override void LoadLevel(int i)
@@ -37,6 +37,13 @@ namespace Hamster.States
             CommonData.gameWorld.SpawnWorld(currentLevel);
         }
 
+        public bool RequestLoadLevel(int i)
+        {
+            startGameplayAfterLoad = true;
+            mapSelection = i;
+            skipLevelMenu = true;
+            return true;
+        }
         public bool ForceLoadLevel(int i)
         {
 
@@ -44,12 +51,12 @@ namespace Hamster.States
             if (currentLoadedMap == -1)
             {
                 mapSelection = i;
-                startLevelImmediately = true;
+                skipLevelMenu = true;
                 return false;   //  early bail
             }
             else
             {
-                startLevelImmediately = true;
+                skipLevelMenu = true;
                 forceLoadLevelIdx = i;
             }
             return true;
@@ -71,7 +78,7 @@ namespace Hamster.States
         {
             TextAsset json = Resources.Load(LevelDirectoryJson) as TextAsset;
             levelDir = JsonUtility.FromJson<LevelDirectory>(json.ToString());
-            if (startLevelImmediately)
+            if (skipLevelMenu)
             {
                 LoadLevel(forceLoadLevelIdx);
 

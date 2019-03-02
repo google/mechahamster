@@ -11,7 +11,21 @@ namespace Hamster.States
         public int levelIdx = 0;
         override public void Initialize()
         {
-            Debug.LogWarning("ServerStartup.Initialize");
+            Debug.Log("ServerStartup.Initialize\n");
+            if (!bServerStarted)
+            {
+            }
+            Debug.Log("ServerStartup.Initialize=" + bServerStarted.ToString() + "\n");
+            AttemptStartServer();
+            if (bServerStarted)
+            {
+
+            }
+        }
+
+        void AttemptStartServer()
+        {
+            Debug.Log("ServerStartup.AttemptStartServer\n");
             if (manager == null)
             {
                 manager = MultiplayerGame.instance.manager;
@@ -31,24 +45,18 @@ namespace Hamster.States
                 }
 
             }
-            if (!bServerStarted)
+            if (manager != null)
             {
-                if (manager != null)
+                //  NOPE! This just creates an infinite loopMultiplayerGame.instance.EnterServerStartupState(levelIdx);  //  use this now instead of manager.StartServer()
+                //  somehow you can get this error: Cannot open socket on ip {*} and port {7777}; check please your network, most probably port has been already occupied
+                bServerStarted = manager.StartServer(); //  this should now be the only place in the code which calls this. Do not litter this throughout the code anymore.
+                if (!bServerStarted)
                 {
-                    //  NOPE! This just creates an infinite loopMultiplayerGame.instance.EnterServerStartupState(levelIdx);  //  use this now instead of manager.StartServer()
-                    bServerStarted = manager.StartServer();
-
-                    //bServerStarted = ForceLoadLevel(levelIdx);    //  we can't do this until after NetworkMainGameScene automatically loads!
+                    Debug.LogError("StartServer failed so some reason!");
                 }
-            }
-            Debug.Log("ServerStartup.Initialize=" + bServerStarted.ToString());
-
-            if (bServerStarted)
-            {
-
+                //bServerStarted = ForceLoadLevel(levelIdx);    //  we can't do this until after NetworkMainGameScene automatically loads!
             }
         }
-
         // Start is called before the first frame update
         void Start()
         {
@@ -60,7 +68,7 @@ namespace Hamster.States
         void Update()
         {
             Debug.LogWarning("ServerStartup.Update");
-
+            AttemptStartServer();
         }
     }
 }   //  Hamster.States

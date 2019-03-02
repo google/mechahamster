@@ -491,7 +491,7 @@ namespace customNetwork
         //   sceneName:
         //     The name of the new Scene.
         public override void OnServerSceneChanged(string sceneName) {
-            Debug.LogWarning("Server scene changed: " + sceneName);
+            Debug.Log("CustomNetworkManager.OnServerSceneChanged. Server scene changed: " + sceneName  + "\n");
             if (sceneName == "NetworkMainGameScene")
             {
 
