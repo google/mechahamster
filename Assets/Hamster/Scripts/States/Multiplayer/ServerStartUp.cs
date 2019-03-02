@@ -45,6 +45,13 @@ namespace Hamster.States
                 }
 
             }
+
+            // If we have an AgonesComponent we can communicate via Agones. Don't assume this
+            // will always exist.
+            if (MultiplayerGame.instance.agones != null) {
+                MultiplayerGame.instance.agones.BeginHealthCheck();
+            }
+
             if (manager != null)
             {
                 //  NOPE! This just creates an infinite loopMultiplayerGame.instance.EnterServerStartupState(levelIdx);  //  use this now instead of manager.StartServer()

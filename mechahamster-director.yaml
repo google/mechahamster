@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openmatch-director
+  labels:
+    app: openmatch
+    component: director
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openmatch
+      component: director
+  template:
+    metadata:
+      labels:
+        app: openmatch
+        component: director
+    spec:
+      containers:
+      - name: openmatch-director
+        image: gcr.io/mechahamster/openmatch-director:dev
+        imagePullPolicy: Always
