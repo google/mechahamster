@@ -10,8 +10,8 @@ namespace Hamster.States
     {
         public NetworkManager manager;
         public CustomNetworkManagerHUD hud;
-
         int curNumPlayers;
+        bool hasPlayers = false;
 
         override public void Initialize()
         {
@@ -56,7 +56,22 @@ namespace Hamster.States
             curNumPlayers = manager.numPlayers;
             if (curNumPlayers > 0)
             {
-                MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>(); //  start the game
+                // GM: Temporarily changing this so we can exit an OpenMatch match and shutdown a server.
+                //MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>(); //  start the game
+                hasPlayers = true;
+            }
+            else
+            {
+                // %%% Temp for testing -- Remove me once OM states are all working.
+                if (hasPlayers)
+                {
+                    // Something might need to kick the clients gracefully here. This will just tell Agones to terminate
+                    // the server because the match is up.
+                    if (MultiplayerGame.instance.agones != null)
+                    {
+                        MultiplayerGame.instance.agones.Shutdown();
+                    }
+                }
             }
         }
     }

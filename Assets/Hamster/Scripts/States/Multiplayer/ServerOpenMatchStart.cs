@@ -64,6 +64,13 @@ namespace Hamster.States
                 //  No players. End of OpenMatch
                 //  do something here to close open match so we can go back to the state where we 
                 MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
+
+                // Something might need to kick the clients gracefully here. This will just tell Agones to terminate
+                // the server because the match is up.
+                if (MultiplayerGame.instance.agones != null)
+                {
+                    MultiplayerGame.instance.agones.Shutdown();
+                }
             }
         }
     }
