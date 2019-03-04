@@ -25,12 +25,15 @@ namespace Hamster.States {
   public class StateManager {
     Stack<BaseState> stateStack;
 
+    FPSDisplay fpsDisplay;
+
     // Constructor.  Note that there is always at least one
     // state in the stack.  (By default, a base-state that does
     // nothing.)
     public StateManager() {
       stateStack = new Stack<BaseState>();
       stateStack.Push(new BaseState());
+      fpsDisplay = new FPSDisplay();
     }
 
     // Pushes a state onto the stack.  Suspends whatever is currently
@@ -82,6 +85,7 @@ namespace Hamster.States {
     // Called by the main game every update.
     public void Update() {
       CurrentState().Update();
+      fpsDisplay.Update();
     }
 
     // Called by the main game every fixed update.
@@ -94,6 +98,7 @@ namespace Hamster.States {
     // Called by the main game every UI update.
     public void OnGUI() {
       CurrentState().OnGUI();
+      fpsDisplay.OnGUI();
     }
 
     // Handy utility function for checking the top state in the stack.
