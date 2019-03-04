@@ -17,6 +17,7 @@ namespace Hamster
         private Frontend.FrontendClient client;
         private Messages.Player player;
         private AsyncServerStreamingCall<Messages.Player> asyncUpdate;
+        private CancellationTokenSource cancel;
         private string address = "";
         private int port = 0;
 
@@ -40,13 +41,15 @@ namespace Hamster
 
             var responseStream = stream.ResponseStream;
 
-            while (await responseStream.MoveNext(CancellationToken.None))
+            while (await responseStream.MoveNext(cancel.Token))
             {
                 var reply = responseStream.Current;
 
                 if (reply.Assignment.Length > 0)
                 {
                     stream.Dispose();
+
+                    cancel = null;
 
                     return reply.Assignment;
                 }
@@ -59,31 +62,52 @@ namespace Hamster
         {
             Debug.Log("OpenMatchClient: Waiting for response from server...");
 
-            Task<string> result;
-
-            result = WaitForMatchResults(asyncUpdate);
-
-            while (!result.IsCompleted)
+            try
             {
-                yield return null;
+                Task<string> result;
+
+                result = WaitForMatchResults(asyncUpdate);
+
+                while (!result.IsCompleted)
+                {
+                    yield return null;
+                }
+
+                string assignment = result.Result;
+
+                // The server returns a string in the form of IP:PORT, and running on GCP
+                // this is always ever an IPv4 string.
+                string[] tokens = assignment.Split(':');
+
+                if (tokens.Length == 2)
+                {
+                    address = tokens[0];
+                    port = Convert.ToInt32(tokens[1]);
+
+                    Debug.LogFormat("OpenMatchClient: Assigned to game server {0}:{1}", address, port);
+                }
+                else
+                {
+                    Debug.LogFormat("OpenMatchClient: Error parsing assignment result: {0}", assignment);
+                }
+            }
+            finally
+            {
+                Debug.Log("OpenMatchClient: Match cancelled before assignment");
+            }
+        }
+
+        /// <summary>Cancels a pending connection request</summary>
+        private void CancelConnecting()
+        {
+            if (cancel != null)
+            {
+                cancel.Cancel();
             }
 
-            string assignment = result.Result;
-
-            // The server returns a string in the form of IP:PORT, and running on GCP
-            // this is always ever an IPv4 string.
-            string[] tokens = assignment.Split(':');
-
-            if (tokens.Length == 2)
+            if (player != null)
             {
-                address = tokens[0];
-                port = Convert.ToInt32(tokens[1]);
-
-                Debug.LogFormat("OpenMatchClient: Assigned to game server {0}:{1}", address, port);
-            }
-            else
-            {
-                Debug.LogFormat("OpenMatchClient: Error parsing assignment result: {0}", assignment);
+                asyncUpdate.Dispose();
             }
         }
 
@@ -111,10 +135,10 @@ namespace Hamster
             {
                 Debug.LogFormat("OpenMatchClient: Connected to Front End API @ {0} as player {1}", address, player.Id);
 
-                var stop = new CancellationTokenSource();
+                cancel = new CancellationTokenSource();
 
                 var callOptions = new CallOptions()
-                    .WithCancellationToken(stop.Token)
+                    .WithCancellationToken(cancel.Token)
                     .WithDeadline(DateTime.UtcNow.AddMinutes(1))
                     .WithHeaders(Metadata.Empty);
                 
@@ -139,12 +163,13 @@ namespace Hamster
             {
                 Debug.LogFormat("OpenMatchClient: Deleting player {0}", player.Id);
 
-                asyncUpdate.Dispose();
+                CancelConnecting();
 
                 Messages.Result result = client.DeletePlayer(player);
 
                 address = "";
                 port = 0;
+                player = null;
 
                 return result.Success; 
             }

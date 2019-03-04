@@ -516,6 +516,13 @@ namespace UnityEngine.Networking
                     manager.networkPort = openMatch.Port;
                     manager.StartClient();
                     bOpenMatchWaiting = false;
+                } else {
+                    if (scaledButton(out newYpos, xpos, ypos, 200, kTextBoxHeight, "Cancel"))
+                    {
+                        openMatch.Disconnect();
+                        bOpenMatchWaiting = false;
+                    }
+                    ypos = newYpos;
                 }
             }
 
