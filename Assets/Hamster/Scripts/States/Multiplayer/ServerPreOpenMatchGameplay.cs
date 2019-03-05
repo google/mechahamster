@@ -9,7 +9,7 @@ namespace Hamster.States
     {
         public NetworkManager manager;
         public CustomNetworkManagerHUD hud;
-
+        int openMatchStartThreshold = 4;    //  automatically start OpenMatch after this number of players
         int     curNumPlayers;
         bool hasPlayers;    //  does this game have any players
 
@@ -55,7 +55,7 @@ namespace Hamster.States
             //Debug.Log("ServerPreOpenMatchGamePlay.Update");
             curNumPlayers = manager.numPlayers;
 
-            if (curNumPlayers >= 4)
+            if (curNumPlayers >= openMatchStartThreshold)
             {
                 //  fire off the OpenMatchState!
                 MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerOpenMatchStart>();
