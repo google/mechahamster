@@ -55,7 +55,7 @@ namespace Hamster.States
             //Debug.Log("ServerPreOpenMatchGamePlay.Update");
             curNumPlayers = manager.numPlayers;
 
-            if (curNumPlayers >= openMatchStartThreshold)
+            if (curNumPlayers >= openMatchStartThreshold && MultiplayerGame.instance.agones == null)
             {
                 //  fire off the OpenMatchState!
                 MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerOpenMatchStart>();

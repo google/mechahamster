@@ -47,6 +47,7 @@ namespace customNetwork
         void DebugOutput(string st)
         {
             DebugOutput(st, null);
+            Debug.Log(st);
         }
 
         void DebugOutput(string st, params object[] args)
@@ -276,7 +277,7 @@ namespace customNetwork
 
         void OnServerAddPlayerAutoPickPrefabInternal(NetworkConnection conn, short playerControllerId)
         {
-            int prefabId = curColorIndex % spawnPrefabs.Count;
+            int prefabId = conn.connectionId % spawnPrefabs.Count;
             curColorIndex++;    //  hack: cycle through the colors. This is a hack because we don't have enough playerController to do this indefinitely!
             OnServerAddPlayerInternal(this.spawnPrefabs[prefabId], conn, playerControllerId);
         }
@@ -299,14 +300,15 @@ namespace customNetwork
                 return;
             }
             */
-            if (playerControllerId < conn.playerControllers.Count && conn.playerControllers[playerControllerId].IsValid && conn.playerControllers[playerControllerId].gameObject != null)
+            var id = conn.connectionId;
+            if (id < conn.playerControllers.Count && conn.playerControllers[id].IsValid && conn.playerControllers[id].gameObject != null)
             {
                 //  note: it seems that Unity already assigns a playerControllerId in its mysterious black box. So, the first connection with come here and already have a player. I'm not sure how.
                 //  it seems that the playerController list is maintained on the client, but not on the server!!!
                 //  to be clear: It seems to be normal that playerControllerId==0 passes through here. So, we skip those errors for playerControllerId==0
-                if (LogFilter.logError) { Debug.LogError("There is already a player at that playerControllerId for this connections."); }
-                if (LogFilter.logError) { Debug.LogError("playerControllerId=" + playerControllerId.ToString()); }
-                if (LogFilter.logError) { Debug.LogError("playerControllerId name=" + conn.playerControllers[playerControllerId].gameObject.name); }
+                if (LogFilter.logError) { Debug.LogError("There is already a player at that id for this connections."); }
+                if (LogFilter.logError) { Debug.LogError("id=" + id.ToString()); }
+                if (LogFilter.logError) { Debug.LogError("id name=" + conn.playerControllers[id].gameObject.name); }
                 return;
             }
 
@@ -383,7 +385,7 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnServerConnect: connId=" + conn.connectionId.ToString() + "\n");
             CreateClientConnections(conn);
         }
-        void DestroyConnectionsPlayerControllers(NetworkConnection conn)
+        public void DestroyConnectionsPlayerControllers(NetworkConnection conn)
         {
             for(int ii=0; ii<conn.playerControllers.Count; ii++ )
             {
@@ -447,7 +449,6 @@ namespace customNetwork
             serverVersion = Application.version;
             MessageBase serverVersionMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(serverVersion);
             conn.Send((short)hamsterMsgType.hmsg_serverVersion, serverVersionMsg);
-
         }
 
         //  client wants the server version.
@@ -646,6 +647,7 @@ namespace customNetwork
         public virtual void OnStopClient()
         {
             DebugOutput("CustomNetworkManager.OnStopClient\n");
+            base.OnStopClient();
         }
         //
         // Summary:
