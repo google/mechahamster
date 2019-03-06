@@ -43,10 +43,18 @@ namespace Hamster.States
             }
         }
 
-
+        void DisconnectPreviousConnection()
+        {
+            if (NetworkClient.active)
+            {
+                NetworkClient.ShutdownAll();
+            }
+        }
         void OpenMatchRequest()
         {
             Debug.Log("Attempting to connect to Open Match!");
+
+            DisconnectPreviousConnection();
 
             // This string is what a match is filtered on. Don't change it unless
             // there is a server-side filter which can create a match with a new value.

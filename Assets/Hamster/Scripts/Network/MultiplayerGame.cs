@@ -137,7 +137,7 @@ public class MultiplayerGame : MonoBehaviour
     static private void EnterMultiPlayerState<T>(StateManager stateManager,  int mode=0, bool isSwapState = false) where T : Hamster.States.BaseState, new()
     {
         Hamster.States.BaseState state = new T();
-        Debug.Log("Enter State: " + state.ToString() +"\n");
+        Debug.Log("State change: " + stateManager.CurrentState().ToString() + "->: " + state.ToString() /*+ "(swap/push=" + isSwapState.ToString()*/  + "\n");
         //  some states require the mode. Pass that along here.
         ServerStartup serverStartupState = state as ServerStartup;
         if (serverStartupState!=null)

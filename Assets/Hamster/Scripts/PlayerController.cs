@@ -131,10 +131,13 @@ namespace Hamster
         //  The server should already be in Gameplay.GameplayMode.Gameplay state before the player has entered the game and been notified via OnStartLocalPlayer().
         static public void StartGamePlay()
         {
+            Debug.Log("StartGamePlay()\n");
+
             Hamster.States.BaseState gameplayState = new Hamster.States.Gameplay(Hamster.States.Gameplay.GameplayMode.Gameplay);
             Hamster.CommonData.mainGame.stateManager.PushState(gameplayState);    //  mainGame isn't ready yet due to Unity having to start itself up.
 
-            MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientInGame>();
+            if (NetworkClient.active)
+                MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientInGame>();
         }
         //  networking start.
         override public void OnStartLocalPlayer()   //  this is not enough. The server needs to know about the player's object so that it can reset its position upon death.

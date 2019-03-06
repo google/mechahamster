@@ -566,9 +566,10 @@ namespace UnityEngine.Networking
             }
             else
             {
+
                 if (NetworkServer.active)
                 {
-                    string serverMsg = "Server("+ customNetwork.CustomNetworkManager.LocalHostname() + "): "+ localipv4 + "\n  port=" + port;
+                    string serverMsg = "Server(" + customNetwork.CustomNetworkManager.LocalHostname() + "): " + localipv4 + "\n  port=" + port.ToString();
                     if (manager.useWebSockets)
                     {
                         serverMsg += " (Using WebSockets)";
@@ -577,8 +578,9 @@ namespace UnityEngine.Networking
                 }
                 if (manager.IsClientConnected())
                 {
-                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + localipv4 + "\n  port=" + port);
+                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + localipv4 + "\n  port=" + port.ToString());
                 }
+                ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "client.active=" + NetworkClient.active.ToString() + ", server.active=" + NetworkServer.active.ToString());
             }
 
             if (manager.IsClientConnected() && !ClientScene.ready)

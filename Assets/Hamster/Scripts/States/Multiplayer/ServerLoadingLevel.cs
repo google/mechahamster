@@ -122,7 +122,8 @@ namespace Hamster.States
                     bLoadedLevel = GentleLoadLevel(levelIdx);    //  force the MainGame state to load the level that was requested. 
                 }
             }
-            if (bLoadedLevel)   //  if the level is loaded, we can see if we're in a state to start the Pre-Openmatch gameplay.
+            //  weird... we can load the level without this variable being set somehow. Okay, just check to see if we're in the game play state and then change our server state!
+            //if (bLoadedLevel)   //  if the level is loaded, we can see if we're in a state to start the Pre-Openmatch gameplay.
             {
                 BaseState curState = Hamster.CommonData.mainGame.stateManager.CurrentState();
                 string curStateName = curState.ToString();
