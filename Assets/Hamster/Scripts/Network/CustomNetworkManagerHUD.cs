@@ -44,7 +44,6 @@ namespace UnityEngine.Networking
         bool m_ShowServer;
         bool m_loadServerRequested = false;
         bool m_autoStartLevel = false;
-        bool bOpenMatchWaiting = false;
         private OpenMatchClient openMatch;
 
         /*
@@ -510,23 +509,7 @@ namespace UnityEngine.Networking
 
             GUI.skin.button.fontSize = (int)kFontSize;
 
-            if (bOpenMatchWaiting) {
-                if (openMatch.Port != 0) {
-                    manager.networkAddress = openMatch.Address;
-                    manager.networkPort = openMatch.Port;
-                    manager.StartClient();
-                    bOpenMatchWaiting = false;
-                } else {
-                    if (scaledButton(out newYpos, xpos, ypos, 200, kTextBoxHeight, "Cancel"))
-                    {
-                        openMatch.Disconnect();
-                        bOpenMatchWaiting = false;
-                    }
-                    ypos = newYpos;
-                }
-            }
-
-            if (!bOpenMatchWaiting && !manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
+            if (!manager.IsClientConnected() && !NetworkServer.active && manager.matchMaker == null)
             {
                 if (noConnection)
                 {
@@ -652,42 +635,13 @@ namespace UnityEngine.Networking
                     return;
                 }
 
-                if (openMatch != null)
-                {
-                    if (!bOpenMatchWaiting)
-                    {
-                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Open Match Start"))
-                        {
-                            Debug.Log("Attempting to connect to Open Match!");
-
-                            // This string is what a match is filtered on. Don't change it unless
-                            // there is a server-side filter which can create a match with a new value.
-                            string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
-
-                            if (openMatch.Connect("35.236.24.200", modeCheckJSON)) {
-                                Debug.Log("Match request sent!");
-                                bOpenMatchWaiting = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ypos = scaledTextBox(xpos, ypos, "Waiting on Open Match...");
-                    }
-
-                    ypos = newYpos;
-                }
-
                 if (manager.matchMaker == null)
                 {
-                    if (!bOpenMatchWaiting)
+                    if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
                     {
-                        if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Enable Match Maker (M)"))
-                        {
-                            manager.StartMatchMaker();
-                        }
-                        ypos = newYpos;
+                        manager.StartMatchMaker();
                     }
+                    ypos = newYpos;
                 }
                 else
                 {
