@@ -21,6 +21,7 @@ namespace customNetwork
             hmsg_serverGameFinished,    //  server tells player that the game has been completed.
             hmsg_serverPlayerIsWinner,  //  server tells player that they're the winner!
             hmsg_newLevel,  //  server tells player that a new level has been loaded
+            hmsg_serverState,   //  the state the server is in.
             hmsg_EndOfMessageList = kMaxShort   //  do not use this. this just means that everything needs to be smaller than this number because the network message uses a short for this key.
         }
         const int kMaxConnections = 32;
@@ -300,7 +301,12 @@ namespace customNetwork
             */
             if (playerControllerId < conn.playerControllers.Count && conn.playerControllers[playerControllerId].IsValid && conn.playerControllers[playerControllerId].gameObject != null)
             {
+                //  note: it seems that Unity already assigns a playerControllerId in its mysterious black box. So, the first connection with come here and already have a player. I'm not sure how.
+                //  it seems that the playerController list is maintained on the client, but not on the server!!!
+                //  to be clear: It seems to be normal that playerControllerId==0 passes through here. So, we skip those errors for playerControllerId==0
                 if (LogFilter.logError) { Debug.LogError("There is already a player at that playerControllerId for this connections."); }
+                if (LogFilter.logError) { Debug.LogError("playerControllerId=" + playerControllerId.ToString()); }
+                if (LogFilter.logError) { Debug.LogError("playerControllerId name=" + conn.playerControllers[playerControllerId].gameObject.name); }
                 return;
             }
 
@@ -353,14 +359,8 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnServerAddPlayer: " + conn.ToString());
             OnServerAddPlayerAutoPickPrefabInternal(conn, playerControllerId);
         }
-        //
-        // Summary:
-        //     Called on the server when a new client connects.
-        //
-        // Parameters:
-        //   conn:
-        //     Connection from client.
-        public virtual void OnServerConnect(NetworkConnection conn)
+
+        void CreateClientConnections(NetworkConnection conn)
         {
             if (client_connections == null)
             {
@@ -373,12 +373,37 @@ namespace customNetwork
         }
         //
         // Summary:
+        //     Called on the server when a new client connects.
+        //
+        // Parameters:
+        //   conn:
+        //     Connection from client.
+        public virtual void OnServerConnect(NetworkConnection conn)
+        {
+            DebugOutput("CustomNetworkManager.OnServerConnect: connId=" + conn.connectionId.ToString() + "\n");
+            CreateClientConnections(conn);
+        }
+        void DestroyConnectionsPlayerControllers(NetworkConnection conn)
+        {
+            for(int ii=0; ii<conn.playerControllers.Count; ii++ )
+            {
+                Destroy(conn.playerControllers[ii].gameObject);
+            }
+            conn.playerControllers.Clear(); //  once we disconnect, all of our playerControllers are destroyed.
+        }
+        //
+        // Summary:
         //     Called on the server when a client disconnects.
         //
         // Parameters:
         //   conn:
         //     Connection from client.
-        public virtual void OnServerDisconnect(NetworkConnection conn) { }
+        public virtual void OnServerDisconnect(NetworkConnection conn)
+        {
+            DebugOutput("CustomNetworkManager.OnServerDisconnect: connId=" + conn.connectionId.ToString() + "\n");
+            DestroyConnectionsPlayerControllers(conn);
+            this.client_connections.Remove(conn);
+        }
         //
         // Summary:
         //     Called on the server when a network error occurs for a client connection.
@@ -389,7 +414,9 @@ namespace customNetwork
         //
         //   errorCode:
         //     Error code.
-        public virtual void OnServerError(NetworkConnection conn, int errorCode) { }
+        public virtual void OnServerError(NetworkConnection conn, int errorCode) {
+            this.client_connections.Remove(conn);   //  maybe do this, maybe do something else. If we can no longer talk to this client, we may want to let the other clients know.
+        }
         //
         // Summary:
         //     Called on the server when a client is ready.
@@ -412,6 +439,7 @@ namespace customNetwork
             MessageBase msg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(levelIdx);    //  test: yep, just send a number without any context for now. Later, wrap this in an appropriate MessageBase class.
             conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg); //  tell our client what level we're using.
             SendServerVersion(conn);
+            CreateClientConnections(conn);
         }
 
         void SendServerVersion(NetworkConnection conn)
@@ -423,11 +451,20 @@ namespace customNetwork
         }
 
         //  client wants the server version.
+        //  [Command]   // this is not a NetworkBehaviour, so it won't work.
         void Cmd_SendServerVersion(int connectionId)
         {
             serverVersion = Application.version;
             MessageBase serverVersionMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(serverVersion);
             NetworkServer.SendToClient(connectionId, (short)hamsterMsgType.hmsg_serverVersion, serverVersionMsg);
+        }
+
+        //  we will send the server state when the client needs to know it for some specific reason.
+        //[Command]   // this is not a NetworkBehaviour, so it won't work.
+        public void Cmd_SendServerState(int connectionId, string serverState)
+        {
+            MessageBase serverStateMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(serverState);
+            NetworkServer.SendToClient(connectionId, (short)hamsterMsgType.hmsg_serverState, serverStateMsg);
         }
 
         float lastServerVersionRequestTime = 0.0f;
@@ -531,6 +568,7 @@ namespace customNetwork
 
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverLevel, OnClientLevelMsg);
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverVersion, OnClientVersion);
+            client.RegisterHandler((short)hamsterMsgType.hmsg_serverState, OnClientServerState);
             //  Hamster.MainGame.NetworkSpawnPlayer(toServerConnection);  //  don't do this yet. Let the weird legacy Hamster code do it in its FixedUpdate, even though it's bad.
         }
 
@@ -565,6 +603,7 @@ namespace customNetwork
             UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
             serverVersion = strMsg.value;
             string clientVersion = Application.version;
+            Debug.LogWarning("Client received Server version=" + serverVersion);
             if (serverVersion != clientVersion)
             {
                 Debug.LogError("Server Version=" + serverVersion + " does not match client=" + clientVersion);
@@ -574,6 +613,14 @@ namespace customNetwork
             {
                 bServerVersionDoesntMatch = false;
             }
+        }
+        //  the server has sent the server state to us.
+        void OnClientServerState(NetworkMessage netMsg)
+        {
+            UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
+            string serverState = strMsg.value;
+            Debug.LogWarning("Client received Server state=" + serverState);
+            MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerOpenMatchStart>(); //  make our client go into the OpenMatch server state!
         }
         //
         // Summary:

@@ -170,6 +170,12 @@ public class MultiplayerGame : MonoBehaviour
         MultiplayerGame.EnterMultiPlayerState<Hamster.States.ClientConnected>(MultiplayerGame.instance.clientStateManager);
 
     }
+
+    //  the game is over. The server needs to tell the players that the game has ended!
+    public void ServerGameOver()
+    {
+
+    }
     // Start is called before the first frame update
     void Start()
     {

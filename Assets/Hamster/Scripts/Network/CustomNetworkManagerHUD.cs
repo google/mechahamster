@@ -610,6 +610,7 @@ namespace UnityEngine.Networking
 
             if (manager.IsClientConnected() && ClientScene.ready)
             {
+                //  warning: adding extra players will mess up some logic that relies on one player per client, such as the OpenMatch criteria. however, it is left here to debug.
                 if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Add player: (Ins)" + ClientScene.localPlayers.Count.ToString()))
                 {
                     CreateNetworkPlayer();
