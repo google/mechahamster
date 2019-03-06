@@ -29,9 +29,16 @@ namespace Hamster.States
                 Debug.LogWarning("StartOpenMatchGame: custMgr.client_connections.Count=" + custMgr.client_connections.Count.ToString());
                 for (int ii = 0; ii < custMgr.client_connections.Count; ii++)
                 {
-                    Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name);
-                    connId = custMgr.client_connections[ii].connectionId;
-                    custMgr.Cmd_SendServerState(connId, curStateName);
+                    try
+                    {
+                        Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name);
+                        connId = custMgr.client_connections[ii].connectionId;
+                        custMgr.Cmd_SendServerState(connId, curStateName);
+                    }
+                    catch
+                    {
+                        Debug.LogFormat("ServerOpenMatchStart::StartOpenMatchGame() - Exception accessing custMgr.client_connections index {0}", ii);
+                    }
                 }
             }
         }
