@@ -17,19 +17,38 @@ namespace Hamster.States
         string omAddress;
         int omPort=-1;
 
-        int curNumPlayers;
+        int curNumPlayers;  //  this should really be the number of connections. Assumption of 1 client = 1 player is incorrect with the Add Player button. However, don't let the player do that and we'll be fine. Otherwise, bugs galore. GALORE!
 
+        //  server starts the OpenMatchGame and tells the clients about it to enter this state.
         void StartOpenMatchGame()
         {
             int connId = 0;
             string curStateName = this.GetType().ToString();
-            for (int ii = 0; ii < custMgr.client_connections.Count; ii++)
+            if (custMgr != null)
             {
-                if (custMgr != null)
+                Debug.LogWarning("StartOpenMatchGame: custMgr.client_connections.Count=" + custMgr.client_connections.Count.ToString());
+                for (int ii = 0; ii < custMgr.client_connections.Count; ii++)
                 {
+                    Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name);
                     connId = custMgr.client_connections[ii].connectionId;
                     custMgr.Cmd_SendServerState(connId, curStateName);
                 }
+            }
+        }
+
+
+        void OpenMatchRequest()
+        {
+            Debug.Log("Attempting to connect to Open Match!");
+
+            // This string is what a match is filtered on. Don't change it unless
+            // there is a server-side filter which can create a match with a new value.
+            string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
+
+            if (openMatch.Connect("35.236.24.200", modeCheckJSON))
+            {
+                Debug.Log("Match request sent!");
+                bOpenMatchWaiting = true;
             }
         }
 
@@ -67,28 +86,32 @@ namespace Hamster.States
         {
             Debug.Log("ServerOpenMatchStart.Initialize");
             GetPointers();
-            if (custMgr != null && custMgr.client_connections != null)
-            {
-                curNumPlayers = custMgr.client_connections.Count;
-            }
+            if (custMgr != null & custMgr.bIsClient)
+                OpenMatchRequest();
+            if (custMgr != null & custMgr.bIsServer)
+                StartOpenMatchGame();
+            //if (custMgr != null && custMgr.client_connections != null)
+            //{
+            //    curNumPlayers = custMgr.client_connections.Count;
+            //}
         }
         override public void OnGUI()
         {
-            Debug.LogWarning("ServerOpenMatchStart.OnGUI");
+            //Debug.LogWarning("ServerOpenMatchStart.OnGUI");
             if (hud != null)
             {
-                hud.scaledTextBox("curNumPlayers=" + curNumPlayers.ToString());
+                hud.scaledTextBox("ServerOpenMatchStart.curNumPlayers=" + curNumPlayers.ToString());
             }
         }
 
         // Update is called once per frame
         override public void Update()
         {
-            Debug.LogWarning("ServerOpenMatchStart.Update: " + manager.name);
+            //Debug.LogWarning("ServerOpenMatchStart.Update: " + manager.name);
             if (custMgr == null)
             {
                 custMgr = manager as customNetwork.CustomNetworkManager;
-                Debug.LogWarning("ServerOpenMatchStart.Update: custMgr" + custMgr.name + custMgr.client_connections.Count.ToString());
+                //Debug.LogWarning("ServerOpenMatchStart.Update: custMgr" + custMgr.name + custMgr.client_connections.Count.ToString());
             }
             if (custMgr != null)
             {
@@ -102,6 +125,8 @@ namespace Hamster.States
             {
                 if (omAddress != openMatch.Address && omPort != openMatch.Port)
                 {
+                    Debug.LogWarning("ServerOpenMatchStart.Update openMatch.Address=" + openMatch.Address + ", port="+openMatch.Port.ToString());
+
                     manager.networkAddress = openMatch.Address;
                     manager.networkPort = openMatch.Port;
                     manager.StartClient();
@@ -122,16 +147,11 @@ namespace Hamster.States
             }
             else if (curNumPlayers <= 0)
             {
-                //  No players. End of OpenMatch
-                //  do something here to close open match so we can go back to the state where we 
-                MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
-
-                // Something might need to kick the clients gracefully here. This will just tell Agones to terminate
-                // the server because the match is up.
-                if (MultiplayerGame.instance.agones != null)
+                if (custMgr != null & custMgr.bIsServer)    //  only the server can shut down the game. The client cannot do this.
                 {
-                    MultiplayerGame.instance.ServerGameOver();
-                    MultiplayerGame.instance.agones.Shutdown();
+                    //  No players. End of OpenMatch
+                    MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
+
                 }
             }
         }

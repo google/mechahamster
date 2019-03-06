@@ -9,8 +9,10 @@ namespace Hamster.States
     public class ServerEndPreGameplay : BaseState
     {
         public NetworkManager manager;
+        public customNetwork.CustomNetworkManager custMgr;
         public CustomNetworkManagerHUD hud;
         int curNumPlayers;
+        int curNumClients;
         bool hasPlayers = false;
         bool agoneHasShutdown = false;
 
@@ -38,7 +40,16 @@ namespace Hamster.States
                     curNumPlayers = manager.numPlayers;
                     hud = manager.GetComponent<CustomNetworkManagerHUD>();
                 }
-
+                if (custMgr != null && custMgr.bIsServer)
+                {
+                    // Something might need to kick the clients gracefully here. This will just tell Agones to terminate
+                    // the server because the match is up.
+                    if (MultiplayerGame.instance.agones != null)
+                    {
+                        MultiplayerGame.instance.ServerGameOver();
+                        ShutdownAgones();
+                    }
+                }
             }
         }
 
@@ -60,7 +71,7 @@ namespace Hamster.States
             //Debug.Log("ServerEndPreGameplay.OnGUI");
             if (hud != null)
             {
-                hud.scaledTextBox("ServerEndPreGameplay curNumPlayers=" + curNumPlayers.ToString());
+                hud.scaledTextBox("ServerEndPreGameplay curNumPlayers=" + curNumPlayers.ToString() + ",nClients=" + curNumClients.ToString());
             }
         }
 
