@@ -620,7 +620,7 @@ namespace customNetwork
             UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
             string serverState = strMsg.value;
             Debug.LogWarning("Client received Server state=" + serverState);
-            MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerOpenMatchStart>(); //  make our client go into the OpenMatch server state!
+            MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
         }
         //
         // Summary:

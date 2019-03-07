@@ -1,104 +1,10 @@
 {
   "levels": [
     {
-      "name": "TestMap",
-      "description": "",
-      "filename": "MultiplayerMap",
-      "replay": "replays/multiplayer"
-    },
-    {
-      "name": "2019_03_01",
-      "description": "New Multiplayer Map",
-      "filename": "SB_map_02",
-      "replay": "replays/SB_map_02"
-	},	
-    {
-      "name": "Multiplayer Test",
-      "description": "",
-      "filename": "GDC0_map",
-      "replay": "replays/gdc2019"
-	},
-    {
-      "name": "Easy Peezie",
-      "description": "",
-      "filename": "map01",
-      "replay": "replays/map01"
-    },
-    {
-      "name": "Bouncy",
-      "description": "",
-      "filename": "map02",
-      "replay": "replays/map02"
-    },
-    {
-      "name": "Boom",
-      "description": "",
-      "filename": "map03"
-    },
-    {
-      "name": "Spikes",
-      "description": "",
-      "filename": "map04"
-    },
-    {
-      "name": "Teleporters",
-      "description": "",
-      "filename": "map05"
-    },
-    {
-      "name": "Jumping!",
-      "description": "What do they do?!?",
-      "filename": "jumptutorial"
-    },
-    {
-      "name": "A Puzzle!",
-      "description": "How to get inside?",
-      "filename": "wallwalking"
-    },
-    {
-      "name": "Warping 101",
-      "description": "Everything you ever wondered about teleporting!",
-      "filename": "teleporterintro",
-      "replay": "replays/warping"
-    },
-    {
-      "name": "More Spikes",
-      "description": "Watch out!",
-      "filename": "spikesandpits"
-    },
-
-    {
-      "name": "The Button",
-      "description": "Dare you to press it.",
-      "filename": "switches"
-    },
-    {
-      "name": "Zoom!",
-      "description": "Gotta go fast!",
-      "filename": "pitjumping"
-    },
-    {
-      "name": "Painful Q",
-      "description": "It hurts!",
-      "filename": "spikyq",
-      "replay": "replays/spikeyq"
-    },
-    {
-      "name": "Warping 201",
-      "description": "Things you never needed to know about teleporting!",
-      "filename": "basicteleport"
-    },
-    {
-      "name": "Dance Party",
-      "description": "The cruelst mosh.",
-      "filename": "danceparty"
-    },
-    {
-      "name": "Blasting Off",
-      "description": "Can you achieve liftoff?",
-      "filename": "blastingoff"
-    }
-
-
+      "name": "GDC 2019 Multiplayer Demo",
+      "description": "GDC 2019 Multiplayer Demo",
+      "filename": "SB_map_03",
+      "replay": "replays/SB_map_03"
+	}
   ]
 }
