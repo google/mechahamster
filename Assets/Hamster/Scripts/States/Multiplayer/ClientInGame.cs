@@ -61,15 +61,25 @@ namespace Hamster.States
             }
             if (!NetworkClient.active)  //  our connection is gone, so let's finish all shutdown.
             {
-                Debug.LogError("ClientInGame shutdown!\n");
-                NetworkClient.ShutdownAll();    //  
-                MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
+                MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientShutdown>();
 
             }
-            else if (manager.numPlayers <= 0 && (NetworkClient.allClients.Count > 0) && !NetworkClient.allClients[0].isConnected)
+            else if (manager.numPlayers <= 0 && (NetworkClient.allClients.Count > 0))   //  we're still connected, but not in this game anymore.
             {
-                NetworkClient.ShutdownAll();
-                MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
+                if (NetworkClient.allClients.Count > 1)
+                {
+                    myDebugMsg = "ClientInGame.Update: Not expecting more than one client!\n";
+                    Debug.LogError(myDebugMsg);   //  code beyond this point assumes one client
+                }
+                NetworkClient myClient = NetworkClient.allClients[0];
+                if (!myClient.isConnected)   //  I'm not sure how this can be possible. but if it is, and we're really not connected, then we should probably bail on all of our clients.
+                {
+                    MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientShutdown>();
+                }
+                else//  the client is still connected, but nobody is in the game!
+                {
+                    myDebugMsg = "NO PLAYERS!!! " + myDebugMsg;
+                }
             }
         }
     }
