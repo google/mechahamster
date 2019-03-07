@@ -33,7 +33,7 @@ namespace Hamster.States
             //Debug.Log("ClientInGame.Update() NetworkClient.allClients.Count=" + NetworkClient.allClients.Count.ToString());
             //Debug.Log("ClientInGame.Update() NetworkClient.allClients[0].isConnected=" + NetworkClient.allClients[0].isConnected.ToString());
             //  note: on the client, we can't actually keep track of how many players are in the game!
-            if (manager.numPlayers <= 0 && !NetworkClient.allClients[0].isConnected)
+            if (manager.numPlayers <= 0 && (NetworkClient.allClients.Count > 0) && !NetworkClient.allClients[0].isConnected)
             {
                 if (NetworkClient.active)   //  I'm the only client and I'm not in the game anymore, so I need to tell my server who I'm still connected to.
                 {
