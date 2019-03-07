@@ -300,7 +300,7 @@ namespace customNetwork
                 return;
             }
             */
-            var id = conn.connectionId;
+            var id = playerControllerId; //conn.connectionId;
             if (id < conn.playerControllers.Count && conn.playerControllers[id].IsValid && conn.playerControllers[id].gameObject != null)
             {
                 //  note: it seems that Unity already assigns a playerControllerId in its mysterious black box. So, the first connection with come here and already have a player. I'm not sure how.
