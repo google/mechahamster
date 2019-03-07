@@ -216,15 +216,15 @@ namespace UnityEngine.Networking
             bool bServerStarted = ReadCommandLineArg();
 
             //  Note to Graeme: This stuff was moved to Start() from Awake() because we need some cycles for the server stuff to get online with valid manager fields to call StartServer(). It's a Unity thing.
-            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
-            {
-                Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());
-                if (!bServerStarted)
-                {
-                    //if (manager.StartServer())    //  we no longer call this anymore, but instead let the FSM handle it. However, we still need to let Unity finish all of its Start() calls, so we can't start right away and need to wait until our Update() loop to actually call it so that we are certain that all Start() calls have been executed.
-                    StartServerReq();   //  so we must make a delayed call to start the FSM-state that will start the server.
-                }
-            }
+            //if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
+            //{
+            //    Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());
+            //    if (!bServerStarted)
+            //    {
+            //        //if (manager.StartServer())    //  we no longer call this anymore, but instead let the FSM handle it. However, we still need to let Unity finish all of its Start() calls, so we can't start right away and need to wait until our Update() loop to actually call it so that we are certain that all Start() calls have been executed.
+            //        StartServerReq();   //  so we must make a delayed call to start the FSM-state that will start the server.
+            //    }
+            //}
         }
 
         void Update()
