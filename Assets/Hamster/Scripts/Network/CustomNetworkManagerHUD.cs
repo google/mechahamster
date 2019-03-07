@@ -33,6 +33,7 @@ namespace UnityEngine.Networking
         int startLevel = kDefaultLevelIdx; 
         public NetworkManager manager;
         [SerializeField] public bool showGUI = true;
+        //public bool releaseModeNoDebugText;
         [SerializeField] public int offsetX;
         [SerializeField] public int offsetY;
 
@@ -315,6 +316,12 @@ namespace UnityEngine.Networking
 
         string scaledTextField(out float newYpos, out float newXPos, float xpos, float ypos, string tField)
         {
+            //if (!releaseModeNoDebugText)
+            //{
+            //    newYpos = ypos;
+            //    newXPos = xpos;
+            //    return "";
+            //}
             const float kMinWidth = 100.0f; //  if we have no text, our box becomes too small to click.
             const float kButtonSpace = 6.0f;
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
@@ -379,6 +386,7 @@ namespace UnityEngine.Networking
         }
         public float scaledTextBox(float xpos, float ypos, string txt)
         {
+            //if (!releaseModeNoDebugText) return ypos;
             float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
             int kFontSize = (int)((kTextBoxHeight) * screenHeightScaling);
             GUIStyle textAreaStyle = new GUIStyle(GUI.skin.label);

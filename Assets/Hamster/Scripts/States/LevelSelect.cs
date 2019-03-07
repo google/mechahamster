@@ -30,6 +30,7 @@ namespace Hamster.States
         {
             if (currentLoadedMap == -1)
                 currentLoadedMap = i;
+            if (currentLoadedMap < 0) return;  //  bail on levels that don't exist. This is normal 'hack' for allowing the player to choose a level via the menu!
             TextAsset json = Resources.Load(levelDir.levels[currentLoadedMap].filename) as TextAsset;
             currentLevel = JsonUtility.FromJson<LevelMap>(json.ToString());
             currentLevel.DatabasePath = null;

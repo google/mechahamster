@@ -71,7 +71,7 @@ namespace Hamster.States
             //Debug.Log("ServerEndPreGameplay.OnGUI");
             if (hud != null)
             {
-                hud.scaledTextBox("ServerEndPreGameplay curNumPlayers=" + curNumPlayers.ToString() + ",nClients=" + curNumClients.ToString());
+                hud.scaledTextBox("ServerEndPreGameplay curNumPlayers=" + curNumPlayers.ToString() + ",nClients=" + curNumClients.ToString() + "\n\tNetClient.active=" + NetworkClient.active.ToString());
             }
         }
 

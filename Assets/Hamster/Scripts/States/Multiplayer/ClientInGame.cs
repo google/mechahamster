@@ -8,16 +8,30 @@ namespace Hamster.States
     public class ClientInGame : BaseState
     {
         public NetworkManager manager;
+        public CustomNetworkManagerHUD hud;
+        private string myDebugMsg;
         bool isClientSceneAddPlayerCalled = false; //  must have called ClientScene.AddPlayer in one way or another
 
-        override public void Initialize()
+        void GetPointers()
         {
-            if (manager == null)
+            if (manager == null || hud == null)
             {
 
                 manager = UnityEngine.GameObject.FindObjectOfType<NetworkManager>();
+                if (manager != null)
+                {
+                    hud = manager.GetComponent<CustomNetworkManagerHUD>();
+                }
+                else
+                {
+                    Debug.LogError("ClientInGame.GetPointers could not find NetworkManager!\n");
+                }
             }
 
+        }
+        override public void Initialize()
+        {
+            GetPointers();
         }
 
         // Start is called before the first frame update
@@ -26,6 +40,10 @@ namespace Hamster.States
 
         }
 
+        public override void OnGUI()
+        {
+            hud.scaledTextBox(myDebugMsg);
+        }
         // Update is called once per frame
         public override void Update()
         {
@@ -33,14 +51,25 @@ namespace Hamster.States
             //Debug.Log("ClientInGame.Update() NetworkClient.allClients.Count=" + NetworkClient.allClients.Count.ToString());
             //Debug.Log("ClientInGame.Update() NetworkClient.allClients[0].isConnected=" + NetworkClient.allClients[0].isConnected.ToString());
             //  note: on the client, we can't actually keep track of how many players are in the game!
-            if (manager.numPlayers <= 0 && (NetworkClient.allClients.Count > 0) && !NetworkClient.allClients[0].isConnected)
+            if (hud != null)
             {
-                if (NetworkClient.active)   //  I'm the only client and I'm not in the game anymore, so I need to tell my server who I'm still connected to.
-                {
-                    MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
-                    NetworkClient.ShutdownAll();
-                }
+                myDebugMsg = "ClientInGame: nPlr=" + manager.numPlayers.ToString() + " nClients=" + NetworkClient.allClients.Count.ToString() + "\n\tNetClient.active=" + NetworkClient.active.ToString();
+            }
+            else
+            {
+                GetPointers();
+            }
+            if (!NetworkClient.active)  //  our connection is gone, so let's finish all shutdown.
+            {
+                Debug.LogError("ClientInGame shutdown!\n");
+                NetworkClient.ShutdownAll();    //  
+                MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
 
+            }
+            else if (manager.numPlayers <= 0 && (NetworkClient.allClients.Count > 0) && !NetworkClient.allClients[0].isConnected)
+            {
+                NetworkClient.ShutdownAll();
+                MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
             }
         }
     }
