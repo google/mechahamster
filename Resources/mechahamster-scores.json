@@ -1,0 +1,62 @@
+{
+  "DB_Users" : {
+    "XYZZY" : {
+      "id" : "XYZZY",
+      "name" : "Unnamed User"
+    }
+  },
+  "Leaderboard" : {
+    "Map" : {
+      "OfflineMaps" : {
+        "MAP01-EasyPeasie" : {
+          "Top" : {
+            "Ranks" : {
+              "-LVdsc1zKyy88KI1KMJq" : {
+                "score" : 9500,
+                "timestamp" : 63684576031,
+                "user_id" : "Rabby",
+                "username" : "Rabby"
+              },
+              "-LVtfB3zSSuoZufyh2Qz" : {
+                "score" : 10000,
+                "timestamp" : 63684576032,
+                "user_id" : "Guinea",
+                "username" : "Guinea"
+              },
+              "-L_P-rC9CNqpiE17yNgT" : {
+                "score" : 9750,
+                "timestamp" : 63684576033,
+                "user_id" : "Ferry",
+                "username" : "Ferry"
+              },
+              "-L_P-rCWReOVtAbet9X2" : {
+                "score" : 9400,
+                "timestamp" : 63684576034,
+                "user_id" : "Hedgey",
+                "username" : "Hedgey"
+              },
+              "-L_P-rCWReOVtAbet9X3" : {
+                "score" : 11050,
+                "timestamp" : 63684576035,
+                "user_id" : "Chinney",
+                "username" : "Chinney"
+              },
+              "-L_P-rCWReOVtAbet9X4" : {
+                "score" : 7900,
+                "timestamp" : 63684576036,
+                "user_id" : "Batty",
+                "username" : "Batty"
+              },
+              "-L_P-rCWReOVtAbet9X4" : {
+                "score" : 7900,
+                "timestamp" : 63684576037,
+                "user_id" : "Gerby",
+                "username" : "Gerby"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
