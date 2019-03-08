@@ -16,21 +16,34 @@ namespace Hamster.States
         private OpenMatchClient openMatch;
         string omAddress;
         int omPort=-1;
-
+        float disconnectAfterTime = 0.75f;
+        float disconnectTime;
         int curNumPlayers;  //  this should really be the number of connections. Assumption of 1 client = 1 player is incorrect with the Add Player button. However, don't let the player do that and we'll be fine. Otherwise, bugs galore. GALORE!
 
         void DisconnectPreviousConnection()
         {
             if (NetworkClient.active)
             {
+                bOpenMatchWaiting = false;
                 NetworkClient.ShutdownAll();
             }
         }
+
+        void SendACKtoServer()
+        {
+            Debug.LogWarning("ClientOpenMatchStart.SendACKtoServer=" + NetworkClient.allClients[0].connection.connectionId.ToString()+ "\n");
+            MessageBase readyMsg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(NetworkClient.allClients[0].connection.connectionId);    //  send my connection id to my server to tell the server that I'm ready to run OpenMatch, so you can reminding me now.
+            NetworkClient.allClients[0].Send((short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_clientOpenMatchAck, readyMsg);
+            disconnectTime = Time.realtimeSinceStartup + disconnectAfterTime;
+            //  DisconnectPreviousConnection();   //  we do not want to do this until after we've sent an ack to our server. so let's wait for a little bit for the hmsg_serverOpenMatchAckBack from the server!
+        }
+
         void OpenMatchRequest()
         {
+            if (bOpenMatchWaiting) return;  //  already trying to make a match. Give up on future attempts
+
             Debug.LogWarning("Attempting to connect to Open Match!");
 
-            DisconnectPreviousConnection();
 
             // This string is what a match is filtered on. Don't change it unless
             // there is a server-side filter which can create a match with a new value.
@@ -39,6 +52,7 @@ namespace Hamster.States
             if (openMatch.Connect("35.236.24.200", modeCheckJSON))
             {
                 Debug.Log("Match request sent!");
+                SendACKtoServer();
                 bOpenMatchWaiting = true;
             }
         }
@@ -111,7 +125,8 @@ namespace Hamster.States
             if (openMatch != null && openMatch.Port != 0)
             {
                 if (custMgr.bIsClient)
-                {
+                {   //  we're done our job. Found our match and will change state now.
+                    bOpenMatchWaiting = false;
                     MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchFound>();
                 }
 

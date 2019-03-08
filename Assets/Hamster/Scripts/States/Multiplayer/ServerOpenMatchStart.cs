@@ -16,31 +16,52 @@ namespace Hamster.States
         private OpenMatchClient openMatch;
         string omAddress;
         int omPort=-1;
-
+        bool[] omClientACKRecvd;    //  mapped 1-for-1  by idx to custMgr.client_connections
+        float lastTimeAckReqSent; //  after we send a request client to start OpenMatch and to send back an ACK.
+        float timeBetweenAckReq = 2.0f;    //  how much time before we send another ack request to the client to start OpenMatch.
         int curNumPlayers;  //  this should really be the number of connections. Assumption of 1 client = 1 player is incorrect with the Add Player button. However, don't let the player do that and we'll be fine. Otherwise, bugs galore. GALORE!
+        int nretries;
 
         //  server starts the OpenMatchGame and tells the clients about it to enter this state.
-        void StartOpenMatchGame()
+        //  -1 sends to ALL clients to start OpenMatch.
+        //  > 0 time is to send to only clients which have not sent back an ACK that they have started OpenMatch!
+        bool StartOpenMatchGame(float lastAbsTime= -1.0f)
         {
+            bool bAllAcksRecvd = false;
+
             int connId = 0;
             string curStateName = this.GetType().ToString();
             if (custMgr != null)
             {
                 Debug.LogWarning("StartOpenMatchGame: custMgr.client_connections.Count=" + custMgr.client_connections.Count.ToString());
-                for (int ii = 0; ii < custMgr.client_connections.Count; ii++)
+                if (custMgr.client_connections.Count > 0)
                 {
-                    try
+                    if (lastAbsTime < 0)
                     {
-                        Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name);
+                        omClientACKRecvd = new bool[custMgr.client_connections.Count];
+                        for (int ii = 0; ii < custMgr.client_connections.Count; ii++)
+                        {
+                            omClientACKRecvd[ii] = false;
+                        }
+                    }
+                    bAllAcksRecvd = true;
+                    for (int ii = 0; ii < custMgr.client_connections.Count; ii++)
+                    {
                         connId = custMgr.client_connections[ii].connectionId;
-                        custMgr.Cmd_SendServerState(connId, curStateName);
+                        omClientACKRecvd[ii] = this.custMgr.ackReceived[connId];
+                        if (!omClientACKRecvd[ii])  //  if this client hasn't acknowledged that they have started OpenMatch, then tell them again.
+                        {
+                            bAllAcksRecvd = false;
+                            Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name + "\nretries="+nretries.ToString());
+                            custMgr.setAck(connId, false); //  clear the ack bit.
+                            custMgr.Cmd_SendServerState(connId, curStateName);
+                            nretries++;
+                        }
                     }
-                    catch
-                    {
-                        Debug.LogFormat("ServerOpenMatchStart::StartOpenMatchGame() - Exception accessing custMgr.client_connections index {0}", ii);
-                    }
+                    lastTimeAckReqSent = Time.realtimeSinceStartup;
                 }
             }
+            return bAllAcksRecvd;
         }
 
         void DisconnectPreviousConnection()
@@ -97,19 +118,27 @@ namespace Hamster.States
                 }
             }
         }
+
+        //  our message to tell the clients to find an OpenMatch game may have failed. so we must periodically tell them again so they can acknowledge with us.
+        void WaitForClientACKs()
+        {
+            if (Time.realtimeSinceStartup >= lastTimeAckReqSent + timeBetweenAckReq)
+            {
+                bool allACKsRecvd = StartOpenMatchGame(lastTimeAckReqSent);
+                if (allACKsRecvd)
+                {
+                    //  okay, all of the clients know to move to OpenMatch, so we can shut down this server!
+                    MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
+                }
+            }
+        }
         override public void Initialize()
         {
             Debug.Log("ServerOpenMatchStart.Initialize");
             GetPointers();
-            //  this is exclusively the server, so don't even have this here anymore. It's just confusing.
-            //if (custMgr != null & custMgr.bIsClient)
-            //    OpenMatchRequest();
+            nretries = 0;
             if (custMgr != null & custMgr.bIsServer)
                 StartOpenMatchGame();
-            //if (custMgr != null && custMgr.client_connections != null)
-            //{
-            //    curNumPlayers = custMgr.client_connections.Count;
-            //}
         }
         override public void OnGUI()
         {
@@ -160,11 +189,9 @@ namespace Hamster.States
             {
             }
 
-            if (curNumPlayers >= 4)
+            if (curNumPlayers > 0)
             {
-                //  fire off the OpenMatchState!
-                //  do something here to start OpenMatch
-                //MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerOpenMatchStart>(0, true);
+                WaitForClientACKs();
             }
             else if (curNumPlayers <= 0)
             {
