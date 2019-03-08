@@ -39,23 +39,23 @@ namespace Hamster.States
             bOpenMatchWaiting = false;
 
         }
-        void OpenMatchRequest()
-        {
+        //void OpenMatchRequest()
+        //{
 
-            Debug.Log("Attempting to connect to Open Match!");
+        //    Debug.Log("Attempting to connect to Open Match!");
 
-            DisconnectPreviousConnection();
+        //    DisconnectPreviousConnection();
 
-            // This string is what a match is filtered on. Don't change it unless
-            // there is a server-side filter which can create a match with a new value.
-            string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
+        //    // This string is what a match is filtered on. Don't change it unless
+        //    // there is a server-side filter which can create a match with a new value.
+        //    string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
 
-            if (openMatch.Connect("35.236.24.200", modeCheckJSON))
-            {
-                Debug.Log("Match request sent!");
-                bOpenMatchWaiting = true;
-            }
-        }
+        //    if (openMatch.Connect("35.236.24.200", modeCheckJSON))
+        //    {
+        //        Debug.Log("Match request sent!");
+        //        bOpenMatchWaiting = true;
+        //    }
+        //}
 
         void GetPointers()
         {

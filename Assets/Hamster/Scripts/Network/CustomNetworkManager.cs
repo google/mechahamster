@@ -15,13 +15,15 @@ namespace customNetwork
         {
             hmsg_serverLevel= kLastUnityMsgType,   //  server tells player what level is currently playing
             hmsg_serverVersion, //  server tells client what version it's running.
+            hmsg_serverState,   //  the state the server is in. NOTE: this may cause the Cl
+            hmsg_clientOpenMatchAck,    //  client affirms that OpenMatch start message was received through the server state.
+            hmsg_serverOpenMatchAckBack,//  server acknowledges that it received the client's ack. This allows the client to shut down its connection to the static lobby server if it is still connected.
             //  the following are still incomplete. They are there as placeholders.
             hmsg_serverPlayerDied,  //  server tells player that they've died
             hmsg_serverPlayerFinished,  //  server tells player that they've finished this level
             hmsg_serverGameFinished,    //  server tells player that the game has been completed.
             hmsg_serverPlayerIsWinner,  //  server tells player that they're the winner!
             hmsg_newLevel,  //  server tells player that a new level has been loaded
-            hmsg_serverState,   //  the state the server is in.
             hmsg_EndOfMessageList = kMaxShort   //  do not use this. this just means that everything needs to be smaller than this number because the network message uses a short for this key.
         }
         const int kMaxConnections = 32;
@@ -35,6 +37,8 @@ namespace customNetwork
         private string serverVersion;
         public MultiplayerGame multiPlayerGame;
 
+        //  openmatch
+        public bool[] ackReceived = new bool[kMaxConnections];  //  for OpenMatch start ACk
         public enum debugOutputStyle
         {
             db_none,
@@ -442,6 +446,11 @@ namespace customNetwork
             CreateClientConnections(conn);
         }
 
+        public void setAck(int connId, bool bit=true)
+        {
+            ackReceived[connId] = bit; //  set or reset the OpenMatch ack.
+        }
+
         void SendServerVersion(NetworkConnection conn)
         {
             serverVersion = Application.version;
@@ -569,6 +578,7 @@ namespace customNetwork
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverLevel, OnClientLevelMsg);
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverVersion, OnClientVersion);
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverState, OnClientServerState);
+            
             //  Hamster.MainGame.NetworkSpawnPlayer(toServerConnection);  //  don't do this yet. Let the weird legacy Hamster code do it in its FixedUpdate, even though it's bad.
         }
 
@@ -620,7 +630,10 @@ namespace customNetwork
             UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
             string serverState = strMsg.value;
             Debug.LogWarning("Client received Server state=" + serverState);
-            MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
+            if (serverState.Contains("ServerOpenMatchStart")) {
+                //  the server has told us to start open match on this client.
+                MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
+            }
         }
         //
         // Summary:
@@ -631,6 +644,17 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnStartHost\n");
             bIsHost = true;
         }
+
+        //  server handles hmsg_clientOpenMatchAck
+        //  SERVER - one of my clients is telling me that it's ready.
+        void svrOnClientReady(NetworkMessage netMsg)
+        {
+            UnityEngine.Networking.NetworkSystem.IntegerMessage intMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.IntegerMessage>();
+            int clientConnId = intMsg.value;    //  this client told us they 
+            Debug.LogWarning("Server received OpenMatch ACK from client(" + clientConnId.ToString() + ")\n");
+            this.ackReceived[clientConnId] = true;
+        }
+
         //
         // Summary:
         //     This hook is invoked when a server is started - including when a host is started. This server was created on this machine
@@ -639,6 +663,8 @@ namespace customNetwork
             Hamster.CommonData.networkmanager = this;    //  there's probably a better place to put this.
             DebugOutput("CustomNetworkManager.OnStartServer\n");
             bIsServer = true;
+            //  register my server handlers
+            NetworkServer.RegisterHandler((short)hamsterMsgType.hmsg_clientOpenMatchAck, svrOnClientReady);
         }
         //
         // Summary:
