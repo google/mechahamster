@@ -289,7 +289,7 @@ namespace customNetwork
          */
         void OnServerAddPlayerInternal(GameObject prefabToInstantiate, NetworkConnection conn, short playerControllerId)
         {
-            DebugOutput("CustomNetworkManager.OnServerAddPlayerInternal: " + conn.ToString());
+            Debug.Log("CustomNetworkManager.OnServerAddPlayerInternal: " + conn.ToString() + ", plrControllerId="+playerControllerId.ToString());
             /*
             if (m_PlayerPrefab == null)
             {
@@ -650,7 +650,9 @@ namespace customNetwork
         void svrOnClientReady(NetworkMessage netMsg)
         {
             UnityEngine.Networking.NetworkSystem.IntegerMessage intMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.IntegerMessage>();
-            int clientConnId = intMsg.value;    //  this client told us they 
+            
+            //int clientConnId = intMsg.value;    //  this client told us the connectionID they *think* they're on. But Unity plays a joke on us. They're different than the server ones for some reason. See this: https://docs.unity3d.com/ScriptReference/Networking.NetworkConnection-connectionId.html
+            int clientConnId = netMsg.conn.connectionId;
             Debug.LogWarning("Server received OpenMatch ACK from client(" + clientConnId.ToString() + ")\n");
             this.ackReceived[clientConnId] = true;
         }

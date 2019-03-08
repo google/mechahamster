@@ -53,7 +53,8 @@ namespace Hamster.States
             //  note: on the client, we can't actually keep track of how many players are in the game!
             if (hud != null)
             {
-                myDebugMsg = "ClientInGame: nPlr=" + manager.numPlayers.ToString() + " nClients=" + NetworkClient.allClients.Count.ToString() + "\n\tNetClient.active=" + NetworkClient.active.ToString();
+                myDebugMsg = "ClientInGame: nPlr=" + manager.numPlayers.ToString() + " nClients=" + NetworkClient.allClients.Count.ToString()
+                    + "\nNetClient.active=" + NetworkClient.active.ToString();
             }
             else
             {
@@ -78,9 +79,13 @@ namespace Hamster.States
                 }
                 else//  the client is still connected, but nobody is in the game!
                 {
-                    myDebugMsg = "NO PLAYERS!!! " + myDebugMsg;
+                    if (NetworkServer.active)   //  client never keeps track of numPlayers. This is a Unity bug.
+                        myDebugMsg = "NO PLAYERS!!!\n" + myDebugMsg;
                 }
             }
+            myDebugMsg =
+                "connId=" + NetworkClient.allClients[0].connection.connectionId.ToString()
+                + "\n" + myDebugMsg;
         }
     }
 }   //  Hamster.States
