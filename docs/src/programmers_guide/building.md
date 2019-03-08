@@ -26,6 +26,7 @@ packages into the Unity project:
 |---------|-----------|
 | Firebase Analytics | FirebaseAnalytics.unitypackage |
 | Firebase Auth | FirebaseAuth.unitypackage |
+| Firebase Crashlytics (Beta) | FirebaseCrashlytics.unitypackage |
 | Firebase Database | FirebaseDatabase.unitypackage |
 | Firebase Invites | FirebaseInvites.unitypackage |
 | Firebase Messaging | FirebaseMessaging.unitypackage |

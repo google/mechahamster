@@ -57,6 +57,7 @@ MechaHamster is an open-source unity project that demonstrates implementation fo
 
 * App measurement, telemetry and insight on user usage and engagement, via [Firebase Analytics][]
 * User identity verification and management, through [Firebase Auth][]
+* Crash reporting and issue management, through [Firebase Crashlytics (Beta)][]
 * Long-term data storage and real-time communication between apps, using [Firebase Realtime Database][]
 * Deliver phone-based alerts with [Firebase Cloud Messaging][].
 * Adjusting app settings remotely and performing complex A/B tests, with [Firebase Remote Config][].
@@ -96,6 +97,7 @@ The game is authored in [Unity][], and requires version 5.6.0b6.
   [Firebase Analytics]: https://firebase.google.com/docs/analytics/
   [Firebase Auth]: https://firebase.google.com/docs/auth/
   [Firebase Realtime Database]: https://firebase.google.com/docs/database/
+  [Firebase Crashlytics (Beta)]: https://firebase.google.com/docs/crashlytics/
   [Firebase Cloud Messaging]: https://firebase.google.com/docs/cloud-messaging/
   [Firebase Remote Config]: https://firebase.google.com/docs/remote-config/
   [Firebase Dynamic Links]: https://firebase.google.com/docs/dynamic-links/

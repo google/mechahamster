@@ -97,6 +97,19 @@ namespace Hamster.States {
         Application.OpenURL(StringConstants.PrivacyPolicyURL);
       } else if (source == menuComponent.TermsAndServicesButton.gameObject) {
         Application.OpenURL(StringConstants.TermsAndServicesURL);
+      } else if (source == menuComponent.SelfDestructButton.gameObject) {
+        // If the User has clicked SelfDestruct more than the DestructionClickCount,
+        // transition to the MeltdownMenu, otherwise display the remaining clicks
+        // via the SelfDestructMenu
+        if (SelfDestructMenu.DestructionClickCount < 1) {
+          SelfDestructMenu.ResetDestructionClickCount();
+          MeltdownMenu meltdownMenu = new MeltdownMenu();
+          manager.PushState(meltdownMenu);
+        }
+        else {
+          SelfDestructMenu warningMenu = new SelfDestructMenu();
+          manager.PushState(warningMenu);
+        }
       } else {
         // Check the volume buttons, and update the appropriate volume if necessary.
         bool volumeChanged = false;

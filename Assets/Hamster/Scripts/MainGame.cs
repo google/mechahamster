@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
+using Firebase;
 using Firebase.Unity.Editor;
 using UnityEngine.SocialPlatforms;
 
@@ -226,6 +227,11 @@ namespace Hamster {
     // Actually start the game, once we've verified that everything
     // is working and we have the firebase prerequisites ready to go.
     void StartGame() {
+      // FirebaseApp is responsible for starting up Crashlytics, when the core app is started.
+      // To ensure that the core of FirebaseApp has started, grab the default instance which
+      // is lazily initialized.
+      FirebaseApp app = FirebaseApp.DefaultInstance;
+
       // Remote Config data has been fetched, so this applies it for this play session:
       Firebase.RemoteConfig.FirebaseRemoteConfig.ActivateFetched();
 

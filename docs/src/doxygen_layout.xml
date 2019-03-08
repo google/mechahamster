@@ -29,6 +29,8 @@
              title="Analytics"/>
         <tab type="user" url="@ref mechahamster_guide_auth"
              title="Auth"/>
+        <tab type="user" url="@ref mechahamster_guide_crashlytics"
+             title="Crashltyics (Beta)"/>
         <tab type="user" url="@ref mechahamster_guide_database"
              title="Realtime Database"/>
         <tab type="user" url="@ref mechahamster_guide_remoteconfig"
