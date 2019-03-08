@@ -32,6 +32,8 @@ namespace UnityEngine.Networking
 
         int startLevel = kDefaultLevelIdx; 
         public NetworkManager manager;
+        public customNetwork.CustomNetworkManager custMgr;
+
         [SerializeField] public bool showGUI = true;
         //public bool releaseModeNoDebugText;
         [SerializeField] public int offsetX;
@@ -203,6 +205,7 @@ namespace UnityEngine.Networking
                 {
                     multiPlayerGame.manager = manager;
                 }
+                custMgr = manager as customNetwork.CustomNetworkManager;
             }
 
             // Pull in the component if it's been added. If it hasn't the menu for Open Match won't appear
@@ -422,6 +425,14 @@ namespace UnityEngine.Networking
             }
             return ypos;
         }
+
+        public void OnGUIShowClientDebugInfo()
+        {
+            if (custMgr == null)
+                custMgr = manager as customNetwork.CustomNetworkManager;
+            custMgr.OnGUIShowClientDebugInfo(this);
+        }
+
             void OnGUI()
         {
             if (!showGUI)
@@ -452,12 +463,13 @@ namespace UnityEngine.Networking
 
             //  you can find the version number in Build Settings->PlayerSettings->Version
             string serverVersionMsg = "";
-            customNetwork.CustomNetworkManager custmgr = manager as customNetwork.CustomNetworkManager;
-            if (custmgr != null)
+            if (custMgr == null)
+                custMgr = manager as customNetwork.CustomNetworkManager;
+            if (custMgr != null)
             {
-                Hamster.CommonData.networkmanager = custmgr;    //  there's probably a better place to put this.
+                Hamster.CommonData.networkmanager = custMgr;    //  there's probably a better place to put this.
                 string sv;
-                if (!custmgr.isServerAndClientVersionMatch(out sv))
+                if (!custMgr.isServerAndClientVersionMatch(out sv))
                 {
                     serverVersionMsg = "MISMATCH ServerV=" + sv;
                     string serverVerFloat = customNetwork.CustomNetworkManager.getStrippedVersionNumber(sv);
@@ -784,7 +796,9 @@ namespace UnityEngine.Networking
                     ypos += spacing;
                 }
             }
-        }
+            if (custMgr != null)
+                custMgr.OnGUIShowClientDebugInfo(this);
+        }   //  OnGUI()
     }
 }
 #endif //ENABLE_UNET

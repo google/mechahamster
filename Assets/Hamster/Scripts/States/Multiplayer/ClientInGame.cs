@@ -83,9 +83,9 @@ namespace Hamster.States
                         myDebugMsg = "NO PLAYERS!!!\n" + myDebugMsg;
                 }
             }
-            myDebugMsg =
-                "connId=" + NetworkClient.allClients[0].connection.connectionId.ToString()
-                + "\n" + myDebugMsg;
+            //myDebugMsg =
+            //    "connId=" + NetworkClient.allClients[0].connection.connectionId.ToString()
+            //    + "\n" + myDebugMsg;
         }
     }
 }   //  Hamster.States

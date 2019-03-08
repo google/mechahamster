@@ -77,7 +77,7 @@ namespace Hamster.States
                 custMgr = manager as customNetwork.CustomNetworkManager;
                 if (custMgr != null && custMgr.client_connections != null)
                 {
-                    curNumPlayers = custMgr.client_connections.Count;
+                    curNumPlayers = custMgr.getNumPlayers();
                 }
                 hud = manager.GetComponent<CustomNetworkManagerHUD>();
                 if (openMatch == null)
@@ -98,7 +98,7 @@ namespace Hamster.States
             //Debug.LogWarning("ServerOpenMatchStart.OnGUI");
             if (hud != null)
             {
-                hud.scaledTextBox("ClientOpenMatchFound.curNumPlayers=" + curNumPlayers.ToString());
+                //hud.scaledTextBox("ClientOpenMatchFound.curNumPlayers=" + curNumPlayers.ToString());
                 if (openMatch != null)
                     hud.scaledTextBox("openMatch ip=" + openMatch.Address + ", port=" + openMatch.Port.ToString());
             }
@@ -117,7 +117,7 @@ namespace Hamster.States
             {
                 if (custMgr.client_connections != null)
                 {
-                    curNumPlayers = custMgr.client_connections.Count;
+                    curNumPlayers = custMgr.getNumPlayers();
                 }
             }
 

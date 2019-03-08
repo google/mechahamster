@@ -42,7 +42,8 @@ namespace Hamster.States
                 }
                 if (custMgr != null && custMgr.bIsServer)
                 {
-                    // Something might need to kick the clients gracefully here. This will just tell Agones to terminate
+                    disconnectAllClients();
+                    curNumPlayers = custMgr.getNumPlayers();
                     // the server because the match is up.
                     if (MultiplayerGame.instance.agones != null)
                     {
@@ -50,6 +51,17 @@ namespace Hamster.States
                         ShutdownAgones();
                     }
                 }
+            }
+        }
+
+        //  all of the clients need to be kicked off this server. The preOpenMatch lobby has ended and the players have found new matches through OpenMatch. So we need to kick all the connections off this server.
+        void disconnectAllClients()
+        {
+            if (!custMgr) return;
+
+            for(int ii=0; ii<custMgr.client_connections.Count; ii++)
+            {
+                custMgr.client_connections[ii].Disconnect();
             }
         }
 
@@ -71,7 +83,7 @@ namespace Hamster.States
             //Debug.Log("ServerEndPreGameplay.OnGUI");
             if (hud != null)
             {
-                hud.scaledTextBox("ServerEndPreGameplay curNumPlayers=" + curNumPlayers.ToString() + ",nClients=" + curNumClients.ToString() + "\n\tNetClient.active=" + NetworkClient.active.ToString());
+                //hud.scaledTextBox("ServerEndPreGameplay curNumPlayers=" + curNumPlayers.ToString() + ",nClients=" + curNumClients.ToString() + "\n\tNetClient.active=" + NetworkClient.active.ToString());
             }
         }
 
