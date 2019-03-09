@@ -180,7 +180,8 @@ namespace customNetwork
         // Parameters:
         //   conn:
         //     Connection to the server.
-        public virtual void OnClientDisconnect(NetworkConnection conn) {
+        public override void OnClientDisconnect(NetworkConnection conn) {
+            base.OnClientConnect(conn);
             DebugOutput("CustomNetworkManager.OnClientDisconnect:" + conn.ToString());
             NetworkClient.ShutdownAll();
         }
@@ -388,10 +389,11 @@ namespace customNetwork
         // Parameters:
         //   conn:
         //     Connection from client.
-        public virtual void OnServerConnect(NetworkConnection conn)
+        public override void OnServerConnect(NetworkConnection conn)
         {
             DebugOutput("CustomNetworkManager.OnServerConnect: connId=" + conn.connectionId.ToString() + "\n");
             CreateClientConnections(conn);
+            base.OnServerConnect(conn);
         }
         void DestroyConnectionsPlayerControllers(NetworkConnection conn)
         {
@@ -408,8 +410,9 @@ namespace customNetwork
         // Parameters:
         //   conn:
         //     Connection from client.
-        public virtual void OnServerDisconnect(NetworkConnection conn)
+        public override void OnServerDisconnect(NetworkConnection conn)
         {
+            base.OnServerDisconnect(conn);
             Debug.LogError("CustomNetworkManager.OnServerDisconnect: connId=" + conn.connectionId.ToString() + "\n");
             DestroyConnectionsPlayerControllers(conn);
             this.client_connections.Remove(conn);
@@ -423,9 +426,9 @@ namespace customNetwork
         void OnApplicationQuit()
         {
             //  stop all the things, whatever we are.
-            this.StopClient();
-            this.OnStopHost();
-            this.OnStopServer();
+            //this.StopClient();
+            //this.StopHost();
+            //this.StopServer();
 
             Debug.Log("Application ending after " + Time.time + " seconds");
             for (int ii = 0; ii < NetworkClient.allClients.Count; ii++)
@@ -444,7 +447,8 @@ namespace customNetwork
         //
         //   errorCode:
         //     Error code.
-        public virtual void OnServerError(NetworkConnection conn, int errorCode) {
+        public override void OnServerError(NetworkConnection conn, int errorCode) {
+            base.OnServerError(conn, errorCode);
             this.client_connections.Remove(conn);   //  maybe do this, maybe do something else. If we can no longer talk to this client, we may want to let the other clients know.
         }
         //
@@ -697,21 +701,21 @@ namespace customNetwork
         //
         // Summary:
         //     This hook is called when a client is stopped.
-        public virtual void OnStopClient()
+        public override void OnStopClient()
         {
             DebugOutput("CustomNetworkManager.OnStopClient\n");
         }
         //
         // Summary:
         //     This hook is called when a host is stopped.
-        public virtual void OnStopHost()
+        public override void OnStopHost()
         {
             DebugOutput("CustomNetworkManager.OnStopHost\n");
         }
         //
         // Summary:
         //     This hook is called when a server is stopped - including when a host is stopped.
-        public virtual void OnStopServer()
+        public override void OnStopServer()
         {
             DebugOutput("CustomNetworkManager.OnStopServer\n");
         }
