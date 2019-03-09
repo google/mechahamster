@@ -414,8 +414,10 @@ namespace customNetwork
         {
             base.OnServerDisconnect(conn);
             Debug.LogError("CustomNetworkManager.OnServerDisconnect: connId=" + conn.connectionId.ToString() + "\n");
-            DestroyConnectionsPlayerControllers(conn);
-            this.client_connections.Remove(conn);
+            if (this.client_connections.Contains(conn)) {
+                DestroyConnectionsPlayerControllers(conn);
+                this.client_connections.Remove(conn);
+            }
         }
 
         //  obsolete in 2018.2
@@ -741,7 +743,8 @@ namespace customNetwork
 
                 strMsg = "client connections";
                 strMsg += "(" + this.client_connections.Count.ToString()+")\n";
-                strMsg += this.client_connections[0].connectionId.ToString();
+                if (this.client_connections!=null && this.client_connections.Count >0)
+                    strMsg += this.client_connections[0].connectionId.ToString();
                 for (int ii=1; ii<this.client_connections.Count; ii++)
                 {
                     strMsg += ", " + this.client_connections[ii].connectionId.ToString();

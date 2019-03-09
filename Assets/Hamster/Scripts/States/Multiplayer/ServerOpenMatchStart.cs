@@ -33,7 +33,7 @@ namespace Hamster.States
             string curStateName = this.GetType().ToString();
             if (custMgr != null)
             {
-                Debug.LogWarning("StartOpenMatchGame: custMgr.client_connections.Count=" + custMgr.client_connections.Count.ToString());
+                Debug.LogWarning("StartOpenMatchGame: custMgr.client_connections.Count=" + custMgr.client_connections.Count.ToString() + "t=" + lastAbsTime.ToString());
                 if (custMgr.client_connections.Count > 0)
                 {
                     if (lastAbsTime < 0)
@@ -138,7 +138,7 @@ namespace Hamster.States
             GetPointers();
             nretries = 0;
             if (custMgr != null & custMgr.bIsServer)
-                StartOpenMatchGame();
+                StartOpenMatchGame(-1.0f);
         }
         override public void OnGUI()
         {
