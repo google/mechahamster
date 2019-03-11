@@ -32,6 +32,8 @@ namespace UnityEngine.Networking
 
         int startLevel = kDefaultLevelIdx; 
         public NetworkManager manager;
+        public customNetwork.CustomNetworkManager custMgr;
+
         [SerializeField] public bool showGUI = true;
         //public bool releaseModeNoDebugText;
         [SerializeField] public int offsetX;
@@ -202,6 +204,7 @@ namespace UnityEngine.Networking
                 {
                     multiPlayerGame.manager = manager;
                 }
+                custMgr = manager as customNetwork.CustomNetworkManager;
             }
 
             // Pull in the component if it's been added. If it hasn't the menu for Open Match won't appear
@@ -421,6 +424,14 @@ namespace UnityEngine.Networking
             }
             return ypos;
         }
+
+        public void OnGUIShowClientDebugInfo()
+        {
+            if (custMgr == null)
+                custMgr = manager as customNetwork.CustomNetworkManager;
+            custMgr.OnGUIShowClientDebugInfo(this);
+        }
+
             void OnGUI()
         {
             if (!showGUI)
@@ -451,12 +462,13 @@ namespace UnityEngine.Networking
 
             //  you can find the version number in Build Settings->PlayerSettings->Version
             string serverVersionMsg = "";
-            customNetwork.CustomNetworkManager custmgr = manager as customNetwork.CustomNetworkManager;
-            if (custmgr != null)
+            if (custMgr == null)
+                custMgr = manager as customNetwork.CustomNetworkManager;
+            if (custMgr != null)
             {
-                Hamster.CommonData.networkmanager = custmgr;    //  there's probably a better place to put this.
+                Hamster.CommonData.networkmanager = custMgr;    //  there's probably a better place to put this.
                 string sv;
-                if (!custmgr.isServerAndClientVersionMatch(out sv))
+                if (!custMgr.isServerAndClientVersionMatch(out sv))
                 {
                     serverVersionMsg = "MISMATCH ServerV=" + sv;
                     string serverVerFloat = customNetwork.CustomNetworkManager.getStrippedVersionNumber(sv);
@@ -599,22 +611,34 @@ namespace UnityEngine.Networking
                 }
                 ypos = newYpos;
             }
+            //if (custMgr != null && custMgr.client_connections != null )
+            //{
+            //    if (scaledButton(out newYpos, xpos + 300, ypos + 300, kTextBoxWidth, kTextBoxHeight, "Disconnect (End) nclients=" + custMgr.client_connections.Count.ToString()))
+            //    {
+            //        //DestroyNetworkPlayer();
+            //        NetworkClient.allClients[0].Disconnect();
+            //        NetworkClient.ShutdownAll();
+            //    }
+            //    ypos = newYpos;
+            //}
 
 
             if (manager.IsClientConnected() && ClientScene.ready)
             {
-                //  warning: adding extra players will mess up some logic that relies on one player per client, such as the OpenMatch criteria. however, it is left here to debug.
-                if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Add player: (Ins)" + ClientScene.localPlayers.Count.ToString()))
-                {
-                    CreateNetworkPlayer();
-                }
-                ypos = newYpos;
-                if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Del player: (Del)" + ClientScene.localPlayers.Count.ToString()))
-                {
-                    DestroyNetworkPlayer();
-                }
-                ypos = newYpos;
+                ////  warning: adding extra players will mess up some logic that relies on one player per client, such as the OpenMatch criteria. however, it is left here to debug.
+                //if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Add player: (Ins)" + ClientScene.localPlayers.Count.ToString()))
+                //{
+                //    CreateNetworkPlayer();
+                //}
+                //ypos = newYpos;
+                //if (scaledButton(out newYpos, xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Del player: (Del)" + ClientScene.localPlayers.Count.ToString()))
+                //{
+                //    DestroyNetworkPlayer();
+                //}
+                //ypos = newYpos;
+
             }
+
 
             if (NetworkServer.active || manager.IsClientConnected())
             {
@@ -738,7 +762,9 @@ namespace UnityEngine.Networking
                     ypos += spacing;
                 }
             }
-        }
+            if (custMgr != null)
+                custMgr.OnGUIShowClientDebugInfo(this);
+        }   //  OnGUI()
     }
 }
 #endif //ENABLE_UNET

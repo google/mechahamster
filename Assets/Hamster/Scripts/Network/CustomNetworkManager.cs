@@ -36,7 +36,7 @@ namespace customNetwork
         private bool bServerVersionDoesntMatch=false;  //  if the server version is different, we should know about it.
         private string serverVersion;
         public MultiplayerGame multiPlayerGame;
-
+        CustomNetworkManagerHUD hud;
         //  openmatch
         public bool[] ackReceived = new bool[kMaxConnections];  //  for OpenMatch start ACk
         public enum debugOutputStyle
@@ -90,6 +90,12 @@ namespace customNetwork
         public NetworkConnection toServerConnection;  //  my connection to the server if I'm a client
         public List<NetworkConnection> client_connections;  //  as a server, these are the connections to me
 
+        //  this centralizes the hack so that if the bug is fixed, we can just fix it here rather than in many places that are using either numPlayers or client_connections.Count
+        public int getNumPlayers()
+        {
+            //return client_connections.Count;  //  this is technically correct, but doesn't work
+            return numPlayers;  //  bug fix hack: so we use this 
+        }
         //  need to put this somewhere. This is just fine for now.
         static public string LocalHostname()
         {
@@ -175,7 +181,8 @@ namespace customNetwork
         // Parameters:
         //   conn:
         //     Connection to the server.
-        public virtual void OnClientDisconnect(NetworkConnection conn) {
+        public override void OnClientDisconnect(NetworkConnection conn) {
+            base.OnClientConnect(conn);
             DebugOutput("CustomNetworkManager.OnClientDisconnect:" + conn.ToString());
             NetworkClient.ShutdownAll();
         }
@@ -384,10 +391,11 @@ namespace customNetwork
         // Parameters:
         //   conn:
         //     Connection from client.
-        public virtual void OnServerConnect(NetworkConnection conn)
+        public override void OnServerConnect(NetworkConnection conn)
         {
             DebugOutput("CustomNetworkManager.OnServerConnect: connId=" + conn.connectionId.ToString() + "\n");
             CreateClientConnections(conn);
+            base.OnServerConnect(conn);
         }
         public void DestroyConnectionsPlayerControllers(NetworkConnection conn)
         {
@@ -404,11 +412,34 @@ namespace customNetwork
         // Parameters:
         //   conn:
         //     Connection from client.
-        public virtual void OnServerDisconnect(NetworkConnection conn)
+        public override void OnServerDisconnect(NetworkConnection conn)
         {
-            DebugOutput("CustomNetworkManager.OnServerDisconnect: connId=" + conn.connectionId.ToString() + "\n");
-            DestroyConnectionsPlayerControllers(conn);
-            this.client_connections.Remove(conn);
+            base.OnServerDisconnect(conn);
+            Debug.LogError("CustomNetworkManager.OnServerDisconnect: connId=" + conn.connectionId.ToString() + "\n");
+            if (this.client_connections.Contains(conn)) {
+                DestroyConnectionsPlayerControllers(conn);
+                this.client_connections.Remove(conn);
+            }
+        }
+
+        //  obsolete in 2018.2
+        //void OnDisconnectedFromServer(NetworkDisconnection info)
+        //{
+        //    Debug.Log("Disconnected from server: " + info);
+        //}
+        void OnApplicationQuit()
+        {
+            //  stop all the things, whatever we are.
+            //this.StopClient();
+            //this.StopHost();
+            //this.StopServer();
+
+            Debug.Log("Application ending after " + Time.time + " seconds");
+            for (int ii = 0; ii < NetworkClient.allClients.Count; ii++)
+            {
+                NetworkClient.allClients[ii].connection.Disconnect();
+                OnServerDisconnect(NetworkClient.allClients[ii].connection);    //  kill all of our connections
+            }
         }
         //
         // Summary:
@@ -420,7 +451,8 @@ namespace customNetwork
         //
         //   errorCode:
         //     Error code.
-        public virtual void OnServerError(NetworkConnection conn, int errorCode) {
+        public override void OnServerError(NetworkConnection conn, int errorCode) {
+            base.OnServerError(conn, errorCode);
             this.client_connections.Remove(conn);   //  maybe do this, maybe do something else. If we can no longer talk to this client, we may want to let the other clients know.
         }
         //
@@ -672,7 +704,7 @@ namespace customNetwork
         //
         // Summary:
         //     This hook is called when a client is stopped.
-        public virtual void OnStopClient()
+        public override void OnStopClient()
         {
             DebugOutput("CustomNetworkManager.OnStopClient\n");
             base.OnStopClient();
@@ -680,14 +712,14 @@ namespace customNetwork
         //
         // Summary:
         //     This hook is called when a host is stopped.
-        public virtual void OnStopHost()
+        public override void OnStopHost()
         {
             DebugOutput("CustomNetworkManager.OnStopHost\n");
         }
         //
         // Summary:
         //     This hook is called when a server is stopped - including when a host is stopped.
-        public virtual void OnStopServer()
+        public override void OnStopServer()
         {
             DebugOutput("CustomNetworkManager.OnStopServer\n");
         }
@@ -698,38 +730,29 @@ namespace customNetwork
                 multiPlayerGame = UnityEngine.GameObject.FindObjectOfType<MultiplayerGame>();
             return multiPlayerGame;
         }
-        /*
-        //  NetworkManager class has these set to private, so we cannot override them anyway. So don't even try or else it will just confuse us.
-        //  do not allow this to override the actual Awake in NetworkManager
-        public void Awake()
+
+        public void OnGUIShowClientDebugInfo(CustomNetworkManagerHUD localHUD)
         {
-            DebugOutput("CustomNetworkManager.Awake\n");
-            //  this calls the base.Awake() because it's been declared private for some reason.
-            System.Type type = typeof(UnityEngine.Networking.NetworkManager);
-            var baseMethod = type.GetMethod("Awake", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            if (baseMethod != null) baseMethod.Invoke(this, null);
-
-
-            if (s_instance != this)
+            string strMsg;
+            if (hud==null)
             {
-                Debug.LogError("CustomNetworkManager is meant to be a singleton. A second one is being created here now.");
+                hud = this.GetComponent<CustomNetworkManagerHUD>();
             }
-            s_instance = this;
-        }
-        // Start is called before the first frame update
-        void Start()
-        {
-            if (s_instance != this)
+            localHUD = hud;
+            if (localHUD != null && this.client_connections != null)
             {
-                Debug.LogError("CustomNetworkManager is meant to be a singleton. A second one is being created here now.");
-            }
-            s_instance = this;
-        }
-        // Update is called once per frame
-        override public void Update()
-        {
+                hud.scaledTextBox("Server's client info: numPlayers=" + this.numPlayers.ToString() +", nClients=" + this.client_connections.Count.ToString());
 
+                strMsg = "client connections";
+                strMsg += "(" + this.client_connections.Count.ToString()+")\n";
+                if (this.client_connections!=null && this.client_connections.Count >0)
+                    strMsg += this.client_connections[0].connectionId.ToString();
+                for (int ii=1; ii<this.client_connections.Count; ii++)
+                {
+                    strMsg += ", " + this.client_connections[ii].connectionId.ToString();
+                }
+                hud.scaledTextBox(strMsg);
+            }
         }
-        */
     }
 }

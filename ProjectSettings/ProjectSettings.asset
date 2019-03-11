@@ -114,7 +114,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.20190307a
+  bundleVersion: 1.20190308a
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0

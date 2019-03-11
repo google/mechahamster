@@ -33,7 +33,7 @@ namespace Hamster.States
             string curStateName = this.GetType().ToString();
             if (custMgr != null)
             {
-                Debug.LogWarning("StartOpenMatchGame: custMgr.client_connections.Count=" + custMgr.client_connections.Count.ToString());
+                Debug.LogWarning("StartOpenMatchGame: custMgr.client_connections.Count=" + custMgr.client_connections.Count.ToString() + "t=" + lastAbsTime.ToString());
                 if (custMgr.client_connections.Count > 0)
                 {
                     if (lastAbsTime < 0)
@@ -108,7 +108,7 @@ namespace Hamster.States
                 custMgr = manager as customNetwork.CustomNetworkManager;
                 if (custMgr != null && custMgr.client_connections != null)
                 {
-                    curNumPlayers = manager.numPlayers;
+                    curNumPlayers = custMgr.getNumPlayers();
                 }
                 hud = manager.GetComponent<CustomNetworkManagerHUD>();
                 if (openMatch == null)
@@ -138,14 +138,14 @@ namespace Hamster.States
             GetPointers();
             nretries = 0;
             if (custMgr != null & custMgr.bIsServer)
-                StartOpenMatchGame();
+                StartOpenMatchGame(-1.0f);
         }
         override public void OnGUI()
         {
             //Debug.LogWarning("ServerOpenMatchStart.OnGUI");
             if (hud != null)
             {
-                hud.scaledTextBox("ServerOpenMatchStart.curNumPlayers=" + curNumPlayers.ToString());
+                //hud.scaledTextBox("ServerOpenMatchStart.curNumPlayers=" + curNumPlayers.ToString());
                 hud.scaledTextBox("ServerOpenMatchStart ip=" + manager.networkAddress + ", port=" + manager.networkPort.ToString());
                 if (openMatch != null)
                     hud.scaledTextBox("openMatch ip=" + openMatch.Address + ", port=" + openMatch.Port.ToString());
@@ -163,7 +163,14 @@ namespace Hamster.States
             }
             if (custMgr != null)
             {
+<<<<<<< HEAD
                 curNumPlayers = manager.numPlayers;
+=======
+                if (custMgr.client_connections != null)
+                {
+                    curNumPlayers = custMgr.getNumPlayers();
+                }
+>>>>>>> master
             }
 
             if (openMatch != null && openMatch.Port != 0)

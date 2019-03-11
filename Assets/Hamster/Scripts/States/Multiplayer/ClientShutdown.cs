@@ -43,6 +43,7 @@ namespace Hamster.States
 
         void Shutdown()
         {
+            manager.StopClient();
             Debug.LogWarning("ClientShutdown.Shutdown\n");
             NetworkClient.ShutdownAll();    //  
         }
