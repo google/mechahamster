@@ -52,7 +52,7 @@ namespace Hamster.States
                         if (!omClientACKRecvd[ii])  //  if this client hasn't acknowledged that they have started OpenMatch, then tell them again.
                         {
                             bAllAcksRecvd = false;
-                            Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name + "\nretries="+nretries.ToString());
+                            Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name + "\nretries="+nretries.ToString() + " connId="+connId.ToString());
                             custMgr.setAck(connId, false); //  clear the ack bit.
                             custMgr.Cmd_SendServerState(connId, curStateName);
                             nretries++;
@@ -127,6 +127,7 @@ namespace Hamster.States
                 bool allACKsRecvd = StartOpenMatchGame(lastTimeAckReqSent);
                 if (allACKsRecvd)
                 {
+                    Debug.Log("ServerOpenMatchStart: All ACKs Received");
                     //  okay, all of the clients know to move to OpenMatch, so we can shut down this server!
                     MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
                 }
@@ -200,15 +201,8 @@ namespace Hamster.States
             {
                 if (custMgr != null & custMgr.bIsServer)    //  only the server can shut down the game. The client cannot do this.
                 {
-                    // Clear out player states. This is totally a hack, but the OnDisconnect stuff doesn't seem to get called,
-                    // and we don't want to leak clients. The server effectively resets at this point.
-                    foreach (NetworkConnection conn in custMgr.client_connections)
-                    {
-                        custMgr.DestroyConnectionsPlayerControllers(conn);
-                    }
-                    custMgr.client_connections.Clear();
-
                     //  No players. End of OpenMatch
+                    Debug.Log("ServerOpenMatchStart: No players. Switching states");
                     MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
                 }
             }

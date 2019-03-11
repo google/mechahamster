@@ -39,6 +39,7 @@ namespace customNetwork
         CustomNetworkManagerHUD hud;
         //  openmatch
         public bool[] ackReceived = new bool[kMaxConnections];  //  for OpenMatch start ACk
+        Coroutine readyRoutine;
         public enum debugOutputStyle
         {
             db_none,
@@ -381,6 +382,7 @@ namespace customNetwork
             }
             if (!client_connections.Contains(conn))
             {
+                Debug.LogFormat("CreateClientConnections: Adding client connection: {0}", conn);
                 client_connections.Add(conn);
             }
         }
@@ -399,6 +401,7 @@ namespace customNetwork
         }
         public void DestroyConnectionsPlayerControllers(NetworkConnection conn)
         {
+            Debug.LogFormat("DestroyConnectionsPlayerControllers: Destroying {0} playerControllers for connection: {1}", conn.playerControllers.Count, conn);
             for(int ii=0; ii<conn.playerControllers.Count; ii++ )
             {
                 Destroy(conn.playerControllers[ii].gameObject);
@@ -419,6 +422,8 @@ namespace customNetwork
             if (this.client_connections.Contains(conn)) {
                 DestroyConnectionsPlayerControllers(conn);
                 this.client_connections.Remove(conn);
+                this.setAck(conn.connectionId, false);
+                Debug.LogFormat("OnServerDisconnect: {0} connections remaining", this.client_connections.Count);
             }
         }
 
@@ -482,6 +487,7 @@ namespace customNetwork
 
         public void setAck(int connId, bool bit=true)
         {
+            Debug.LogFormat("setAck: ACK bit for connId {0} changed from {1} to {2}", connId, ackReceived[connId], bit);
             ackReceived[connId] = bit; //  set or reset the OpenMatch ack.
         }
 
@@ -687,7 +693,7 @@ namespace customNetwork
             //int clientConnId = intMsg.value;    //  this client told us the connectionID they *think* they're on. But Unity plays a joke on us. They're different than the server ones for some reason. See this: https://docs.unity3d.com/ScriptReference/Networking.NetworkConnection-connectionId.html
             int clientConnId = netMsg.conn.connectionId;
             Debug.LogWarning("Server received OpenMatch ACK from client(" + clientConnId.ToString() + ")\n");
-            this.ackReceived[clientConnId] = true;
+            this.setAck(clientConnId, true);
         }
 
         //
@@ -752,6 +758,52 @@ namespace customNetwork
                     strMsg += ", " + this.client_connections[ii].connectionId.ToString();
                 }
                 hud.scaledTextBox(strMsg);
+            }
+        }
+
+        private IEnumerator ReadyUpdate()
+        {
+            while (true)
+            {
+                if (multiPlayerGame != null && multiPlayerGame.agones != null)
+                {
+                    multiPlayerGame.agones.Ready();
+                }
+                else
+                {
+                    Debug.Log("CustomNetworkManager::ReadyUpdate() - Problem: multiPlayerGame={0}", multiPlayerGame);
+                }
+
+                yield return new WaitForSeconds(30);
+            }
+        }
+
+        public void StartReadyRoutine()
+        {
+            Debug.Log("CustomNetworkManager: StartReadyRoutine()");
+
+            if (readyRoutine == null)
+            {
+                readyRoutine = StartCoroutine(ReadyUpdate());
+            }
+            else
+            {
+                Debug.Log("CustomNetworkManager: StartReadyRoutine: readyRoutine is already allocated.");
+            }
+        }
+
+        public void StopReadyRoutine()
+        {
+            Debug.Log("CustomNetworkManager: StopReadyRoutine()");
+            
+            if (readyRoutine != null)
+            {
+                StopCoroutine(readyRoutine);
+                readyRoutine = null;
+            }
+            else
+            {
+                Debug.Log("CustomNetworkManager: StopReadyRoutine: readyRoutine is already de-allocated");
             }
         }
     }
