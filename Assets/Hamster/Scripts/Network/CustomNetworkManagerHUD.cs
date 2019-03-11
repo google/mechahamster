@@ -75,13 +75,6 @@ namespace UnityEngine.Networking
                     m_autoStartLevel = false;   //  we gotta stop calling this over and over.
                     multiPlayerGame.EnterServerStartupState(startLevel);  //  use this now instead of manager.StartServer()
                     bSucceeded = true;
-
-                    //  we no longer do agones.Ready() here because it should be done in the FSM started by ServerStartupState above.
-                    //  see Hamster.States.ServerStartup.Initialize() or ServerLoadingLevel.GentleLoadLevel() for where this should happen now.
-                    //// If we're running through Agones, signal ready after the level has loaded
-                    //if (agones != null) {
-                    //    agones.Ready();
-                    //}
                 }
             }
             return bSucceeded;

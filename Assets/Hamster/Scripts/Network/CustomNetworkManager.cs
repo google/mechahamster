@@ -761,8 +761,10 @@ namespace customNetwork
             }
         }
 
-        private IEnumerator ReadyUpdate()
+        private IEnumerator ReadyUpdate(float delay)
         {
+            GetMultiplayerPointer();
+
             while (true)
             {
                 if (multiPlayerGame != null && multiPlayerGame.agones != null)
@@ -774,17 +776,15 @@ namespace customNetwork
                     Debug.Log("CustomNetworkManager::ReadyUpdate() - Problem: multiPlayerGame={0}", multiPlayerGame);
                 }
 
-                yield return new WaitForSeconds(30);
+                yield return new WaitForSeconds(delay);
             }
         }
 
-        public void StartReadyRoutine()
+        public void StartReadyRoutine(float delay)
         {
-            Debug.Log("CustomNetworkManager: StartReadyRoutine()");
-
             if (readyRoutine == null)
             {
-                readyRoutine = StartCoroutine(ReadyUpdate());
+                readyRoutine = StartCoroutine(ReadyUpdate(delay));
             }
             else
             {
@@ -794,10 +794,9 @@ namespace customNetwork
 
         public void StopReadyRoutine()
         {
-            Debug.Log("CustomNetworkManager: StopReadyRoutine()");
-            
             if (readyRoutine != null)
             {
+                Debug.Log("CustomNetworkManager: StopReadyRoutine: Stopping readyRoutine");
                 StopCoroutine(readyRoutine);
                 readyRoutine = null;
             }
