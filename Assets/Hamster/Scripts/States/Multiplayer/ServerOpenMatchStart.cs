@@ -163,14 +163,10 @@ namespace Hamster.States
             }
             if (custMgr != null)
             {
-<<<<<<< HEAD
-                curNumPlayers = manager.numPlayers;
-=======
                 if (custMgr.client_connections != null)
                 {
                     curNumPlayers = custMgr.getNumPlayers();
                 }
->>>>>>> master
             }
 
             if (openMatch != null && openMatch.Port != 0)
