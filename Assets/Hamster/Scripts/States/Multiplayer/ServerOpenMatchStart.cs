@@ -71,22 +71,6 @@ namespace Hamster.States
                 NetworkClient.ShutdownAll();
             }
         }
-        void OpenMatchRequest()
-        {
-            Debug.Log("Attempting to connect to Open Match!");
-
-            DisconnectPreviousConnection();
-
-            // This string is what a match is filtered on. Don't change it unless
-            // there is a server-side filter which can create a match with a new value.
-            string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
-
-            if (openMatch.Connect("35.236.24.200", modeCheckJSON))
-            {
-                Debug.Log("Match request sent!");
-                bOpenMatchWaiting = true;
-            }
-        }
 
         void GetPointers()
         {
