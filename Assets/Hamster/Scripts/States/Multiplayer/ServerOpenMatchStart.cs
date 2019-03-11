@@ -52,7 +52,7 @@ namespace Hamster.States
                         if (!omClientACKRecvd[ii])  //  if this client hasn't acknowledged that they have started OpenMatch, then tell them again.
                         {
                             bAllAcksRecvd = false;
-                            Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name + "\nretries="+nretries.ToString());
+                            Debug.LogWarning(ii.ToString() + ") SendServerState(" + curStateName + ") to: " + custMgr.client_connections[ii].playerControllers[0].gameObject.name + "\nretries="+nretries.ToString() + " connId="+connId.ToString());
                             custMgr.setAck(connId, false); //  clear the ack bit.
                             custMgr.Cmd_SendServerState(connId, curStateName);
                             nretries++;
@@ -69,22 +69,6 @@ namespace Hamster.States
             if (NetworkClient.active)
             {
                 NetworkClient.ShutdownAll();
-            }
-        }
-        void OpenMatchRequest()
-        {
-            Debug.Log("Attempting to connect to Open Match!");
-
-            DisconnectPreviousConnection();
-
-            // This string is what a match is filtered on. Don't change it unless
-            // there is a server-side filter which can create a match with a new value.
-            string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
-
-            if (openMatch.Connect("35.236.24.200", modeCheckJSON))
-            {
-                Debug.Log("Match request sent!");
-                bOpenMatchWaiting = true;
             }
         }
 
@@ -127,6 +111,7 @@ namespace Hamster.States
                 bool allACKsRecvd = StartOpenMatchGame(lastTimeAckReqSent);
                 if (allACKsRecvd)
                 {
+                    Debug.Log("ServerOpenMatchStart: All ACKs Received");
                     //  okay, all of the clients know to move to OpenMatch, so we can shut down this server!
                     MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
                 }
@@ -201,8 +186,8 @@ namespace Hamster.States
                 if (custMgr != null & custMgr.bIsServer)    //  only the server can shut down the game. The client cannot do this.
                 {
                     //  No players. End of OpenMatch
+                    Debug.Log("ServerOpenMatchStart: No players. Switching states");
                     MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
-
                 }
             }
         }

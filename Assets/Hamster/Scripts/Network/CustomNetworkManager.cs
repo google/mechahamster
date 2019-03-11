@@ -39,6 +39,7 @@ namespace customNetwork
         CustomNetworkManagerHUD hud;
         //  openmatch
         public bool[] ackReceived = new bool[kMaxConnections];  //  for OpenMatch start ACk
+        Coroutine readyRoutine;
         public enum debugOutputStyle
         {
             db_none,
@@ -51,6 +52,7 @@ namespace customNetwork
         void DebugOutput(string st)
         {
             DebugOutput(st, null);
+            Debug.Log(st);
         }
 
         void DebugOutput(string st, params object[] args)
@@ -287,7 +289,7 @@ namespace customNetwork
 
         void OnServerAddPlayerAutoPickPrefabInternal(NetworkConnection conn, short playerControllerId)
         {
-            int prefabId = curColorIndex % spawnPrefabs.Count;
+            int prefabId = conn.connectionId % spawnPrefabs.Count;
             curColorIndex++;    //  hack: cycle through the colors. This is a hack because we don't have enough playerController to do this indefinitely!
             OnServerAddPlayerInternal(this.spawnPrefabs[prefabId], conn, playerControllerId);
         }
@@ -310,14 +312,15 @@ namespace customNetwork
                 return;
             }
             */
-            if (playerControllerId < conn.playerControllers.Count && conn.playerControllers[playerControllerId].IsValid && conn.playerControllers[playerControllerId].gameObject != null)
+            var id = playerControllerId; //conn.connectionId;
+            if (id < conn.playerControllers.Count && conn.playerControllers[id].IsValid && conn.playerControllers[id].gameObject != null)
             {
                 //  note: it seems that Unity already assigns a playerControllerId in its mysterious black box. So, the first connection with come here and already have a player. I'm not sure how.
                 //  it seems that the playerController list is maintained on the client, but not on the server!!!
                 //  to be clear: It seems to be normal that playerControllerId==0 passes through here. So, we skip those errors for playerControllerId==0
-                if (LogFilter.logError) { Debug.LogError("There is already a player at that playerControllerId for this connections."); }
-                if (LogFilter.logError) { Debug.LogError("playerControllerId=" + playerControllerId.ToString()); }
-                if (LogFilter.logError) { Debug.LogError("playerControllerId name=" + conn.playerControllers[playerControllerId].gameObject.name); }
+                if (LogFilter.logError) { Debug.LogError("There is already a player at that id for this connections."); }
+                if (LogFilter.logError) { Debug.LogError("id=" + id.ToString()); }
+                if (LogFilter.logError) { Debug.LogError("id name=" + conn.playerControllers[id].gameObject.name); }
                 return;
             }
 
@@ -379,6 +382,7 @@ namespace customNetwork
             }
             if (!client_connections.Contains(conn))
             {
+                Debug.LogFormat("CreateClientConnections: Adding client connection: {0}", conn);
                 client_connections.Add(conn);
             }
         }
@@ -395,8 +399,9 @@ namespace customNetwork
             CreateClientConnections(conn);
             base.OnServerConnect(conn);
         }
-        void DestroyConnectionsPlayerControllers(NetworkConnection conn)
+        public void DestroyConnectionsPlayerControllers(NetworkConnection conn)
         {
+            Debug.LogFormat("DestroyConnectionsPlayerControllers: Destroying {0} playerControllers for connection: {1}", conn.playerControllers.Count, conn);
             for(int ii=0; ii<conn.playerControllers.Count; ii++ )
             {
                 Destroy(conn.playerControllers[ii].gameObject);
@@ -417,6 +422,8 @@ namespace customNetwork
             if (this.client_connections.Contains(conn)) {
                 DestroyConnectionsPlayerControllers(conn);
                 this.client_connections.Remove(conn);
+                this.setAck(conn.connectionId, false);
+                Debug.LogFormat("OnServerDisconnect: {0} connections remaining", this.client_connections.Count);
             }
         }
 
@@ -480,6 +487,7 @@ namespace customNetwork
 
         public void setAck(int connId, bool bit=true)
         {
+            Debug.LogFormat("setAck: ACK bit for connId {0} changed from {1} to {2}", connId, ackReceived[connId], bit);
             ackReceived[connId] = bit; //  set or reset the OpenMatch ack.
         }
 
@@ -488,7 +496,6 @@ namespace customNetwork
             serverVersion = Application.version;
             MessageBase serverVersionMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(serverVersion);
             conn.Send((short)hamsterMsgType.hmsg_serverVersion, serverVersionMsg);
-
         }
 
         //  client wants the server version.
@@ -686,7 +693,7 @@ namespace customNetwork
             //int clientConnId = intMsg.value;    //  this client told us the connectionID they *think* they're on. But Unity plays a joke on us. They're different than the server ones for some reason. See this: https://docs.unity3d.com/ScriptReference/Networking.NetworkConnection-connectionId.html
             int clientConnId = netMsg.conn.connectionId;
             Debug.LogWarning("Server received OpenMatch ACK from client(" + clientConnId.ToString() + ")\n");
-            this.ackReceived[clientConnId] = true;
+            this.setAck(clientConnId, true);
         }
 
         //
@@ -706,6 +713,7 @@ namespace customNetwork
         public override void OnStopClient()
         {
             DebugOutput("CustomNetworkManager.OnStopClient\n");
+            base.OnStopClient();
         }
         //
         // Summary:
@@ -750,6 +758,51 @@ namespace customNetwork
                     strMsg += ", " + this.client_connections[ii].connectionId.ToString();
                 }
                 hud.scaledTextBox(strMsg);
+            }
+        }
+
+        private IEnumerator ReadyUpdate(float delay)
+        {
+            GetMultiplayerPointer();
+
+            while (true)
+            {
+                if (multiPlayerGame != null && multiPlayerGame.agones != null)
+                {
+                    multiPlayerGame.agones.Ready();
+                }
+                else
+                {
+                    Debug.Log("CustomNetworkManager::ReadyUpdate() - Problem: multiPlayerGame={0}", multiPlayerGame);
+                }
+
+                yield return new WaitForSeconds(delay);
+            }
+        }
+
+        public void StartReadyRoutine(float delay)
+        {
+            if (readyRoutine == null)
+            {
+                readyRoutine = StartCoroutine(ReadyUpdate(delay));
+            }
+            else
+            {
+                Debug.Log("CustomNetworkManager: StartReadyRoutine: readyRoutine is already allocated.");
+            }
+        }
+
+        public void StopReadyRoutine()
+        {
+            if (readyRoutine != null)
+            {
+                Debug.Log("CustomNetworkManager: StopReadyRoutine: Stopping readyRoutine");
+                StopCoroutine(readyRoutine);
+                readyRoutine = null;
+            }
+            else
+            {
+                Debug.Log("CustomNetworkManager: StopReadyRoutine: readyRoutine is already de-allocated");
             }
         }
     }

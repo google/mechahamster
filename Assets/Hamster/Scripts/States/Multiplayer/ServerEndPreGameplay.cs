@@ -13,7 +13,6 @@ namespace Hamster.States
         public CustomNetworkManagerHUD hud;
         int curNumPlayers;
         int curNumClients;
-        bool hasPlayers = false;
         bool agoneHasShutdown = false;
 
         override public void Initialize()
@@ -67,15 +66,10 @@ namespace Hamster.States
 
         void ShutdownAgones()
         {
-            // Something might need to kick the clients gracefully here. This will just tell Agones to terminate
-            // the server because the match is up.
-            if (MultiplayerGame.instance.agones != null)
+            if (MultiplayerGame.instance.agones != null && !agoneHasShutdown)
             {
                 agoneHasShutdown = true;    //  don't know if we can spam agones.Shutdown or not. Just allow it unless it causes problems.
                 MultiplayerGame.instance.agones.Shutdown();
-            }
-            else
-            {  //  we've added a player, so we're no longer in this state.
             }
         }
         override public void OnGUI()
@@ -94,10 +88,10 @@ namespace Hamster.States
             curNumPlayers = manager.numPlayers;
             if (curNumPlayers > 0)
             {
-                // GM: Temporarily changing this so we can exit an OpenMatch match and shutdown a server.
-                //MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>(); //  start the game
-                hasPlayers = true;
-                MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
+                if (MultiplayerGame.instance.agones == null)
+                {
+                    MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
+                }
             }
             else
             {

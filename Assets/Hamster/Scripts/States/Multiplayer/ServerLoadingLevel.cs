@@ -60,7 +60,7 @@ namespace Hamster.States
             // If we're running through Agones, signal ready after the level has loaded
             if (MultiplayerGame.instance.agones != null)
             {
-                MultiplayerGame.instance.agones.Ready();
+                //MultiplayerGame.instance.agones.Ready();
                 internalState = originalMHStates.AgonesReady;
             }
             return bSuccess;
@@ -80,7 +80,7 @@ namespace Hamster.States
             // If we're running through Agones, signal ready after the level has loaded
             if (MultiplayerGame.instance.agones != null)
             {
-                MultiplayerGame.instance.agones.Ready();
+                //MultiplayerGame.instance.agones.Ready();
                 internalState = originalMHStates.AgonesReady;
             }
             return bSuccess;
@@ -132,7 +132,14 @@ namespace Hamster.States
                 {
                     //  the server has finished loading the map and is ready to let players drop in. So go to the next state.
                     //  Allow players to drop in to the game now.
-                    MultiplayerGame.instance.ServerEnterMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
+                    if (MultiplayerGame.instance.agones != null)
+                    {
+                        MultiplayerGame.instance.ServerEnterMultiPlayerState<Hamster.States.ServerListenForClients>();
+                    }
+                    else
+                    {
+                        MultiplayerGame.instance.ServerEnterMultiPlayerState<Hamster.States.ServerPreOpenMatchGamePlay>();
+                    }
                 }
             }
         }
