@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 namespace Hamster.States
 {
+    /*
+     * The server needs time to load the level before it can accept players. This has to do with how levels are created on the fly from prefab tile parts.
+     */
     public class ServerLoadingLevel : BaseState
     {
         enum originalMHStates

@@ -11,7 +11,7 @@ using Hamster.States;
  * refer to NetworkManager, that makes that structure a no-go. Thus, it's simply placed as a component onto the same Component as CustomNetworkManager. It's unclear what ramifications this may
  * have later down the road. But for now, it works.
  */
-public class MultiplayerGame : MonoBehaviour
+public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
 {
     //  game constants
     const int kMaxPlayers = 4;
@@ -53,7 +53,8 @@ public class MultiplayerGame : MonoBehaviour
     public int startingLevel;
     public float[] playerFinishTimes = new float[kMaxPlayers];  //  where we record the finish times of the players.
     public NetworkConnection[] networkConnections = new NetworkConnection[kMaxPlayers];
-
+    public Dictionary<NetworkConnection, float> startTimes;
+    public Dictionary<NetworkConnection, float> finishTimes;
     string serverAddress;
     string serverPort;
 
@@ -80,16 +81,20 @@ public class MultiplayerGame : MonoBehaviour
         }
     }
 
+    void ClearFinishTimes()
+    {
+        for (int ii = 0; ii < kMaxPlayers; ii++)
+        {
+            playerFinishTimes[ii] = -1.0f;  //  initialize to negative time.
+        }
+    }
     //  typical unity stuff below
     private void Awake()
     {
         if (s_instance == null)
             s_instance = this;
         DontDestroyOnLoad(this.gameObject); //  because NetworkManager has been set to DontDestroyOnLoad, it will be in a separate scene hierarchy/memory segment that cannot interact with this. Thus we must be in the same "zone" as the NetworkManager! Ugh, Unity!
-        for (int ii = 0; ii < kMaxPlayers; ii++)
-        {
-            playerFinishTimes[ii] = -1.0f;  //  initialize to negative time.
-        }
+        ClearFinishTimes();
     }
 
     //  use startLevelidx==-1 to choose a level through the menu.
@@ -137,7 +142,7 @@ public class MultiplayerGame : MonoBehaviour
     static private void EnterMultiPlayerState<T>(StateManager stateManager,  int mode=0, bool isSwapState = false) where T : Hamster.States.BaseState, new()
     {
         Hamster.States.BaseState state = new T();
-        Debug.Log("State change: " + stateManager.CurrentState().ToString() + "->: " + state.ToString() /*+ "(swap/push=" + isSwapState.ToString()*/  + "\n");
+        Debug.Log("State change: " + stateManager.CurrentState().ToString() + "->: " + state.ToString() /*+ "(swap/push=" + isSwapState.ToString()*/  + "(" + mode.ToString() + ")\n");
         //  some states require the mode. Pass that along here.
         //  this is an ugly way to pass variables, but I didn't want to change the core of stateManager
         ServerStartup serverStartupState = state as ServerStartup;
@@ -168,7 +173,7 @@ public class MultiplayerGame : MonoBehaviour
         }
     }
 
-
+    //  This is called on the Client. The client should have only one connection to the server.
     public void OnClientConnect(NetworkConnection conn)
     {
         networkConnections[0] = conn;   //  we're on the client, so we have only ONE connection to the server.
@@ -184,6 +189,34 @@ public class MultiplayerGame : MonoBehaviour
     {
 
     }
+
+    //[Command]
+    //public void Cmd_clientStartedGame(NetworkConnection conn)
+    //{
+    //    this.startTimes[conn] = Time.realtimeSinceStartup;
+    //}
+
+    ////  called on the server when the client finished the game.
+    //[Command]
+    //public void cmd_OnServerClientFinishedGame(NetworkConnection conn)
+    //{
+    //    this.finishTimes[conn] = Time.realtimeSinceStartup;
+    //}
+    ////  called on the client when the client finished the game.
+    //public void ClientFinishedGame(NetworkConnection conn)
+    //{
+    //    cmd_OnServerClientFinishedGame(conn);
+    //}
+
+    //public void notifyServerClientStart()
+    //{
+    //    if (NetworkClient.active && NetworkClient.allClients != null)
+    //    {
+    //        NetworkConnection conn = NetworkClient.allClients[0].connection;
+    //        Cmd_clientStartedGame(conn);
+    //    }
+    //}
+
     // Start is called before the first frame update
     void Start()
     {

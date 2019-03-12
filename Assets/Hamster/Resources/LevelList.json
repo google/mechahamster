@@ -5,6 +5,12 @@
       "description": "GDC 2019 Multiplayer Demo",
       "filename": "SB_map_04",
       "replay": "replays/SB_map_04"
-	}
+    },
+    {
+      "name": "Debug Multiplayer",
+      "description": "For Testing",
+      "filename": "MultiplayerMap",
+      "replay": "replays/MultiplayerMap"
+    }
   ]
 }

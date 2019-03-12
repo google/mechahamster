@@ -14,7 +14,7 @@ namespace Hamster.States
 {
     public class ServerNetworkManagerOnlineSceneLoaded : BaseState
     {
-        int startLevel = 0;
+        int startLevel = -1;    //  default to -1 allows the menu to be shown to select a level.
 
         override public void Initialize()
         {
@@ -29,6 +29,7 @@ namespace Hamster.States
                 Hamster.States.ServerStartup startupState = prevState as Hamster.States.ServerStartup;
                 if (startupState != null)
                 {
+                    Debug.LogError("startupState.levelIdx=" + startupState.levelIdx.ToString());
                     startLevel = startupState.levelIdx;
                 }
             }
@@ -41,6 +42,7 @@ namespace Hamster.States
         // Update is called once per frame
         public override void Update ()
         {
+            Debug.Log("ServerNetworkManagerOnlineSceneLoaded.Update startLevel=" + startLevel.ToString());
 
             MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerLoadingLevel>(startLevel);
             //this.manager.PopState();    //  okay, we're done, so just exit this state?

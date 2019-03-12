@@ -5,6 +5,7 @@ using System.IO;
 
 public class JsonStartupConfig : MonoBehaviour
 {
+    public int defaultStartLevel = 0;
     public bool autoStart;  //  automatically start as server or client, depending upon whether I have a display or not.
     public const string kConfigJsonBasename = "MHConfig";
     public const string kConfigJson = kConfigJsonBasename + ".json";
@@ -23,7 +24,7 @@ public class JsonStartupConfig : MonoBehaviour
         Debug.LogWarning("Automatically created " + kConfigJson + ". Move this file to a Resources/ subfolder.\n");
         StartupConfig cfg = new StartupConfig();
         //  set up defaults here.
-        cfg.startingLevel = 0;  //  this is the multiplayer map.
+        cfg.startingLevel = defaultStartLevel;  //  this is the multiplayer map.
         cfg.serverIP = "35.236.114.54";   //  this is the address Graeme gave me.
         cfg.serverPort = "7777";    //  this is sort of the default for MechaHamster for whatever reason.
         string jsonOutStr = JsonUtility.ToJson(cfg);
@@ -44,12 +45,12 @@ public class JsonStartupConfig : MonoBehaviour
 
         if (json == null)
         {
-            if (autoStart)
-                Debug.LogWarning("cannot autostart because File not found in Resources/: " + kConfigJson + "\n");
             if (Application.isEditor)
             {
                 CreateDummyJson();
             }
+            if (autoStart)
+                Debug.LogWarning("cannot autostart because File not found in Resources/: " + kConfigJson + "\n");
         }
         else
         {

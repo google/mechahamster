@@ -396,8 +396,8 @@ namespace customNetwork
         public override void OnServerConnect(NetworkConnection conn)
         {
             DebugOutput("CustomNetworkManager.OnServerConnect: connId=" + conn.connectionId.ToString() + "\n");
-            CreateClientConnections(conn);
             base.OnServerConnect(conn);
+            CreateClientConnections(conn);
         }
         public void DestroyConnectionsPlayerControllers(NetworkConnection conn)
         {
@@ -463,24 +463,33 @@ namespace customNetwork
         //
         // Summary:
         //     Called on the server when a client is ready.
-        //
+        //      NOTE: "ready" in this case means that ClientScene.Ready(conn) was called. But that function is obsolete.
         // Parameters:
         //   conn:
         //     Connection from client.
         public override void OnServerReady(NetworkConnection conn)
         {
+            bool isHost;
+            isHost = NetworkClient.active && NetworkServer.active;
+
+            Debug.LogWarning("OnServerReady: " + conn.ToString()+"\n");
             //  we need to tell the client what level we've loaded.
             int levelIdx = -1;  //  no level is loaded that we know of (yet).
             if (Hamster.CommonData.gameWorld != null)   //  if the game knows about a levelIndex, then send it.
             {
                 levelIdx = Hamster.CommonData.gameWorld.curLevelIdx;
+                Debug.LogWarning("OnServerReady levelIdx=" + levelIdx.ToString() + ", isHost=" + isHost.ToString() + "\n");
             }
             else
             {
                 Debug.LogWarning("Server didn't notify clients of server level idx");
             }
-            MessageBase msg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(levelIdx);    //  test: yep, just send a number without any context for now. Later, wrap this in an appropriate MessageBase class.
-            conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg); //  tell our client what level we're using.
+            if (conn.connectionId != conn.hostId)    //  hack: let the host choose a level through the menu! But other servers need to tell their clients what level to load
+            {
+                MessageBase msg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(levelIdx);    //  test: yep, just send a number without any context for now. Later, wrap this in an appropriate MessageBase class.
+                Debug.LogWarning("conn.Send server level: " + levelIdx.ToString() + " to " + conn.ToString());
+                conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg); //  tell our client what level we're using.
+            }
             SendServerVersion(conn);
             CreateClientConnections(conn);
         }
@@ -632,8 +641,8 @@ namespace customNetwork
         void OnClientLevelMsg(NetworkMessage netMsg)
         {
             UnityEngine.Networking.NetworkSystem.IntegerMessage intMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.IntegerMessage>();
-            DebugOutput("OnClientLevelMsg: " + intMsg.ToString());
             int levelToLoad = intMsg.value;
+            DebugOutput("OnClientLevelMsg: recved Server level request:" + levelToLoad.ToString());
             //  our server has declared a level that it has already loaded. Let's try to load that level.
             MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientLoadingLevel>(levelToLoad); //  make our client go into the OpenMatch server state!
 
@@ -656,7 +665,7 @@ namespace customNetwork
             UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
             serverVersion = strMsg.value;
             string clientVersion = Application.version;
-            Debug.LogWarning("Client received Server version=" + serverVersion);
+            Debug.Log("Client received Server version=" + serverVersion);
             if (serverVersion != clientVersion)
             {
                 Debug.LogError("Server Version=" + serverVersion + " does not match client=" + clientVersion);

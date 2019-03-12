@@ -37,6 +37,7 @@ namespace Hamster
         const int kInitialHitPoints = 3;
 
         public bool isSpectator;   //  this give client authority to ball movement and uses a different control scheme to move the ball/camera.
+        MultiplayerGame multiplayerGame;
 
         NetworkIdentity netIdentity;
         Rigidbody myRigidBody;
@@ -67,6 +68,7 @@ namespace Hamster
 
         void Start()
         {
+            multiplayerGame = FindObjectOfType<MultiplayerGame>();
             Time.maximumDeltaTime = kTimeScale;
             if (mycam==null)
             {
@@ -368,7 +370,18 @@ namespace Hamster
         {
             ReachedGoal = true;
             ResetPlayerPosition(this.gameObject);
-            Debug.LogWarning("Player has reached goal: " + this.name);
+            //if (NetworkServer.active)
+            //{
+            //    //NetworkConnection conn;
+            //    //NetworkIdentity netID = this.GetComponent<NetworkIdentity>();
+
+            //    Debug.LogWarning("Server: Player has reached goal: " + this.name);
+            //    //multiplayerGame.cmd_OnServerClientFinishedGame(conn);
+            //}
+            if (NetworkClient.active)
+            {
+                Debug.LogWarning("Client: Player has reached goal: " + this.name);
+            }
 
             //  on the client, need to tell the player that they won.
             //  on the server, need to update the game state so that we know a player has "won" the level.

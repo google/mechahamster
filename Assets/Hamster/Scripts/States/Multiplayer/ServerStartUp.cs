@@ -9,8 +9,14 @@ namespace Hamster.States
         public NetworkManager manager;
         public bool bServerStarted = false;
         public int levelIdx = 0;
+        bool isHost;
         override public void Initialize()
         {
+            isHost = NetworkClient.active && NetworkServer.active;
+            if (isHost)
+            {
+                levelIdx = -1;
+            }
             Debug.Log("ServerStartup.Initialize\n");
             if (!bServerStarted)
             {
