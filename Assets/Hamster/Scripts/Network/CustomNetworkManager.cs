@@ -633,11 +633,15 @@ namespace customNetwork
         {
             UnityEngine.Networking.NetworkSystem.IntegerMessage intMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.IntegerMessage>();
             DebugOutput("OnClientLevelMsg: " + intMsg.ToString());
-            //  our server has declared a level. Let's try to load that level.
-            if (intMsg.value >= 0)
-            {
-                LoadLevel(intMsg.value);
-            }
+            int levelToLoad = intMsg.value;
+            //  our server has declared a level that it has already loaded. Let's try to load that level.
+            MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientLoadingLevel>(levelToLoad); //  make our client go into the OpenMatch server state!
+
+            //  this is obsolete. Try to use the states to do this so that the Client level load is more sensible that relying on timing!
+            //if (intMsg.value >= 0)
+            //{
+            //    LoadLevel(intMsg.value);
+            //}
         }
 
         public bool isServerAndClientVersionMatch(out string serverV)

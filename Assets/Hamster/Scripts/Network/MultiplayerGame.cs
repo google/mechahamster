@@ -139,6 +139,7 @@ public class MultiplayerGame : MonoBehaviour
         Hamster.States.BaseState state = new T();
         Debug.Log("State change: " + stateManager.CurrentState().ToString() + "->: " + state.ToString() /*+ "(swap/push=" + isSwapState.ToString()*/  + "\n");
         //  some states require the mode. Pass that along here.
+        //  this is an ugly way to pass variables, but I didn't want to change the core of stateManager
         ServerStartup serverStartupState = state as ServerStartup;
         if (serverStartupState!=null)
         {
@@ -147,8 +148,15 @@ public class MultiplayerGame : MonoBehaviour
         ServerLoadingLevel serverLoadLevel = state as ServerLoadingLevel;
         if (serverLoadLevel != null)
         {
-            Debug.Log("Loading Level=" + mode.ToString());
+            Debug.Log("Server Loading Level=" + mode.ToString());
             serverLoadLevel.levelIdx = mode;
+        }
+        ClientLoadingLevel clientLoadLevel = state as ClientLoadingLevel;
+        if (clientLoadLevel != null)
+        {
+            Debug.Log("Client Loading Level=" + mode.ToString());
+            clientLoadLevel.levelIdx = mode;
+
         }
         if (isSwapState)
         {
