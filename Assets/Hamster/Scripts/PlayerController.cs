@@ -104,6 +104,8 @@ namespace Hamster
             this.myRigidBody.detectCollisions = !bmakeIntoSpectator;
             this.myRigidBody.useGravity = !bmakeIntoSpectator;
             this.isSpectator = bmakeIntoSpectator;
+
+            CommonData.mainCamera.mode = bmakeIntoSpectator ? CameraController.CameraMode.Spectator : CameraController.CameraMode.Gameplay;
         }
         [Command]
         void Cmd_ResetPlayerPosition()
@@ -124,10 +126,7 @@ namespace Hamster
 
         public void ClientMakeIntoSpectator(bool bmakeIntoSpectator)
         {
-            if (isClient)
-                Cmd_MakeIntoSpectator(bmakeIntoSpectator);
-            this.
-            MakeIntoSpectator(bmakeIntoSpectator);
+            Cmd_MakeIntoSpectator(bmakeIntoSpectator);
             //  different control scheme.
         }
         //  The server should already be in Gameplay.GameplayMode.Gameplay state before the player has entered the game and been notified via OnStartLocalPlayer().
@@ -185,97 +184,9 @@ namespace Hamster
         //    float angleInDegrees = Mathf.Rad2Deg*angleInRadians;   //  in degrees because n00bs.
         //    cam.transform.RotateAround(rotationalAxis, -angleInDegrees);//rotate the opposite way 
         //}
-        /*
-         * These are custom controls for the spectator that floats around and doesn't move according to physics.
-         */
-        Vector3 SpectatorControls()
-        {
-            //  we have to normalize the camera after all of these moves because the rotate around the yaxis along with various camera-relative movement can cause roll to pollute the camera matrix.
-            //StraightenCamera(mycam);
 
-            Vector3 force = Vector3.zero;
-            if (!isSpectator) return force;   //  non-spectators do not have access to this special stuff.
-
-            float zforce = 0.0f;
-            float elapsedTime = Time.deltaTime;
-            Vector2 input = inputController.GetInputVector();   //  kKeyVelocity
-            //float inputMag = Hamster.InputControllers.KeyboardController.kKeyVelocity * kTimeScale;    //  just a fudge factor to make it feel right.
-            float inputMag = kTimeScale * kPositionDelta;    //  Since we are moving the position rather than adding a force, we don't need to have the velocity multiplied in.
-
-            if (Input.GetKeyDown(KeyCode.Space))    //  space to reset position to StartPosition square
-            {
-                Cmd_ResetPlayerPosition();
-                this.ResetPlayerPosition(this.gameObject);
-                Cmd_ZeroPlayerMomentum();
-                ZeroPlayerMomentum();
-            }
-            else if (Input.GetKeyDown(KeyCode.Return))    //  Return/Enter to zero momentum
-            {
-                Cmd_ZeroPlayerMomentum();
-                ZeroPlayerMomentum();
-            }
-
-            if (Input.GetKey(KeyCode.W))
-            {
-                Vector3 xzForce = mycamParentXform.forward; //  force along the xzplane since the camera will be looking at the target at a downward angle.
-                xzForce.y = 0;
-                xzForce.Normalize();
-                xzForce *= inputMag / elapsedTime;
-                force += xzForce;
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                Vector3 xzForce = mycamParentXform.forward * inputMag / elapsedTime;
-                xzForce.y = 0;
-                xzForce.Normalize();
-                xzForce *= inputMag / elapsedTime;
-
-                force -= xzForce;
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                Vector3 xzForce = mycamParentXform.right; //  force along the xzplane since the camera will be looking at the target at a downward angle.
-                xzForce.y = 0;
-                xzForce.Normalize();
-                xzForce *= inputMag / elapsedTime;
-                force -= xzForce;
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                Vector3 xzForce = mycamParentXform.right; //  force along the xzplane since the camera will be looking at the target at a downward angle.
-                xzForce.y = 0;
-                xzForce.Normalize();
-                xzForce *= inputMag / elapsedTime;
-                force += xzForce;
-            }
-
-            if (Input.GetKey(KeyCode.PageUp))
-            {
-                if (elapsedTime > 0.01f)
-                    force.y = inputMag/ elapsedTime;
-            }
-            else if (Input.GetKey(KeyCode.PageDown))
-            {
-                if (elapsedTime > 0.01f)
-                    force.y = -inputMag / elapsedTime;
-            }
-
-            float camRotateVal = kCamRotateSpeed * kTimeScale / elapsedTime;
-            if (Input.GetKey(KeyCode.Q))   //  rotate camera left
-            {
-                //mycamParentXform.RotateAround(this.transform.position, kYaxis, camRotateVal); //  don't do this anymore. We actually just want to move the camera in an orbit.
-                mycamParentXform.position -= mycamParentXform.transform.right* camRotateVal;
-            }
-            else if (Input.GetKey(KeyCode.E))   //  rotate camera right
-            {
-                //mycamParentXform.RotateAround(this.transform.position, kYaxis , -camRotateVal);//  don't do this anymore. We actually just want to move the camera in an orbit.
-                mycamParentXform.position += mycamParentXform.transform.right* camRotateVal;
-            }
-            return force;
-        }
         void Update()
         {
-            float spectatorZforce = 0.0f;
             if (Input.GetKeyDown(KeyCode.F12))  //  special key to request spectator mode.
             {
                 ClientMakeIntoSpectator(!isSpectator);
@@ -293,7 +204,7 @@ namespace Hamster
                 }
             }
 
-            if (isLocalPlayer)
+            if (isLocalPlayer && !isSpectator)
             {
                 float elapsedTime = Time.deltaTime; //  time since last frame.
                 Vector2 input = inputController.GetInputVector();   //  kKeyVelocity
@@ -323,10 +234,6 @@ namespace Hamster
                 }
 
                 forceThisFrame *= kForceFudgeFactor;
-                if (this.isSpectator)
-                {
-                    forceThisFrame = SpectatorControls();
-                }
 
                 if (forceThisFrame.magnitude < kServerForceThreshold)
                     return;  // if we're too weak of a force, the server does not need know about you.
@@ -381,7 +288,7 @@ namespace Hamster
                     {
                         multiplayerGame = FindObjectOfType<MultiplayerGame>();
                     }
-                    multiplayerGame.ClientFinishedGame(conn);
+                    multiplayerGame.cmd_OnServerClientFinishedGame(conn);
                 }
             }
             if (NetworkClient.active)
@@ -495,6 +402,17 @@ namespace Hamster
             AddPosition(deltaPos);
         }
 
-
+        public static PlayerController FindLocalPlayerController()
+        {
+            PlayerController[] players = FindObjectsOfType<PlayerController>();
+            foreach(PlayerController player in players)
+            {
+                if( player.isLocalPlayer )
+                {
+                    return player;
+                }
+            }
+            return null;    // unexpected...
+        }
     }
 }
