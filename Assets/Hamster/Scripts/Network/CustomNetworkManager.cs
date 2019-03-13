@@ -330,7 +330,7 @@ namespace customNetwork
                 //  note: it seems that Unity already assigns a playerControllerId in its mysterious black box. So, the first connection with come here and already have a player. I'm not sure how.
                 //  it seems that the playerController list is maintained on the client, but not on the server!!!
                 //  to be clear: It seems to be normal that playerControllerId==0 passes through here. So, we skip those errors for playerControllerId==0
-                if (LogFilter.logError) { Debug.LogError("There is already a player at that id for this connections."); }
+                if (LogFilter.logError) { Debug.LogError("There is already a player at that playerControllerId for this connectionId=" + conn.connectionId.ToString()); }
                 if (LogFilter.logError) { Debug.LogError("id=" + id.ToString()); }
                 if (LogFilter.logError) { Debug.LogError("id name=" + conn.playerControllers[id].gameObject.name); }
                 return;

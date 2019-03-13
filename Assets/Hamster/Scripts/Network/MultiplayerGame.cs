@@ -203,22 +203,20 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
 
     //  called on the server when the client finished the game.
     //[Command]
-    public void cmd_OnServerClientFinishedGame(NetworkConnection conn)
+    public float cmd_OnServerClientFinishedGame(NetworkConnection conn)
     {
         this.finishTimes[conn.connectionId] = Time.realtimeSinceStartup;
         Debug.LogError("cmd_OnServerClientFinishedGame: finish t=" + this.finishTimes[conn.connectionId].ToString());
         float raceTime = this.finishTimes[conn.connectionId] - this.startTimes[conn.connectionId];
         Debug.Log("s=" + this.startTimes[conn.connectionId].ToString() + " f=" + this.finishTimes[conn.connectionId].ToString() + ", raceTime=" + raceTime.ToString());
 
-        long elaspedTimeinMS = (long)(System.Convert.ToInt64(raceTime * 1000.0f));
-        string timeStr = string.Format(StringConstants.FinishedTimeText, Hamster.Utilities.StringHelper.FormatTime(elaspedTimeinMS));
-
-        Debug.LogWarning("Server recvd notice that client Finished Game: " + conn.ToString() + "t=" + +elaspedTimeinMS + "\n");
+        return raceTime;
     }
     //  called on the client when the client finished the game.
     public void ClientFinishedGame(NetworkConnection conn)
     {
-        cmd_OnServerClientFinishedGame(conn);
+        float raceTime = cmd_OnServerClientFinishedGame(conn);
+        ServerGameFinished.EnterState(raceTime);
     }
 
     public void notifyServerClientStart(NetworkConnection conn)

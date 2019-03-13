@@ -114,12 +114,13 @@ namespace Hamster.States {
     }
 
     public override void Update() {
-      float elapsedTime = Time.realtimeSinceStartup - StartTime;
-      if (elapsedTime < SlowdownTotalTime) {
-        Time.timeScale = Mathf.Lerp(1.0f, 0.0f, elapsedTime / SlowdownTotalTime);
-      } else {
-        Time.timeScale = 0.0f;
-      }
+            // we cannot do this anymore otherwise our server and client will become desynched. The server and client already are on slightly different clocks. No reason to explicitly desync them here when their frame rates invariably differ
+      //float elapsedTime = Time.realtimeSinceStartup - StartTime;
+      //if (elapsedTime < SlowdownTotalTime) {
+      //  Time.timeScale = Mathf.Lerp(1.0f, 0.0f, elapsedTime / SlowdownTotalTime);
+      //} else {
+      //  Time.timeScale = 0.0f;
+      //}
     }
 
     public override void HandleUIEvent(GameObject source, object eventData) {
