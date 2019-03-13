@@ -198,10 +198,7 @@ namespace Hamster
             {
                 //  EndGame();  //  we don't end the game anymore because in a multiplayer game, other people are still playing. So let's not destroy the world.
                 //  instead, let's just reset our position
-                if (isServer)
-                {
-                    ResetPlayerPosition(this.gameObject);
-                }
+                ResetPlayerPosition(this.gameObject);
             }
 
             if (isLocalPlayer && !isSpectator)

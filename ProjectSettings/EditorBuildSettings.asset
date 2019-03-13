@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Hamster/NetworkStartScene.unity
-    guid: ba5235b58cf390a4c82afcdb71870bf7
+    path: Assets/Hamster/NetworkStartSceneCA.unity
+    guid: c4856c002589c1f4fb7729e1e3773b95
   - enabled: 1
     path: Assets/Hamster/NetworkMainGameScene.unity
     guid: 95311917bee885746a4e03e0b6f40369
+  - enabled: 1
+    path: Assets/Hamster/NetworkStartScene.unity
+    guid: ba5235b58cf390a4c82afcdb71870bf7
   m_configObjects: {}

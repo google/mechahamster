@@ -8,7 +8,6 @@ public class FPSDisplay
     GUIStyle style;
     Rect displayRect;
     double lastDeltaTime;
-    UnityEngine.Networking.CustomNetworkManagerHUD hud;
 
     public FPSDisplay()
     {
