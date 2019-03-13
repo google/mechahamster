@@ -55,6 +55,8 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     public NetworkConnection[] networkConnections = new NetworkConnection[kMaxPlayers];
     public Dictionary<int, float> startTimes;
     public Dictionary<int, float> finishTimes;
+    public Dictionary<int, NetworkConnection> finishedClients;
+
     string serverAddress;
     string serverPort;
 
@@ -96,6 +98,7 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
             s_instance = this;
             startTimes  = new Dictionary<int, float>();
             finishTimes = new Dictionary<int, float>();
+            finishedClients = new Dictionary<int, NetworkConnection>();   //  clients which have finished the race.
         }
         DontDestroyOnLoad(this.gameObject); //  because NetworkManager has been set to DontDestroyOnLoad, it will be in a separate scene hierarchy/memory segment that cannot interact with this. Thus we must be in the same "zone" as the NetworkManager! Ugh, Unity!
         ClearFinishTimes();
@@ -216,7 +219,14 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     public void ClientFinishedGame(NetworkConnection conn)
     {
         float raceTime = cmd_OnServerClientFinishedGame(conn);
-        ServerGameFinished.EnterState(raceTime);
+        //  add this connectionId as one of the finished clients.
+        if (!finishedClients.ContainsKey(conn.connectionId))
+            finishedClients[conn.connectionId] = conn;
+        //  wait until we get 4 finished clients before we do something.
+        if (finishedClients.Count >= 4)
+        {
+            ServerGameFinished.EnterState(raceTime);
+        }
     }
 
     public void notifyServerClientStart(NetworkConnection conn)
