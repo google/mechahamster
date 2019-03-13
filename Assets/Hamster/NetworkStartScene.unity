@@ -112,18 +112,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &110862952 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2242585629550785348, guid: 815574da17091434d82da70aed5bfe7c,
-    type: 3}
-  m_PrefabInstance: {fileID: 2242585631130547771}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14a1e3842874dec48a348c36506ff71c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &124869208
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,37 +181,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &380209252 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6615453843098976770, guid: eb20d603e67ce57468093cbefa793e46,
-    type: 3}
-  m_PrefabInstance: {fileID: 157028280096146033}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &380209253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380209252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cafa3a20f4c2bdf3a861cc7a9fc87196, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &380209259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380209252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01447fdde2d17e73987d973f255c750c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HealthCheckPeriod: 2
 --- !u!1 &966873831
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,16 +329,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3281308309604169175, guid: eb20d603e67ce57468093cbefa793e46,
-        type: 3}
-      propertyPath: config
-      value: 
-      objectReference: {fileID: 110862952}
-    - target: {fileID: 4457444913016974179, guid: eb20d603e67ce57468093cbefa793e46,
-        type: 3}
-      propertyPath: skipLevelMenu
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb20d603e67ce57468093cbefa793e46, type: 3}

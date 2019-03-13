@@ -53,8 +53,8 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     public int startingLevel;
     public float[] playerFinishTimes = new float[kMaxPlayers];  //  where we record the finish times of the players.
     public NetworkConnection[] networkConnections = new NetworkConnection[kMaxPlayers];
-    public Dictionary<NetworkConnection, float> startTimes;
-    public Dictionary<NetworkConnection, float> finishTimes;
+    public Dictionary<int, float> startTimes;
+    public Dictionary<int, float> finishTimes;
     string serverAddress;
     string serverPort;
 
@@ -92,7 +92,11 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     private void Awake()
     {
         if (s_instance == null)
+        {
             s_instance = this;
+            startTimes  = new Dictionary<int, float>();
+            finishTimes = new Dictionary<int, float>();
+        }
         DontDestroyOnLoad(this.gameObject); //  because NetworkManager has been set to DontDestroyOnLoad, it will be in a separate scene hierarchy/memory segment that cannot interact with this. Thus we must be in the same "zone" as the NetworkManager! Ugh, Unity!
         ClearFinishTimes();
     }
@@ -191,31 +195,40 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     }
 
     //[Command]
-    //public void Cmd_clientStartedGame(NetworkConnection conn)
-    //{
-    //    this.startTimes[conn] = Time.realtimeSinceStartup;
-    //}
+    public void Cmd_clientStartedGame(NetworkConnection conn)
+    {
+        this.startTimes[conn.connectionId] = Time.realtimeSinceStartup;
+        Debug.LogWarning("Cmd_clientStartedGame: Start t=" + this.startTimes[conn.connectionId].ToString() + " conn=" + conn.ToString());
+    }
 
-    ////  called on the server when the client finished the game.
+    //  called on the server when the client finished the game.
     //[Command]
-    //public void cmd_OnServerClientFinishedGame(NetworkConnection conn)
-    //{
-    //    this.finishTimes[conn] = Time.realtimeSinceStartup;
-    //}
-    ////  called on the client when the client finished the game.
-    //public void ClientFinishedGame(NetworkConnection conn)
-    //{
-    //    cmd_OnServerClientFinishedGame(conn);
-    //}
+    public void cmd_OnServerClientFinishedGame(NetworkConnection conn)
+    {
+        this.finishTimes[conn.connectionId] = Time.realtimeSinceStartup;
+        Debug.LogError("cmd_OnServerClientFinishedGame: finish t=" + this.finishTimes[conn.connectionId].ToString());
+        float raceTime = this.finishTimes[conn.connectionId] - this.startTimes[conn.connectionId];
+        Debug.Log("s=" + this.startTimes[conn.connectionId].ToString() + " f=" + this.finishTimes[conn.connectionId].ToString() + ", raceTime=" + raceTime.ToString());
 
-    //public void notifyServerClientStart()
-    //{
-    //    if (NetworkClient.active && NetworkClient.allClients != null)
-    //    {
-    //        NetworkConnection conn = NetworkClient.allClients[0].connection;
-    //        Cmd_clientStartedGame(conn);
-    //    }
-    //}
+        long elaspedTimeinMS = (long)(System.Convert.ToInt64(raceTime * 1000.0f));
+        string timeStr = string.Format(StringConstants.FinishedTimeText, Hamster.Utilities.StringHelper.FormatTime(elaspedTimeinMS));
+
+        Debug.LogWarning("Server recvd notice that client Finished Game: " + conn.ToString() + "t=" + +elaspedTimeinMS + "\n");
+    }
+    //  called on the client when the client finished the game.
+    public void ClientFinishedGame(NetworkConnection conn)
+    {
+        cmd_OnServerClientFinishedGame(conn);
+    }
+
+    public void notifyServerClientStart(NetworkConnection conn)
+    {
+        Debug.LogWarning("MultiplayerGame.notifyServerClientStart: " + conn.ToString() + "\n");
+        if (conn != null)
+        {
+            Cmd_clientStartedGame(conn);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

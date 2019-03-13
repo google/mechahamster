@@ -370,14 +370,20 @@ namespace Hamster
         {
             ReachedGoal = true;
             ResetPlayerPosition(this.gameObject);
-            //if (NetworkServer.active)
-            //{
-            //    //NetworkConnection conn;
-            //    //NetworkIdentity netID = this.GetComponent<NetworkIdentity>();
-
-            //    Debug.LogWarning("Server: Player has reached goal: " + this.name);
-            //    //multiplayerGame.cmd_OnServerClientFinishedGame(conn);
-            //}
+            if (NetworkServer.active)
+            {
+                Debug.LogWarning("Server: Player has reached goal: " + this.name);
+                NetworkConnection conn = this.connectionToClient;
+                if (conn != null)
+                {
+                    Debug.LogWarning("Server call attempt multiplayerGame.cmd_OnServerClientFinishedGame : " + conn.ToString()+ "\n");
+                    if (multiplayerGame == null)
+                    {
+                        multiplayerGame = FindObjectOfType<MultiplayerGame>();
+                    }
+                    multiplayerGame.cmd_OnServerClientFinishedGame(conn);
+                }
+            }
             if (NetworkClient.active)
             {
                 Debug.LogWarning("Client: Player has reached goal: " + this.name);

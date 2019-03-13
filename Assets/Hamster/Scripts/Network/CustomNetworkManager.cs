@@ -91,6 +91,18 @@ namespace customNetwork
         public NetworkConnection toServerConnection;  //  my connection to the server if I'm a client
         public List<NetworkConnection> client_connections;  //  as a server, these are the connections to me
 
+        public MultiplayerGame getMultiPlayerPointer()
+        {
+            if (multiPlayerGame == null)
+            {
+                multiPlayerGame = GetComponent<MultiplayerGame>();
+            }
+            if (multiPlayerGame == null)
+            {
+                Debug.LogError("MultiPlayerGame component needs to be on the same object as CustomNetworkManager!\n");
+            }
+            return multiPlayerGame;
+        }
         //  this centralizes the hack so that if the bug is fixed, we can just fix it here rather than in many places that are using either numPlayers or client_connections.Count
         public int getNumPlayers()
         {
@@ -371,6 +383,7 @@ namespace customNetwork
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
         {
             DebugOutput("CustomNetworkManager.OnServerAddPlayer: " + conn.ToString());
+            getMultiPlayerPointer().notifyServerClientStart(conn);
             OnServerAddPlayerAutoPickPrefabInternal(conn, playerControllerId);
         }
 
