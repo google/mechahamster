@@ -16,6 +16,11 @@ spec:
           - name: mecha-hamster
             image: gcr.io/mechahamster/mechahamster:agones-latest
             imagePullPolicy: Always
+            resources:
+              limits:
+                cpu: "2"
+              requests:
+                cpu: "1"
 ---
 apiVersion: "stable.agones.dev/v1alpha1"
 kind: FleetAutoscaler
