@@ -21,7 +21,7 @@ namespace customNetwork
             //  the following are still incomplete. They are there as placeholders.
             hmsg_serverPlayerDied,  //  server tells player that they've died
             hmsg_serverPlayerFinished,  //  server tells player that they've finished this level
-            hmsg_serverGameFinished,    //  server tells player that the game has been completed.
+            hmsg_serverGameOver,    //  server tells player that the game has been completed.
             hmsg_serverPlayerIsWinner,  //  server tells player that they're the winner!
             hmsg_newLevel,  //  server tells player that a new level has been loaded
             hmsg_EndOfMessageList = kMaxShort   //  do not use this. this just means that everything needs to be smaller than this number because the network message uses a short for this key.
@@ -537,6 +537,19 @@ namespace customNetwork
             NetworkServer.SendToClient(connectionId, (short)hamsterMsgType.hmsg_serverState, serverStateMsg);
         }
 
+        //  send our race time string from the server to the client.
+        //public void server_SendRaceTime(int connectionId, float raceTime)
+        //{
+        //    string raceTimeStr = raceTime.ToString();   //  raw time. We might want to send this instead of the formatted time.
+
+        //    long elaspedTimeinMS = (long)(System.Convert.ToInt64(raceTime * 1000.0f));
+        //    raceTimeStr = string.Format(Hamster.StringConstants.FinishedTimeText, Hamster.Utilities.StringHelper.FormatTime(elaspedTimeinMS));
+
+        //    Debug.LogWarning("Server send racetime=" + raceTimeStr + " to connId=" + connectionId.ToString());
+        //    MessageBase raceTimeMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(raceTimeStr);
+        //    NetworkServer.SendToClient(connectionId, (short)hamsterMsgType.hmsg_serverPlayerFinished, raceTimeMsg);
+        //}
+
         float lastServerVersionRequestTime = 0.0f;
         void RequestServerVersion(NetworkIdentity netid)
         {
@@ -639,7 +652,11 @@ namespace customNetwork
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverLevel, OnClientLevelMsg);
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverVersion, OnClientVersion);
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverState, OnClientServerState);
+            client.RegisterHandler((short)hamsterMsgType.hmsg_serverPlayerFinished, OnClientFinished);
+            client.RegisterHandler((short)hamsterMsgType.hmsg_serverGameOver, OnClientGameOver);
             
+
+
             //  Hamster.MainGame.NetworkSpawnPlayer(toServerConnection);  //  don't do this yet. Let the weird legacy Hamster code do it in its FixedUpdate, even though it's bad.
         }
 
@@ -689,16 +706,41 @@ namespace customNetwork
                 bServerVersionDoesntMatch = false;
             }
         }
+
+        //  all players have finished. So server tells everyone the game is over.
+        //  client gets the message and quits the server to go back to the lobby.
+        void OnClientGameOver(NetworkMessage netMsg)
+        {
+            Debug.LogError("OnClientGameOver hmsg_serverGameOver recvd");
+            UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
+            string serverState = strMsg.value;
+            Debug.LogError("OnClientFinished hmsg_serverGameOver msg=" + serverState);
+
+            //  quit OpenMatch and return to the "Lobby" which is really the preOpenMatchState.
+            MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientReturnToLobby>();
+        }
+
+        //  called on the client when the server tells us we've finished the race and gives us the time.
+        //  handles the hmsg_serverPlayerFinished message from the server.
+        void OnClientFinished(NetworkMessage netMsg)
+        {
+            Debug.LogError("OnClientFinished hmsg_serverPlayerFinished recvd");
+            UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
+            string serverState = strMsg.value;
+            Debug.LogError("OnClientFinished hmsg_serverPlayerFinished msg=" + serverState);
+            //if (serverState.Contains("ServerOpenMatchStart"))
+            //{
+            //    //  the server has told us to start open match on this client.
+            //    MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
+            //}
+        }
         //  the server has sent the server state to us.
         void OnClientServerState(NetworkMessage netMsg)
         {
             UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
-            string serverState = strMsg.value;
-            Debug.LogWarning("Client received Server state=" + serverState);
-            if (serverState.Contains("ServerOpenMatchStart")) {
-                //  the server has told us to start open match on this client.
-                MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
-            }
+            string finishTime = strMsg.value;
+            Debug.LogWarning("Client received Server finished Time=" + finishTime);
+            //MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientFinishedRace>(); //  make our client go into the OpenMatch server state!
         }
         //
         // Summary:
@@ -732,6 +774,7 @@ namespace customNetwork
             bIsServer = true;
             //  register my server handlers
             NetworkServer.RegisterHandler((short)hamsterMsgType.hmsg_clientOpenMatchAck, svrOnClientReady);
+            //  NetworkServer.SendToClient(connectionId, (short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_serverPlayerFinished, raceTimeMsg);
         }
         //
         // Summary:

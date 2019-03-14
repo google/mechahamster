@@ -201,7 +201,15 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     //  the game is over. The server needs to tell the players that the game has ended!
     public void ServerGameOver()
     {
+        customNetwork.CustomNetworkManager custMgr = manager as customNetwork.CustomNetworkManager;
 
+        foreach (NetworkConnection conn in custMgr.client_connections)
+        {
+            MessageBase raceTimeMsg = new UnityEngine.Networking.NetworkSystem.StringMessage("race finished");
+            Debug.LogError("ServerGameOver: hmsg_serverGameOver sent to: " + conn.connectionId.ToString());
+
+            NetworkServer.SendToClient(conn.connectionId, (short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_serverGameOver, raceTimeMsg);
+        }
     }
 
     //[Command]
@@ -211,15 +219,43 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
         Debug.LogWarning("Cmd_clientStartedGame: Start t=" + this.startTimes[conn.connectionId].ToString() + " conn=" + conn.ToString());
     }
 
+    //  this doesn't actually seem to work for some reason. Maybe the message is too long?
+    public void server_SendRaceTime(int connectionId, float raceTime)
+    {
+        string raceTimeStr = raceTime.ToString();   //  raw time. We might want to send this instead of the formatted time.
+
+        //long elaspedTimeinMS = (long)(System.Convert.ToInt64(raceTime * 1000.0f));
+        //raceTimeStr = string.Format(Hamster.StringConstants.FinishedTimeText, Hamster.Utilities.StringHelper.FormatTime(elaspedTimeinMS));
+
+        Debug.LogWarning("Server send racetime=" + raceTimeStr + " to connId=" + connectionId.ToString());
+
+        MessageBase raceTimeMsg = new UnityEngine.Networking.NetworkSystem.StringMessage(raceTimeStr);
+        NetworkServer.SendToClient(connectionId, (short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_serverPlayerFinished, raceTimeMsg);
+    }
     //  called on the server when the client finished the game.
     //[Command]
     public float cmd_OnServerClientFinishedGame(NetworkConnection conn)
     {
+        float raceTime = 0;
         this.finishTimes[conn.connectionId] = Time.realtimeSinceStartup;
-        Debug.LogError("cmd_OnServerClientFinishedGame: finish t=" + this.finishTimes[conn.connectionId].ToString());
-        float raceTime = this.finishTimes[conn.connectionId] - this.startTimes[conn.connectionId];
-        Debug.Log("s=" + this.startTimes[conn.connectionId].ToString() + " f=" + this.finishTimes[conn.connectionId].ToString() + ", raceTime=" + raceTime.ToString());
+        Debug.LogWarning("cmd_OnServerClientFinishedGame(" + conn.connectionId.ToString() + "): finish t=" + this.finishTimes[conn.connectionId].ToString());
+
         //playerFinishTimes[conn.connectionId] = raceTime;
+
+        if (!this.finishTimes.ContainsKey(conn.connectionId))
+        {
+            Debug.LogError("finishTimes has no key for connId=" + conn.connectionId.ToString());
+        }
+        else if (!this.startTimes.ContainsKey(conn.connectionId))
+        {
+            Debug.LogError("startTimes has no key for connId=" + conn.connectionId.ToString());
+        }
+        else
+        {
+            raceTime = this.finishTimes[conn.connectionId] - this.startTimes[conn.connectionId];
+            Debug.Log("s=" + this.startTimes[conn.connectionId].ToString() + " f=" + this.finishTimes[conn.connectionId].ToString() + ", raceTime=" + raceTime.ToString());
+            server_SendRaceTime(conn.connectionId, raceTime);
+        }
         return raceTime;
     }
     //  called on the client when the client finished the game.
@@ -229,10 +265,12 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
         //  add this connectionId as one of the finished clients.
         if (!finishedClients.ContainsKey(conn.connectionId))
             finishedClients[conn.connectionId] = conn;
+
+        //  tell that client they finished!
         //  wait until we get 4 finished clients before we do something.
         if (finishedClients.Count >= kMaxPlayers)
         {
-            ServerGameFinished.EnterState(raceTime);
+            ServerGameFinished.EnterState(conn.connectionId, raceTime);
         }
     }
 

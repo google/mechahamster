@@ -94,7 +94,7 @@ namespace UnityEngine.Networking
                 m_loadServerRequested = !AutoStartLevel(startLevel);
         }
 
-        void ReadConfig()
+        public void ReadConfig()
         {
             config = FindObjectOfType<JsonStartupConfig>();
 
