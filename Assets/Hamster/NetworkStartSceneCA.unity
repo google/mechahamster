@@ -468,10 +468,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7405748709298861591, guid: be868b26095015c40a916add22e7b3dc,
-        type: 3}
-      propertyPath: m_OfflineScene
-      value: NetworkStartSceneCA
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be868b26095015c40a916add22e7b3dc, type: 3}
