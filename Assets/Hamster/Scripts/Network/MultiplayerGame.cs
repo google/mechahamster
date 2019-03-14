@@ -14,7 +14,10 @@ using Hamster.States;
 public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
 {
     //  game constants
-    const int kMaxPlayers = 4;
+    public const int kMaxPlayers = 4;
+    public const int kMaxObservers = 1;
+    public const int kMaxConnections = kMaxPlayers + kMaxObservers;
+    public const int kOpenMatchThreshold = kMaxConnections;    //  kMaxPlayers;    //  this is when OpenMatch fires. Hack: test 5 connections when we're testing end of game triggers.
 
     static public MultiplayerGame s_instance;
     static public MultiplayerGame instance {
@@ -51,7 +54,7 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     public int numPlayers = 1;  //  this is the number of players who can join. Autostart after this number is reached on the server
     public int defaultLevelIdx = 0;
     public int startingLevel;
-    public float[] playerFinishTimes = new float[kMaxPlayers];  //  where we record the finish times of the players.
+    //public float[] playerFinishTimes = new float[kMaxPlayers];  //  where we record the finish times of the players.
     public NetworkConnection[] networkConnections = new NetworkConnection[kMaxPlayers];
     public Dictionary<int, float> startTimes;
     public Dictionary<int, float> finishTimes;
@@ -85,10 +88,13 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
 
     void ClearFinishTimes()
     {
-        for (int ii = 0; ii < kMaxPlayers; ii++)
-        {
-            playerFinishTimes[ii] = -1.0f;  //  initialize to negative time.
-        }
+        startTimes.Clear();
+        finishTimes.Clear();
+        finishedClients.Clear();
+        //for (int ii = 0; ii < kMaxPlayers; ii++)
+        //{
+        //    playerFinishTimes[ii] = -1.0f;  //  initialize to negative time.
+        //}
     }
     //  typical unity stuff below
     private void Awake()
@@ -212,7 +218,7 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
         Debug.LogError("cmd_OnServerClientFinishedGame: finish t=" + this.finishTimes[conn.connectionId].ToString());
         float raceTime = this.finishTimes[conn.connectionId] - this.startTimes[conn.connectionId];
         Debug.Log("s=" + this.startTimes[conn.connectionId].ToString() + " f=" + this.finishTimes[conn.connectionId].ToString() + ", raceTime=" + raceTime.ToString());
-
+        //playerFinishTimes[conn.connectionId] = raceTime;
         return raceTime;
     }
     //  called on the client when the client finished the game.
@@ -223,7 +229,7 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
         if (!finishedClients.ContainsKey(conn.connectionId))
             finishedClients[conn.connectionId] = conn;
         //  wait until we get 4 finished clients before we do something.
-        if (finishedClients.Count >= 4)
+        if (finishedClients.Count >= kMaxPlayers)
         {
             ServerGameFinished.EnterState(raceTime);
         }

@@ -285,7 +285,7 @@ namespace Hamster
                     {
                         multiplayerGame = FindObjectOfType<MultiplayerGame>();
                     }
-                    multiplayerGame.cmd_OnServerClientFinishedGame(conn);
+                    multiplayerGame.ClientFinishedGame(conn);
                 }
             }
             if (NetworkClient.active)

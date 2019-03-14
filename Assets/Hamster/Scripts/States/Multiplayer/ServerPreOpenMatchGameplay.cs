@@ -9,7 +9,7 @@ namespace Hamster.States
     {
         public NetworkManager manager;
         public CustomNetworkManagerHUD hud;
-        int openMatchStartThreshold = 4;    //  automatically start OpenMatch after this number of players
+        int openMatchStartThreshold = MultiplayerGame.kOpenMatchThreshold;    //  automatically start OpenMatch after this number of players
         int     curNumPlayers;
 
         override public void Initialize()

@@ -140,7 +140,7 @@ namespace Hamster.States
             {
             }
 
-            if (curNumPlayers >= 4)
+            if (curNumPlayers >= MultiplayerGame.kOpenMatchThreshold)
             {
                 //  fire off the OpenMatchState!
                 //  do something here to start OpenMatch
