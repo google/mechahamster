@@ -112,8 +112,6 @@ Mechahamster, you'll need set up the database access rules.
 4. Alternatively, use [Firebase CLI][] to upload `database.rules.json` file under `/console`
    directory to your Firebase project, which will be detailed below.
 
-> MechaHamster uses the name 'XYZZY' to represent desktop users.
-
 #### Update Firebase Database url in the script
 
 MechaHamster can access Firebase Realtime Database in the Unity Editor.  Set Database url to your
