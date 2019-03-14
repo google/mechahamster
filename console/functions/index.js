@@ -19,61 +19,33 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-// Database key for Leaderboard/Map/{MapType}/{MapID}/Top/Ranks/lastCleanup
-// and Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplays/lastCleanup
-const DB_KEY_LAST_CLEANUP = "lastCleanup";
+// Database key for
+//   Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplay/lastCleanupReplay
+const DB_KEY_LAST_CLEANUP_REPLAY = "lastCleanupReplay";
 
-// Database key for Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplays
-const DB_KEY_SHARED_REPLAYS = "SharedReplays";
+// Database keys to storage url of the replay data.
+//   Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplay/{RankID}/data/replayPath
+const DB_KEY_REPLAY_PATH = "data/replayPath";
 
-// Database keys to storage url of the replay data in the rank record. Ex.
-// Leaderboard/Map/{MapType}/{MapID}/Top/Ranks/{RankID}/data/replayPath and
-// Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplay/{RankID}/data/replayPath
-const DB_KEY_DATA = "data";
-const DB_KEY_REPLAY_PATH = "replayPath";
-
-// Database key of the time of this rank record. Ex.
-// Leaderboard/Map/{MapType}/{MapID}/Top/Ranks/{RankID}/score and
-// Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplay/{RankID}/score
+// Database key of the time of the rank record.
+//   Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplay/{RankID}/score
 const DB_KEY_SCORE = "score";
 
 // Minimum time between two cleanup process in milliseconds (1 minutes)
 // The cloud function aborts if it is triggered less than this amount of time since last cleanup.
 const CLEANUP_MIN_INTV_IN_MS = 1000 * 60;
 
-// Target number of records to keep under
-// Leaderboard/Map/{MapType}/{MapID}/Top/Ranks/ and
-// Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplay/
+// Target number of records to keep for each map.
 const TARGET_MAX_RECORDS = 5;
 
-// Start to clean up after the child count exceed this number.
-// The cleanup process will keep only the top "TARGET_MAX_RECORDS" of record and remove the rest.
+// Start to clean up if the amount of record exceeds this number.
 const RECORDS_CLEANUP_THRESHOLD = 10;
 
-// This cloud function is to limit the number of children in under the following database url
-//   Leaderboard/Map/{MapType}/{MapID}/Top/Ranks/
-// This cloud function is designed to process clean-up in a batch for efficiency.
-exports.processRankAdded =
-    functions.database.ref('Leaderboard/Map/{MapType}/{MapID}/Top/Ranks/{RankID}')
-    .onCreate(snapshot => {
-  console.log("========= Rank Record Added =========");
-  return updateLastCleanupTimestamp(snapshot).then(result => {
-    // If the transaction is aborted because the last update timestamp is too closed to current
-    // time, do nothing.  Otherwise, start the clean-up process.
-    if (result.committed) {
-      return processCleanup(snapshot.ref.parent);
-    } else {
-      return console.log("Skip clean-up process");
-    }
-  });
-});
-
-// This cloud function is to limit the number of children in under the following database url
-//   Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplays/
-// Also, this function removes the replay data from the cloud storage if it is no longer referenced
-// by the database.
-// This cloud function is designed to process clean-up in a batch for efficiency.
-exports.processSharedReplayAdded =
+// This cloud function is to limit the number of replay data stored in the database and cloud
+// storage.
+// It is triggered when a new record is added to the database.
+// It is designed to cleanup in a batch for efficiency.
+exports.cleanupReplay =
     functions.database.ref('Leaderboard/Map/{MapType}/{MapID}/Top/SharedReplays/{RankID}')
     .onCreate(snapshot => {
   console.log("========= Shared Replay Record Added =========");
@@ -89,15 +61,15 @@ exports.processSharedReplayAdded =
   });
 });
 
-// Reduce the freqency of the heavy lifting clean-up process through lastCleanup timestamp and
-// predefined CLEANUP_MIN_INTV_IN_MS property.
+// Reduce the frequency of the heavy lifting clean-up process using lastCleanupReplay timestamp.
 function updateLastCleanupTimestamp(snapshot) {
-  const lastCleanupTimestampRef = snapshot.ref.parent.child(DB_KEY_LAST_CLEANUP);
-  // Use transaction to update timestamp to prevent racing condition
+  // Navigate to Leaderboard/Map/{MapType}/{MapID}/Top/lastCleanupReplay
+  const lastCleanupTimestampRef = snapshot.ref.parent.parent.child(DB_KEY_LAST_CLEANUP_REPLAY);
+  // Use transaction to update timestamp to prevent race condition.
   return lastCleanupTimestampRef.transaction(snapshot => {
     const timestamp = new Date().getTime();
     if (snapshot !== null && (timestamp - snapshot) <= CLEANUP_MIN_INTV_IN_MS) {
-      // Abort the transaction by returning undefined
+      // Abort the transaction if this is triggered too soon. This returns an "undefined" result.
       return console.log("Abort " + lastCleanupTimestampRef + " update ( " + (timestamp - snapshot)
         + "ms <= " + CLEANUP_MIN_INTV_IN_MS + "ms )");
     } else {
@@ -127,24 +99,22 @@ function processCleanup(dbRef) {
       const recordToRemove = {};
 
       let childIndex = 0;
-      // DataSnapshot.forEach preserves the ascending order by score from orderByChild(DB_KEY_SCORE)
+      // DataSnapshot.forEach iterates in the ascending order from orderByChild(DB_KEY_SCORE)
       snapshot.forEach(function(childSnapshot) {
         // Keep the first few records
         if (childIndex++ <= TARGET_MAX_RECORDS) {
           return;
         }
 
-        // Set the child record to null to remove it in the database
+        // Set the child record to null to remove it from the database
         recordToRemove[childSnapshot.key] = null;
 
-        // If dbRef is for SharedReplays, delete old replay files as well.
-        if (dbRef.key == DB_KEY_SHARED_REPLAYS) {
-          const replayPath = childSnapshot.child(DB_KEY_DATA).child(DB_KEY_REPLAY_PATH).val();
-          if (replayPath) {
-            console.log("Removing file " + replayPath);
-            // Add the promise to remove the replay record from the storage
-            promises.push(bucket.file(replayPath).delete());
-          }
+        // Delete old replay files as well.
+        const replayPath = childSnapshot.child(DB_KEY_REPLAY_PATH).val();
+        if (replayPath) {
+          console.log("Removing file " + replayPath);
+          // Add the promise to remove the replay record from the storage
+          promises.push(bucket.file(replayPath).delete());
         }
       });
 
