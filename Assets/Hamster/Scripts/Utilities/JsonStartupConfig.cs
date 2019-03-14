@@ -62,6 +62,7 @@ public class JsonStartupConfig : MonoBehaviour
     private void Awake()
     {
         isConfigLoaded = false;
+        DontDestroyOnLoad(this.gameObject); //  because NetworkManager has been set to DontDestroyOnLoad, it will be in a separate scene hierarchy/memory segment that cannot interact with this. Thus we must be in the same "zone" as the NetworkManager! Ugh, Unity!
     }
     // Start is called before the first frame update
     void Start()

@@ -94,7 +94,7 @@ namespace UnityEngine.Networking
                 m_loadServerRequested = !AutoStartLevel(startLevel);
         }
 
-        public void ReadConfig()
+        public void ReadConfig(NetworkManager netMgr = null)
         {
             config = FindObjectOfType<JsonStartupConfig>();
 
@@ -107,6 +107,12 @@ namespace UnityEngine.Networking
                 this.startLevel = config.startupConfig.startingLevel;
                 this.serverAddress = config.startupConfig.serverIP;
                 this.serverPort = config.startupConfig.serverPort;
+                Debug.LogError("ReadConfig addr=" + this.serverAddress);
+                if (netMgr != null)
+                {
+                    netMgr.networkAddress = this.serverAddress;
+                    netMgr.networkPort = Convert.ToInt32(serverPort); ;
+                }
             }
         }
         bool ReadCommandLineArg()

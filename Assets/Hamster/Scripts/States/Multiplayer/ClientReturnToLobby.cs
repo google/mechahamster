@@ -60,7 +60,16 @@ namespace Hamster.States
             if (hud != null)
             {
                 myDebugMsg = "ClientReturnToLobby: nPlr=" + manager.numPlayers.ToString() + " nClients=" + NetworkClient.allClients.Count.ToString() + "\n\tNetClient.active=" + NetworkClient.active.ToString();
-                manager.StartClient();
+                if (!NetworkClient.active)
+                {
+                    Debug.Log(myDebugMsg);
+                    hud.ReadConfig(manager);
+                    string serverRedirectMsg = "server=" + manager.networkAddress + ", port=" + manager.networkPort.ToString();
+                    Debug.LogWarning(serverRedirectMsg);
+                    manager.StartClient();  //  once this is fired off, we should go into a waiting state.
+
+
+                }
             }
             else
             {
