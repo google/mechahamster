@@ -8,6 +8,7 @@ var NAVTREE =
       [ "Firebase Features", "mechahamster_guide_building.html", [
         [ "Analytics", "mechahamster_guide_analytics.html", null ],
         [ "Auth", "mechahamster_guide_auth.html", null ],
+        [ "Crashltyics (Beta)", "mechahamster_guide_crashlytics.html", null ],
         [ "Realtime Database", "mechahamster_guide_database.html", null ],
         [ "Remote Config", "mechahamster_guide_remoteconfig.html", null ],
         [ "Messaging", "mechahamster_guide_messaging.html", null ],

@@ -145,8 +145,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
                onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
           <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)"
-               onblur="searchBox.OnSearchFieldFocus(false)"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
                onkeyup="searchBox.OnSearchFieldChange(event)"/>
           </span><span class="right">
             <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
@@ -162,7 +162,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <div id="nav-sync" class="sync"></div>
     </div>
   </div>
-  <div id="splitbar" style="-moz-user-select:none;"
+  <div id="splitbar" style="-moz-user-select:none;" 
        class="ui-resizable-handle">
   </div>
 </div>
@@ -179,7 +179,7 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0"
+<iframe src="javascript:void(0)" frameborder="0" 
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -207,6 +207,8 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <td>Firebase Analytics </td><td>FirebaseAnalytics.unitypackage </td></tr>
 <tr>
 <td>Firebase Auth </td><td>FirebaseAuth.unitypackage </td></tr>
+<tr>
+<td>Firebase Crashlytics (Beta) </td><td>FirebaseCrashlytics.unitypackage </td></tr>
 <tr>
 <td>Firebase Database </td><td>FirebaseDatabase.unitypackage </td></tr>
 <tr>
@@ -271,10 +273,6 @@ $(document).ready(function(){initNavTree('mechahamster_guide_building.html','');
 <li>Replace the rules text with the code in <a href="https://github.com/google/mechahamster/tree/master/console/database.rules.json">database.rules.json</a> under <code>/console</code> directory.</li>
 <li>Alternatively, use <a href="https://firebase.google.com/docs/cli/">Firebase CLI</a> to upload <code>database.rules.json</code> file under <code>/console</code> directory to your Firebase project, which will be detailed below.</li>
 </ol>
-<blockquote class="doxtable">
-<p>MechaHamster uses the name 'XYZZY' to represent desktop users.</p>
-<p></p>
-</blockquote>
 <h4>Update Firebase Database url in the script</h4>
 <p>MechaHamster can access Firebase Realtime Database in the Unity Editor. Set Database url to your project's database url using the SetEditorDatabaseUrl() function.</p>
 <ol type="1">
