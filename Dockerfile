@@ -8,4 +8,4 @@ COPY ./Client/mechahamster_client.x86_64 /opt/mechahamster/mechahamster_client.x
 COPY ./Client/remote_config_data /opt/mechahamster/remote_config_data
 
 EXPOSE 7777/udp
-CMD ["/opt/mechahamster/mechahamster_client.x86_64", "-a", "-s", "-nographics"]
+CMD ["/opt/mechahamster/mechahamster_client.x86_64", "-level", "0", "-a", "-s", "-nographics"]
