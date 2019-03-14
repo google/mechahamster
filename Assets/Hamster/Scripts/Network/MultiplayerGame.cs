@@ -17,7 +17,8 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     public const int kMaxPlayers = 4;
     public const int kMaxObservers = 1;
     public const int kMaxConnections = kMaxPlayers + kMaxObservers;
-    public const int kOpenMatchThreshold = kMaxConnections;    //  kMaxPlayers;    //  this is when OpenMatch fires. Hack: test 5 connections when we're testing end of game triggers.
+    //public const int kOpenMatchThreshold = kMaxConnections;    //  kMaxPlayers;    //  this is when OpenMatch fires. Hack: test 5 connections when we're testing end of game triggers.
+    public const int kOpenMatchThreshold = kMaxPlayers;    //  GM: The above is WIP; fixing this for now back to the old way so that game clients can connect
 
     static public MultiplayerGame s_instance;
     static public MultiplayerGame instance {
