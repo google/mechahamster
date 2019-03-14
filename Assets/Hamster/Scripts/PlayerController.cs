@@ -126,8 +126,10 @@ namespace Hamster
 
         public void ClientMakeIntoSpectator(bool bmakeIntoSpectator)
         {
-            Cmd_MakeIntoSpectator(bmakeIntoSpectator);
-            //  different control scheme.
+            if (isClient)
+                Cmd_MakeIntoSpectator(bmakeIntoSpectator);
+
+            MakeIntoSpectator(bmakeIntoSpectator);
         }
         //  The server should already be in Gameplay.GameplayMode.Gameplay state before the player has entered the game and been notified via OnStartLocalPlayer().
         static public void StartGamePlay()
@@ -187,7 +189,7 @@ namespace Hamster
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F12))  //  special key to request spectator mode.
+            if (isLocalPlayer && Input.GetKeyDown(KeyCode.F12))  //  special key to request spectator mode.
             {
                 ClientMakeIntoSpectator(!isSpectator);
             }

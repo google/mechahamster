@@ -49,11 +49,16 @@ namespace Hamster.States
             // there is a server-side filter which can create a match with a new value.
             string modeCheckJSON = @"{""mode"": {""battleroyale"": 1}";
 
-            if (openMatch.Connect("35.236.24.200", modeCheckJSON))
+            if (openMatch != null && openMatch.Connect("35.236.24.200", modeCheckJSON))
             {
                 Debug.Log("Match request sent!");
                 SendACKtoServer();
                 bOpenMatchWaiting = true;
+            }
+            else
+            {
+                string detail = openMatch != null ? openMatch.Address : "null";
+                Debug.LogWarning("Could not connect to openMatch: " + detail);
             }
         }
 

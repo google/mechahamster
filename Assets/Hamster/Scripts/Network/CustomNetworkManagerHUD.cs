@@ -34,6 +34,8 @@ namespace UnityEngine.Networking
         public NetworkManager manager;
         public customNetwork.CustomNetworkManager custMgr;
 
+        FPSDisplay fpsDisplay = new FPSDisplay();
+
         [SerializeField] public bool showGUI = true;
         //public bool releaseModeNoDebugText;
         [SerializeField] public int offsetX;
@@ -226,6 +228,8 @@ namespace UnityEngine.Networking
 
         void Update()
         {
+            fpsDisplay.Update();
+
             if (m_loadServerRequested)
             {
                 StartServerCommon();
@@ -425,7 +429,7 @@ namespace UnityEngine.Networking
             custMgr.OnGUIShowClientDebugInfo(this);
         }
 
-            void OnGUI()
+        void OnGUI()
         {
             if (!showGUI)
             {
@@ -437,6 +441,7 @@ namespace UnityEngine.Networking
                 return;
             }
 
+            fpsDisplay.OnGUI();
 
             int spacing = kTextBoxHeight + kSpaceBetweenBoxes;
             float screenHeightScaling = 1.0f;// Screen.currentResolution.height / 1024.0f;
@@ -490,6 +495,12 @@ namespace UnityEngine.Networking
                 }
 
             }
+            string omServer = "lobby";
+            if (MultiplayerGame.instance && MultiplayerGame.instance.agones)
+            {
+                omServer = "OpenMatch";
+            }
+            ypos = scaledTextBox(xpos, ypos, "scene=" + SceneManagement.SceneManager.GetActiveScene().name + " " + omServer); 
             ypos = scaledTextBox(xpos, ypos, "clientV=" + Application.version + ", " + serverVersionMsg);
 
             if (bShowDebugCmdlineArgs)

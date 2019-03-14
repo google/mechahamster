@@ -84,7 +84,7 @@ MonoBehaviour:
   m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 0
   m_PlayerSpawnMethod: 0
-  m_OfflineScene: NetworkStartScene
+  m_OfflineScene: NetworkStartSceneCA
   m_OnlineScene: NetworkMainGameScene
   m_SpawnPrefabs:
   - {fileID: 1130139028330910, guid: b4a4128649ba5c743b99519ac6e6aa3b, type: 3}
@@ -199,11 +199,6 @@ MonoBehaviour:
   numPlayers: 1
   defaultLevelIdx: 0
   startingLevel: 0
-  playerFinishTimes:
-  - 0
-  - 0
-  - 0
-  - 0
   agones: {fileID: 0}
   openMatch: {fileID: 0}
   curState: 
