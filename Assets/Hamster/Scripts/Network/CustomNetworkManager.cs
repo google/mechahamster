@@ -24,6 +24,7 @@ namespace customNetwork
             hmsg_serverGameOver,    //  server tells player that the game has been completed.
             hmsg_serverPlayerIsWinner,  //  server tells player that they're the winner!
             hmsg_newLevel,  //  server tells player that a new level has been loaded
+            hmsg_serverDebugInfo,   //  server tells the player some debug info
             hmsg_EndOfMessageList = kMaxShort   //  do not use this. this just means that everything needs to be smaller than this number because the network message uses a short for this key.
         }
         const int kMaxConnections = 32;
@@ -354,6 +355,14 @@ namespace customNetwork
             NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
         }
 
+
+        public void ServerSendDebugInfoToClient(NetworkConnection conn, string prependMsg="")
+        {
+            string serverDebugInfoMsg = this.networkAddress;
+            serverDebugInfoMsg = " (#" + conn.connectionId.ToString() + "/" + this.client_connections.Count.ToString() + ") " + this.networkAddress + ":" + this.networkPort.ToString();
+            serverDebugInfoMsg = prependMsg + serverDebugInfoMsg;
+            ServerSendDebugMessageToClient(serverDebugInfoMsg, conn);
+        }
         /*
          * Server responds to Client calling ClientScene.AddPlayer here.
          * This is successfully getting called even though the debug info doesn't print out.
@@ -366,6 +375,7 @@ namespace customNetwork
                 Debug.LogError("Registered Spawnable Prefabs list must contain at least one player prefab at index 0 to spawn the player.");
             }
             OnServerAddPlayerAutoPickPrefabInternal(conn, localPlayerControllerId);
+            ServerSendDebugInfoToClient(conn, "OnServerAddPlayer:" + extraMessageReader.ToString());
         }
         //
         // Summary:
@@ -385,6 +395,7 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnServerAddPlayer: " + conn.ToString());
             getMultiPlayerPointer().notifyServerClientStart(conn);
             OnServerAddPlayerAutoPickPrefabInternal(conn, playerControllerId);
+            ServerSendDebugInfoToClient(conn, "OnServerAddPlayer");
         }
 
         void CreateClientConnections(NetworkConnection conn)
@@ -411,6 +422,7 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnServerConnect: connId=" + conn.connectionId.ToString() + "\n");
             base.OnServerConnect(conn);
             CreateClientConnections(conn);
+            ServerSendDebugInfoToClient(conn, "Connect");
         }
         public void DestroyConnectionsPlayerControllers(NetworkConnection conn)
         {
@@ -430,6 +442,15 @@ namespace customNetwork
         //     Connection from client.
         public override void OnServerDisconnect(NetworkConnection conn)
         {
+            //  tell everyone that someone disconnected
+            for(int ii=0; ii<this.client_connections.Count; ii++)
+            {
+                NetworkConnection loopConn = client_connections[ii];
+                if (loopConn != null)
+                {
+                    ServerSendDebugInfoToClient(loopConn, "Disconnect id="+ conn.connectionId.ToString());
+                }
+            }
             base.OnServerDisconnect(conn);
             Debug.LogError("CustomNetworkManager.OnServerDisconnect: connId=" + conn.connectionId.ToString() + "\n");
             if (this.client_connections.Contains(conn)) {
@@ -654,6 +675,7 @@ namespace customNetwork
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverState, OnClientServerState);
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverPlayerFinished, OnClientFinished);
             client.RegisterHandler((short)hamsterMsgType.hmsg_serverGameOver, OnClientGameOver);
+            client.RegisterHandler((short)hamsterMsgType.hmsg_serverDebugInfo, OnClientRcvServerDebugInfo);
             
 
 
@@ -704,6 +726,27 @@ namespace customNetwork
             else
             {
                 bServerVersionDoesntMatch = false;
+            }
+        }
+
+        //  use this to tell the client something for debug.
+        //  client handles hmsg_serverDebugInfo
+        public void ServerSendDebugMessageToClient(string msg, NetworkConnection conn)
+        {
+            Debug.LogError("DbgMsg: Server->client(" + conn.connectionId.ToString() + "):"+msg);
+            MessageBase serverDebugMsgBase = new UnityEngine.Networking.NetworkSystem.StringMessage(msg);
+            NetworkServer.SendToClient(conn.connectionId, (short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_serverDebugInfo, serverDebugMsgBase);
+        }
+
+        //  OnClientRcvServerDebugInfo - get string debug msg from server
+        void OnClientRcvServerDebugInfo(NetworkMessage netMsg)
+        {
+            UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
+            string serverDbg = strMsg.value;
+            Debug.LogError("OnClientRcvServerDebugInfo " + serverDbg);
+            if (hud != null)
+            {
+                hud.curServerDebugInfo = serverDbg;
             }
         }
 

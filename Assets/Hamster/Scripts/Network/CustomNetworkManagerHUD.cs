@@ -51,6 +51,9 @@ namespace UnityEngine.Networking
         bool m_autoStartLevel = false;
         private OpenMatchClient openMatch;
 
+        //  debug info from the server
+        public string curServerDebugInfo;
+
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
          */
@@ -506,6 +509,7 @@ namespace UnityEngine.Networking
             {
                 omServer = "OpenMatch";
             }
+            ypos = scaledTextBox(xpos, ypos, curServerDebugInfo);
             ypos = scaledTextBox(xpos, ypos, "scene=" + SceneManagement.SceneManager.GetActiveScene().name + " " + omServer); 
             ypos = scaledTextBox(xpos, ypos, "clientV=" + Application.version + ", " + serverVersionMsg);
 
