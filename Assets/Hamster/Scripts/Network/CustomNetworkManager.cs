@@ -358,13 +358,33 @@ namespace customNetwork
 
         public void ServerSendDebugInfoToClient(NetworkConnection conn, string prependMsg="")
         {
+            string serverType = "LOBBY";
+            string networkAddr = this.networkAddress;
+            string networkPrt = this.networkPort.ToString();
+
+            bool bHasAgones = false;
+            if (this.multiPlayerGame.agones != null)
+            {
+                bHasAgones = true;
+                serverType = "OpenMatch";
+                if (this.multiPlayerGame != null)
+                {
+                    if (this.multiPlayerGame.openMatch != null)
+                    {
+                        networkAddr = this.multiPlayerGame.openMatch.Address;
+                        networkPrt = this.multiPlayerGame.openMatch.Port.ToString();
+                    }
+                }
+            }
+
+
             string serverDebugInfoMsg = this.networkAddress;
 
             if (this.networkAddress == "localhost")
             {
 
             }
-            serverDebugInfoMsg = " (#" + conn.connectionId.ToString() + "/" + this.client_connections.Count.ToString() + ") " + this.networkAddress + ":" + this.networkPort.ToString();
+            serverDebugInfoMsg = " (#" + conn.connectionId.ToString() + "/" + this.client_connections.Count.ToString() + ") " + serverType  + " - "+ this.networkAddress + ":" + networkPrt;
             serverDebugInfoMsg = prependMsg + serverDebugInfoMsg;
             ServerSendDebugMessageToClient(serverDebugInfoMsg, conn);
         }
