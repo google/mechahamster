@@ -166,7 +166,7 @@ namespace Hamster {
             return null;
           }
 
-          UserScore replayScore = new UserScore(task.Result.Children.First());
+          UserScore replayScore = UserScore.CreateScoreFromRecord(task.Result.Children.First());
           if (replayScore != null &&
               replayScore.OtherData != null &&
               replayScore.OtherData.ContainsKey(Database_Property_ReplayPath)) {
