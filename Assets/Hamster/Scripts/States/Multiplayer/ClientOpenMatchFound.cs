@@ -31,14 +31,22 @@ namespace Hamster.States
 
         void ConnectToOpenMatchServer()
         {
-            manager.networkAddress = openMatch.Address;
-            manager.networkPort = openMatch.Port;
-            manager.StartClient();
-            omAddress = openMatch.Address;
-            omPort = openMatch.Port;
-            bOpenMatchWaiting = false;
-
+            if (!NetworkClient.active && bOpenMatchWaiting)  //  we can only try this when we're not connected to anything and when we're waiting for openmatch connection.
+            {
+                Debug.LogWarning("ClientOpenMatchFound.Update ConnectToOpenMatchServer attempt: openMatch.Address=" + openMatch.Address + ", port=" + openMatch.Port.ToString());
+                manager.networkAddress = openMatch.Address;
+                manager.networkPort = openMatch.Port;
+                manager.StartClient();
+                omAddress = openMatch.Address;
+                omPort = openMatch.Port;
+                bOpenMatchWaiting = false;
+            }
+            else
+            {
+                NetworkClient.ShutdownAll();    //  if we're trying to get to OpenMatch, we should not be connected to any previous server anymore.
+            }
         }
+
         //void OpenMatchRequest()
         //{
 
@@ -91,7 +99,9 @@ namespace Hamster.States
         {
             GetPointers();
             DisconnectPreviousConnection();
-            ConnectToOpenMatchServer();
+            bOpenMatchWaiting = true;
+            //  ConnectToOpenMatchServer(); //  stall. put in a wait state between disconnect from previous server and connection to openmatch
+
         }
         override public void OnGUI()
         {
@@ -124,16 +134,9 @@ namespace Hamster.States
             if (openMatch != null && openMatch.Port != 0)
             {
 
-                if (omAddress != openMatch.Address && omPort != openMatch.Port)
+                if (bOpenMatchWaiting)
                 {
-                    Debug.LogWarning("ClientOpenMatchFound.Update openMatch.Address=" + openMatch.Address + ", port="+openMatch.Port.ToString());
-
-                    manager.networkAddress = openMatch.Address;
-                    manager.networkPort = openMatch.Port;
-                    manager.StartClient();
-                    omAddress = openMatch.Address;
-                    omPort = openMatch.Port;
-                    bOpenMatchWaiting = false;
+                    ConnectToOpenMatchServer();
                 }
             }
             else
