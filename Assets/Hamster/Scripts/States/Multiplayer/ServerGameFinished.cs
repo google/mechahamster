@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 namespace Hamster.States
 {
-    //  one of the players has finished the match. Need to tell that client and maybe the other clients what's happened!
+    //  All of the players have finished the race. Ends the match and tells the clients the race results
+    //  and to GTFO my server.
     public class ServerGameFinished : BaseState
     {
         Menus.SingleLabelGUI menuComponent;
@@ -24,18 +25,11 @@ namespace Hamster.States
         // Start is called before the first frame update
         public override void Initialize()
         {
-            menuComponent = SpawnUI<Menus.SingleLabelGUI>(StringConstants.PrefabsSingleLabelMenu);
-            //menuComponent = SpawnUI<Menus.SingleLabelGUI>(StringConstants.PrefabsLevelFinishedMenu);  //  nope. This spawns a big prefab menu system.
-
-            //customNetwork.CustomNetworkManager custMgr = MultiplayerGame.instance.manager as customNetwork.CustomNetworkManager;
-            //if (custMgr != null) {
-            //    custMgr.server_SendRaceTime(this.connectionId, this.m_raceTime);
-            //}
+            //  menuComponent = SpawnUI<Menus.SingleLabelGUI>(StringConstants.PrefabsSingleLabelMenu);  //  this only happens on the server, so no reason to put up a menu
 
             Time.timeScale = 1.0f;
             CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
             MultiplayerGame.instance.ServerGameOver();
 
         }
@@ -43,7 +37,7 @@ namespace Hamster.States
         public override void Resume(StateExitValue results)
         {
             ShowUI();
-            CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.gameMusic, true);
+            //  CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.gameMusic, true); //  not necessary to do this on the server.
             if (CommonData.vrPointer != null)
             {
                 CommonData.vrPointer.SetActive(false);
@@ -64,12 +58,6 @@ namespace Hamster.States
             Utilities.HideDuringGameplay.OnGameplayStateChange(false);
             Time.timeScale = 0.0f;
             Screen.sleepTimeout = SleepTimeout.SystemSetting;
-            //DestroyReplayAnimator();
-
-            //if (gameplayRecordingEnabled)
-            //{
-            //    CommonData.mainGame.PlayerSpawnedEvent.RemoveListener(OnPlayerSpawned);
-            //}
 
             return new StateExitValue(typeof(ServerGameFinished));
         }

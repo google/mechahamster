@@ -371,7 +371,8 @@ namespace customNetwork
             string networkPrt = this.networkPort.ToString();
 
             bool bHasAgones = false;
-            if (this.multiPlayerGame.agones != null)
+            getMultiPlayerPointer();
+            if (this.multiPlayerGame != null && this.multiPlayerGame.agones != null)
             {
                 bHasAgones = true;
                 serverType = "OpenMatch";
@@ -727,7 +728,7 @@ namespace customNetwork
         {
             UnityEngine.Networking.NetworkSystem.IntegerMessage intMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.IntegerMessage>();
             int levelToLoad = intMsg.value;
-            DebugOutput("OnClientLevelMsg: recved Server level request:" + levelToLoad.ToString());
+            DebugOutput("OnClientLevelMsg: recvd Server level request:" + levelToLoad.ToString());
             //  our server has declared a level that it has already loaded. Let's try to load that level.
             MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientLoadingLevel>(levelToLoad); //  make our client go into the OpenMatch server state!
 

@@ -12,6 +12,7 @@ namespace Hamster.States
         enum originalMHStates
         {
             UnknownState,
+            BaseState,
             StartState,
             LoadLevelRequested,
             WaitingForDBLoad,
@@ -32,6 +33,10 @@ namespace Hamster.States
         {
             switch (statename)
             {
+                case "Hamster.States.BaseState":
+                    return originalMHStates.BaseState;
+                    break;
+
                 case "Hamster.States.Gameplay":
                     return originalMHStates.Gameplay;
                     break;
@@ -91,7 +96,12 @@ namespace Hamster.States
 
         override public void Initialize()
         {
-            Debug.Log("ServerLoadingLevel.Initialize: level=" + levelIdx.ToString() + "\n");
+            string msg = "ServerLoadingLevel.Initialize: level=" + levelIdx.ToString();
+            CustomNetworkManagerHUD hud = MultiplayerGame.instance.manager.GetComponent<CustomNetworkManagerHUD>();
+            if (hud != null)
+                hud.showClientDebugInfoMessage(msg);
+
+
             bLoadedLevel = false;
             internalState = originalMHStates.StartState;
             if (levelIdx >= 0)
@@ -116,6 +126,9 @@ namespace Hamster.States
                 //Debug.Log("ServerLoadingLevel.Update: level=" + levelIdx.ToString() + "\n");
                 //Debug.Log("ServerLoadingLevel:curState=" + curState + "(" + GetState(curStateName).ToString() + ")\n");
                 //  we must wait until the original single player MechaHamster state has reached "MainMenu" before we can load the level
+                if (GetState(curStateName) == originalMHStates.BaseState) {
+                    bLoadedLevel = GentleLoadLevel(levelIdx);    //  force the MainGame state to load the level that was requested. 
+                }
                 if (GetState(curStateName) == originalMHStates.MainMenu)
                 {
                     bLoadedLevel = GentleLoadLevel(levelIdx);    //  force the MainGame state to load the level that was requested. 
@@ -131,7 +144,13 @@ namespace Hamster.States
                 BaseState curState = Hamster.CommonData.mainGame.stateManager.CurrentState();
                 string curStateName = curState.ToString();
                 string curStateEnum = GetState(curStateName).ToString();
-                if ((GetState(curStateName)) == originalMHStates.Gameplay)
+                string msg = "ServerLoadingLevel.Update: level=" + levelIdx.ToString() + "\nstate=" + curStateName;
+                CustomNetworkManagerHUD hud = MultiplayerGame.instance.manager.GetComponent<CustomNetworkManagerHUD>();
+                if (hud != null)
+                    hud.showClientDebugInfoMessage(msg);
+
+                originalMHStates curMHState = GetState(curStateName);
+                if (curMHState == originalMHStates.Gameplay)
                 {
                     //  the server has finished loading the map and is ready to let players drop in. So go to the next state.
                     //  Allow players to drop in to the game now.

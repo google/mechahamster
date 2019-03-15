@@ -53,7 +53,12 @@ namespace UnityEngine.Networking
 
         //  debug info from the server
         public string curServerDebugInfo;
-
+        string curClientDebugInfo = "";
+        public void showClientDebugInfoMessage(string msg)
+        {
+            curClientDebugInfo = msg;
+            Debug.Log("CustomNetMgrHUD.show" + msg + "\n");
+        }
         /*
          * We want to load the server as soon as we can, but still need to wait for varoius FSM states to initialize properly first.
          */
@@ -510,6 +515,10 @@ namespace UnityEngine.Networking
                 omServer = "OpenMatch";
             }
             ypos = scaledTextBox(xpos, ypos, curServerDebugInfo);
+            if (!string.IsNullOrEmpty(curClientDebugInfo))
+            {
+                ypos = scaledTextBox(xpos, ypos, curClientDebugInfo);
+            }
             ypos = scaledTextBox(xpos, ypos, "scene=" + SceneManagement.SceneManager.GetActiveScene().name + " " + omServer); 
             ypos = scaledTextBox(xpos, ypos, "clientV=" + Application.version + ", " + serverVersionMsg);
 

@@ -42,7 +42,8 @@ namespace Hamster.States
         // Update is called once per frame
         public override void Update ()
         {
-            Debug.Log("ServerNetworkManagerOnlineSceneLoaded.Update startLevel=" + startLevel.ToString());
+
+            
 
             MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerLoadingLevel>(startLevel);
             //this.manager.PopState();    //  okay, we're done, so just exit this state?

@@ -34,8 +34,15 @@ namespace Hamster.States
             TextAsset json = Resources.Load(levelDir.levels[currentLoadedMap].filename) as TextAsset;
             currentLevel = JsonUtility.FromJson<LevelMap>(json.ToString());
             currentLevel.DatabasePath = null;
-            CommonData.gameWorld.DisposeWorld();
-            CommonData.gameWorld.SpawnWorld(currentLevel);
+            if (CommonData.gameWorld != null)
+            {
+                CommonData.gameWorld.DisposeWorld();
+                CommonData.gameWorld.SpawnWorld(currentLevel);
+            }
+            else
+            {
+                Debug.Log("FAILED LoadLevel(" + i.ToString() + ") because CommonData.gameWorld is not ready!");
+            }
         }
 
         public bool RequestLoadLevel(int i)
