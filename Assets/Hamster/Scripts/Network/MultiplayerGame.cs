@@ -236,10 +236,19 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     //[Command]
     public float cmd_OnServerClientFinishedGame(NetworkConnection conn)
     {
-        float raceTime = 0;
+        customNetwork.CustomNetworkManager custMgr = manager as customNetwork.CustomNetworkManager;
+        string finishedMsg;
         this.finishTimes[conn.connectionId] = Time.realtimeSinceStartup;
-        Debug.LogWarning("cmd_OnServerClientFinishedGame(" + conn.connectionId.ToString() + "): finish t=" + this.finishTimes[conn.connectionId].ToString());
+        float raceTime = this.finishTimes[conn.connectionId] - this.startTimes[conn.connectionId];
+        Debug.LogWarning("cmd_OnServerClientFinishedGame(" + conn.connectionId.ToString() + "): finish t=" + raceTime.ToString());
+        if (custMgr != null)
+        {
+            //string whoFinished = conn. conn.connectionId;
+            string formattedRaceTime = string.Format(Hamster.StringConstants.FinishedTimeText, Hamster.Utilities.StringHelper.FormatTime((long)(raceTime*1000.0f)));
 
+            finishedMsg = "(" + this.finishedClients.Count.ToString() + "/" + custMgr.client_connections.Count.ToString() + ") " + formattedRaceTime + " #" + conn.connectionId.ToString() +" " + custMgr.getPlayerName(conn.connectionId);
+            custMgr.ServerShout(finishedMsg);
+        }
         //playerFinishTimes[conn.connectionId] = raceTime;
 
         if (!this.finishTimes.ContainsKey(conn.connectionId))
@@ -261,10 +270,11 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     //  called on the client when the client finished the game.
     public void ClientFinishedGame(NetworkConnection conn)
     {
-        float raceTime = cmd_OnServerClientFinishedGame(conn);
         //  add this connectionId as one of the finished clients.
         if (!finishedClients.ContainsKey(conn.connectionId))
             finishedClients[conn.connectionId] = conn;
+
+        float raceTime = cmd_OnServerClientFinishedGame(conn);
 
         //  tell that client they finished!
         //  wait until we get 4 finished clients before we do something.

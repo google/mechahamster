@@ -343,7 +343,10 @@ namespace customNetwork
             {
                 player = (GameObject)Instantiate(prefabToInstantiate, startPos.position, startPos.rotation);
                 if (player != null)
+                {
                     plrObject[conn.connectionId, playerControllerId] = player;
+                    player.name = prefabToInstantiate.name; //  don't allow Unity append "(Clone)" to the name
+                }
             }
             else
             {
@@ -355,6 +358,11 @@ namespace customNetwork
             NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
         }
 
+        public string getPlayerName(int connId, int plrControllerId = 0)
+        {
+            string name = plrObject[connId, plrControllerId].gameObject.name;
+            return name;
+        }
 
         public void ServerSendDebugInfoToClient(NetworkConnection conn, string prependMsg="")
         {
@@ -754,11 +762,19 @@ namespace customNetwork
             }
         }
 
+        //  tell all clients this message
+        public void ServerShout(string msg)
+        {
+            Debug.Log("DbgMsg: ServerShout:" + msg);
+            foreach (NetworkConnection conn in client_connections) {
+                ServerSendDebugMessageToClient(msg, conn);
+            }
+        }
         //  use this to tell the client something for debug.
         //  client handles hmsg_serverDebugInfo
         public void ServerSendDebugMessageToClient(string msg, NetworkConnection conn)
         {
-            Debug.LogError("DbgMsg: Server->client(" + conn.connectionId.ToString() + "):"+msg);
+            Debug.Log("DbgMsg: Server->client(" + conn.connectionId.ToString() + "):"+msg);
             MessageBase serverDebugMsgBase = new UnityEngine.Networking.NetworkSystem.StringMessage(msg);
             NetworkServer.SendToClient(conn.connectionId, (short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_serverDebugInfo, serverDebugMsgBase);
         }
