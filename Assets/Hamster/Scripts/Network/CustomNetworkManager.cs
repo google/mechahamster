@@ -359,6 +359,11 @@ namespace customNetwork
         public void ServerSendDebugInfoToClient(NetworkConnection conn, string prependMsg="")
         {
             string serverDebugInfoMsg = this.networkAddress;
+
+            if (this.networkAddress == "localhost")
+            {
+
+            }
             serverDebugInfoMsg = " (#" + conn.connectionId.ToString() + "/" + this.client_connections.Count.ToString() + ") " + this.networkAddress + ":" + this.networkPort.ToString();
             serverDebugInfoMsg = prependMsg + serverDebugInfoMsg;
             ServerSendDebugMessageToClient(serverDebugInfoMsg, conn);
@@ -769,21 +774,22 @@ namespace customNetwork
         {
             Debug.LogError("OnClientFinished hmsg_serverPlayerFinished recvd");
             UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
-            string serverState = strMsg.value;
-            Debug.LogError("OnClientFinished hmsg_serverPlayerFinished msg=" + serverState);
-            //if (serverState.Contains("ServerOpenMatchStart"))
-            //{
-            //    //  the server has told us to start open match on this client.
-            //    MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
-            //}
+            string finishTime = strMsg.value;
+            Debug.LogWarning("Client received Server finished Time=" + finishTime);
+            //MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientFinishedRace>(); //  make our client go into the OpenMatch server state!
         }
         //  the server has sent the server state to us.
         void OnClientServerState(NetworkMessage netMsg)
         {
+
             UnityEngine.Networking.NetworkSystem.StringMessage strMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.StringMessage>();
-            string finishTime = strMsg.value;
-            Debug.LogWarning("Client received Server finished Time=" + finishTime);
-            //MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientFinishedRace>(); //  make our client go into the OpenMatch server state!
+            string serverState = strMsg.value;
+            Debug.LogWarning("Client received Server state=" + serverState);
+            if (serverState.Contains("ServerOpenMatchStart"))
+            {
+                //  the server has told us to start open match on this client.
+                MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
+            }
         }
         //
         // Summary:
