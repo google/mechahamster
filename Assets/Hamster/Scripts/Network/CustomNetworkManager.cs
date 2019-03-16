@@ -339,9 +339,10 @@ namespace customNetwork
 
             GameObject player;
             Transform startPos = GetStartPosition();
+            Vector3 offset = Quaternion.Euler(0f, (id % 4) * Mathf.PI * 0.5f, 0f) * Vector3.forward;
             if (startPos != null)
             {
-                player = (GameObject)Instantiate(prefabToInstantiate, startPos.position, startPos.rotation);
+                player = (GameObject)Instantiate(prefabToInstantiate, startPos.position + offset, startPos.rotation);
                 if (player != null)
                 {
                     plrObject[conn.connectionId, playerControllerId] = player;
@@ -350,7 +351,7 @@ namespace customNetwork
             }
             else
             {
-                player = (GameObject)Instantiate(prefabToInstantiate, Vector3.zero, Quaternion.identity);
+                player = (GameObject)Instantiate(prefabToInstantiate, Vector3.zero + offset, Quaternion.identity);
                 if (player != null)
                     plrObject[conn.connectionId, playerControllerId] = player;
             }
