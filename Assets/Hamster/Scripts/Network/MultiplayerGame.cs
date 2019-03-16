@@ -89,9 +89,12 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
 
     void ClearFinishTimes()
     {
-        startTimes.Clear();
-        finishTimes.Clear();
-        finishedClients.Clear();
+        if (startTimes != null)
+            startTimes.Clear();
+        if (finishTimes != null)
+            finishTimes.Clear();
+        if (finishedClients != null)
+            finishedClients.Clear();
         //for (int ii = 0; ii < kMaxPlayers; ii++)
         //{
         //    playerFinishTimes[ii] = -1.0f;  //  initialize to negative time.
