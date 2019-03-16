@@ -19,7 +19,7 @@ namespace UnityEngine.Networking
     public class CustomNetworkManagerHUD : MonoBehaviour
     {
         const int kDefaultLevelIdx = 0;//  defaults to load level 0
-
+        public bool autoLoadClient = true;  //starts the client with the default address in the config flle immediately.
         public bool bShowDebugCurrentStateInfo = false; //  show the current finite state machine state
         public bool bShowDebugCmdlineArgs = false;  //  show the command line arguments.
         public bool skipLevelMenu = false;  //  skips the menu and starts server level right away
@@ -48,6 +48,7 @@ namespace UnityEngine.Networking
         // Runtime variable
         bool m_ShowServer;
         bool m_loadServerRequested = false;
+        bool m_loadClientRequested = false;
         bool m_autoStartLevel = false;
         private OpenMatchClient openMatch;
 
@@ -66,6 +67,26 @@ namespace UnityEngine.Networking
         {
             m_loadServerRequested = true;
             m_autoStartLevel = true;    //  this is some weird legacy logic.
+        }
+        void StartClientReq()
+        {
+            if (!m_loadServerRequested) //  server load takes precedence
+                m_loadClientRequested = true;
+        }
+        void StartClientAttempt()
+        {
+            if (m_loadClientRequested)
+            {
+                if (this.config.isConfigLoaded)
+                {
+                    this.serverPort = config.startupConfig.serverPort;
+                    this.serverAddress = config.startupConfig.serverIP;
+                    manager.networkAddress = this.serverAddress;
+                    manager.networkPort = Convert.ToInt32(this.serverPort);
+                    manager.StartClient();
+                    m_loadClientRequested = false;
+                }
+            }
         }
 
         //  this starts the level as soon as all of the other dependent pieces are ready to start the level. This means some pointers and such need to come online.
@@ -145,11 +166,11 @@ namespace UnityEngine.Networking
                 switch (lowCaseInput)
                 {
                     case "-c":
-                        Debug.Log("Start Client");
-                        //  placeholder for when we want to start the client on a particular level from command line. Harder than it looks.
+                        Debug.Log("[-c] Start Client");
+                        StartClientReq();
                         break;
                     case "-s":
-                        Debug.Log("Start Server");
+                        Debug.Log("[-s] Start Server");
                         StartServerReq();
                         break;
                     case "-a":
@@ -228,16 +249,11 @@ namespace UnityEngine.Networking
             //  command line args take precedence over the .json config file because someone had to type it intentionally.
             bool bServerStarted = ReadCommandLineArg();
 
-            //  Note to Graeme: This stuff was moved to Start() from Awake() because we need some cycles for the server stuff to get online with valid manager fields to call StartServer(). It's a Unity thing.
-            //if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
-            //{
-            //    Debug.LogFormat("Starting headless server @ {0}:{1}", manager.networkAddress.ToString(), manager.networkPort.ToString());
-            //    if (!bServerStarted)
-            //    {
-            //        //if (manager.StartServer())    //  we no longer call this anymore, but instead let the FSM handle it. However, we still need to let Unity finish all of its Start() calls, so we can't start right away and need to wait until our Update() loop to actually call it so that we are certain that all Start() calls have been executed.
-            //        StartServerReq();   //  so we must make a delayed call to start the FSM-state that will start the server.
-            //    }
-            //}
+            //  note: this won't happen if the server was requested in the CommandLineArguments above.
+            if (autoLoadClient)
+            {
+                StartClientReq();
+            }
         }
 
         void Update()
@@ -247,6 +263,10 @@ namespace UnityEngine.Networking
             if (m_loadServerRequested)
             {
                 StartServerCommon();
+            }
+            else if (m_loadClientRequested)
+            {
+                StartClientAttempt();
             }
             if (Input.GetKeyDown(KeyCode.Tilde) || Input.GetKeyDown(KeyCode.BackQuote))
             {
@@ -275,7 +295,7 @@ namespace UnityEngine.Networking
                 }
                 if (Input.GetKeyDown(KeyCode.C))
                 {
-                    manager.StartClient();
+                    StartClientReq();
                 }
             }
             if (NetworkServer.active || NetworkClient.active)
@@ -448,11 +468,11 @@ namespace UnityEngine.Networking
         {
             if (!showGUI)
             {
-                OperatingSystemFamily fam = SystemInfo.operatingSystemFamily;
-                if (fam == OperatingSystemFamily.Windows || fam == OperatingSystemFamily.Linux || fam == OperatingSystemFamily.MacOSX)
-                {
-                    scaledTextBox(0, 0, "Show GUI: Press tilde ~ or `");
-                }
+                //OperatingSystemFamily fam = SystemInfo.operatingSystemFamily;
+                //if (fam == OperatingSystemFamily.Windows || fam == OperatingSystemFamily.Linux || fam == OperatingSystemFamily.MacOSX)
+                //{
+                //    scaledTextBox(0, 0, "Show GUI: Press tilde ~ or `");
+                //}
                 return;
             }
 
@@ -569,7 +589,7 @@ namespace UnityEngine.Networking
 
                     if (scaledButton(out newYpos, xpos, ypos, 105, kTextBoxHeight, "LAN (C)lient"))
                     {
-                        manager.StartClient();
+                        StartClientReq();
                     }
                     //  ypos = newYpos;
                     float offsetXPos = xpos;
