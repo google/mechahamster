@@ -40,6 +40,7 @@ namespace Hamster.MapObjects
             xform.position = transform.position + kPlayerStartOffset;
             xform.rotation = Quaternion.identity;
         }
+        //  ugh. this gets spammed because that's just how the original single-player mecha-hamster worked.
         public GameObject SpawnPlayer()
         {
             CommonData.mainGame.player = CommonData.mainGame.SpawnPlayer(); ;

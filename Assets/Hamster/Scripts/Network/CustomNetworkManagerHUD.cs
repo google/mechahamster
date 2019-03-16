@@ -317,6 +317,7 @@ namespace UnityEngine.Networking
         }
         void CreateNetworkPlayer()
         {
+            Debug.LogWarning("CustomNetworkManagerHUD.CreateNetworkPlayer: " + ClientScene.localPlayers.Count.ToString() + "\n");
             customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)ClientScene.localPlayers.Count);
         }
 

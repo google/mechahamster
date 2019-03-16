@@ -7,6 +7,8 @@ namespace Hamster.States
     public class ClientConnected : BaseState
     {
         public NetworkManager manager;
+        public NetworkConnection conn;
+        public BaseState prevState;
 
         override public void Initialize()
         {
@@ -14,8 +16,15 @@ namespace Hamster.States
             {
 
                 manager = UnityEngine.GameObject.FindObjectOfType<NetworkManager>();
-				//if (manager!=null)
-				//	bServerStarted = manager.StartServer();
+            }
+            //  the previous state needs to get some callbacks to know that we've connected.
+            if (prevState != null)
+            {
+                ClientOpenMatchFound omFoundState = prevState as ClientOpenMatchFound;
+                if (omFoundState != null)
+                {
+                    omFoundState.OnConnectedToOpenMatch();
+                }
             }
 
         }

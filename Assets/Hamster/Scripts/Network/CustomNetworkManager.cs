@@ -164,6 +164,7 @@ namespace customNetwork
             DebugOutput("CustomNetworkManager.OnClientConnect\n");
             toServerConnection = conn;
             CustomNetworkPlayer.conn = conn;
+            base.OnClientConnect(conn);
             GetMultiplayerPointer();
             if (multiPlayerGame != null)
             {
@@ -196,7 +197,6 @@ namespace customNetwork
         //   conn:
         //     Connection to the server.
         public override void OnClientDisconnect(NetworkConnection conn) {
-            base.OnClientConnect(conn);
             DebugOutput("CustomNetworkManager.OnClientDisconnect:" + conn.ToString());
             NetworkClient.ShutdownAll();
         }
@@ -476,18 +476,21 @@ namespace customNetwork
         //     Connection from client.
         public override void OnServerDisconnect(NetworkConnection conn)
         {
-            //  tell everyone that someone disconnected
-            for(int ii=0; ii<this.client_connections.Count; ii++)
+            if (client_connections != null)
             {
-                NetworkConnection loopConn = client_connections[ii];
-                if (loopConn != null)
+                //  tell everyone that someone disconnected
+                for (int ii = 0; ii < this.client_connections.Count; ii++)
                 {
-                    ServerSendDebugInfoToClient(loopConn, "Disconnect id="+ conn.connectionId.ToString());
+                    NetworkConnection loopConn = client_connections[ii];
+                    if (loopConn != null)
+                    {
+                        ServerSendDebugInfoToClient(loopConn, "Disconnect id=" + conn.connectionId.ToString());
+                    }
                 }
             }
             base.OnServerDisconnect(conn);
             Debug.LogError("CustomNetworkManager.OnServerDisconnect: connId=" + conn.connectionId.ToString() + "\n");
-            if (this.client_connections.Contains(conn)) {
+            if (this.client_connections != null && this.client_connections.Contains(conn)) {
                 DestroyConnectionsPlayerControllers(conn);
                 this.client_connections.Remove(conn);
                 this.setAck(conn.connectionId, false);

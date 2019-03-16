@@ -275,7 +275,6 @@ namespace Hamster
         public void HandleGoalCollision()
         {
             ReachedGoal = true;
-            ResetPlayerPosition(this.gameObject);
             if (NetworkServer.active)
             {
                 Debug.LogWarning("Server: Player has reached goal: " + this.name);
@@ -288,6 +287,7 @@ namespace Hamster
                         multiplayerGame = FindObjectOfType<MultiplayerGame>();
                     }
                     multiplayerGame.ClientFinishedGame(conn);
+                    ResetPlayerPosition(this.gameObject);   //  only do this on the server.
                 }
             }
             if (NetworkClient.active)

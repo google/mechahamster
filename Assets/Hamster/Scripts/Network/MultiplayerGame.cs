@@ -153,7 +153,7 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
         stateManager.PopState();
     }
     //  this is private. Use MultiplayerGame.instance.ClientEnterMultiPlayerState or MultiplayerGame.instance.ClientEnterMultiPlayerState to make explicit whether server or client FSM is affected.
-    static private void EnterMultiPlayerState<T>(StateManager stateManager,  int mode=0, bool isSwapState = false) where T : Hamster.States.BaseState, new()
+    static private Hamster.States.BaseState EnterMultiPlayerState<T>(StateManager stateManager,  int mode=0, bool isSwapState = false) where T : Hamster.States.BaseState, new()
     {
         Hamster.States.BaseState state = new T();
         Debug.Log("State change: " + stateManager.CurrentState().ToString() + "->: " + state.ToString() /*+ "(swap/push=" + isSwapState.ToString()*/  + "(" + mode.ToString() + ")\n");
@@ -185,6 +185,7 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
         {
             stateManager.PushState(state);
         }
+        return state;
     }
 
     //  This is called on the Client. The client should have only one connection to the server.
@@ -194,8 +195,11 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
         //Hamster.States.ClientConnected state = new Hamster.States.ClientConnected();   //  create new state for FSM that will let us force the starting level.
         //stateManager.PushState(state);
         //  this replaces the above with a templated version.
-        MultiplayerGame.EnterMultiPlayerState<Hamster.States.ClientConnected>(MultiplayerGame.instance.clientStateManager);
-
+        BaseState prevState = MultiplayerGame.instance.clientStateManager.CurrentState();
+        ClientConnected clientConnectedState =  MultiplayerGame.EnterMultiPlayerState<Hamster.States.ClientConnected>(MultiplayerGame.instance.clientStateManager) as ClientConnected;
+        clientConnectedState.conn = conn;
+        clientConnectedState.manager = manager;
+        clientConnectedState.prevState = prevState;
     }
 
     //  the game is over. The server needs to tell the players that the game has ended!

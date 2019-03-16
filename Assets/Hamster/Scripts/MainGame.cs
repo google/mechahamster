@@ -147,12 +147,13 @@ namespace Hamster {
 
                 if (NetworkClient.active)   //  this is how we spawn a client for multiplayer game
                 {
-                    if (NetworkClient.allClients.Count == 0)    //  wait fo ra connection.
+                    if (NetworkClient.allClients != null && NetworkClient.allClients.Count == 0)    //  wait for a connection.
                     {    //  only do this if we don't already have a player.)
                         //customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)customNetwork.CustomNetworkPlayer.conn.playerControllers.Count);
                     }
                     else if ((customNetwork.CustomNetworkPlayer.conn != null) && (customNetwork.CustomNetworkPlayer.conn.playerControllers.Count == 0))   //  we're already connected, but we don't yet have a controller connection, spawn a player for ourselves.
                     {
+                        Debug.Log("conn=" + customNetwork.CustomNetworkPlayer.conn.ToString());
                         customNetwork.CustomNetworkPlayer.CreatePlayerClient((short)customNetwork.CustomNetworkPlayer.conn.playerControllers.Count);    //  ask the server to create a player for us.
                     }
                     else//we already have a connection and a player!

@@ -23,7 +23,7 @@ namespace customNetwork
         public bool bCreateClientOnEnable;
         public bool bTestSpawnFromServer;
         public static NetworkConnection conn;
-        public short playerControllerID;
+        short playerControllerID = 0;
         short curSpawnIdx = 0;
         const float kKeySpeed = 1.0f;
         const float kKeyRotationRate = 5.0f;

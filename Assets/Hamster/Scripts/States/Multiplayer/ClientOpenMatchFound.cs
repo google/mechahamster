@@ -10,7 +10,7 @@ namespace Hamster.States
         public NetworkManager manager;
         public customNetwork.CustomNetworkManager custMgr;
         public CustomNetworkManagerHUD hud;
-        
+        public MultiplayerGame multiplayergame;
         //  OpenMatch stuff
         bool bOpenMatchWaiting = false;
         private OpenMatchClient openMatch;
@@ -21,29 +21,76 @@ namespace Hamster.States
 
         //  server starts the OpenMatchGame and tells the clients about it to enter this state.
 
+    void ShutdownNonOpenMatchConnections()
+        {
+            foreach (NetworkClient client in NetworkClient.allClients)
+            {
+                if ((client.connection.address != openMatch.Address) && client.connection.isConnected)
+                {
+                    client.Disconnect();
+                }
+            }
+        }
         void DisconnectPreviousConnection()
         {
-            if (NetworkClient.active)
+            if (NetworkClient.active && (null!=isConnectedToOpenMatchServer()))
             {
-                NetworkClient.ShutdownAll();
+                ShutdownNonOpenMatchConnections();
             }
         }
 
+        public void OnConnectedToOpenMatch()
+        {
+            string msg = "!Success! Connect OM : om.Addr=" + openMatch.Address + ", port=" + openMatch.Port.ToString();
+            bOpenMatchWaiting = false;
+            DisconnectPreviousConnection(); //   if we put it here, we are assuming we can have both OpenMatch and Lobby servers connected at the same time!
+        }
+        NetworkConnection isConnectedToOpenMatchServer()
+        {
+            NetworkConnection conn = null;
+            foreach (NetworkClient client in NetworkClient.allClients)
+            {
+                if (client.connection.address == openMatch.Address && client.connection.isConnected)
+                {
+                    return client.connection;
+                }
+            }
+            return conn;
+        }
+
+        //  try to connect to OM server.
         void ConnectToOpenMatchServer()
         {
+            string msg = "Cnx client.Active=" + NetworkClient.active.ToString() + ",bOMWait=" + bOpenMatchWaiting.ToString();
             if (!NetworkClient.active && bOpenMatchWaiting)  //  we can only try this when we're not connected to anything and when we're waiting for openmatch connection.
             {
-                Debug.LogWarning("ClientOpenMatchFound.Update ConnectToOpenMatchServer attempt: openMatch.Address=" + openMatch.Address + ", port=" + openMatch.Port.ToString());
-                manager.networkAddress = openMatch.Address;
-                manager.networkPort = openMatch.Port;
-                manager.StartClient();
+                //Debug.LogWarning(msg);
+                if (hud==null)
+                {
+                    GetPointers();
+                }
+                if (null!=isConnectedToOpenMatchServer())    //  keep trying to connect as long as we're not connected to OM yet.
+                {
+                    manager.networkAddress = openMatch.Address;
+                    manager.networkPort = openMatch.Port;
+                    msg = "?TRY? Connect OM : om.Addr=" + openMatch.Address + ", port=" + openMatch.Port.ToString();
+                    manager.StartClient();
+                }
                 omAddress = openMatch.Address;
                 omPort = openMatch.Port;
-                bOpenMatchWaiting = false;
             }
-            else
+
+            //  if this is true, then our job is done and we really should have moved on to a different state.
+            NetworkConnection conn = isConnectedToOpenMatchServer();
+            if (conn != null)
             {
-                NetworkClient.ShutdownAll();    //  if we're trying to get to OpenMatch, we should not be connected to any previous server anymore.
+                msg = "DETECTED Connect OM : om.Addr=" + openMatch.Address + ", port=" + openMatch.Port.ToString() + "\n" + conn.ToString();
+                bOpenMatchWaiting = false;
+                multiplayergame.OnClientConnect(conn);
+            }
+            if (hud != null)
+            {
+                hud.showClientDebugInfoMessage(msg);
             }
         }
 
@@ -93,12 +140,12 @@ namespace Hamster.States
                     if (hud !=null)
                         openMatch = hud.GetComponent<OpenMatchClient>();    //  this is probably not the best place for the OpenMatch component, but I don't care. It's where it is now. Change it later if it causes problems.
                 }
+                multiplayergame = manager.GetComponent<MultiplayerGame>();
             }
         }
         override public void Initialize()
         {
             GetPointers();
-            DisconnectPreviousConnection();
             bOpenMatchWaiting = true;
             //  ConnectToOpenMatchServer(); //  stall. put in a wait state between disconnect from previous server and connection to openmatch
 
@@ -117,6 +164,7 @@ namespace Hamster.States
         // Update is called once per frame
         override public void Update()
         {
+            GetPointers();
             //Debug.LogWarning("ServerOpenMatchStart.Update: " + manager.name);
             if (custMgr == null)
             {
@@ -134,28 +182,9 @@ namespace Hamster.States
             if (openMatch != null && openMatch.Port != 0)
             {
 
-                if (bOpenMatchWaiting)
+                if (bOpenMatchWaiting)  //  if we've been asked to connect to OM, keep trying until we succeed.
                 {
                     ConnectToOpenMatchServer();
-                }
-            }
-            else
-            {
-            }
-
-            if (curNumPlayers >= MultiplayerGame.kOpenMatchThreshold)
-            {
-                //  fire off the OpenMatchState!
-                //  do something here to start OpenMatch
-                //MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerOpenMatchStart>(0, true);
-            }
-            else if (curNumPlayers <= 0)
-            {
-                if (custMgr != null & custMgr.bIsServer)    //  only the server can shut down the game. The client cannot do this.
-                {
-                    //  No players. End of OpenMatch
-                    MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ServerEndPreGameplay>();
-
                 }
             }
         }
