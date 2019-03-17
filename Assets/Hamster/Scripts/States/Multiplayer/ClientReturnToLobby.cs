@@ -12,7 +12,8 @@ namespace Hamster.States
         JsonStartupConfig config;
         string lobbyAddress;
         int lobbyPort;
-
+        float timeToWaitForServerDisconnect = 5.0f; //  wait for a little bit for the server to disconnect. If we connect immediately, our old connection still exists and we'll cause bugs where we can't finish the game again!
+        float disconnectTime;   //  time at which we disconnected (approx)
         private string myDebugMsg;
         bool isClientSceneAddPlayerCalled = false; //  must have called ClientScene.AddPlayer in one way or another
 
@@ -39,7 +40,8 @@ namespace Hamster.States
             GetPointers();
             if (hud != null)
                 hud.ReadConfig();
-            Shutdown(); //  close down. But then connect to "lobby" server.
+            Shutdown();
+            disconnectTime = Time.realtimeSinceStartup;
         }
 
         // Start is called before the first frame update
@@ -50,9 +52,12 @@ namespace Hamster.States
 
         void Shutdown()
         {
-            manager.StopClient();
-            Debug.LogWarning("ClientReturnToLobby.Shutdown\n");
-            NetworkClient.ShutdownAll();    //  
+            if (NetworkServer.active || NetworkClient.active)
+            {
+                manager.StopHost();
+                manager.StopClient();
+                NetworkClient.ShutdownAll();    //  
+            }
         }
         public override void OnGUI()
         {
@@ -91,16 +96,32 @@ namespace Hamster.States
                     hud.showClientDebugInfoMessage(serverRedirectMsg);
                 }
             }
+            //  this is bad. We're already connected, so shutting down defeats the purpose.
+            //else//  we shouldn't be connected to anything, so try shutting everything down.
+            //{
+            //    Shutdown();
+            //}
         }
         // Update is called once per frame
         public override void Update()
         {
+            NetworkConnection conn;
             GetPointers();
             if (hud != null)
             {
                 myDebugMsg = "ClientReturnToLobby: nPlr=" + manager.numPlayers.ToString() + " nClients=" + NetworkClient.allClients.Count.ToString() + "\n\tNetClient.active=" + NetworkClient.active.ToString();
                 Debug.Log(myDebugMsg);
-                ConnectToLobbyServer();
+                conn = isConnectedToLobbyServer();
+                if (conn == null)
+                {
+                    if (!NetworkClient.active)
+                        ConnectToLobbyServer();
+                }
+                else
+                {
+                    if (Time.realtimeSinceStartup > disconnectTime + timeToWaitForServerDisconnect)
+                        MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientInGame>();
+                }
             }
         }
     }

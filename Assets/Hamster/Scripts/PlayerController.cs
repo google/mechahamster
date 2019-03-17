@@ -275,24 +275,29 @@ namespace Hamster
         public void HandleGoalCollision()
         {
             ReachedGoal = true;
+            bool isLocalPlayerAuthority = netIdentity.localPlayerAuthority;// are we client-authority?
             if (NetworkServer.active)
             {
                 Debug.LogWarning("Server: Player has reached goal: " + this.name);
                 NetworkConnection conn = this.connectionToClient;
                 if (conn != null)
                 {
-                    Debug.LogWarning("Server call attempt multiplayerGame.cmd_OnServerClientFinishedGame : " + conn.ToString()+ "\n");
+                    Debug.LogWarning("Server call attempt multiplayerGame.cmd_OnServerClientFinishedGame : " + conn.ToString() + "\n");
                     if (multiplayerGame == null)
                     {
                         multiplayerGame = FindObjectOfType<MultiplayerGame>();
                     }
                     multiplayerGame.ClientFinishedGame(conn);
-                    ResetPlayerPosition(this.gameObject);   //  only do this on the server.
+                    if (!isLocalPlayerAuthority)
+                        {
+                            //ResetPlayerPosition(this.gameObject);   //  only do this on the server.
+                        }
+                    }
                 }
-            }
             if (NetworkClient.active)
             {
                 Debug.LogWarning("Client: Player has reached goal: " + this.name);
+                ResetPlayerPosition(this.gameObject);   //  Now that we have player auth, we need to do this!
             }
 
             //  on the client, need to tell the player that they won.

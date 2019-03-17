@@ -9,6 +9,7 @@ namespace customNetwork
 {
     public class CustomNetworkManager : NetworkManager
     {
+        const bool bIgnoreOpenMatchServerRequest = false;   //  minghack: ignore request to go to OpenMatch so we can test finish match states
         const int kLastUnityMsgType = 255;   //  Use a number after Unity's own message types for our own message types. Note: it's not actually 255. But we're leaving room for Unity to grow its own enum list.
         const int kMaxShort = 32767;
         public enum hamsterMsgType
@@ -197,6 +198,7 @@ namespace customNetwork
         //   conn:
         //     Connection to the server.
         public override void OnClientDisconnect(NetworkConnection conn) {
+            this.client_connections.Remove(conn);
             DebugOutput("CustomNetworkManager.OnClientDisconnect:" + conn.ToString());
             NetworkClient.ShutdownAll();
         }
@@ -807,6 +809,7 @@ namespace customNetwork
 
             //  quit OpenMatch and return to the "Lobby" which is really the preOpenMatchState.
             MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientReturnToLobby>();
+            //  MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientShutdown>();
         }
 
         //  called on the client when the server tells us we've finished the race and gives us the time.
@@ -828,8 +831,11 @@ namespace customNetwork
             Debug.LogWarning("Client received Server state=" + serverState);
             if (serverState.Contains("ServerOpenMatchStart"))
             {
-                //  the server has told us to start open match on this client.
-                MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
+                if (!bIgnoreOpenMatchServerRequest)
+                {
+                    //  the server has told us to start open match on this client.
+                    MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchStart>(); //  make our client go into the OpenMatch server state!
+                }
             }
         }
         //

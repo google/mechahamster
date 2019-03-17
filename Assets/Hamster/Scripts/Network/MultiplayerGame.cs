@@ -217,6 +217,7 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
 
             NetworkServer.SendToClient(conn.connectionId, (short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_serverGameOver, raceTimeMsg);
         }
+        ClearFinishTimes();
     }
 
     //[Command]
@@ -243,6 +244,17 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     //[Command]
     public float cmd_OnServerClientFinishedGame(NetworkConnection conn)
     {
+        //  add this connectionId as one of the finished clients.
+        if (!finishedClients.ContainsKey(conn.connectionId))
+        {
+            finishedClients[conn.connectionId] = conn;
+        }
+        else//  don't spam the client if the client has already finished the race and we've told them about it.
+        {
+            return 0.0f;
+        }
+
+
         customNetwork.CustomNetworkManager custMgr = manager as customNetwork.CustomNetworkManager;
         string finishedMsg;
         this.finishTimes[conn.connectionId] = Time.realtimeSinceStartup;
@@ -277,9 +289,6 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     //  called on the client when the client finished the game.
     public void ClientFinishedGame(NetworkConnection conn)
     {
-        //  add this connectionId as one of the finished clients.
-        if (!finishedClients.ContainsKey(conn.connectionId))
-            finishedClients[conn.connectionId] = conn;
 
         float raceTime = cmd_OnServerClientFinishedGame(conn);
 

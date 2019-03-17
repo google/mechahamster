@@ -71,7 +71,7 @@ namespace Hamster.InputControllers {
 
         // If we run out of replay data, count it as a finishing the level.
         if (inputDataIndex >= replayData.inputData.Length) {
-          CommonData.mainGame.PlayerController.HandleGoalCollision();
+          //    CommonData.mainGame.PlayerController.HandleGoalCollision(); //  I think this may cause a bug.
         }
 
       }

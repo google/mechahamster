@@ -127,7 +127,9 @@ namespace Hamster.States {
         CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
         manager.PopState();
       } else if (source == dialogComponent.RetryButton.gameObject) {
-        manager.SwapState(new Gameplay(mode));
+                MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientReturnToLobby>();
+
+                //manager.SwapState(new Gameplay(mode));
       } else if (source == dialogComponent.SubmitButton.gameObject) {
         LeaderboardController = LeaderboardController ??
             GameObject.FindObjectOfType<LeaderboardController>() ??
