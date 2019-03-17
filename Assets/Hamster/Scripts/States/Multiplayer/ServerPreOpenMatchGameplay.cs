@@ -14,7 +14,8 @@ namespace Hamster.States
 
         override public void Initialize()
         {
-            Debug.Log("ServerPreOpenMatchGamePlay.Initialize");
+            string msg = "ServerPreOpenMatchGamePlay.Initialize";
+            Debug.Log(msg);
             if (manager == null)
             {
                 manager = MultiplayerGame.instance.manager;
@@ -38,6 +39,8 @@ namespace Hamster.States
                 }
 
             }
+            if (hud != null)
+                hud.showClientDebugInfoMessage(msg);
         }
         override public void OnGUI()
         {
@@ -48,7 +51,9 @@ namespace Hamster.States
             }
         }
 
-        // Update is called once per frame
+        // both Lobby and OpenMatch gameplay takes place here and just spins in this update loop until something happens.
+        //  for lobby, when 4 players are found, swap to state: ServerOpenMatchStart
+        //  for agones (i.e. OpenMatch cloud game), simply shut down when everyone leaves when the match is over: ServerEndPreGameplay
         override public void Update()
         {
             //Debug.Log("ServerPreOpenMatchGamePlay.Update");

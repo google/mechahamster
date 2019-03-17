@@ -15,11 +15,11 @@ namespace Hamster.States
 
         static public void EnterState(int connId, float raceTime)
         {
-            Hamster.States.ServerGameFinished clientFinishedMatch = new Hamster.States.ServerGameFinished();   //  create new state for FSM that will let us force the starting level.
-            clientFinishedMatch.m_raceTime = raceTime;
-            clientFinishedMatch.connectionId = connId;
+            Hamster.States.ServerGameFinished serverFinishedMatch = new Hamster.States.ServerGameFinished();   //  create new state for FSM that will let us force the starting level.
+            serverFinishedMatch.m_raceTime = raceTime;
+            serverFinishedMatch.connectionId = connId;
 
-            Hamster.CommonData.mainGame.stateManager.PushState(clientFinishedMatch);    //  begin the state normally.
+            Hamster.CommonData.mainGame.stateManager.PushState(serverFinishedMatch);    //  begin the state normally.
         }
 
         // Start is called before the first frame update

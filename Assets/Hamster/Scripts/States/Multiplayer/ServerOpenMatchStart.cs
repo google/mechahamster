@@ -156,6 +156,8 @@ namespace Hamster.States
 
             if (openMatch != null && openMatch.Port != 0)
             {
+                //  ugh, I'm not sure this is right. But I'm afraid to change it now that things are working. If this is a server state, we shouldn't have to care that we're not a client.
+                //  it seems like this code should be deleted, but I'm too afraid to mess with it now that things seem to work.
                 if (custMgr.bIsClient)
                 {
                     MultiplayerGame.instance.ServerSwapMultiPlayerState<Hamster.States.ClientOpenMatchFound>();

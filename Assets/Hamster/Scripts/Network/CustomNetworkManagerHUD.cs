@@ -127,7 +127,7 @@ namespace UnityEngine.Networking
                 m_loadServerRequested = !AutoStartLevel(startLevel);
         }
 
-        public void ReadConfig(NetworkManager netMgr = null)
+        public JsonStartupConfig ReadConfig(NetworkManager netMgr = null)
         {
             config = FindObjectOfType<JsonStartupConfig>();
 
@@ -147,6 +147,7 @@ namespace UnityEngine.Networking
                     netMgr.networkPort = Convert.ToInt32(serverPort); ;
                 }
             }
+            return config;
         }
         bool ReadCommandLineArg()
         {

@@ -21,7 +21,7 @@ namespace customNetwork
             //  the following are still incomplete. They are there as placeholders.
             hmsg_serverPlayerDied,  //  server tells player that they've died
             hmsg_serverPlayerFinished,  //  server tells player that they've finished this level
-            hmsg_serverGameOver,    //  server tells player that the game has been completed.
+            hmsg_serverGameOver,    //  server tells player that the game has been completed. This means all of the clients need to try to connect to the Lobby ASAP because the server will soon be disconnecting us!
             hmsg_serverPlayerIsWinner,  //  server tells player that they're the winner!
             hmsg_newLevel,  //  server tells player that a new level has been loaded
             hmsg_serverDebugInfo,   //  server tells the player some debug info
