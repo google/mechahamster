@@ -7,7 +7,6 @@ namespace Hamster.States
     //  this is where the players from the "preOpenMatch" game are matched in OpenMatch and disconnected from their current game. This starts a new 4 player game with OpenMatch.
     public class ClientOpenMatchStart : BaseState
     {
-        static bool bHackDontGotoOpenMatch = true;  //minghack: for testing. don't jump to OpenMatch so we can test the end of match states without a new server build.
         public NetworkManager manager;
         public customNetwork.CustomNetworkManager custMgr;
         public CustomNetworkManagerHUD hud;
@@ -134,7 +133,7 @@ namespace Hamster.States
 
             if (openMatch != null && openMatch.Port != 0)
             {
-                if (custMgr.bIsClient && !bHackDontGotoOpenMatch)
+                if (custMgr.bIsClient)
                 {   //  we're done our job. Found our match and will change state now.
                     bOpenMatchWaiting = false;
                     MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchFound>();
