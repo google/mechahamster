@@ -852,6 +852,9 @@ namespace customNetwork
             int clientConnId = netMsg.conn.connectionId;
             Debug.LogWarning("Server received OpenMatch ACK from client(" + clientConnId.ToString() + ")\n");
             this.setAck(clientConnId, true);
+            //  now that the "lobby" server knows that our client has an OpenMatch addr ready, we can disconnect that client. However, let's not do this because the client will actually disconnect from the newly match OpenMatch server! Yikes!
+            //netMsg.conn.Disconnect();
+            //netMsg.conn.Dispose();
         }
 
         //

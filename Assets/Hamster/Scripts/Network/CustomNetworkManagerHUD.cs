@@ -70,8 +70,12 @@ namespace UnityEngine.Networking
         }
         void StartClientReq()
         {
-            if (!m_loadServerRequested) //  server load takes precedence
+            if (!m_loadServerRequested)
+            {//  server load takes precedence
+#if !UNITY_EDITOR   //  unity editor always allows us to enter via HUD menu!
                 m_loadClientRequested = true;
+#endif//#if UNITY_EDITOR
+            }
         }
         void StartClientAttempt()
         {
@@ -590,6 +594,7 @@ namespace UnityEngine.Networking
                     if (scaledButton(out newYpos, xpos, ypos, 105, kTextBoxHeight, "LAN (C)lient"))
                     {
                         StartClientReq();
+                        m_loadClientRequested = true;   //  yeah, if we're going through the menu with a user click, have it take priority. This is ugly pachinko logic, but whatever.
                     }
                     //  ypos = newYpos;
                     float offsetXPos = xpos;

@@ -29,10 +29,13 @@ namespace Hamster.States
             }
         }
 
+        //  we are ready to go to OpenMatch. So, our LOBBY server can stop spamming us now, please.
         void SendACKtoServer()
         {
-            Debug.LogWarning("ClientOpenMatchStart.SendACKtoServer=" + NetworkClient.allClients[0].connection.connectionId.ToString()+ "\n");
-            MessageBase readyMsg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(NetworkClient.allClients[0].connection.connectionId);    //  send my connection id to my server to tell the server that I'm ready to run OpenMatch, so you can reminding me now.
+            Debug.LogWarning("ClientOpenMatchStart.SendACKtoServer=(#" + NetworkClient.allClients[0].connection.connectionId.ToString() 
+                + "/" + NetworkClient.allClients.Count.ToString() + ")\n");
+            
+            MessageBase readyMsg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(NetworkClient.allClients[0].connection.connectionId);    //  send my connection id to my server to tell the server that I'm ready to run OpenMatch, so you can stop reminding me to go to openmatch.
             NetworkClient.allClients[0].Send((short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_clientOpenMatchAck, readyMsg);
             disconnectTime = Time.realtimeSinceStartup + disconnectAfterTime;
             //  DisconnectPreviousConnection();   //  we do not want to do this until after we've sent an ack to our server. so let's wait for a little bit for the hmsg_serverOpenMatchAckBack from the server!
@@ -107,7 +110,7 @@ namespace Hamster.States
                 //hud.scaledTextBox("ClientOpenMatchStart.curNumPlayers=" + curNumPlayers.ToString());
                 hud.scaledTextBox("ClientOpenMatchStart ip=" + manager.networkAddress + ", port=" + manager.networkPort.ToString());
                 if (openMatch != null)
-                    hud.scaledTextBox("openMatch ip=" + openMatch.Address + ", port=" + openMatch.Port.ToString());
+                    hud.scaledTextBox("OMStart: openMatch ip=" + openMatch.Address + ", port=" + openMatch.Port.ToString());
             }
         }
 
@@ -136,17 +139,6 @@ namespace Hamster.States
                     MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientOpenMatchFound>();
                 }
 
-                //if (omAddress != openMatch.Address && omPort != openMatch.Port)
-                //{
-                //    Debug.LogWarning("ClientOpenMatchStart.Update openMatch.Address=" + openMatch.Address + ", port="+openMatch.Port.ToString());
-
-                //    manager.networkAddress = openMatch.Address;
-                //    manager.networkPort = openMatch.Port;
-                //    manager.StartClient();
-                //    omAddress = openMatch.Address;
-                //    omPort = openMatch.Port;
-                //    bOpenMatchWaiting = false;
-                //}
             }
             else
             {

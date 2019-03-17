@@ -12,7 +12,8 @@ namespace Hamster.States
         public CustomNetworkManagerHUD hud;
         public MultiplayerGame multiplayergame;
         //  OpenMatch stuff
-        bool bOpenMatchWaiting = false;
+        bool bOpenMatchWaiting = true;
+        bool bHaveOpenMatchTicket = false;  // I have a golden ticket! I'm ready to go to OpenMatch! I don't need to be connected to the Lobby anymore!
         private OpenMatchClient openMatch;
         string omAddress;
         int omPort=-1;
@@ -33,7 +34,7 @@ namespace Hamster.States
         }
         void DisconnectPreviousConnection()
         {
-            if (NetworkClient.active && (null!=isConnectedToOpenMatchServer()))
+            if ((NetworkClient.allClients.Count > 0) && (null!=isConnectedToOpenMatchServer()))
             {
                 ShutdownNonOpenMatchConnections();
             }
@@ -43,6 +44,8 @@ namespace Hamster.States
         {
             string msg = "!Success! Connect OM : om.Addr=" + openMatch.Address + ", port=" + openMatch.Port.ToString();
             bOpenMatchWaiting = false;
+            if (hud != null)
+                hud.showClientDebugInfoMessage(msg);
             DisconnectPreviousConnection(); //   if we put it here, we are assuming we can have both OpenMatch and Lobby servers connected at the same time!
         }
         NetworkConnection isConnectedToOpenMatchServer()
@@ -50,20 +53,45 @@ namespace Hamster.States
             NetworkConnection conn = null;
             foreach (NetworkClient client in NetworkClient.allClients)
             {
-                if (client.connection.address == openMatch.Address && client.connection.isConnected)
+
+                if ((null != client.connection) && (client.connection.address == openMatch.Address && client.connection.isConnected))
                 {
                     return client.connection;
                 }
             }
             return conn;
         }
+        void attemptConnectToOpenMatch()
+        {
+            if (bOpenMatchWaiting)
+            {
+                Debug.LogWarning("ClientOpenMatchStart.Update openMatch.Address=" + openMatch.Address + ", port=" + openMatch.Port.ToString());
+
+                manager.networkAddress = openMatch.Address;
+                manager.networkPort = openMatch.Port;
+                manager.StartClient();
+                omAddress = openMatch.Address;
+                omPort = openMatch.Port;
+
+                if (null != isConnectedToOpenMatchServer())
+                    bOpenMatchWaiting = false;
+            }
+        }
 
         //  try to connect to OM server.
         void ConnectToOpenMatchServer()
         {
-            string msg = "Cnx client.Active=" + NetworkClient.active.ToString() + ",bOMWait=" + bOpenMatchWaiting.ToString();
-            if (!NetworkClient.active && bOpenMatchWaiting)  //  we can only try this when we're not connected to anything and when we're waiting for openmatch connection.
+            //  yeah, weird Unity logic bug: You can have client.active==true, but have allClient.Count==0 at the same time. So, we check on allClients.Count now.
+            string serverMsg = "";
+            if (NetworkClient.allClients.Count>0)
             {
+                serverMsg = NetworkClient.allClients[0].connection.address;
+            }
+            string msg = "Cnx client.Active=" + NetworkClient.active.ToString() + ", bOMWait=" + bOpenMatchWaiting.ToString() + "\nnClients=" + NetworkClient.allClients.Count.ToString()
+                + ", ip=" +serverMsg;
+            if ((NetworkClient.active==false) && bOpenMatchWaiting)  //  we can only try this when we're not connected to anything and when we're waiting for openmatch connection.
+            {
+                NetworkConnection isConn = isConnectedToOpenMatchServer();
                 //Debug.LogWarning(msg);
                 if (hud==null)
                 {
@@ -71,22 +99,43 @@ namespace Hamster.States
                 }
                 if (null!=isConnectedToOpenMatchServer())    //  keep trying to connect as long as we're not connected to OM yet.
                 {
-                    manager.networkAddress = openMatch.Address;
-                    manager.networkPort = openMatch.Port;
                     msg = "?TRY? Connect OM : om.Addr=" + openMatch.Address + ", port=" + openMatch.Port.ToString();
-                    manager.StartClient();
+                    Debug.LogWarning(msg);
+                    if (bHaveOpenMatchTicket)
+                    {
+                        attemptConnectToOpenMatch();
+                    }
                 }
-                omAddress = openMatch.Address;
-                omPort = openMatch.Port;
+                if (isConn != null)
+                {
+                    msg = "Found Conn=" + isConn.ToString();
+                    Debug.LogWarning(msg);
+                }
+                if (hud != null)
+                    hud.showClientDebugInfoMessage(msg);
             }
 
             //  if this is true, then our job is done and we really should have moved on to a different state.
             NetworkConnection conn = isConnectedToOpenMatchServer();
-            if (conn != null)
+            if (conn != null)   //  we have connection to OM!
             {
                 msg = "DETECTED Connect OM : om.Addr=" + openMatch.Address + ", port=" + openMatch.Port.ToString() + "\n" + conn.ToString();
                 bOpenMatchWaiting = false;
                 multiplayergame.OnClientConnect(conn);
+                this.bHaveOpenMatchTicket = false;  //  take my ticket away!
+            }
+            else//  if we're not connected to OpenMatch, then it's a little more complicated. However, if we're in this state, we expect that we're still connected to the LOBBY server. So, we should disconnect from that LOBBY server so that we can go about our business of actually connecting to OM.
+            {
+                if (NetworkClient.allClients.Count > 0)
+                {
+                    //  kill our connection with the lobby server so that we can try to connect to OpenMatch server. Unity doesn't seem to support multiple connections at once in Unet, unsurprisingly.
+                    NetworkClient.allClients[0].connection.Disconnect();
+                    NetworkClient.allClients[0].connection.Dispose();
+                }
+                attemptConnectToOpenMatch();
+            }
+            {
+
             }
             if (hud != null)
             {
@@ -157,7 +206,29 @@ namespace Hamster.States
             {
                 //hud.scaledTextBox("ClientOpenMatchFound.curNumPlayers=" + curNumPlayers.ToString());
                 if (openMatch != null)
-                    hud.scaledTextBox("openMatch ip=" + openMatch.Address + ", port=" + openMatch.Port.ToString());
+                {
+                    NetworkConnection isConn = isConnectedToOpenMatchServer();
+                    if (isConn == null)
+                    {
+                        NetworkClient myClient;
+                        string myAddress = "none";
+                        if (NetworkClient.allClients.Count > 0)
+                        {
+                            myClient = NetworkClient.allClients[0];
+                            myAddress = myClient.serverIp;
+                        }
+                        hud.scaledTextBox("OMFound, but not connected ip=" + openMatch.Address + ", port=" + openMatch.Port.ToString() + "\nnClients=" + NetworkClient.allClients.Count.ToString()
+                            + ") conn=" + myAddress + ", client.active=" + NetworkClient.active.ToString());
+                        //  let's try this to see if it changes anything.
+                        if (NetworkClient.allClients.Count == 0)
+                            ConnectToOpenMatchServer();
+                    }
+                    else
+                    {
+                        hud.scaledTextBox("OMFound ip=" + openMatch.Address + ", port=" + openMatch.Port.ToString() + "\nconn=" + isConn.ToString());
+
+                    }
+                }
             }
         }
 
