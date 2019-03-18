@@ -28,8 +28,8 @@ namespace customNetwork
             hmsg_serverDebugInfo,   //  server tells the player some debug info
             hmsg_EndOfMessageList = kMaxShort   //  do not use this. this just means that everything needs to be smaller than this number because the network message uses a short for this key.
         }
-        const int kMaxConnections = 32;
-        const int kMaxPlayersPerConnection = 32;
+        public const int kMaxConnections = 32;
+        public const int kMaxPlayersPerConnection = 32;
         public static CustomNetworkManager s_instance;
         public GameObject[,] plrObject = new GameObject[kMaxConnections, kMaxPlayersPerConnection];
         public bool m_AutoCreatePlayerFromSpawnPrefabList;

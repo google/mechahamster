@@ -62,7 +62,7 @@ namespace Hamster.States
             {
                 //  NOPE! This just creates an infinite loopMultiplayerGame.instance.EnterServerStartupState(levelIdx);  //  use this now instead of manager.StartServer()
                 //  somehow you can get this error: Cannot open socket on ip {*} and port {7777}; check please your network, most probably port has been already occupied
-                bServerStarted = manager.StartServer(); //  this should now be the only place in the code which calls this. Do not litter this throughout the code anymore.
+                bServerStarted = manager.StartServer(MultiplayerGame.instance.connConfig, customNetwork.CustomNetworkManager.kMaxConnections); //  this should now be the only place in the code which calls this. Do not litter this throughout the code anymore.
                 if (!bServerStarted)
                 {
                     Debug.LogError("StartServer failed so some reason!");

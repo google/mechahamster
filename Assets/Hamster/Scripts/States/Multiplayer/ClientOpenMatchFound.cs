@@ -69,7 +69,7 @@ namespace Hamster.States
 
                 manager.networkAddress = openMatch.Address;
                 manager.networkPort = openMatch.Port;
-                manager.StartClient();
+                manager.StartClient(null, MultiplayerGame.instance.connConfig);
                 omAddress = openMatch.Address;
                 omPort = openMatch.Port;
 

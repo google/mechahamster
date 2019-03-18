@@ -87,7 +87,7 @@ namespace UnityEngine.Networking
                     this.serverAddress = config.startupConfig.serverIP;
                     manager.networkAddress = this.serverAddress;
                     manager.networkPort = Convert.ToInt32(this.serverPort);
-                    manager.StartClient();
+                    manager.StartClient(null, MultiplayerGame.instance.connConfig);
                     m_loadClientRequested = false;
                 }
             }
@@ -598,7 +598,7 @@ namespace UnityEngine.Networking
 
                     if (scaledButton(out newYpos, xpos, ypos, 105, kTextBoxHeight, "LAN (C)lient"))
                     {
-                        manager.StartClient();
+                        manager.StartClient(null, MultiplayerGame.instance.connConfig);
                         //StartClientReq();
                         m_loadClientRequested = true;   //  yeah, if we're going through the menu with a user click, have it take priority. This is ugly pachinko logic, but whatever.
                     }

@@ -483,5 +483,25 @@ PrefabInstance:
       propertyPath: showGUI
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7826132452897640500, guid: be868b26095015c40a916add22e7b3dc,
+        type: 3}
+      propertyPath: connConfig.m_DisconnectTimeout
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7826132452897640500, guid: be868b26095015c40a916add22e7b3dc,
+        type: 3}
+      propertyPath: connConfig.m_ConnectTimeout
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7826132452897640500, guid: be868b26095015c40a916add22e7b3dc,
+        type: 3}
+      propertyPath: connConfig.m_NetworkDropThreshold
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 7826132452897640500, guid: be868b26095015c40a916add22e7b3dc,
+        type: 3}
+      propertyPath: connConfig.m_OverflowDropThreshold
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be868b26095015c40a916add22e7b3dc, type: 3}

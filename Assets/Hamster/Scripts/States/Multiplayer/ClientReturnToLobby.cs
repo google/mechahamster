@@ -90,7 +90,7 @@ namespace Hamster.States
             Debug.LogWarning(serverRedirectMsg);
             if (null == isConnectedToLobbyServer())
             {
-                manager.StartClient();  //  once this is fired off, we should go into a waiting state.
+                manager.StartClient(null, MultiplayerGame.instance.connConfig);  //  once this is fired off, we should go into a waiting state.
                 if (hud != null)
                 {
                     hud.showClientDebugInfoMessage(serverRedirectMsg);

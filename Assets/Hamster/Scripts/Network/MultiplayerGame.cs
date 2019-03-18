@@ -105,6 +105,11 @@ public class MultiplayerGame : /*NetworkBehaviour */MonoBehaviour
     {
         if (s_instance == null)
         {
+            // GM: These need to be set manually because Unity doesn't auto-configure the stuff
+            // that is actually REQUIRED by the NetworkClient. Also do NOT change the order.
+            connConfig.AddChannel(QosType.ReliableSequenced);
+            connConfig.AddChannel(QosType.Unreliable);
+
             s_instance = this;
             startTimes  = new Dictionary<int, float>();
             finishTimes = new Dictionary<int, float>();
