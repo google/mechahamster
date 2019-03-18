@@ -209,9 +209,17 @@ namespace customNetwork
         //   conn:
         //     Connection to the server.
         public override void OnClientDisconnect(NetworkConnection conn) {
-            this.client_connections.Remove(conn);
             DebugOutput("CustomNetworkManager.OnClientDisconnect:" + conn.ToString());
-            NetworkClient.ShutdownAll();
+
+            if (this.client_connections != null)
+            {
+                this.client_connections.Remove(conn);
+                NetworkClient.ShutdownAll();
+            }
+            else
+            {
+                Debug.LogFormat("OnClientDisconnect called before CreateClientConnections for connection {0}", conn);
+            }
         }
         //
         // Summary:
@@ -407,7 +415,7 @@ namespace customNetwork
             {
 
             }
-            serverDebugInfoMsg = " (#" + conn.connectionId.ToString() + "/" + this.client_connections.Count.ToString() + ") " + serverType  + " - "+ this.networkAddress + ":" + networkPrt;
+            serverDebugInfoMsg = "[client: " + conn.address + "] " + " (#" + conn.connectionId.ToString() + "/" + this.client_connections.Count.ToString() + ") " + serverType  + " - "+ this.networkAddress + ":" + networkPrt;
             serverDebugInfoMsg = prependMsg + serverDebugInfoMsg;
             ServerSendDebugMessageToClient(serverDebugInfoMsg, conn);
         }

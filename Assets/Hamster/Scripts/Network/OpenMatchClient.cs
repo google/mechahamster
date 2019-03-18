@@ -32,7 +32,18 @@ namespace Hamster
          
         private string GetPlayerUniqueID()
         {
-            return UnityEngine.Application.platform.ToString().ToLower() + "-" + SystemInfo.deviceUniqueIdentifier;
+            if (Application.platform != RuntimePlatform.Android)
+            {
+                // Unity's device ID does not differentiate when multiple clients are run on the same device.
+                // For the sake of testing, we add a timestamp if we're not on Android so we can run multiple PC clients.
+
+                Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                return UnityEngine.Application.platform.ToString().ToLower() + "-" + SystemInfo.deviceUniqueIdentifier + "-" + unixTimestamp;
+            }
+            else
+            {
+               return UnityEngine.Application.platform.ToString().ToLower() + "-" + SystemInfo.deviceUniqueIdentifier;
+            }
         }
 
         private async Task<string> WaitForMatchResults(AsyncServerStreamingCall<Messages.Player> stream)
@@ -105,7 +116,7 @@ namespace Hamster
                 cancel.Cancel();
             }
 
-            if (player != null)
+            if (asyncUpdate != null)
             {
                 asyncUpdate.Dispose();
             }
@@ -119,13 +130,12 @@ namespace Hamster
             channel = new Channel(address, OpenMatchPort, ChannelCredentials.Insecure);
             client = new Frontend.FrontendClient(channel);
 
+            // Disconnect the player (and clean up work variables) in the event one was already connected.
+            Disconnect();
+
             player = new Messages.Player();
             player.Id = GetPlayerUniqueID();
             player.Properties = matchProperties;
-
-            // Attempt to delete the player ID first because if the ID exists already in Open Match it will
-            // be ignored until it is removed (by the client or internal clean-up timeouts).
-            client.DeletePlayer(player);
 
             Debug.LogFormat("OpenMatchClient: Attempting to create [{0} : {1}]", player.Id, player.Properties);
 
@@ -144,7 +154,7 @@ namespace Hamster
                 
                 asyncUpdate = client.GetUpdates(player, callOptions);
 
-                //
+                // Wait for match results in a coroutine that will be cancelled on Disconnect
                 StartCoroutine(RetrieveMatchResults());
 
                 return true;
@@ -159,16 +169,19 @@ namespace Hamster
         /// <returns>True if the player is successfully deleted</returns>
         public bool Disconnect()
         {
+            Debug.LogFormat("OpenMatchClient: Disconnecting {0}:{1}", address, port);
+
+            address = "";
+            port = 0;
+
             if (player != null)
             {
-                Debug.LogFormat("OpenMatchClient: Deleting player {0}", player.Id);
-
                 CancelConnecting();
+
+                Debug.LogFormat("OpenMatchClient: Deleting player {0}", player.Id);
 
                 Messages.Result result = client.DeletePlayer(player);
 
-                address = "";
-                port = 0;
                 player = null;
 
                 return result.Success; 
