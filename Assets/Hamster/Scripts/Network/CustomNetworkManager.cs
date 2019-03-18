@@ -14,7 +14,7 @@ namespace customNetwork
         const int kMaxShort = 32767;
         public enum hamsterMsgType
         {
-            hmsg_serverLevel= kLastUnityMsgType,   //  server tells player what level is currently playing
+            hmsg_serverLevel = kLastUnityMsgType,   //  server tells player what level is currently playing
             hmsg_serverVersion, //  server tells client what version it's running.
             hmsg_serverState,   //  the state the server is in. NOTE: this may cause the Cl
             hmsg_clientOpenMatchAck,    //  client affirms that OpenMatch start message was received through the server state.
@@ -35,8 +35,9 @@ namespace customNetwork
         public bool m_AutoCreatePlayerFromSpawnPrefabList;
         static short curColorIndex = 0;
         static short curLocalPlayerID = 0;  //  we may have multiple controllers/players on this single client. We don't, but we could.
-        private bool bServerVersionDoesntMatch=false;  //  if the server version is different, we should know about it.
+        private bool bServerVersionDoesntMatch = false;  //  if the server version is different, we should know about it.
         private string serverVersion;
+        bool recvd_LevelFromServer = false; //  client recvd what level to load from server.
         public MultiplayerGame multiPlayerGame;
         CustomNetworkManagerHUD hud;
         //  openmatch
@@ -152,16 +153,26 @@ namespace customNetwork
                 RequestServerSpawn(toServerConnection, (short)localPlayerID);
             }
         }
-        //
-        // Summary:
-        //     Called on the client when connected to a server.
-        //
-        // Parameters:
-        //   conn:
-        //     Connection to the server.
-        //  client makes connection to the server. 
-        public override void OnClientConnect(NetworkConnection conn)
+
+        void NewConnectionClearVariables(NetworkConnection conn)
         {
+            recvd_LevelFromServer = false;
+            bServerVersionDoesntMatch = true;
+            if (ackReceived != null)
+                ackReceived[conn.connectionId] = false;  //  for OpenMatch start ACk
+
+    }
+    //
+    // Summary:
+    //     Called on the client when connected to a server.
+    //
+    // Parameters:
+    //   conn:
+    //     Connection to the server.
+    //  client makes connection to the server. 
+    public override void OnClientConnect(NetworkConnection conn)
+        {
+            NewConnectionClearVariables(conn);
             DebugOutput("CustomNetworkManager.OnClientConnect\n");
             toServerConnection = conn;
             CustomNetworkPlayer.conn = conn;
@@ -543,16 +554,23 @@ namespace customNetwork
         //     Connection from client.
         public override void OnServerReady(NetworkConnection conn)
         {
-            bool isHost;
-            isHost = NetworkClient.active && NetworkServer.active;
 
             Debug.LogWarning("OnServerReady: " + conn.ToString()+"\n");
+            SendServerVersion(conn);
+            SendServerLevel(conn);
+            CreateClientConnections(conn);
+        }
+
+        public void SendServerLevel(NetworkConnection conn)
+        {
             //  we need to tell the client what level we've loaded.
-            int levelIdx = -1;  //  no level is loaded that we know of (yet).
+            bool isHost;
+            int levelIdx = -1;
+            isHost = NetworkClient.active && NetworkServer.active;
+
             if (Hamster.CommonData.gameWorld != null)   //  if the game knows about a levelIndex, then send it.
             {
                 levelIdx = Hamster.CommonData.gameWorld.curLevelIdx;
-                Debug.LogWarning("OnServerReady levelIdx=" + levelIdx.ToString() + ", isHost=" + isHost.ToString() + "\n");
             }
             else
             {
@@ -564,10 +582,7 @@ namespace customNetwork
                 Debug.LogWarning("conn.Send server level: " + levelIdx.ToString() + " to " + conn.ToString());
                 conn.Send((short)hamsterMsgType.hmsg_serverLevel, msg); //  tell our client what level we're using.
             }
-            SendServerVersion(conn);
-            CreateClientConnections(conn);
         }
-
         public void setAck(int connId, bool bit=true)
         {
             Debug.LogFormat("setAck: ACK bit for connId {0} changed from {1} to {2}", connId, ackReceived[connId], bit);
@@ -734,6 +749,7 @@ namespace customNetwork
         {
             UnityEngine.Networking.NetworkSystem.IntegerMessage intMsg = netMsg.ReadMessage<UnityEngine.Networking.NetworkSystem.IntegerMessage>();
             int levelToLoad = intMsg.value;
+            recvd_LevelFromServer = true;
             DebugOutput("OnClientLevelMsg: recvd Server level request:" + levelToLoad.ToString());
             //  our server has declared a level that it has already loaded. Let's try to load that level.
             MultiplayerGame.instance.ClientSwapMultiPlayerState<Hamster.States.ClientLoadingLevel>(levelToLoad); //  make our client go into the OpenMatch server state!
@@ -768,7 +784,12 @@ namespace customNetwork
                 bServerVersionDoesntMatch = false;
             }
         }
-
+        //  ask the server to send us the message hmsg_serverLevel for OnClientLevelMsg again.
+        public void ClientAskServerForLevel()
+        {
+            MessageBase msg = new UnityEngine.Networking.NetworkSystem.IntegerMessage(-1);
+            NetworkClient.allClients[0].connection.Send((short)hamsterMsgType.hmsg_serverLevel, msg);
+        }
         //  tell all clients this message
         public void ServerShout(string msg)
         {
@@ -808,7 +829,7 @@ namespace customNetwork
             Debug.LogError("OnClientFinished hmsg_serverGameOver msg=" + serverState);
 
             //  quit OpenMatch and return to the "Lobby" which is really the preOpenMatchState.
-            MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientReturnToLobby>();
+            //MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientReturnToLobby>();   //  don't do this anymore. It doesn't work reliably. Let the player hit "Retry" in the "goal" menu.
             //  MultiplayerGame.instance.ClientEnterMultiPlayerState<Hamster.States.ClientShutdown>();
         }
 
@@ -848,6 +869,15 @@ namespace customNetwork
             bIsHost = true;
         }
 
+        //  this is the server response to hmsg_serverLevel
+        //  one of my clients is asking for the level because they missed it somehow. So, let's fulfill that request.
+        void svrSendServerLevel(NetworkMessage netMsg)
+        {
+            int clientConnId = netMsg.conn.connectionId;
+            int levelIdx = Hamster.CommonData.gameWorld.curLevelIdx;
+            Debug.LogWarning("Client #" + clientConnId.ToString() + " asked Server for level index=" + levelIdx.ToString());
+            SendServerLevel(netMsg.conn);
+        }
         //  server handles hmsg_clientOpenMatchAck
         //  SERVER - one of my clients is telling me that it's ready.
         void svrOnClientReady(NetworkMessage netMsg)
@@ -873,6 +903,7 @@ namespace customNetwork
             bIsServer = true;
             //  register my server handlers
             NetworkServer.RegisterHandler((short)hamsterMsgType.hmsg_clientOpenMatchAck, svrOnClientReady);
+            NetworkServer.RegisterHandler((short)hamsterMsgType.hmsg_serverLevel, svrSendServerLevel);
             //  NetworkServer.SendToClient(connectionId, (short)customNetwork.CustomNetworkManager.hamsterMsgType.hmsg_serverPlayerFinished, raceTimeMsg);
         }
         //

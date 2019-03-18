@@ -9,6 +9,8 @@ namespace Hamster.States
         public NetworkManager manager;
         public NetworkConnection conn;
         public BaseState prevState;
+        const float timeBetweenAsks = 5.0f;
+        float lastAskTime;
 
         override public void Initialize()
         {
@@ -35,10 +37,20 @@ namespace Hamster.States
 
         }
 
+        void AskForLevel()
+        {
+            if (Time.realtimeSinceStartup > lastAskTime + timeBetweenAsks)
+            {
+                customNetwork.CustomNetworkManager custMgr = manager as customNetwork.CustomNetworkManager;
+                custMgr.ClientAskServerForLevel();
+                lastAskTime = Time.realtimeSinceStartup;
+            }
+        }
         // Update is called once per frame
         void Update()
         {
-
+            // sometimes, we can be here expecting to go to ClientLoadingLevel, but we missed the hmsg_serverLevel so OnClientLevelMsg was never called!
+            AskForLevel();
         }
     }
 }   //  Hamster.States
