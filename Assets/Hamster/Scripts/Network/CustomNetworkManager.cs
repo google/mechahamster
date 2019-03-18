@@ -360,7 +360,7 @@ namespace customNetwork
 
             GameObject player;
             Transform startPos = GetStartPosition();
-            Vector3 offset = Quaternion.Euler(0f, (id % 4) * Mathf.PI * 0.5f, 0f) * Vector3.forward;
+            Vector3 offset = Quaternion.AngleAxis((conn.connectionId % 4) * 90.0f, Vector3.up) * Vector3.forward;
             if (startPos != null)
             {
                 player = (GameObject)Instantiate(prefabToInstantiate, startPos.position + offset, startPos.rotation);
