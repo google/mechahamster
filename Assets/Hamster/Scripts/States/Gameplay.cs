@@ -117,13 +117,13 @@ namespace Hamster.States {
 
       CommonData.gameWorld.MergeMeshes();
 
-      // Retrieve metadata from the storage bucket.  This is also a light-weighted way to check
-      // if the file exists.  If not, it returns 404 Not Found and the task would be in Faulted
-      // state.
-      TimeDataUtil.GetBestSharedReplayPathAsync(CommonData.gameWorld.worldMap)
-        .ContinueWith(task => {
-        bestReplayPath = task.Result;
-      });
+      // Retrieve path to the best replay record
+      if (gameplayRecordingEnabled) {
+        TimeDataUtil.GetBestSharedReplayPathAsync(CommonData.gameWorld.worldMap)
+          .ContinueWith(task => {
+          bestReplayPath = task.Result;
+        });
+      }
     }
 
     // Resume the state.  Called when the state becomes active
