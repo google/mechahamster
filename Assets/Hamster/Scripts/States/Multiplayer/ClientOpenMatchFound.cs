@@ -121,7 +121,7 @@ namespace Hamster.States
             {
                 msg = "DETECTED Connect OM : om.Addr=" + openMatch.Address + ", port=" + openMatch.Port.ToString() + "\n" + conn.ToString();
                 bOpenMatchWaiting = false;
-                multiplayergame.OnClientConnect(conn);
+                multiplayergame.OnClientConnect(conn);  //  maybe we need to wait for CustomNetworkMangaer to do this from its own OnClientConnect()
                 this.bHaveOpenMatchTicket = false;  //  take my ticket away!
             }
             else//  if we're not connected to OpenMatch, then it's a little more complicated. However, if we're in this state, we expect that we're still connected to the LOBBY server. So, we should disconnect from that LOBBY server so that we can go about our business of actually connecting to OM.
@@ -201,6 +201,7 @@ namespace Hamster.States
         }
         override public void OnGUI()
         {
+            GetPointers();
             //Debug.LogWarning("ServerOpenMatchStart.OnGUI");
             if (hud != null)
             {
@@ -228,6 +229,10 @@ namespace Hamster.States
                         hud.scaledTextBox("OMFound ip=" + openMatch.Address + ", port=" + openMatch.Port.ToString() + "\nconn=" + isConn.ToString());
 
                     }
+                }
+                if (null!=isConnectedToOpenMatchServer())
+                {
+                    hud.scaledTextBox("isConnected=true ip=" + openMatch.Address + ":" + openMatch.Port.ToString());
                 }
             }
         }

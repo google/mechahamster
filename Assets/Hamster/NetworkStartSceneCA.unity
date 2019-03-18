@@ -476,7 +476,7 @@ PrefabInstance:
     - target: {fileID: 2002344950344480194, guid: be868b26095015c40a916add22e7b3dc,
         type: 3}
       propertyPath: bShowDebugCurrentStateInfo
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2002344950344480194, guid: be868b26095015c40a916add22e7b3dc,
         type: 3}

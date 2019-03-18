@@ -591,17 +591,19 @@ namespace UnityEngine.Networking
                         }
                         ypos = newYpos;
                     }
+                    float offsetXPos = xpos;
+
+                    manager.networkAddress = serverAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos + 250, ypos, serverAddress);
+                    serverPort = scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, serverPort);
 
                     if (scaledButton(out newYpos, xpos, ypos, 105, kTextBoxHeight, "LAN (C)lient"))
                     {
-                        StartClientReq();
+                        manager.StartClient();
+                        //StartClientReq();
                         m_loadClientRequested = true;   //  yeah, if we're going through the menu with a user click, have it take priority. This is ugly pachinko logic, but whatever.
                     }
                     //  ypos = newYpos;
-                    float offsetXPos = xpos;
 
-                    manager.networkAddress = serverAddress = scaledTextField(out newYpos, out offsetXPos, offsetXPos+250, ypos, serverAddress);
-                    serverPort = scaledTextField(out newYpos, out offsetXPos, offsetXPos, ypos, serverPort);
                     manager.networkPort = Convert.ToInt32(serverPort);
                     ypos = newYpos;
 
@@ -648,7 +650,9 @@ namespace UnityEngine.Networking
                 }
                 if (manager.IsClientConnected())
                 {
-                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + localipv4 + "\n  port=" + port.ToString());
+                    string dbgMsg = "Client(" + customNetwork.CustomNetworkManager.LocalHostname() + ")=" + localipv4 + ":" + port.ToString();
+                    dbgMsg += "\n(?/" + NetworkClient.allClients.Count.ToString() + ") connected to " + NetworkClient.allClients[0].connection.address + " as id=" + NetworkClient.allClients[0].connection.connectionId.ToString();
+                    ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, dbgMsg);
                 }
                 ypos = scaledTextBox(xpos, ypos, kTextBoxWidth, kTextBoxHeight, "client.active=" + NetworkClient.active.ToString() + ", server.active=" + NetworkServer.active.ToString());
             }
