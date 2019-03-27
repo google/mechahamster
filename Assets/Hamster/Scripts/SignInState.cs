@@ -13,7 +13,8 @@ namespace Hamster
       SignedOut = 1,
       Email = 2,
       Anonymous = 3,
-      GooglePlayServices = 4
+      GooglePlayServices = 4,
+      GameCenter = 5
     }
 
     /// <summary>

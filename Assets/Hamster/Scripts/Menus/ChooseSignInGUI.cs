@@ -28,6 +28,7 @@ namespace Hamster.Menus {
     public GUIButton AnonymousSignIn;
     public GUIButton DontSignIn;
     public GUIButton GooglePlaySignIn;
+    public GUIButton GameCenterSignIn;
   }
 
 }
