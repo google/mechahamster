@@ -37,8 +37,6 @@
              title="Remote Config"/>
         <tab type="user" url="@ref mechahamster_guide_messaging"
              title="Messaging"/>
-        <tab type="user" url="@ref mechahamster_guide_invites"
-             title="Invites"/>
         <tab type="user" url="@ref mechahamster_guide_testlab"
              title="Test Lab"/>
       </tab>

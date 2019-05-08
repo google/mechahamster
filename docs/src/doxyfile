@@ -748,7 +748,6 @@ INPUT                  = "index.md" \
                          "programmers_guide/fb_analytics.md" \
                          "programmers_guide/fb_auth.md" \
                          "programmers_guide/fb_crashlytics.md" \
-                         "programmers_guide/fb_invites.md" \
                          "programmers_guide/fb_database.md" \
                          "programmers_guide/fb_remoteconfig.md" \
                          "programmers_guide/fb_messaging.md" \

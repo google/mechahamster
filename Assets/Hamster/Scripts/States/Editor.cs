@@ -221,8 +221,6 @@ namespace Hamster.States {
         manager.PushState(new LoadMap());
       } else if (source == menuComponent.SaveButton.gameObject) {
         manager.PushState(new SaveMap());
-      } else if (source == menuComponent.ShareButton.gameObject) {
-        manager.PushState(new SendInvite());
       } else if (source == menuComponent.PlayButton.gameObject) {
         manager.PushState(new Gameplay(Gameplay.GameplayMode.Editor));
       } else if (source == menuComponent.RotateButton.gameObject) {

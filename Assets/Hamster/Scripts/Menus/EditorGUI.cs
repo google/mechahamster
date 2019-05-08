@@ -26,7 +26,6 @@ namespace Hamster.Menus {
     public GUIButton LoadButton;
     public GUIButton SaveButton;
     public GUIButton ClearButton;
-    public GUIButton ShareButton;
     public GUIButton PlayButton;
     public GUIButton ExportButton;
     public GUIButton BonusButton;

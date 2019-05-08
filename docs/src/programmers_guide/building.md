@@ -28,7 +28,6 @@ packages into the Unity project:
 | Firebase Auth | FirebaseAuth.unitypackage |
 | Firebase Crashlytics (Beta) | FirebaseCrashlytics.unitypackage |
 | Firebase Database | FirebaseDatabase.unitypackage |
-| Firebase Invites | FirebaseInvites.unitypackage |
 | Firebase Messaging | FirebaseMessaging.unitypackage |
 | Firebase Remote Config | FirebaseRemoteConfig.unitypackage |
 | Firebase Cloud Storage | FirebaseStorage.unitypackage |
@@ -55,7 +54,7 @@ download the files necessary to link it to MechaHamster:
 
 #### (Android Only) Add your signing key's SHA-1 to the project
 
-In order to make use of several Firebase features, (Authentication and App Invites)
+In order to make use of Firebase Authentication,
 you will need to calculate a SHA-1 hash from your signing key, and
 enter it into the Firebase console.
 

@@ -47,7 +47,6 @@ namespace Hamster.States {
     public override void Initialize() {
       CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
       SetFirebaseMessagingListeners();
-      SetFirebaseInvitesListeners();
       InitializeUI();
     }
 
@@ -72,7 +71,6 @@ namespace Hamster.States {
         }
       }
       SetFirebaseMessagingListeners();
-      SetFirebaseInvitesListeners();
       InitializeUI();
     }
 
@@ -102,7 +100,6 @@ namespace Hamster.States {
 
     public override void Suspend() {
       RemoveFirebaseMessagingListeners();
-      RemoveFirebaseInvitesListeners();
       HideUI();
     }
 
@@ -157,33 +154,6 @@ namespace Hamster.States {
 
     private void RemoveFirebaseMessagingListeners() {
       Firebase.Messaging.FirebaseMessaging.MessageReceived -= OnMessageReceived;
-    }
-
-    private void SetFirebaseInvitesListeners() {
-      Firebase.Invites.FirebaseInvites.InviteReceived += OnInviteReceived;
-      Firebase.Invites.FirebaseInvites.InviteNotReceived += OnInviteNotReceived;
-      Firebase.Invites.FirebaseInvites.ErrorReceived += OnErrorReceived;
-    }
-
-    private void RemoveFirebaseInvitesListeners() {
-      Firebase.Invites.FirebaseInvites.InviteReceived -= OnInviteReceived;
-      Firebase.Invites.FirebaseInvites.InviteNotReceived -= OnInviteNotReceived;
-      Firebase.Invites.FirebaseInvites.ErrorReceived -= OnErrorReceived;
-    }
-
-    public void OnInviteReceived(object sender,
-                                 Firebase.Invites.InviteReceivedEventArgs e) {
-      QueueState(new InviteReceived(e));
-    }
-
-    public void OnInviteNotReceived(object sender, System.EventArgs e) {
-      Debug.Log("No Invite or Deep Link received on start up");
-    }
-
-    public void OnErrorReceived(object sender,
-                                Firebase.Invites.InviteErrorReceivedEventArgs e) {
-      Debug.LogError("Error occurred received the invite: " +
-          e.ErrorMessage);
     }
 
     void HandleConversionResult(System.Threading.Tasks.Task convertTask) {
