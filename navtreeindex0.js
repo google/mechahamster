@@ -10,12 +10,11 @@ var NAVTREEINDEX0 =
 "mechahamster_guide_database.html":[1,2,3],
 "mechahamster_guide_daydream.html":[1,3],
 "mechahamster_guide_gameplay.html":[0],
-"mechahamster_guide_invites.html":[1,2,6],
 "mechahamster_guide_messaging.html":[1,2,5],
 "mechahamster_guide_overview.html":[1],
 "mechahamster_guide_overview.html":[1,0],
 "mechahamster_guide_remoteconfig.html":[1,2,4],
-"mechahamster_guide_testlab.html":[1,2,7],
+"mechahamster_guide_testlab.html":[1,2,6],
 "mechahamster_readme.html":[2],
 "pages.html":[]
 };

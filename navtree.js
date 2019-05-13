@@ -12,7 +12,6 @@ var NAVTREE =
         [ "Realtime Database", "mechahamster_guide_database.html", null ],
         [ "Remote Config", "mechahamster_guide_remoteconfig.html", null ],
         [ "Messaging", "mechahamster_guide_messaging.html", null ],
-        [ "Invites", "mechahamster_guide_invites.html", null ],
         [ "Test Lab", "mechahamster_guide_testlab.html", null ]
       ] ],
       [ "Daydream", "mechahamster_guide_daydream.html", null ]
