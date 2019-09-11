@@ -1,0 +1,23 @@
+[By string literal]
+ 
+var stringname="string value";  
+ 
+<script>  
+var str="This is string literal";  
+document.write(str);  
+</script>  
+ 
+>> This is string literal
+ 
+----------
+ 
+[By string object]
+ 
+var stringname=new String("string literal");  
+ 
+<script>  
+var stringname=new String("hello javascript string");  
+document.write(stringname);  
+</script>  
+ 
+>> hello javascript string
