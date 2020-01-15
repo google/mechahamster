@@ -66,8 +66,7 @@ And download the game to your mobile device from the AppStore and Google Play St
       * FirebaseRemoteConfig.unitypackage
       * FirebaseStorage.unitypackage
    * Select a target platform (iOS or Android) using the `File > Build Settings` menu option.
-   * Add Firebase to your app using either the [Firebase Unity SDK iOS Setup][] or
-     [Firebase Unity SDK Android Setup][].  For more information see [Building MechaHamster][].
+   * [Add Firebase to your app][]. For more information see [Building MechaHamster][].
    * Wait for the spinner (compiling) icon to stop in the bottom right corner of the Unity status
      bar.
    * Finally, select the `File > Build Settings` menu option then click `Build and Run`.
@@ -81,6 +80,7 @@ And download the game to your mobile device from the AppStore and Google Play St
 For more information about MechaHamster see [MechaHamster Document][]
 To contribute the this project see [CONTRIBUTING][].
 
+  [Add Firebase to your app]: https://firebase.google.com/docs/unity/setup
   [Android]: https://www.android.com/
   [CONTRIBUTING]: https://github.com/google/mechahamster/blob/master/CONTRIBUTING.txt
   [GitHub]: https://github.com/google/mechahamster/
@@ -91,8 +91,6 @@ To contribute the this project see [CONTRIBUTING][].
   [MechaHamster]: https://github.com/google/mechahamster/
   [Firebase Unity SDK]: https://firebase.google.com/docs/unity/setup
   [Unity 5.6 beta]: https://unity3d.com/unity/beta]
-  [Firebase Unity SDK iOS Setup]: https://firebase.google.com/docs/unity/setup#add_firebase_to_your_app
-  [Firebase Unity SDK Android Setup]: https://firebase.google.com/docs/unity/setup#add_firebase_to_your_app_1
   [Firebase Realtime Database]: https://firebase.google.com/docs/database/
   [Firebase Analytics]: https://firebase.google.com/docs/analytics/
   [Firebase Authentication]: https://firebase.google.com/docs/auth/
