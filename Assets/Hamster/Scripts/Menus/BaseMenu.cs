@@ -35,11 +35,7 @@ namespace Hamster.Menus {
         RectTransform rt = canvas.GetComponent<RectTransform>();
         rt.SetPositionAndRotation(MenuOffset, Quaternion.identity);
         // Set up canvas input.
-        if (CommonData.inVrMode) {
-          gameObject.AddComponent<GvrPointerGraphicRaycaster>();
-        } else {
-          gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
-        }
+        gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
       }
     }
   }

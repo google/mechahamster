@@ -15,7 +15,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Firebase.Unity.Editor;
 
 namespace Hamster.States {
   // State for requesting username/password from the user for

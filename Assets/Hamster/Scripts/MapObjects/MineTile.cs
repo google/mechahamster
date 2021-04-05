@@ -50,11 +50,11 @@ namespace Hamster.MapObjects {
     public AudioClip[] ExplosionAudio;
 
     private void Start() {
-      ExplosionForce = (float)FirebaseRemoteConfig.GetValue(
+      ExplosionForce = (float)FirebaseRemoteConfigDeprecated.GetValue(
         StringConstants.RemoteConfigMineTileForce).DoubleValue;
-      ExplosionRadius = (float)FirebaseRemoteConfig.GetValue(
+      ExplosionRadius = (float)FirebaseRemoteConfigDeprecated.GetValue(
         StringConstants.RemoteConfigMineTileRadius).DoubleValue;
-      UpwardsModifier = (float)FirebaseRemoteConfig.GetValue(
+      UpwardsModifier = (float)FirebaseRemoteConfigDeprecated.GetValue(
         StringConstants.RemoteConfigMineTileUpwardsMod).DoubleValue;
     }
 

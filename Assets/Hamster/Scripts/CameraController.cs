@@ -63,18 +63,6 @@ namespace Hamster {
 
     void Start() {
       mainGame = FindObjectOfType<MainGame>();
-      // Needs to be normalized because it was set via the inspector.
-      if (CommonData.inVrMode) {
-        float VRHeightScalar;
-        try {
-          VRHeightScalar =
-          (float)Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
-          StringConstants.RemoteConfigVRHeightScale).DoubleValue;
-        } catch (System.Exception) {
-          // If the RemoteConfig failed, use a sensible value.
-          VRHeightScalar = 0.65f;
-        }
-      }
     }
 
     // Pans the camera in a direction during edit mode.
@@ -101,9 +89,7 @@ namespace Hamster {
             Vector3 camTarget = player.transform.position;
             camTarget.y = CameraFocusHeight;
             transform.position = camTarget + viewAngleVector * ViewDistance;
-            if (!CommonData.inVrMode) {
-              transform.LookAt(player.transform.position, kUpVector);
-            }
+            transform.LookAt(player.transform.position, kUpVector);
           }
           break;
         case CameraMode.Dragging:
@@ -141,9 +127,7 @@ namespace Hamster {
           transform.position = cameraTarget * CameraZoom
               + transform.position * (1.0f - CameraZoom);
 
-          if (!CommonData.inVrMode) {
-            transform.LookAt(transform.position - viewAngleVector, kUpVector);
-          }
+          transform.LookAt(transform.position - viewAngleVector, kUpVector);
           break;
         case CameraMode.Menu:
           // Menu mode.  User is in a menu.
@@ -153,9 +137,7 @@ namespace Hamster {
           transform.position = menuCameraTarget * CameraZoom
               + transform.position * (1.0f - CameraZoom);
 
-          if (!CommonData.inVrMode) {
-            transform.LookAt(transform.position - viewAngleVector, kUpVector);
-          }
+          transform.LookAt(transform.position - viewAngleVector, kUpVector);
           break;
       }
     }

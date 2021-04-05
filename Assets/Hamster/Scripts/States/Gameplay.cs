@@ -15,7 +15,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
@@ -89,19 +88,16 @@ namespace Hamster.States {
     public override void Initialize() {
       CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.gameMusic, true);
       fixedUpdateTimestamp = 0;
-      if (CommonData.vrPointer != null) {
-        CommonData.vrPointer.SetActive(false);
-      }
       Time.timeScale = 1.0f;
       double gravity_y =
-        Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
+        Firebase.RemoteConfig.FirebaseRemoteConfigDeprecated.GetValue(
             StringConstants.RemoteConfigPhysicsGravity).DoubleValue;
       Physics.gravity = new Vector3(0, (float)gravity_y, 0);
       CommonData.gameWorld.ResetMap();
       Utilities.HideDuringGameplay.OnGameplayStateChange(true);
       CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
 
-      gameplayRecordingEnabled = Firebase.RemoteConfig.FirebaseRemoteConfig.GetValue(
+      gameplayRecordingEnabled = Firebase.RemoteConfig.FirebaseRemoteConfigDeprecated.GetValue(
         StringConstants.RemoteConfigGameplayRecordingEnabled).BooleanValue;
 
       if (gameplayRecordingEnabled) {
@@ -133,9 +129,6 @@ namespace Hamster.States {
     public override void Resume(StateExitValue results) {
       ShowUI();
       CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.gameMusic, true);
-      if (CommonData.vrPointer != null) {
-        CommonData.vrPointer.SetActive(false);
-      }
       Time.timeScale = 1.0f;
       CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
       Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -143,9 +136,6 @@ namespace Hamster.States {
 
     public override StateExitValue Cleanup() {
       DestroyUI();
-      if (CommonData.vrPointer != null) {
-        CommonData.vrPointer.SetActive(true);
-      }
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       Utilities.HideDuringGameplay.OnGameplayStateChange(false);
       Time.timeScale = 0.0f;
@@ -161,9 +151,6 @@ namespace Hamster.States {
 
     public override void Suspend() {
       HideUI();
-      if (CommonData.vrPointer != null) {
-        CommonData.vrPointer.SetActive(true);
-      }
       Time.timeScale = 0.0f;
       CommonData.mainCamera.mode = CameraController.CameraMode.Menu;
       Screen.sleepTimeout = SleepTimeout.NeverSleep;

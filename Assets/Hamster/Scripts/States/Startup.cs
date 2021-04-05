@@ -15,7 +15,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
@@ -37,7 +36,7 @@ namespace Hamster.States {
       // If we need to sign in, do that.  Otherwise, if we know who we are,
       // so fetch the user data.
       if (auth.CurrentUser == null) {
-        if (CommonData.inVrMode || CommonData.testLab.IsTestingScenario) {
+        if (CommonData.testLab.IsTestingScenario) {
               manager.PushState(new WaitForTask(auth.SignInAnonymouslyAsync(),
                   StringConstants.LabelSigningIn, true));
         } else {

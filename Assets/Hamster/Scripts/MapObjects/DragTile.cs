@@ -22,7 +22,7 @@ namespace Hamster.MapObjects {
     public float Drag { get; private set; }
 
     private void Start() {
-      Drag = (float)FirebaseRemoteConfig.GetValue(
+      Drag = (float)FirebaseRemoteConfigDeprecated.GetValue(
         StringConstants.RemoteConfigSandTileDrag).DoubleValue;
     }
 

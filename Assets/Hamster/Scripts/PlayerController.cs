@@ -40,7 +40,7 @@ namespace Hamster {
       IsProcessingDeath = false;
       HitPoints = kInitialHitPoints;
       if (CommonData.currentReplayData == null) {
-        inputController = new InputControllers.MultiInputController();
+        inputController = new InputControllers.TiltController();
       } else {
         inputController = new InputControllers.ReplayController(
             CommonData.currentReplayData,

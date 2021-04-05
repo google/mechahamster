@@ -24,10 +24,6 @@ namespace Hamster.Utilities {
     Quaternion quat;
     void Start() {
       quat = Quaternion.Euler(rotation);
-      if (CommonData.inVrMode) {
-        // Remove Rotation in VR mode.
-        Destroy(this);
-      }
     }
 
     void Update() {

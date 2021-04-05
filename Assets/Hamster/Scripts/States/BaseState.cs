@@ -66,7 +66,7 @@ namespace Hamster.States {
     // Spawn a UI Prefab, and return the component associated with it.
     protected T SpawnUI<T>(string prefabLookup) {
       gui = GameObject.Instantiate(CommonData.prefabs.menuLookup[prefabLookup]);
-      gui.transform.position = new Vector3(0, 0, CommonData.inVrMode ? UIDepthVR : UIDepthMobile);
+      gui.transform.position = new Vector3(0, 0, UIDepthMobile);
       gui.transform.SetParent(CommonData.mainCamera.transform, false);
       ResizeUI(gui);
       return gui.GetComponent<T>();
