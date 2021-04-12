@@ -33,12 +33,10 @@ namespace Hamster.MapObjects {
     public bool SpikesActive { get; private set; }
 
     private void Start() {
-      ExplosionForce = (float)FirebaseRemoteConfigDeprecated.GetValue(
-        StringConstants.RemoteConfigSpikesTileForce).DoubleValue;
-      ExplosionRadius = (float)FirebaseRemoteConfigDeprecated.GetValue(
-        StringConstants.RemoteConfigSpikesTileRadius).DoubleValue;
-      ExplosionUpwardsModifier = (float)FirebaseRemoteConfigDeprecated.GetValue(
-        StringConstants.RemoteConfigSpikesTileUpwardsMod).DoubleValue;
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      ExplosionForce = (float)remoteConfig.GetValue(StringConstants.RemoteConfigSpikesTileForce).DoubleValue;
+      ExplosionRadius = (float)remoteConfig.GetValue(StringConstants.RemoteConfigSpikesTileRadius).DoubleValue;
+      ExplosionUpwardsModifier = (float)remoteConfig.GetValue(StringConstants.RemoteConfigSpikesTileUpwardsMod).DoubleValue;
 
       ForceState(EnabledAtStart);
     }

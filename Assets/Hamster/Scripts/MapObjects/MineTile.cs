@@ -50,12 +50,10 @@ namespace Hamster.MapObjects {
     public AudioClip[] ExplosionAudio;
 
     private void Start() {
-      ExplosionForce = (float)FirebaseRemoteConfigDeprecated.GetValue(
-        StringConstants.RemoteConfigMineTileForce).DoubleValue;
-      ExplosionRadius = (float)FirebaseRemoteConfigDeprecated.GetValue(
-        StringConstants.RemoteConfigMineTileRadius).DoubleValue;
-      UpwardsModifier = (float)FirebaseRemoteConfigDeprecated.GetValue(
-        StringConstants.RemoteConfigMineTileUpwardsMod).DoubleValue;
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      ExplosionForce = (float)remoteConfig.GetValue(StringConstants.RemoteConfigMineTileForce).DoubleValue;
+      ExplosionRadius = (float)remoteConfig.GetValue(StringConstants.RemoteConfigMineTileRadius).DoubleValue;
+      UpwardsModifier = (float)remoteConfig.GetValue(StringConstants.RemoteConfigMineTileUpwardsMod).DoubleValue;
     }
 
     public void FixedUpdate() {

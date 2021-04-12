@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-
+using Firebase.RemoteConfig;
 
 namespace Hamster.States {
   public class Gameplay : BaseState {
@@ -89,16 +87,14 @@ namespace Hamster.States {
       CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.gameMusic, true);
       fixedUpdateTimestamp = 0;
       Time.timeScale = 1.0f;
-      double gravity_y =
-        Firebase.RemoteConfig.FirebaseRemoteConfigDeprecated.GetValue(
-            StringConstants.RemoteConfigPhysicsGravity).DoubleValue;
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      double gravity_y = remoteConfig.GetValue(StringConstants.RemoteConfigPhysicsGravity).DoubleValue;
       Physics.gravity = new Vector3(0, (float)gravity_y, 0);
       CommonData.gameWorld.ResetMap();
       Utilities.HideDuringGameplay.OnGameplayStateChange(true);
       CommonData.mainCamera.mode = CameraController.CameraMode.Gameplay;
 
-      gameplayRecordingEnabled = Firebase.RemoteConfig.FirebaseRemoteConfigDeprecated.GetValue(
-        StringConstants.RemoteConfigGameplayRecordingEnabled).BooleanValue;
+      gameplayRecordingEnabled = remoteConfig.GetValue(StringConstants.RemoteConfigGameplayRecordingEnabled).BooleanValue;
 
       if (gameplayRecordingEnabled) {
         gameplayRecorder = new GameplayRecorder(CommonData.gameWorld.worldMap.name, 1);

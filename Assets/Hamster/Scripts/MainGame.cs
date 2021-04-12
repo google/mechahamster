@@ -17,12 +17,14 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 using Firebase;
-using UnityEngine.SocialPlatforms;
 using Firebase.Extensions;
+using Firebase.RemoteConfig;
+using System.Threading.Tasks;
 
-namespace Hamster {
+namespace Hamster
+{
 
-  public class MainGame : MonoBehaviour {
+    public class MainGame : MonoBehaviour {
 
     [HideInInspector]
     public States.StateManager stateManager = new States.StateManager();
@@ -36,6 +38,8 @@ namespace Hamster {
 
     // The player responsible for game music.
     private AudioSource musicPlayer;
+
+    private bool firebaseInitialized;
 
     // The PlayerController component on the active player object.
     public PlayerController PlayerController {
@@ -76,7 +80,6 @@ namespace Hamster {
       }
     }
 
-    private bool firebaseInitialized;
 
     IEnumerator Start() {
       Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
@@ -192,8 +195,10 @@ namespace Hamster {
       // Feature Flags
       defaults.Add(StringConstants.RemoteConfigGameplayRecordingEnabled, false);
 
-      Firebase.RemoteConfig.FirebaseRemoteConfigDeprecated.SetDefaults(defaults);
-      return Firebase.RemoteConfig.FirebaseRemoteConfigDeprecated.FetchAsync(System.TimeSpan.Zero);
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      return remoteConfig.SetDefaultsAsync(defaults)
+        .ContinueWith(result => remoteConfig.FetchAndActivateAsync())
+        .Unwrap();
     }
 
     // When the app starts, check to make sure that we have
@@ -224,9 +229,6 @@ namespace Hamster {
       // To ensure that the core of FirebaseApp has started, grab the default instance which
       // is lazily initialized.
       FirebaseApp app = FirebaseApp.DefaultInstance;
-
-      // Remote Config data has been fetched, so this applies it for this play session:
-      Firebase.RemoteConfig.FirebaseRemoteConfigDeprecated.ActivateFetched();
 
       CommonData.prefabs = FindObjectOfType<PrefabList>();
       CommonData.mainCamera = FindObjectOfType<CameraController>();
