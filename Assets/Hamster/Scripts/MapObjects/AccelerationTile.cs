@@ -30,8 +30,8 @@ namespace Hamster.MapObjects {
     public float Acceleration { get; private set; }
 
     private void Start() {
-      Acceleration = (float)FirebaseRemoteConfig.GetValue(
-          StringConstants.RemoteConfigAccelerationTileForce).DoubleValue;
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      Acceleration = (float)remoteConfig.GetValue(StringConstants.RemoteConfigAccelerationTileForce).DoubleValue;
     }
 
     public void FixedUpdate() {

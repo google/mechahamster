@@ -271,14 +271,8 @@ namespace Hamster.States {
     public override void Update() {
       Ray selectionRay;
       float rayDist;
-      if (!CommonData.inVrMode) {
-        Camera camera = CommonData.mainCamera.GetComponentInChildren<Camera>();
-        selectionRay = camera.ScreenPointToRay(Input.mousePosition);
-      } else {
-        // To make this function in the editor, set selection ray to a valid laser
-        // pointer here.
-        selectionRay = new Ray(Vector3.zero, Vector3.up);
-      }
+      Camera camera = CommonData.mainCamera.GetComponentInChildren<Camera>();
+      selectionRay = camera.ScreenPointToRay(Input.mousePosition);
       if (mapToolSelection == (int)SpecialTools.Camera) {
         UpdateCameraController();
       }

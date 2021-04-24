@@ -91,8 +91,7 @@ namespace Hamster.States {
       menuComponent.AccountButton.gameObject.SetActive(CommonData.ShowInternetMenus());
 
       // Editor is disabled in VR mode.
-      menuComponent.EditorButton.gameObject.SetActive(
-          !CommonData.inVrMode && CommonData.ShowInternetMenus());
+      menuComponent.EditorButton.gameObject.SetActive(CommonData.ShowInternetMenus());
 
       // If you're NOT signed in, the main menu has a button to sign in:
       menuComponent.SignInButton.gameObject.SetActive(CommonData.isNotSignedIn);

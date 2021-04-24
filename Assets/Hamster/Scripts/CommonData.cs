@@ -38,10 +38,6 @@ namespace Hamster {
     // X-Z plane at height 0
     public static Plane kZeroPlane = new Plane(Vector3.up, new Vector3(0, 0, 0));
 
-    // Whether we're in VR mode or not.  Set at startup by VRSystemSetup.
-    public static bool inVrMode = false;
-    public static GameObject vrPointer;
-
     // Data to be used in current replay.  Null, if no replay is playing.
     public static string currentReplayData = null;
 

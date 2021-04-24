@@ -17,12 +17,14 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 using Firebase;
-using Firebase.Unity.Editor;
-using UnityEngine.SocialPlatforms;
+using Firebase.Extensions;
+using Firebase.RemoteConfig;
+using System.Threading.Tasks;
 
-namespace Hamster {
+namespace Hamster
+{
 
-  public class MainGame : MonoBehaviour {
+    public class MainGame : MonoBehaviour {
 
     [HideInInspector]
     public States.StateManager stateManager = new States.StateManager();
@@ -36,6 +38,8 @@ namespace Hamster {
 
     // The player responsible for game music.
     private AudioSource musicPlayer;
+
+    private bool firebaseInitialized;
 
     // The PlayerController component on the active player object.
     public PlayerController PlayerController {
@@ -76,7 +80,6 @@ namespace Hamster {
       }
     }
 
-    private bool firebaseInitialized;
 
     IEnumerator Start() {
       Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
@@ -192,30 +195,25 @@ namespace Hamster {
       // Feature Flags
       defaults.Add(StringConstants.RemoteConfigGameplayRecordingEnabled, false);
 
-      Firebase.RemoteConfig.FirebaseRemoteConfig.SetDefaults(defaults);
-      return Firebase.RemoteConfig.FirebaseRemoteConfig.FetchAsync(System.TimeSpan.Zero);
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      return remoteConfig.SetDefaultsAsync(defaults)
+        .ContinueWith(result => remoteConfig.FetchAndActivateAsync())
+        .Unwrap();
     }
 
     // When the app starts, check to make sure that we have
     // the required dependencies to use Firebase, and if not,
     // add them if possible.
     void InitializeFirebaseAndStart() {
-      Firebase.DependencyStatus dependencyStatus = Firebase.FirebaseApp.CheckDependencies();
-
-      if (dependencyStatus != Firebase.DependencyStatus.Available) {
-        Firebase.FirebaseApp.FixDependenciesAsync().ContinueWith(task => {
-          dependencyStatus = Firebase.FirebaseApp.CheckDependencies();
-          if (dependencyStatus == Firebase.DependencyStatus.Available) {
-            InitializeFirebaseComponents();
-          } else {
-            Debug.LogError(
-                "Could not resolve all Firebase dependencies: " + dependencyStatus);
+      FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+        var dependencyStatus = task.Result;
+        if (dependencyStatus == DependencyStatus.Available) {
+          InitializeFirebaseComponents();
+        } else {
+            Debug.LogError("Could not resolve all Firebase dependencies: " + dependencyStatus);
             Application.Quit();
-          }
-        });
-      } else {
-        InitializeFirebaseComponents();
-      }
+        }
+      });
     }
 
     void InitializeFirebaseComponents() {
@@ -232,21 +230,11 @@ namespace Hamster {
       // is lazily initialized.
       FirebaseApp app = FirebaseApp.DefaultInstance;
 
-      // Remote Config data has been fetched, so this applies it for this play session:
-      Firebase.RemoteConfig.FirebaseRemoteConfig.ActivateFetched();
-
       CommonData.prefabs = FindObjectOfType<PrefabList>();
       CommonData.mainCamera = FindObjectOfType<CameraController>();
       CommonData.mainGame = this;
       Firebase.AppOptions ops = new Firebase.AppOptions();
       CommonData.app = Firebase.FirebaseApp.Create(ops);
-
-      // Setup database url when running in the editor
-#if UNITY_EDITOR
-      if (CommonData.app.Options.DatabaseUrl == null) {
-        CommonData.app.SetEditorDatabaseUrl("https://YOUR-PROJECT-ID.firebaseio.com");
-      }
-#endif
 
       Screen.orientation = ScreenOrientation.Landscape;
 

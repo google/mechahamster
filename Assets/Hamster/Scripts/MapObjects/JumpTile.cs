@@ -30,8 +30,8 @@ namespace Hamster.MapObjects {
     public float JumpVelocity { get; private set; }
 
     private void Start() {
-      JumpVelocity = (float)FirebaseRemoteConfig.GetValue(
-        StringConstants.RemoteConfigJumpTileVelocity).DoubleValue;
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      JumpVelocity = (float)remoteConfig.GetValue(StringConstants.RemoteConfigJumpTileVelocity).DoubleValue;
     }
 
     public void FixedUpdate() {

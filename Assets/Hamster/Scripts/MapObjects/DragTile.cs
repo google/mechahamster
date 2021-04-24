@@ -22,8 +22,8 @@ namespace Hamster.MapObjects {
     public float Drag { get; private set; }
 
     private void Start() {
-      Drag = (float)FirebaseRemoteConfig.GetValue(
-        StringConstants.RemoteConfigSandTileDrag).DoubleValue;
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      Drag = (float)remoteConfig.GetValue(StringConstants.RemoteConfigSandTileDrag).DoubleValue;
     }
 
     void OnTriggerEnter(Collider collider) {

@@ -15,7 +15,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Firebase.Unity.Editor;
 using Firebase.Auth;
 using Firebase.Database;
 

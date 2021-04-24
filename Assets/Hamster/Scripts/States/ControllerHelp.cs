@@ -15,7 +15,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Firebase.Unity.Editor;
 
 
 namespace Hamster.States {
@@ -64,11 +63,8 @@ namespace Hamster.States {
 
     public override void Update() {
       bool stateEnding = false;
-#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
-      Vector2 tilt = new Vector2(GvrController.Accel.z, -GvrController.Accel.x);
-#else
+
       Vector2 tilt = Vector2.zero;
-#endif
       float currentTime = Time.realtimeSinceStartup;
 
       // Check if they've held the controller flat for long enough.
