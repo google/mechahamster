@@ -78,7 +78,7 @@ And download the game to your mobile device from the AppStore and Google Play St
 
 ## Documentation
 For more information about MechaHamster see [MechaHamster Document][]
-To contribute the this project see [CONTRIBUTING][].
+To contribute this project see [CONTRIBUTING][].
 
   [Add Firebase to your app]: https://firebase.google.com/docs/unity/setup
   [Android]: https://www.android.com/
