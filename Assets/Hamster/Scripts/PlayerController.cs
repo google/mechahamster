@@ -14,6 +14,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Hamster.InputControllers;
 
 namespace Hamster {
 
@@ -40,7 +41,19 @@ namespace Hamster {
       IsProcessingDeath = false;
       HitPoints = kInitialHitPoints;
       if (CommonData.currentReplayData == null) {
-        inputController = new InputControllers.TiltController();
+        if (SystemInfo.supportsGyroscope)
+        {
+          inputController = new InputControllers.TiltController();
+        }
+        else
+        {
+          // If there's no gyroscope (probably a chromebook), fallback to keyboard input.
+          // see: https://developer.android.com/topic/arc/manifest#partially-supported-hardware-features
+          // We probably need a touchscreen controller and/or gamepad one.
+          // We likely also should have better metrics, a large chromebook with a gyroscope won't
+          // be fun to play either.
+          inputController = new KeyboardController();
+        }
       } else {
         inputController = new InputControllers.ReplayController(
             CommonData.currentReplayData,
